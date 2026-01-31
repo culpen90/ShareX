@@ -23,7 +23,6 @@
 
 #endregion License Information (GPL v3)
 
-using CG.Web.MegaApiClient;
 using ShareX.HelpersLib;
 using ShareX.UploadersLib.FileUploaders;
 using ShareX.UploadersLib.ImageUploaders;
@@ -33,7 +32,6 @@ using ShareX.UploadersLib.URLShorteners;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace ShareX.UploadersLib
@@ -475,12 +473,6 @@ namespace ShareX.UploadersLib
             SharedFolderUpdateControls();
 
             #endregion Shared folder
-
-            #region Mega
-
-            MegaConfigureTab(false);
-
-            #endregion Mega
 
             #region Pushbullet
 
@@ -1890,98 +1882,6 @@ However, there is a workaround. You can navigate to the Google Drive website in 
         }
 
         #endregion Localhostr
-
-        #region Mega
-
-        private void MegaConfigureTab(bool tryLogin)
-        {
-            Color OkColor = Color.Green;
-            Color NokColor = Color.DarkRed;
-
-            tpMega.Enabled = false;
-
-            if (Config.MegaAuthInfos != null)
-            {
-                txtMegaEmail.Text = Config.MegaAuthInfos.Email;
-            }
-
-            if (Config.MegaAuthInfos == null)
-            {
-                lblMegaStatus.Text = Resources.UploadersConfigForm_MegaConfigureTab_Not_configured;
-                lblMegaStatus.ForeColor = NokColor;
-            }
-            else
-            {
-                cbMegaFolder.Items.Clear();
-
-                Mega mega = new Mega(Config.MegaAuthInfos?.GetMegaApiClientAuthInfos());
-
-                if (!tryLogin || mega.TryLogin())
-                {
-                    lblMegaStatus.Text = Resources.UploadersConfigForm_MegaConfigureTab_Configured;
-                    lblMegaStatus.ForeColor = OkColor;
-
-                    if (tryLogin)
-                    {
-                        Mega.DisplayNode[] nodes = mega.GetDisplayNodes().ToArray();
-                        cbMegaFolder.Items.AddRange(nodes);
-                        cbMegaFolder.SelectedItem = nodes.FirstOrDefault(n => n.Node != null && n.Node.Id == Config.MegaParentNodeId) ?? Mega.DisplayNode.EmptyNode;
-                    }
-                    else
-                    {
-                        cbMegaFolder.Items.Add("[" + Resources.UploadersConfigForm_MegaConfigureTab_Click_refresh_button + "]");
-                        cbMegaFolder.SelectedIndex = 0;
-                    }
-                }
-                else
-                {
-                    lblMegaStatus.Text = Resources.UploadersConfigForm_MegaConfigureTab_Invalid_authentication;
-                    lblMegaStatus.ForeColor = NokColor;
-                }
-            }
-
-            tpMega.Enabled = true;
-        }
-
-        private void btnMegaLogin_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(txtMegaEmail.Text) || string.IsNullOrEmpty(txtMegaPassword.Text))
-            {
-                return;
-            }
-
-            MegaApiClient.AuthInfos megaAuthInfos = new MegaApiClient().GenerateAuthInfos(txtMegaEmail.Text, txtMegaPassword.Text);
-            if (megaAuthInfos != null)
-            {
-                Config.MegaAuthInfos = new MegaAuthInfos(megaAuthInfos);
-            }
-            else
-            {
-                Config.MegaAuthInfos = null;
-            }
-
-            MegaConfigureTab(true);
-        }
-
-        private void cbMegaFolder_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (((ComboBox)sender).SelectedItem is Mega.DisplayNode selectedNode)
-            {
-                Config.MegaParentNodeId = selectedNode == Mega.DisplayNode.EmptyNode ? null : selectedNode.Node.Id;
-            }
-        }
-
-        private void btnMegaRegister_Click(object sender, EventArgs e)
-        {
-            URLHelpers.OpenURL("https://mega.co.nz/#register");
-        }
-
-        private void btnMegaRefreshFolders_Click(object sender, EventArgs e)
-        {
-            MegaConfigureTab(true);
-        }
-
-        #endregion Mega
 
         #region Amazon S3
 

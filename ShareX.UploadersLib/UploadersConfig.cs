@@ -248,13 +248,6 @@ namespace ShareX.UploadersLib
 
         #endregion Email
 
-        #region Mega
-
-        public MegaAuthInfos MegaAuthInfos { get; set; } = null;
-        public string MegaParentNodeId { get; set; } = null;
-
-        #endregion Mega
-
         #region Amazon S3
 
         public AmazonS3Settings AmazonS3Settings { get; set; } = new AmazonS3Settings()
