@@ -200,7 +200,14 @@ namespace ShareX
             }
             else
             {
-                url = "https://api.openai.com/v1/responses";
+                url = "https://api.openai.com";
+            }
+
+            string path = "/v1/responses";
+
+            if (!url.EndsWith(path))
+            {
+                url = URLHelpers.CombineURL(url, path);
             }
 
             HttpResponseMessage response = await httpClient.PostAsync(url, content);

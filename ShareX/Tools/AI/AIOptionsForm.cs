@@ -154,11 +154,9 @@ namespace ShareX
                         string openAIBaseURL = txtOpenAICustomURL.Text;
                         if (string.IsNullOrWhiteSpace(openAIBaseURL))
                         {
-                            openAIBaseURL = "https://api.openai.com/v1";
+                            openAIBaseURL = "https://api.openai.com";
                         }
-                        openAIBaseURL = openAIBaseURL.Trim().TrimEnd('/');
-
-                        string openAIURL = openAIBaseURL + "/models";
+                        string openAIURL = URLHelpers.CombineURL(openAIBaseURL, "v1/models");
                         req = new HttpRequestMessage(HttpMethod.Get, openAIURL);
                         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", openAIKey);
                         break;
