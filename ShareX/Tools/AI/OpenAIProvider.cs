@@ -196,7 +196,7 @@ namespace ShareX
 
             if (!string.IsNullOrEmpty(CustomURL))
             {
-                url = CustomURL;
+                url = CustomURL + "/responses";
             }
             else
             {

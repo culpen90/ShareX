@@ -29,6 +29,8 @@ using System.Drawing;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Windows.Forms;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace ShareX
 {
@@ -211,6 +213,39 @@ namespace ShareX
                     {
                         lblTestStatus.ForeColor = Color.LimeGreen;
                         lblTestStatus.Text = "Connection OK.";
+
+                        //Repopulate model list with available models for the provider
+                        var json = JsonSerializer.Deserialize<JsonElement>(text);
+                        var modelIds = new List<string>();
+                        switch (provider)
+                        {
+                            case AIProvider.OpenAI:
+                            case AIProvider.Custom:
+                                cbOpenAIModel.Items.Clear();
+                                foreach (var item in json.GetProperty("data").EnumerateArray())
+                                {
+                                    cbOpenAIModel.Items.Add(item.GetProperty("id").GetString());
+                                }
+                                break;
+                            case AIProvider.Gemini:
+                                cbGeminiModel.Items.Clear();
+                                foreach (var item in json.GetProperty("data").EnumerateArray())
+                                {
+                                    cbGeminiModel.Items.Add(item.GetProperty("id").GetString());
+                                }
+                                break;
+                            case AIProvider.OpenRouter:
+                                cbOpenRouterModel.Items.Clear();
+                                foreach (var item in json.GetProperty("data").EnumerateArray())
+                                {
+                                    cbOpenRouterModel.Items.Add(item.GetProperty("id").GetString());
+                                }
+                                break;
+                            default:
+                                lblTestStatus.ForeColor = Color.IndianRed;
+                                lblTestStatus.Text = "No models found.";
+                                return;
+                        }
                     }
                     else
                     {
