@@ -276,7 +276,7 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>3</value>
   </data>
   <data name="gbPrivateBinCredentials.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 232</value>
+    <value>16, 232</value>
   </data>
   <data name="gbPrivateBinCredentials.Size" type="System.Drawing.Size, System.Drawing">
     <value>190, 126</value>
@@ -3040,13 +3040,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>13</value>
   </data>
   <data name="tpFTP.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 64</value>
+    <value>4, 244</value>
   </data>
   <data name="tpFTP.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpFTP.Size" type="System.Drawing.Size, System.Drawing">
-    <value>803, 499</value>
+    <value>178, 0</value>
   </data>
   <data name="tpFTP.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -3202,13 +3202,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>4</value>
   </data>
   <data name="tpDropbox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpDropbox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpDropbox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpDropbox.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -3367,13 +3367,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>4</value>
   </data>
   <data name="tpOneDrive.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpOneDrive.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpOneDrive.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpOneDrive.TabIndex" type="System.Int32, mscorlib">
     <value>17</value>
@@ -3679,13 +3679,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>9</value>
   </data>
   <data name="tpGoogleDrive.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpGoogleDrive.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpGoogleDrive.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpGoogleDrive.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -3916,13 +3916,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>7</value>
   </data>
   <data name="tpPuush.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpPuush.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpPuush.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpPuush.TabIndex" type="System.Int32, mscorlib">
     <value>26</value>
@@ -4168,13 +4168,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>7</value>
   </data>
   <data name="tpBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpBox.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpBox.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -4999,13 +4999,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>20</value>
   </data>
   <data name="tpAmazonS3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpAmazonS3.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpAmazonS3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpAmazonS3.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -5437,13 +5437,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>9</value>
   </data>
   <data name="tpGoogleCloudStorage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpGoogleCloudStorage.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpGoogleCloudStorage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpGoogleCloudStorage.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
@@ -5926,13 +5926,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>16</value>
   </data>
   <data name="tpAzureStorage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpAzureStorage.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpAzureStorage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpAzureStorage.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
@@ -6163,13 +6163,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>11</value>
   </data>
   <data name="tpBackblazeB2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpBackblazeB2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpBackblazeB2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpBackblazeB2.TabIndex" type="System.Int32, mscorlib">
     <value>33</value>
@@ -6655,13 +6655,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>16</value>
   </data>
   <data name="tpOwnCloud.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpOwnCloud.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpOwnCloud.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpOwnCloud.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -6865,13 +6865,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>6</value>
   </data>
   <data name="tpMediaFire.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpMediaFire.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpMediaFire.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpMediaFire.TabIndex" type="System.Int32, mscorlib">
     <value>16</value>
@@ -7027,13 +7027,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>4</value>
   </data>
   <data name="tpPushbullet.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpPushbullet.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpPushbullet.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpPushbullet.TabIndex" type="System.Int32, mscorlib">
     <value>14</value>
@@ -7207,13 +7207,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>5</value>
   </data>
   <data name="tpSendSpace.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpSendSpace.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpSendSpace.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpSendSpace.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -7366,13 +7366,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>4</value>
   </data>
   <data name="tpHostr.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpHostr.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpHostr.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpHostr.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -7525,13 +7525,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>4</value>
   </data>
   <data name="tpLambda.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpLambda.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpLambda.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpLambda.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
@@ -7654,13 +7654,13 @@ For example, if your bucket is called "bucket.example.com" then URL will be "htt
     <value>3</value>
   </data>
   <data name="tpPomf.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpPomf.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpPomf.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpPomf.TabIndex" type="System.Int32, mscorlib">
     <value>22</value>
@@ -8615,13 +8615,13 @@ Using an encrypted library disables sharing.</value>
     <value>20</value>
   </data>
   <data name="tpSeafile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpSeafile.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpSeafile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpSeafile.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -8786,10 +8786,10 @@ Using an encrypted library disables sharing.</value>
     <value>4</value>
   </data>
   <data name="tpStreamable.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpStreamable.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpStreamable.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
@@ -8888,13 +8888,13 @@ Using an encrypted library disables sharing.</value>
     <value>2</value>
   </data>
   <data name="tpSul.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpSul.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpSul.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpSul.TabIndex" type="System.Int32, mscorlib">
     <value>25</value>
@@ -9122,13 +9122,13 @@ Using an encrypted library disables sharing.</value>
     <value>7</value>
   </data>
   <data name="tpLithiio.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpLithiio.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpLithiio.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpLithiio.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
@@ -9629,13 +9629,13 @@ Using an encrypted library disables sharing.</value>
     <value>1</value>
   </data>
   <data name="tpPlik.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpPlik.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpPlik.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpPlik.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>
@@ -9851,10 +9851,10 @@ Using an encrypted library disables sharing.</value>
     <value>6</value>
   </data>
   <data name="tpYouTube.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpYouTube.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpYouTube.TabIndex" type="System.Int32, mscorlib">
     <value>31</value>
@@ -10154,13 +10154,13 @@ Using an encrypted library disables sharing.</value>
     <value>10</value>
   </data>
   <data name="tpSharedFolder.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpSharedFolder.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpSharedFolder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpSharedFolder.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -10574,13 +10574,13 @@ Using an encrypted library disables sharing.</value>
     <value>14</value>
   </data>
   <data name="tpEmail.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 244</value>
+    <value>4, 64</value>
   </data>
   <data name="tpEmail.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpEmail.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 0</value>
+    <value>803, 499</value>
   </data>
   <data name="tpEmail.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -10607,7 +10607,7 @@ Using an encrypted library disables sharing.</value>
     <value>3, 3</value>
   </data>
   <data name="tcFileUploaders.Size" type="System.Drawing.Size, System.Drawing">
-    <value>811, 567</value>
+    <value>186, 66</value>
   </data>
   <data name="tcFileUploaders.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -10631,7 +10631,7 @@ Using an encrypted library disables sharing.</value>
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tpFileUploaders.Size" type="System.Drawing.Size, System.Drawing">
-    <value>817, 573</value>
+    <value>192, 72</value>
   </data>
   <data name="tpFileUploaders.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -11714,7 +11714,7 @@ Using an encrypted library disables sharing.</value>
     <value>NoControl</value>
   </data>
   <data name="lblOneTimeSecretAPIKey.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 55</value>
+    <value>13, 64</value>
   </data>
   <data name="lblOneTimeSecretAPIKey.Size" type="System.Drawing.Size, System.Drawing">
     <value>49, 15</value>
@@ -11768,7 +11768,7 @@ Using an encrypted library disables sharing.</value>
     <value>1</value>
   </data>
   <data name="txtOneTimeSecretAPIKey.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 71</value>
+    <value>16, 80</value>
   </data>
   <data name="txtOneTimeSecretAPIKey.Size" type="System.Drawing.Size, System.Drawing">
     <value>304, 23</value>
@@ -11900,7 +11900,7 @@ Using an encrypted library disables sharing.</value>
     <value>NoControl</value>
   </data>
   <data name="lblPrivateBinCustomUrl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>30, 16</value>
+    <value>13, 16</value>
   </data>
   <data name="lblPrivateBinCustomUrl.Size" type="System.Drawing.Size, System.Drawing">
     <value>76, 15</value>
@@ -11924,7 +11924,7 @@ Using an encrypted library disables sharing.</value>
     <value>0</value>
   </data>
   <data name="txtPrivateBinCustomUrl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>33, 32</value>
+    <value>16, 32</value>
   </data>
   <data name="txtPrivateBinCustomUrl.Size" type="System.Drawing.Size, System.Drawing">
     <value>152, 23</value>
@@ -11951,7 +11951,7 @@ Using an encrypted library disables sharing.</value>
     <value>NoControl</value>
   </data>
   <data name="lblPrivateBinExpiration.Location" type="System.Drawing.Point, System.Drawing">
-    <value>30, 64</value>
+    <value>13, 64</value>
   </data>
   <data name="lblPrivateBinExpiration.Size" type="System.Drawing.Size, System.Drawing">
     <value>62, 15</value>
@@ -11975,7 +11975,7 @@ Using an encrypted library disables sharing.</value>
     <value>2</value>
   </data>
   <data name="cbPrivateBinExpiration.Location" type="System.Drawing.Point, System.Drawing">
-    <value>33, 80</value>
+    <value>16, 80</value>
   </data>
   <data name="cbPrivateBinExpiration.Size" type="System.Drawing.Size, System.Drawing">
     <value>152, 23</value>
@@ -12002,7 +12002,7 @@ Using an encrypted library disables sharing.</value>
     <value>NoControl</value>
   </data>
   <data name="lblPrivateBinFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>30, 113</value>
+    <value>16, 113</value>
   </data>
   <data name="lblPrivateBinFormat.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 15</value>
@@ -12026,7 +12026,7 @@ Using an encrypted library disables sharing.</value>
     <value>4</value>
   </data>
   <data name="cbPrivateBinFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>33, 129</value>
+    <value>16, 129</value>
   </data>
   <data name="cbPrivateBinFormat.Size" type="System.Drawing.Size, System.Drawing">
     <value>152, 23</value>
@@ -12053,7 +12053,7 @@ Using an encrypted library disables sharing.</value>
     <value>NoControl</value>
   </data>
   <data name="lblPrivateBinPastePassword.Location" type="System.Drawing.Point, System.Drawing">
-    <value>30, 162</value>
+    <value>13, 162</value>
   </data>
   <data name="lblPrivateBinPastePassword.Size" type="System.Drawing.Size, System.Drawing">
     <value>91, 15</value>
@@ -12077,7 +12077,7 @@ Using an encrypted library disables sharing.</value>
     <value>6</value>
   </data>
   <data name="txtPrivateBinPastePassword.Location" type="System.Drawing.Point, System.Drawing">
-    <value>33, 178</value>
+    <value>16, 178</value>
   </data>
   <data name="txtPrivateBinPastePassword.Size" type="System.Drawing.Size, System.Drawing">
     <value>152, 23</value>
@@ -12104,7 +12104,7 @@ Using an encrypted library disables sharing.</value>
     <value>NoControl</value>
   </data>
   <data name="cbPrivateBinBurnAfterReading.Location" type="System.Drawing.Point, System.Drawing">
-    <value>33, 207</value>
+    <value>16, 207</value>
   </data>
   <data name="cbPrivateBinBurnAfterReading.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 19</value>
