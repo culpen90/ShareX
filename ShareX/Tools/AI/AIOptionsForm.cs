@@ -113,18 +113,11 @@ namespace ShareX
             gbOpenAI.Visible = false;
             gbGemini.Visible = false;
             gbOpenRouter.Visible = false;
-            lblOpenAICustomURL.Visible = false;
-            txtOpenAICustomURL.Visible = false;
 
             switch ((AIProvider)cbProvider.SelectedIndex)
             {
                 case AIProvider.OpenAI:
                     gbOpenAI.Visible = true;
-                    break;
-                case AIProvider.Custom:
-                    gbOpenAI.Visible = true;
-                    lblOpenAICustomURL.Visible = true;
-                    txtOpenAICustomURL.Visible = true;
                     break;
                 case AIProvider.Gemini:
                     gbGemini.Visible = true;
@@ -150,7 +143,6 @@ namespace ShareX
                 switch (provider)
                 {
                     case AIProvider.OpenAI:
-                    case AIProvider.Custom:
                         string openAIKey = txtOpenAIAPIKey.Text?.Trim();
                         if (string.IsNullOrEmpty(openAIKey))
                         {
@@ -240,10 +232,10 @@ namespace ShareX
         private void btnAPIKeyHelp_Click(object sender, EventArgs e)
         {
             string url = "";
+
             switch ((AIProvider)cbProvider.SelectedIndex)
             {
                 case AIProvider.OpenAI:
-                case AIProvider.Custom:
                     url = "https://platform.openai.com/api-keys";
                     break;
                 case AIProvider.Gemini:
@@ -253,6 +245,7 @@ namespace ShareX
                     url = "https://openrouter.ai/keys";
                     break;
             }
+
             URLHelpers.OpenURL(url);
         }
 
