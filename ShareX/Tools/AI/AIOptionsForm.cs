@@ -29,6 +29,8 @@ using System.Drawing;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Windows.Forms;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace ShareX
 {
