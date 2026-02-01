@@ -133,6 +133,7 @@ namespace ShareX
             try
             {
                 btnTestConnection.Enabled = false;
+                btnCustomOpenAIModels.Enabled = false;
                 lblTestStatus.ForeColor = Color.Gold;
                 lblTestStatus.Text = "Testing...";
 
@@ -224,6 +225,7 @@ namespace ShareX
             finally
             {
                 btnTestConnection.Enabled = true;
+                btnCustomOpenAIModels.Enabled = true;
             }
         }
 
@@ -259,6 +261,96 @@ namespace ShareX
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private async void btnCustomOpenAIModels_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                btnTestConnection.Enabled = false;
+                btnCustomOpenAIModels.Enabled = false;
+                lblTestStatus.ForeColor = Color.Gold;
+                lblTestStatus.Text = "Loading Models...";
+
+                HttpClient client = HttpClientFactory.Create();
+                HttpRequestMessage req = null;
+                AIProvider provider = (AIProvider)cbProvider.SelectedIndex;
+
+                string openAIKey = txtOpenAIAPIKey.Text?.Trim();
+                if (string.IsNullOrEmpty(openAIKey))
+                {
+                    openAIKey = "";
+                }
+
+                string openAIBaseURL = txtOpenAICustomURL.Text;
+                if (string.IsNullOrWhiteSpace(openAIBaseURL))
+                {
+                    lblTestStatus.ForeColor = Color.IndianRed;
+                    lblTestStatus.Text = "Missing custom API URL.";
+                    return;
+                }
+                string openAIURL = URLHelpers.CombineURL(openAIBaseURL, "v1/models");
+                req = new HttpRequestMessage(HttpMethod.Get, openAIURL);
+                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", openAIKey);
+
+                //lblTestStatus.ForeColor = Color.IndianRed;
+                //lblTestStatus.Text = "Select a provider first.";
+
+                using (req)
+                using (HttpResponseMessage resp = await client.SendAsync(req))
+                {
+                    bool ok = (int)resp.StatusCode >= 200 && (int)resp.StatusCode < 300;
+                    string text = await resp.Content.ReadAsStringAsync();
+
+                    if (ok)
+                    {
+                        var json = JsonSerializer.Deserialize<JsonElement>(text);
+                        var modelIds = new List<string>();
+                        int modelCount = 0;
+                        cbOpenAIModel.Items.Clear();
+                        foreach (var item in json.GetProperty("data").EnumerateArray())
+                        {
+                            cbOpenAIModel.Items.Add(item.GetProperty("id").GetString());
+                            modelCount++;
+                        }
+                        if (modelCount == 0)
+                        {
+                            lblTestStatus.ForeColor = Color.IndianRed;
+                            lblTestStatus.Text = "No models found.";
+                            return;
+                        }
+                        lblTestStatus.ForeColor = Color.LimeGreen;
+                        lblTestStatus.Text = modelCount + " models loaded.";
+                    }
+                    else
+                    {
+                        lblTestStatus.ForeColor = Color.IndianRed;
+                        string summary = resp.ReasonPhrase;
+                        if (string.IsNullOrWhiteSpace(summary)) summary = resp.StatusCode.ToString();
+                        if (!string.IsNullOrWhiteSpace(text))
+                        {
+                            if (text.Length > 200) text = text.Substring(0, 200) + "...";
+                            summary += ": " + text;
+                        }
+                        lblTestStatus.Text = summary;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lblTestStatus.ForeColor = Color.IndianRed;
+                lblTestStatus.Text = ex.Message;
+            }
+            finally
+            {
+                btnTestConnection.Enabled = true;
+                btnCustomOpenAIModels.Enabled = true;
+            }
+        }
+
+        private void lblTestStatus_MouseHover(object sender, EventArgs e)
+        {
+            tipStatus.SetToolTip(this, lblTestStatus.Text);
         }
     }
 }
