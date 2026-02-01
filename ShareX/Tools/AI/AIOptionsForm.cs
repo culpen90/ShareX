@@ -267,6 +267,17 @@ namespace ShareX
 
         private async void btnCustomOpenAIModels_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(txtOpenAICustomURL.Text))
+            {
+                cbOpenAIModel.Items.Clear();
+                foreach (string model in OpenAIProvider.DefaultModels )
+                {
+                    cbOpenAIModel.Items.Add(model);
+                }
+                lblTestStatus.ForeColor = Color.LimeGreen;
+                lblTestStatus.Text = "Default models loaded";
+                return;
+            }
             try
             {
                 btnTestConnection.Enabled = false;
