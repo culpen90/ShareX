@@ -94,7 +94,6 @@ namespace ShareX
         public string APIKey { get; set; }
         public string Model { get; set; }
         public string CustomURL { get; set; }
-        public static readonly string[] DefaultModels = { "gpt-5.2", "gpt-5.1", "gpt-5", "gpt-5-mini", "gpt-5-nano" };
 
         public OpenAIProvider(string apiKey, string model, string customURL = null)
         {

@@ -34,7 +34,7 @@ namespace ShareX
             cbProvider = new System.Windows.Forms.ComboBox();
             btnAPIKeyHelp = new System.Windows.Forms.Button();
             gbOpenAI = new System.Windows.Forms.GroupBox();
-            btnCustomOpenAIModels = new System.Windows.Forms.Button();
+            btnOpenAILoadModels = new System.Windows.Forms.Button();
             lblOpenAIAPIKey = new System.Windows.Forms.Label();
             txtOpenAIAPIKey = new System.Windows.Forms.TextBox();
             lblOpenAIModel = new System.Windows.Forms.Label();
@@ -91,7 +91,7 @@ namespace ShareX
             // 
             // gbOpenAI
             // 
-            gbOpenAI.Controls.Add(btnCustomOpenAIModels);
+            gbOpenAI.Controls.Add(btnOpenAILoadModels);
             gbOpenAI.Controls.Add(lblOpenAIAPIKey);
             gbOpenAI.Controls.Add(txtOpenAIAPIKey);
             gbOpenAI.Controls.Add(lblOpenAIModel);
@@ -106,12 +106,14 @@ namespace ShareX
             gbOpenAI.Name = "gbOpenAI";
             gbOpenAI.TabStop = false;
             // 
-            // btnCustomOpenAIModels
+            // btnOpenAILoadModels
             // 
-            resources.ApplyResources(btnCustomOpenAIModels, "btnCustomOpenAIModels");
-            btnCustomOpenAIModels.Name = "btnCustomOpenAIModels";
-            btnCustomOpenAIModels.UseVisualStyleBackColor = true;
-            btnCustomOpenAIModels.Click += btnCustomOpenAIModels_Click;
+            resources.ApplyResources(btnOpenAILoadModels, "btnOpenAILoadModels");
+            btnOpenAILoadModels.Image = Properties.Resources.arrow_circle_double_135;
+            btnOpenAILoadModels.Name = "btnOpenAILoadModels";
+            tipStatus.SetToolTip(btnOpenAILoadModels, resources.GetString("btnOpenAILoadModels.ToolTip"));
+            btnOpenAILoadModels.UseVisualStyleBackColor = true;
+            btnOpenAILoadModels.Click += btnOpenAILoadModels_Click;
             // 
             // lblOpenAIAPIKey
             // 
@@ -345,7 +347,7 @@ namespace ShareX
         private System.Windows.Forms.CheckBox cbAutoCopyResult;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnCustomOpenAIModels;
+        private System.Windows.Forms.Button btnOpenAILoadModels;
         private System.Windows.Forms.ToolTip tipStatus;
     }
 }
