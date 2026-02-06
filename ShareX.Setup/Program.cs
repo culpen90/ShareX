@@ -423,9 +423,8 @@ namespace ShareX.Setup
 
                 if (File.Exists(manifestPath))
                 {
-                    string processorArch = Platform == "arm64" ? "ARM64" : "x64";
                     string manifestContent = File.ReadAllText(manifestPath);
-                    manifestContent = manifestContent.Replace("{PLATFORM}", processorArch);
+                    manifestContent = manifestContent.Replace("{PLATFORM}", Platform);
                     File.WriteAllText(manifestPath, manifestContent);
                 }
             }
