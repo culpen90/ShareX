@@ -31,6 +31,10 @@ jobs:
         platform:
           - x64
           - ARM64
+        exclude:
+          # Steam configuration doesn't support ARM64
+          - configuration: Steam
+            platform: ARM64
 
     env:
       SOLUTION_FILE_PATH: ShareX.sln
