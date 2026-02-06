@@ -93,6 +93,12 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration "${{ matrix.configuration }}" -p:Platform="${{ matrix.platform }}" --self-contained true /m:1 "${{ env.SOLUTION_FILE_PATH }}"
 
+      - name: Build Setup (x64)
+        if: matrix.platform == 'ARM64'
+        run: |
+          # Build ShareX.Setup and its dependencies for x64 since it can't run as ARM64 on CI
+          dotnet build --configuration "${{ matrix.configuration }}" -p:Platform="x64" --self-contained true "ShareX.Setup\ShareX.Setup.csproj"
+
       - name: Setup
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
