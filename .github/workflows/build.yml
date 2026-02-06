@@ -205,7 +205,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Portable-ARM64
-          path: Output/ARM64
+          path: Output
 
       - name: Download artifact (Debug x64)
         if: github.ref == 'refs/heads/develop'
@@ -235,11 +235,25 @@ jobs:
           name: MicrosoftStore-x64
           path: Output
 
+      - name: Download artifact (MicrosoftStore ARM64)
+        if: github.ref == 'refs/heads/develop'
+        uses: actions/download-artifact@v4
+        with:
+          name: MicrosoftStore-ARM64
+          path: Output
+
       - name: Download artifact (MicrosoftStoreDebug x64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
           name: MicrosoftStoreDebug-x64
+          path: Output
+
+      - name: Download artifact (MicrosoftStoreDebug ARM64)
+        if: github.ref == 'refs/heads/develop'
+        uses: actions/download-artifact@v4
+        with:
+          name: MicrosoftStoreDebug-ARM64
           path: Output
 
       - name: Create release body file
