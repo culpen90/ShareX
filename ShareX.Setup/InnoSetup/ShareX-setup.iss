@@ -1,7 +1,17 @@
 #define MyAppName "ShareX"
+#ifndef Platform
+  #define Platform "x64"
+#endif
+#if Platform == "ARM64"
+  #define RuntimeId "win-arm64"
+  #define PlatformLower "arm64"
+#else
+  #define RuntimeId "win-x64"
+  #define PlatformLower "x64"
+#endif
 #define MyAppRootDirectory "..\.."
 #define MyAppOutputDirectory MyAppRootDirectory + "\Output"
-#define MyAppReleaseDirectory MyAppRootDirectory + "\" + MyAppName + "\bin\Release\win-x64"
+#define MyAppReleaseDirectory MyAppRootDirectory + "\" + MyAppName + "\bin\Release\" + RuntimeId
 #define MyAppFileName MyAppName + ".exe"
 #define MyAppFilePath MyAppReleaseDirectory + "\" + MyAppFileName
 #define MyAppVersion GetStringFileInfo(MyAppFilePath, "ProductVersion")
@@ -25,7 +35,7 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 LicenseFile={#MyAppRootDirectory}\LICENSE.txt
 MinVersion=10.0.14393
-OutputBaseFilename={#MyAppName}-{#MyAppVersion}-setup
+OutputBaseFilename={#MyAppName}-{#MyAppVersion}-{#PlatformLower}-setup
 OutputDir={#MyAppOutputDirectory}
 PrivilegesRequired=none
 SolidCompression=yes

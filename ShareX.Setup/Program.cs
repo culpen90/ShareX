@@ -300,7 +300,7 @@ namespace ShareX.Setup
                     {
                         FileName = InnoSetupCompilerPath,
                         WorkingDirectory = InnoSetupDir,
-                        Arguments = $"/Q \"{fileName}\"",
+                        Arguments = $"/Q /DPlatform={Platform} \"{fileName}\"",
                         UseShellExecute = false
                     };
 
