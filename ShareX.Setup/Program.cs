@@ -58,14 +58,17 @@ namespace ShareX.Setup
 
         private static SetupJobs Job { get; set; } = SetupJobs.Release;
         private static bool Silent { get; set; } = false;
+        private static string Platform { get; set; } = "x64";
 
         private static string ParentDir;
         private static string Configuration;
         private static string AppVersion;
+        private static string AppFilename;
         private static string WindowsKitsDir;
 
+        private static string RuntimeId => Platform == "ARM64" ? "win-arm64" : "win-x64";
         private static string SolutionPath => Path.Combine(ParentDir, "ShareX.sln");
-        private static string BinDir => Path.Combine(ParentDir, "ShareX", "bin", Configuration, "win-x64");
+        private static string BinDir => Path.Combine(ParentDir, "ShareX", "bin", Configuration, RuntimeId);
         private static string SteamLauncherDir => Path.Combine(ParentDir, "ShareX.Steam", "bin", Configuration);
         private static string ExecutablePath => Path.Combine(BinDir, "ShareX.exe");
 
@@ -80,13 +83,13 @@ namespace ShareX.Setup
         private static string InnoSetupDir => Path.Combine(SetupDir, "InnoSetup");
         private static string MicrosoftStorePackageFilesDir => Path.Combine(SetupDir, "MicrosoftStore");
 
-        private static string SetupPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-setup.exe");
-        private static string PortableZipPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-portable.zip");
-        private static string DebugZipPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-debug.zip");
+        private static string SetupPath => Path.Combine(OutputDir, $"{AppFilename}-setup.exe");
+        private static string PortableZipPath => Path.Combine(OutputDir, $"{AppFilename}-portable.zip");
+        private static string DebugZipPath => Path.Combine(OutputDir, $"{AppFilename}-debug.zip");
         private static string SteamUpdatesDir => Path.Combine(SteamOutputDir, "Updates");
-        private static string SteamZipPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-Steam.zip");
-        private static string MicrosoftStoreAppxPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}.appx");
-        private static string MicrosoftStoreDebugAppxPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-debug.appx");
+        private static string SteamZipPath => Path.Combine(OutputDir, $"{AppFilename}-Steam.zip");
+        private static string MicrosoftStoreAppxPath => Path.Combine(OutputDir, $"{AppFilename}.appx");
+        private static string MicrosoftStoreDebugAppxPath => Path.Combine(OutputDir, $"{AppFilename}-debug.appx");
         private static string FFmpegPath => Path.Combine(OutputDir, "ffmpeg.exe");
         private static string RecorderDevicesSetupPath => Path.Combine(OutputDir, $"recorder-devices-{RecorderDevicesVersion}-setup.exe");
         private static string ExifToolPath => Path.Combine(OutputDir, "exiftool.exe");
@@ -207,6 +210,14 @@ namespace ShareX.Setup
                     Environment.Exit(0);
                 }
             }
+
+            CLICommand platformCommand = cli.GetCommand("Platform");
+
+            if (platformCommand != null)
+            {
+                Platform = platformCommand.Parameter;
+                Console.WriteLine("Platform: " + Platform);
+            }
         }
 
         private static void UpdatePaths()
@@ -254,8 +265,10 @@ namespace ShareX.Setup
 
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(ExecutablePath);
             AppVersion = versionInfo.ProductVersion;
+            AppFilename = $"ShareX-{AppVersion}-{Platform.ToLowerInvariant()}";
 
             Console.WriteLine("Application version: " + AppVersion);
+            Console.WriteLine("Application filename: " + AppFilename);
 
             if (Job.HasFlag(SetupJobs.CompileAppx))
             {

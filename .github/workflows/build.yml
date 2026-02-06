@@ -102,7 +102,7 @@ jobs:
       - name: Setup
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
-          & "ShareX.Setup\bin\${{ matrix.configuration }}\win-x64\ShareX.Setup.exe" -silent -job "${{ matrix.configuration }}"
+          & "ShareX.Setup\bin\${{ matrix.configuration }}\win-x64\ShareX.Setup.exe" -silent -job "${{ matrix.configuration }}" -platform "${{ matrix.platform }}"
 
       - name: Upload artifact (Setup-x64)
         if: matrix.configuration == 'Release' && matrix.platform == 'x64'
