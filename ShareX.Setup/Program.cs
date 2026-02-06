@@ -418,6 +418,16 @@ namespace ShareX.Setup
             else if (job == SetupJobs.CreateMicrosoftStoreFolder || job == SetupJobs.CreateMicrosoftStoreDebugFolder)
             {
                 FileHelpers.CopyAll(MicrosoftStorePackageFilesDir, destination);
+
+                string manifestPath = Path.Combine(destination, "AppxManifest.xml");
+
+                if (File.Exists(manifestPath))
+                {
+                    string processorArch = Platform == "arm64" ? "ARM64" : "x64";
+                    string manifestContent = File.ReadAllText(manifestPath);
+                    manifestContent = manifestContent.Replace("{PLATFORM}", processorArch);
+                    File.WriteAllText(manifestPath, manifestContent);
+                }
             }
 
             Console.WriteLine("Folder created: " + destination);
