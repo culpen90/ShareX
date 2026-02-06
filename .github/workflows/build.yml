@@ -93,82 +93,82 @@ jobs:
         run: |
           & "ShareX.Setup\bin\${{ matrix.configuration }}\${{ env.RUNTIME_ID }}\ShareX.Setup.exe" -silent -job "${{ matrix.configuration }}"
 
-      - name: Upload artifact (Setup x64)
+      - name: Upload artifact (Setup-x64)
         if: matrix.configuration == 'Release' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
           name: Setup-x64
-          path: Output\ShareX-${{ env.APP_VERSION }}-setup.exe
+          path: Output\${{ env.APP_FILENAME }}-setup.exe
 
-      - name: Upload artifact (Setup ARM64)
+      - name: Upload artifact (Setup-ARM64)
         if: matrix.configuration == 'Release' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
           name: Setup-ARM64
-          path: Output\ShareX-${{ env.APP_VERSION }}-setup.exe
+          path: Output\${{ env.APP_FILENAME }}-setup.exe
 
-      - name: Upload artifact (Portable x64)
+      - name: Upload artifact (Portable-x64)
         if: matrix.configuration == 'Release' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
           name: Portable-x64
-          path: Output\ShareX-${{ env.APP_VERSION }}-portable.zip
+          path: Output\${{ env.APP_FILENAME }}-portable.zip
 
-      - name: Upload artifact (Portable ARM64)
+      - name: Upload artifact (Portable-ARM64)
         if: matrix.configuration == 'Release' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
           name: Portable-ARM64
-          path: Output\ShareX-${{ env.APP_VERSION }}-portable.zip
+          path: Output\${{ env.APP_FILENAME }}-portable.zip
 
-      - name: Upload artifact (Debug x64)
+      - name: Upload artifact (Debug-x64)
         if: matrix.configuration == 'Debug' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
           name: Debug-x64
-          path: Output\ShareX-${{ env.APP_VERSION }}-debug.zip
+          path: Output\${{ env.APP_FILENAME }}-debug.zip
 
-      - name: Upload artifact (Debug ARM64)
+      - name: Upload artifact (Debug-ARM64)
         if: matrix.configuration == 'Debug' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
           name: Debug-ARM64
-          path: Output\ShareX-${{ env.APP_VERSION }}-debug.zip
+          path: Output\${{ env.APP_FILENAME }}-debug.zip
 
       - name: Upload artifact (Steam)
         if: matrix.configuration == 'Steam'
         uses: actions/upload-artifact@v4
         with:
           name: Steam
-          path: Output\ShareX-${{ env.APP_VERSION }}-Steam.zip
+          path: Output\${{ env.APP_FILENAME }}-Steam.zip
 
-      - name: Upload artifact (MicrosoftStore x64)
+      - name: Upload artifact (MicrosoftStore-x64)
         if: matrix.configuration == 'MicrosoftStore' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStore-x64
-          path: Output\ShareX-${{ env.APP_VERSION }}.appx
+          path: Output\${{ env.APP_FILENAME }}.appx
 
-      - name: Upload artifact (MicrosoftStore ARM64)
+      - name: Upload artifact (MicrosoftStore-ARM64)
         if: matrix.configuration == 'MicrosoftStore' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStore-ARM64
-          path: Output\ShareX-${{ env.APP_VERSION }}.appx
+          path: Output\${{ env.APP_FILENAME }}.appx
 
-      - name: Upload artifact (MicrosoftStoreDebug x64)
+      - name: Upload artifact (MicrosoftStoreDebug-x64)
         if: matrix.configuration == 'MicrosoftStoreDebug' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStoreDebug-x64
-          path: Output\ShareX-${{ env.APP_VERSION }}-debug.appx
+          path: Output\${{ env.APP_FILENAME }}-debug.appx
 
-      - name: Upload artifact (MicrosoftStoreDebug ARM64)
+      - name: Upload artifact (MicrosoftStoreDebug-ARM64)
         if: matrix.configuration == 'MicrosoftStoreDebug' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStoreDebug-ARM64
-          path: Output\ShareX-${{ env.APP_VERSION }}-debug.appx
+          path: Output\${{ env.APP_FILENAME }}-debug.appx
 
   release:
     name: Release
@@ -185,39 +185,39 @@ jobs:
       APP_VERSION: ${{ needs.build.outputs.APP_VERSION }}
 
     steps:
-      - name: Download artifact (Setup x64)
+      - name: Download artifact (Setup-x64)
         uses: actions/download-artifact@v4
         with:
           name: Setup-x64
           path: Output
 
-      - name: Download artifact (Setup ARM64)
+      - name: Download artifact (Setup-ARM64)
         uses: actions/download-artifact@v4
         with:
           name: Setup-ARM64
           path: Output
 
-      - name: Download artifact (Portable x64)
+      - name: Download artifact (Portable-x64)
         uses: actions/download-artifact@v4
         with:
           name: Portable-x64
           path: Output
 
-      - name: Download artifact (Portable ARM64)
+      - name: Download artifact (Portable-ARM64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
           name: Portable-ARM64
           path: Output
 
-      - name: Download artifact (Debug x64)
+      - name: Download artifact (Debug-x64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
           name: Debug-x64
           path: Output
 
-      - name: Download artifact (Debug ARM64)
+      - name: Download artifact (Debug-ARM64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
@@ -231,28 +231,28 @@ jobs:
           name: Steam
           path: Output
 
-      - name: Download artifact (MicrosoftStore x64)
+      - name: Download artifact (MicrosoftStore-x64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
           name: MicrosoftStore-x64
           path: Output
 
-      - name: Download artifact (MicrosoftStore ARM64)
+      - name: Download artifact (MicrosoftStore-ARM64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
           name: MicrosoftStore-ARM64
           path: Output
 
-      - name: Download artifact (MicrosoftStoreDebug x64)
+      - name: Download artifact (MicrosoftStoreDebug-x64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
           name: MicrosoftStoreDebug-x64
           path: Output
 
-      - name: Download artifact (MicrosoftStoreDebug ARM64)
+      - name: Download artifact (MicrosoftStoreDebug-ARM64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
         with:
