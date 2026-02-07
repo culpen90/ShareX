@@ -247,13 +247,6 @@ jobs:
           name: Steam-x64
           path: Output
 
-      - name: Download artifact (Steam-ARM64)
-        if: github.ref == 'refs/heads/develop'
-        uses: actions/download-artifact@v4
-        with:
-          name: Steam-ARM64
-          path: Output
-
       - name: Download artifact (MicrosoftStore-x64)
         if: github.ref == 'refs/heads/develop'
         uses: actions/download-artifact@v4
@@ -317,7 +310,6 @@ jobs:
             Output/ShareX-${{ env.APP_VERSION }}-debug-x64.zip
             Output/ShareX-${{ env.APP_VERSION }}-debug-arm64.zip
             Output/ShareX-${{ env.APP_VERSION }}-Steam-x64.zip
-            Output/ShareX-${{ env.APP_VERSION }}-Steam-arm64.zip
             Output/ShareX-${{ env.APP_VERSION }}-x64.appx
             Output/ShareX-${{ env.APP_VERSION }}-arm64.appx
             Output/ShareX-${{ env.APP_VERSION }}-debug-x64.appx
