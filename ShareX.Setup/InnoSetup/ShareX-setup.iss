@@ -4,8 +4,10 @@
 #endif
 #if Platform == "arm64"
   #define RuntimeId "win-arm64"
+  #define MyArchitecturesAllowed "arm64"
 #else
   #define RuntimeId "win-x64"
+  #define MyArchitecturesAllowed "x64compatible"
 #endif
 #define MyAppRootDirectory "..\.."
 #define MyAppOutputDirectory MyAppRootDirectory + "\Output"
@@ -26,8 +28,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppVersion={#MyAppVersion}
-ArchitecturesAllowed=x64os arm64 x86
-ArchitecturesInstallIn64BitMode=x64os
+ArchitecturesAllowed={#MyArchitecturesAllowed}
+ArchitecturesInstallIn64BitMode={#MyArchitecturesAllowed}
 DefaultDirName={commonpf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
