@@ -163,28 +163,28 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStore-x64
-          path: Output\ShareX-${{ env.APP_VERSION }}-${{ env.PLATFORM }}.appx
+          path: Output\ShareX-${{ env.APP_VERSION }}-MicrosoftStore-${{ env.PLATFORM }}.appx
 
       - name: Upload artifact (MicrosoftStore-ARM64)
         if: matrix.configuration == 'MicrosoftStore' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStore-ARM64
-          path: Output\ShareX-${{ env.APP_VERSION }}-${{ env.PLATFORM }}.appx
+          path: Output\ShareX-${{ env.APP_VERSION }}-MicrosoftStore-${{ env.PLATFORM }}.appx
 
       - name: Upload artifact (MicrosoftStoreDebug-x64)
         if: matrix.configuration == 'MicrosoftStoreDebug' && matrix.platform == 'x64'
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStoreDebug-x64
-          path: Output\ShareX-${{ env.APP_VERSION }}-debug-${{ env.PLATFORM }}.appx
+          path: Output\ShareX-${{ env.APP_VERSION }}-MicrosoftStore-debug-${{ env.PLATFORM }}.appx
 
       - name: Upload artifact (MicrosoftStoreDebug-ARM64)
         if: matrix.configuration == 'MicrosoftStoreDebug' && matrix.platform == 'ARM64'
         uses: actions/upload-artifact@v4
         with:
           name: MicrosoftStoreDebug-ARM64
-          path: Output\ShareX-${{ env.APP_VERSION }}-debug-${{ env.PLATFORM }}.appx
+          path: Output\ShareX-${{ env.APP_VERSION }}-MicrosoftStore-debug-${{ env.PLATFORM }}.appx
 
   release:
     name: Release
@@ -318,10 +318,10 @@ jobs:
             Output/ShareX-${{ env.APP_VERSION }}-debug-arm64.zip
             Output/ShareX-${{ env.APP_VERSION }}-Steam-x64.zip
             # Output/ShareX-${{ env.APP_VERSION }}-Steam-arm64.zip
-            Output/ShareX-${{ env.APP_VERSION }}-x64.appx
-            Output/ShareX-${{ env.APP_VERSION }}-arm64.appx
-            Output/ShareX-${{ env.APP_VERSION }}-debug-x64.appx
-            Output/ShareX-${{ env.APP_VERSION }}-debug-arm64.appx
+            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-x64.appx
+            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-arm64.appx
+            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-debug-x64.appx
+            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-debug-arm64.appx
 
       - name: Release (Stable)
         env:
