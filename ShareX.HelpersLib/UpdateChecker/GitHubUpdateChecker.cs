@@ -148,57 +148,79 @@ namespace ShareX.HelpersLib
             {
                 LatestVersion = new Version(release.tag_name.Substring(1));
 
-                if (release.assets != null && release.assets.Length > 0)
-                {
-                    string endsWith;
+                GitHubAsset asset = null;
 
-                    if (isPortable)
+                if (isPortable)
+                {
+                    if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
                     {
-                        if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
-                        {
-                            endsWith = "portable-arm64.zip";
-                        }
-                        else
-                        {
-                            endsWith = "portable-x64.zip";
-                        }
+                        asset = FindAsset(release, "portable-arm64.zip");
+                    }
+
+                    if (asset == null)
+                    {
+                        asset = FindAsset(release, "portable-x64.zip");
+                    }
+
+                    if (asset == null)
+                    {
+                        asset = FindAsset(release, "portable.zip");
+                    }
+                }
+                else
+                {
+                    if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
+                    {
+                        asset = FindAsset(release, "setup-arm64.exe");
+                    }
+
+                    if (asset == null)
+                    {
+                        asset = FindAsset(release, "setup-x64.exe");
+                    }
+
+                    if (asset == null)
+                    {
+                        asset = FindAsset(release, "setup.exe");
+                    }
+                }
+
+                if (asset != null)
+                {
+                    FileName = asset.name;
+
+                    if (isBrowserDownloadURL)
+                    {
+                        DownloadURL = asset.browser_download_url;
                     }
                     else
                     {
-                        if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
-                        {
-                            endsWith = "setup-arm64.exe";
-                        }
-                        else
-                        {
-                            endsWith = "setup-x64.exe";
-                        }
+                        DownloadURL = asset.url;
                     }
 
-                    foreach (GitHubAsset asset in release.assets)
-                    {
-                        if (asset != null && !string.IsNullOrEmpty(asset.name) && asset.name.EndsWith(endsWith, StringComparison.OrdinalIgnoreCase))
-                        {
-                            FileName = asset.name;
+                    IsPreRelease = release.prerelease;
 
-                            if (isBrowserDownloadURL)
-                            {
-                                DownloadURL = asset.browser_download_url;
-                            }
-                            else
-                            {
-                                DownloadURL = asset.url;
-                            }
-
-                            IsPreRelease = release.prerelease;
-
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
 
             return false;
+        }
+
+        private GitHubAsset FindAsset(GitHubRelease release, string endsWith)
+        {
+            if (release.assets != null)
+            {
+                foreach (GitHubAsset asset in release.assets)
+                {
+                    if (asset != null && !string.IsNullOrEmpty(asset.name) && asset.name.EndsWith(endsWith, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return asset;
+                    }
+                }
+            }
+
+            return null;
         }
 
         protected class GitHubRelease
