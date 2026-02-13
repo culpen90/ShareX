@@ -1282,24 +1282,91 @@ namespace ShareX
 
         public static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
+            Bitmap resultBmp = null;
+
             Program.MainForm.InvokeSafe(() =>
             {
-                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                EditorEvents events = new EditorEvents
                 {
-                    AvaloniaIntegration.ShowEditor(filePath);
-                }
-                else if (bmp != null)
+                    CopyImageRequested = async (bytes) =>
+                    {
+                        using (MemoryStream ms = new MemoryStream(bytes))
+                        using (Bitmap img = new Bitmap(ms))
+                        {
+                            MainFormCopyImage(img);
+                        }
+                        await Task.CompletedTask;
+                    },
+                    SaveImageRequested = async (bytes) =>
+                    {
+                        using (MemoryStream ms = new MemoryStream(bytes))
+                        using (Bitmap img = new Bitmap(ms))
+                        {
+                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                            string newFilePath = Path.Combine(screenshotsFolder, fileName);
+
+                            ImageHelpers.SaveImage(img, newFilePath);
+                        }
+                        await Task.CompletedTask;
+                    },
+                    SaveAsRequested = async (bytes) =>
+                    {
+                        using (MemoryStream ms = new MemoryStream(bytes))
+                        using (Bitmap img = new Bitmap(ms))
+                        {
+                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                            string newFilePath = Path.Combine(screenshotsFolder, fileName);
+
+                            newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
+                        }
+                        await Task.CompletedTask;
+                    },
+                    PinImageRequested = (bytes) =>
+                    {
+                        using (MemoryStream ms = new MemoryStream(bytes))
+                        using (Bitmap img = new Bitmap(ms))
+                        {
+                            Bitmap clone = new Bitmap(img);
+                            PinToScreen(clone, taskSettings);
+                        }
+                    },
+                    UploadImageRequested = async (bytes) =>
+                    {
+                        using (MemoryStream ms = new MemoryStream(bytes))
+                        using (Bitmap img = new Bitmap(ms))
+                        {
+                            Bitmap clone = new Bitmap(img);
+                            MainFormUploadImage(clone, taskSettings);
+                        }
+                        await Task.CompletedTask;
+                    }
+                };
+
+                byte[] resultBytes = null;
+
+                if (bmp != null)
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
                         bmp.Save(ms, ImageFormat.Png);
                         ms.Position = 0;
-                        AvaloniaIntegration.ShowEditor(ms);
+                        resultBytes = AvaloniaIntegration.ShowEditorDialog(ms, events);
+                    }
+                }
+
+                if (resultBytes != null)
+                {
+                    using (MemoryStream ms = new MemoryStream(resultBytes))
+                    using (Bitmap temp = new Bitmap(ms))
+                    {
+                        resultBmp = new Bitmap(temp);
                     }
                 }
             });
 
-            return null;
+            return resultBmp;
         }
 
         public static void MainFormCopyImage(Bitmap bmp)
