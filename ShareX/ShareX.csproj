@@ -20,6 +20,7 @@
     <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.14" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ImageEditor\src\ShareX.ImageEditor\ShareX.ImageEditor.csproj" />
     <ProjectReference Include="..\ShareX.HistoryLib\ShareX.HistoryLib.csproj" />
     <ProjectReference Include="..\ShareX.ImageEffectsLib\ShareX.ImageEffectsLib.csproj" />
     <ProjectReference Include="..\ShareX.IndexerLib\ShareX.IndexerLib.csproj" />

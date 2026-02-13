@@ -25,6 +25,7 @@
 
 using ShareX.HelpersLib;
 using ShareX.HistoryLib;
+using ShareX.ImageEditor;
 using ShareX.ImageEffectsLib;
 using ShareX.IndexerLib;
 using ShareX.MediaLib;
@@ -1198,6 +1199,16 @@ namespace ShareX
 
         public static Bitmap AnnotateImage(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
+            if (Program.Settings.UseModernImageEditor)
+            {
+                return AnnotateImageModern(bmp, filePath, taskSettings, taskMode);
+            }
+
+            return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
+        }
+
+        public static Bitmap AnnotateImageLegacy(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
+        {
             if (bmp != null)
             {
                 bmp = ImageHelpers.NonIndexedBitmap(bmp);
@@ -1265,6 +1276,28 @@ namespace ShareX
                     }
                 }
             }
+
+            return null;
+        }
+
+        public static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
+        {
+            Program.MainForm.InvokeSafe(() =>
+            {
+                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                {
+                    AvaloniaIntegration.ShowEditor(filePath);
+                }
+                else if (bmp != null)
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        bmp.Save(ms, ImageFormat.Png);
+                        ms.Position = 0;
+                        AvaloniaIntegration.ShowEditor(ms);
+                    }
+                }
+            });
 
             return null;
         }
