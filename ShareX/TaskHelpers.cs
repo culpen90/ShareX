@@ -1282,7 +1282,7 @@ namespace ShareX
 
         public static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
-            Bitmap resultBmp = null;
+            Bitmap bmpResult = null;
 
             Program.MainForm.InvokeSafe(() =>
             {
@@ -1344,29 +1344,27 @@ namespace ShareX
                     }
                 };
 
-                byte[] resultBytes = null;
-
                 if (bmp != null)
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
                         bmp.Save(ms, ImageFormat.Png);
                         ms.Position = 0;
-                        resultBytes = AvaloniaIntegration.ShowEditorDialog(ms, events, ShareXResources.IsDarkTheme);
-                    }
-                }
+                        byte[] resultBytes = AvaloniaIntegration.ShowEditorDialog(ms, events, ShareXResources.IsDarkTheme);
 
-                if (resultBytes != null)
-                {
-                    using (MemoryStream ms = new MemoryStream(resultBytes))
-                    using (Bitmap temp = new Bitmap(ms))
-                    {
-                        resultBmp = new Bitmap(temp);
+                        if (resultBytes != null)
+                        {
+                            using (MemoryStream msResult = new MemoryStream(resultBytes))
+                            using (Bitmap temp = new Bitmap(msResult))
+                            {
+                                bmpResult = new Bitmap(temp);
+                            }
+                        }
                     }
                 }
             });
 
-            return resultBmp;
+            return bmpResult;
         }
 
         public static void MainFormCopyImage(Bitmap bmp)
