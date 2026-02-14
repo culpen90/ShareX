@@ -1310,7 +1310,7 @@ namespace ShareX
                         }
                         await Task.CompletedTask;
                     },
-                    SaveAsRequested = async (bytes) =>
+                    SaveImageAsRequested = async (bytes) =>
                     {
                         using (MemoryStream ms = new MemoryStream(bytes))
                         using (Bitmap img = new Bitmap(ms))
