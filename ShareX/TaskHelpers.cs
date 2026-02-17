@@ -1288,16 +1288,15 @@ namespace ShareX
             {
                 EditorEvents events = new EditorEvents
                 {
-                    CopyImageRequested = async (bytes) =>
+                    CopyImageRequested = (bytes) =>
                     {
                         using (MemoryStream ms = new MemoryStream(bytes))
                         using (Bitmap img = new Bitmap(ms))
                         {
                             MainFormCopyImage(img);
                         }
-                        await Task.CompletedTask;
                     },
-                    SaveImageRequested = async (bytes) =>
+                    SaveImageRequested = (bytes) =>
                     {
                         using (MemoryStream ms = new MemoryStream(bytes))
                         using (Bitmap img = new Bitmap(ms))
@@ -1308,9 +1307,8 @@ namespace ShareX
 
                             ImageHelpers.SaveImage(img, newFilePath);
                         }
-                        await Task.CompletedTask;
                     },
-                    SaveImageAsRequested = async (bytes) =>
+                    SaveImageAsRequested = (bytes) =>
                     {
                         using (MemoryStream ms = new MemoryStream(bytes))
                         using (Bitmap img = new Bitmap(ms))
@@ -1321,26 +1319,16 @@ namespace ShareX
 
                             newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
                         }
-                        await Task.CompletedTask;
                     },
                     PinImageRequested = (bytes) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            Bitmap clone = new Bitmap(img);
-                            PinToScreen(clone, taskSettings);
-                        }
+                        Bitmap bmp = ImageHelpers.ByteArrayToBitmap(bytes);
+                        PinToScreen(bmp, taskSettings);
                     },
-                    UploadImageRequested = async (bytes) =>
+                    UploadImageRequested = (bytes) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            Bitmap clone = new Bitmap(img);
-                            MainFormUploadImage(clone, taskSettings);
-                        }
-                        await Task.CompletedTask;
+                        Bitmap bmp = ImageHelpers.ByteArrayToBitmap(bytes);
+                        MainFormUploadImage(bmp, taskSettings);
                     }
                 };
 
@@ -1350,15 +1338,12 @@ namespace ShareX
                     {
                         bmp.Save(ms, ImageFormat.Png);
                         ms.Position = 0;
-                        byte[] resultBytes = AvaloniaIntegration.ShowEditorDialog(ms, events, taskMode);
 
-                        if (resultBytes != null)
+                        byte[] bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, events, taskMode);
+
+                        if (bytesResult != null)
                         {
-                            using (MemoryStream msResult = new MemoryStream(resultBytes))
-                            using (Bitmap temp = new Bitmap(msResult))
-                            {
-                                bmpResult = new Bitmap(temp);
-                            }
+                            bmpResult = ImageHelpers.ByteArrayToBitmap(bytesResult);
                         }
                     }
                 }
