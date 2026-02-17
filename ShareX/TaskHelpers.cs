@@ -1350,7 +1350,7 @@ namespace ShareX
                     {
                         bmp.Save(ms, ImageFormat.Png);
                         ms.Position = 0;
-                        byte[] resultBytes = AvaloniaIntegration.ShowEditorDialog(ms, events, ShareXResources.IsDarkTheme);
+                        byte[] resultBytes = AvaloniaIntegration.ShowEditorDialog(ms, events, taskMode);
 
                         if (resultBytes != null)
                         {
