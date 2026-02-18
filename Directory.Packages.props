@@ -2,6 +2,7 @@
   <PropertyGroup>
     <!-- Disable CPM for the ImageEditor submodule which manages its own package versions -->
     <ManagePackageVersionsCentrally Condition="!$(MSBuildProjectDirectory.Contains('ImageEditor'))">true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="FluentFTP" Version="53.0.2" />
