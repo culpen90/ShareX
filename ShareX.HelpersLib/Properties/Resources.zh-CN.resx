@@ -1050,7 +1050,7 @@
     <value>正上</value>
   </data>
   <data name="ContentAlignment_TopRight" xml:space="preserve">
-    <value>右下</value>
+    <value>右上</value>
   </data>
   <data name="ContentAlignment_MiddleLeft" xml:space="preserve">
     <value>左中</value>
