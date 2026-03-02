@@ -1596,6 +1596,24 @@ namespace ShareX.ScreenCaptureLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Smoothing:.
+        /// </summary>
+        internal static string ShapeManager_FreehandSmoothing {
+            get {
+                return ResourceManager.GetString("ShapeManager_FreehandSmoothing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Curve interpolation.
+        /// </summary>
+        internal static string ShapeManager_FreehandCurveInterpolation {
+            get {
+                return ResourceManager.GetString("ShapeManager_FreehandCurveInterpolation", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Border style:.
         /// </summary>
         internal static string ShapeManager_BorderStyle {
