@@ -456,6 +456,12 @@
   <data name="ShapeManager_ArrowHeadDirection" xml:space="preserve">
     <value>箭头头部方向：</value>
   </data>
+  <data name="ShapeManager_FreehandSmoothing" xml:space="preserve">
+    <value>平滑度:</value>
+  </data>
+  <data name="ShapeManager_FreehandCurveInterpolation" xml:space="preserve">
+    <value>曲线插值</value>
+  </data>
   <data name="ShapeManager_BorderStyle" xml:space="preserve">
     <value>边框样式：</value>
   </data>
