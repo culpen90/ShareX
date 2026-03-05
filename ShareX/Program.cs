@@ -25,6 +25,7 @@
 
 using ShareX.HelpersLib;
 using ShareX.HistoryLib;
+using ShareX.ImageEditor;
 using ShareX.Properties;
 using ShareX.UploadersLib;
 using System;
@@ -355,6 +356,13 @@ namespace ShareX
             UpdateManager = new ShareXUpdateManager();
             LanguageHelper.ChangeLanguage(Settings.Language);
             CleanupManager.CleanupAsync();
+
+            if (Settings.UseModernImageEditor)
+            {
+                DebugHelper.WriteLine("Avalonia init started.");
+                AvaloniaIntegration.Initialize();
+                DebugHelper.WriteLine("Avalonia init finished.");
+            }
 
             DebugHelper.WriteLine("MainForm init started.");
             MainForm = new MainForm();
