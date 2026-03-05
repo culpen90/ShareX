@@ -1296,29 +1296,39 @@ namespace ShareX
                             MainFormCopyImage(img);
                         }
                     },
-                    SaveImageRequested = (bytes) =>
+                    SaveImageRequested = (bytes, newFilePath) =>
                     {
                         using (MemoryStream ms = new MemoryStream(bytes))
                         using (Bitmap img = new Bitmap(ms))
                         {
-                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                            string newFilePath = Path.Combine(screenshotsFolder, fileName);
+                            if (string.IsNullOrEmpty(newFilePath))
+                            {
+                                string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                                string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                                newFilePath = Path.Combine(screenshotsFolder, fileName);
+                            }
 
                             ImageHelpers.SaveImage(img, newFilePath);
                         }
+
+                        return newFilePath;
                     },
-                    SaveImageAsRequested = (bytes) =>
+                    SaveImageAsRequested = (bytes, newFilePath) =>
                     {
                         using (MemoryStream ms = new MemoryStream(bytes))
                         using (Bitmap img = new Bitmap(ms))
                         {
-                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                            string newFilePath = Path.Combine(screenshotsFolder, fileName);
+                            if (string.IsNullOrEmpty(newFilePath))
+                            {
+                                string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                                string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                                newFilePath = Path.Combine(screenshotsFolder, fileName);
+                            }
 
                             newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
                         }
+
+                        return newFilePath;
                     },
                     PinImageRequested = (bytes) =>
                     {
@@ -1340,7 +1350,7 @@ namespace ShareX
                         ms.Position = 0;
 
                         byte[] bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                            events, taskMode);
+                            events, taskMode, filePath);
 
                         if (bytesResult != null)
                         {
