@@ -1339,7 +1339,8 @@ namespace ShareX
                         bmp.Save(ms, ImageFormat.Png);
                         ms.Position = 0;
 
-                        byte[] bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, events, taskMode);
+                        byte[] bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                            events, taskMode);
 
                         if (bytesResult != null)
                         {
