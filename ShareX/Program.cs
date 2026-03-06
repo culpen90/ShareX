@@ -25,7 +25,7 @@
 
 using ShareX.HelpersLib;
 using ShareX.HistoryLib;
-using ShareX.ImageEditor;
+using ShareX.ImageEditor.Hosting;
 using ShareX.Properties;
 using ShareX.UploadersLib;
 using System;
