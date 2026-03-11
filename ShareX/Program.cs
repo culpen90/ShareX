@@ -357,7 +357,7 @@ namespace ShareX
             LanguageHelper.ChangeLanguage(Settings.Language);
             CleanupManager.CleanupAsync();
 
-            if (Settings.UseModernImageEditor)
+            if (!DefaultTaskSettings.ToolsSettings.UseLegacyImageEditor)
             {
                 DebugHelper.WriteLine("Avalonia init started.");
                 AvaloniaIntegration.Initialize();

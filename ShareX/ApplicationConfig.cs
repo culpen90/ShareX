@@ -168,9 +168,6 @@ namespace ShareX
 
         #region Advanced
 
-        [Category("Application"), DefaultValue(false), Description("Enables the new modern image editor (Experimental).")]
-        public bool UseModernImageEditor { get; set; }
-
         [Category("Application"), DefaultValue(false), Description("Calculate and show file sizes in binary units (KiB, MiB etc.)")]
         public bool BinaryUnits { get; set; }
 

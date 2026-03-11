@@ -298,6 +298,7 @@
             btnWatchFolderAdd = new System.Windows.Forms.Button();
             tpTools = new System.Windows.Forms.TabPage();
             pTools = new System.Windows.Forms.Panel();
+            cbUseLegacyImageEditor = new System.Windows.Forms.CheckBox();
             txtToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.TextBox();
             lblToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.Label();
             txtToolsScreenColorPickerInfoText = new System.Windows.Forms.TextBox();
@@ -2361,6 +2362,7 @@
             // 
             // pTools
             // 
+            pTools.Controls.Add(cbUseLegacyImageEditor);
             pTools.Controls.Add(txtToolsScreenColorPickerFormatCtrl);
             pTools.Controls.Add(lblToolsScreenColorPickerFormatCtrl);
             pTools.Controls.Add(txtToolsScreenColorPickerInfoText);
@@ -2369,6 +2371,13 @@
             pTools.Controls.Add(lblToolsScreenColorPickerFormat);
             resources.ApplyResources(pTools, "pTools");
             pTools.Name = "pTools";
+            // 
+            // cbUseLegacyImageEditor
+            // 
+            resources.ApplyResources(cbUseLegacyImageEditor, "cbUseLegacyImageEditor");
+            cbUseLegacyImageEditor.Name = "cbUseLegacyImageEditor";
+            cbUseLegacyImageEditor.UseVisualStyleBackColor = true;
+            cbUseLegacyImageEditor.CheckedChanged += cbUseLegacyImageEditor_CheckedChanged;
             // 
             // txtToolsScreenColorPickerFormatCtrl
             // 
@@ -2831,5 +2840,6 @@
         private System.Windows.Forms.TextBox txtCustomActionCompletedSoundPath;
         private System.Windows.Forms.CheckBox cbUseCustomActionCompletedSound;
         private System.Windows.Forms.CheckBox cbCaptureAutoHideDesktopIcons;
+        private System.Windows.Forms.CheckBox cbUseLegacyImageEditor;
     }
 }

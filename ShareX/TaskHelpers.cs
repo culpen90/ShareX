@@ -1199,12 +1199,12 @@ namespace ShareX
 
         public static Bitmap AnnotateImage(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
-            if (Program.Settings.UseModernImageEditor)
+            if (taskSettings.ToolsSettings.UseLegacyImageEditor)
             {
-                return AnnotateImageModern(bmp, filePath, taskSettings, taskMode);
+                return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
             }
 
-            return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
+            return AnnotateImageModern(bmp, filePath, taskSettings, taskMode);
         }
 
         public static Bitmap AnnotateImageLegacy(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
