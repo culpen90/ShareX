@@ -480,7 +480,7 @@ namespace ShareX
 
             #region Tools
 
-            cbUseLegacyImageEditor.Checked = TaskSettings.ToolsSettings.UseLegacyImageEditor;
+            #region General
 
             CodeMenu.Create<CodeMenuEntryPixelInfo>(txtToolsScreenColorPickerFormat);
             txtToolsScreenColorPickerFormat.Text = TaskSettings.ToolsSettings.ScreenColorPickerFormat;
@@ -490,6 +490,15 @@ namespace ShareX
 
             CodeMenu.Create<CodeMenuEntryPixelInfo>(txtToolsScreenColorPickerInfoText);
             txtToolsScreenColorPickerInfoText.Text = TaskSettings.ToolsSettings.ScreenColorPickerInfoText;
+
+            #endregion
+
+            #region Image editor
+
+            cbImageEditorUseLegacyImageEditor.Checked = TaskSettings.ToolsSettings.UseLegacyImageEditor;
+            cbImageEditorExitConfirmation.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation;
+
+            #endregion
 
             #endregion Tools
 
@@ -536,7 +545,7 @@ namespace ShareX
                 pCapture.Enabled = tpRegionCapture.Enabled = tpScreenRecorder.Enabled = tpOCR.Enabled = !TaskSettings.UseDefaultCaptureSettings;
                 pActions.Enabled = !TaskSettings.UseDefaultActions;
                 tpFileNaming.Enabled = tpUploadClipboard.Enabled = tpUploaderFilters.Enabled = !TaskSettings.UseDefaultUploadSettings;
-                pTools.Enabled = !TaskSettings.UseDefaultToolsSettings;
+                pTools.Enabled = tpToolsImageEditor.Enabled = !TaskSettings.UseDefaultToolsSettings;
                 pgTaskSettings.Enabled = !TaskSettings.UseDefaultAdvancedSettings;
             }
         }
@@ -1816,15 +1825,12 @@ namespace ShareX
 
         #region Tools
 
+        #region General
+
         private void cbUseDefaultToolsSettings_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.UseDefaultToolsSettings = !cbOverrideToolsSettings.Checked;
             UpdateDefaultSettingVisibility();
-        }
-
-        private void cbUseLegacyImageEditor_CheckedChanged(object sender, EventArgs e)
-        {
-            TaskSettings.ToolsSettings.UseLegacyImageEditor = cbUseLegacyImageEditor.Checked;
         }
 
         private void txtToolsScreenColorPickerFormat_TextChanged(object sender, EventArgs e)
@@ -1841,6 +1847,22 @@ namespace ShareX
         {
             TaskSettings.ToolsSettings.ScreenColorPickerInfoText = txtToolsScreenColorPickerInfoText.Text;
         }
+
+        #endregion
+
+        #region Image editor
+
+        private void cbImageEditorUseLegacyImageEditor_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.UseLegacyImageEditor = cbImageEditorUseLegacyImageEditor.Checked;
+        }
+
+        private void cbImageEditorExitConfirmation_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation = cbImageEditorExitConfirmation.Checked;
+        }
+
+        #endregion
 
         #endregion Tools
 

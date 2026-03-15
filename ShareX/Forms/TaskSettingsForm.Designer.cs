@@ -297,8 +297,9 @@
             btnWatchFolderRemove = new System.Windows.Forms.Button();
             btnWatchFolderAdd = new System.Windows.Forms.Button();
             tpTools = new System.Windows.Forms.TabPage();
+            tcTools = new System.Windows.Forms.TabControl();
+            tpToolsGeneral = new System.Windows.Forms.TabPage();
             pTools = new System.Windows.Forms.Panel();
-            cbUseLegacyImageEditor = new System.Windows.Forms.CheckBox();
             txtToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.TextBox();
             lblToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.Label();
             txtToolsScreenColorPickerInfoText = new System.Windows.Forms.TextBox();
@@ -306,6 +307,9 @@
             txtToolsScreenColorPickerFormat = new System.Windows.Forms.TextBox();
             lblToolsScreenColorPickerFormat = new System.Windows.Forms.Label();
             cbOverrideToolsSettings = new System.Windows.Forms.CheckBox();
+            tpToolsImageEditor = new System.Windows.Forms.TabPage();
+            cbImageEditorExitConfirmation = new System.Windows.Forms.CheckBox();
+            cbImageEditorUseLegacyImageEditor = new System.Windows.Forms.CheckBox();
             tpAdvanced = new System.Windows.Forms.TabPage();
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
@@ -370,7 +374,10 @@
             pActions.SuspendLayout();
             tpWatchFolders.SuspendLayout();
             tpTools.SuspendLayout();
+            tcTools.SuspendLayout();
+            tpToolsGeneral.SuspendLayout();
             pTools.SuspendLayout();
+            tpToolsImageEditor.SuspendLayout();
             tpAdvanced.SuspendLayout();
             SuspendLayout();
             // 
@@ -2355,14 +2362,28 @@
             // tpTools
             // 
             tpTools.BackColor = System.Drawing.SystemColors.Window;
-            tpTools.Controls.Add(pTools);
-            tpTools.Controls.Add(cbOverrideToolsSettings);
+            tpTools.Controls.Add(tcTools);
             resources.ApplyResources(tpTools, "tpTools");
             tpTools.Name = "tpTools";
             // 
+            // tcTools
+            // 
+            tcTools.Controls.Add(tpToolsGeneral);
+            tcTools.Controls.Add(tpToolsImageEditor);
+            resources.ApplyResources(tcTools, "tcTools");
+            tcTools.Name = "tcTools";
+            tcTools.SelectedIndex = 0;
+            // 
+            // tpToolsGeneral
+            // 
+            tpToolsGeneral.Controls.Add(pTools);
+            tpToolsGeneral.Controls.Add(cbOverrideToolsSettings);
+            resources.ApplyResources(tpToolsGeneral, "tpToolsGeneral");
+            tpToolsGeneral.Name = "tpToolsGeneral";
+            tpToolsGeneral.UseVisualStyleBackColor = true;
+            // 
             // pTools
             // 
-            pTools.Controls.Add(cbUseLegacyImageEditor);
             pTools.Controls.Add(txtToolsScreenColorPickerFormatCtrl);
             pTools.Controls.Add(lblToolsScreenColorPickerFormatCtrl);
             pTools.Controls.Add(txtToolsScreenColorPickerInfoText);
@@ -2371,13 +2392,6 @@
             pTools.Controls.Add(lblToolsScreenColorPickerFormat);
             resources.ApplyResources(pTools, "pTools");
             pTools.Name = "pTools";
-            // 
-            // cbUseLegacyImageEditor
-            // 
-            resources.ApplyResources(cbUseLegacyImageEditor, "cbUseLegacyImageEditor");
-            cbUseLegacyImageEditor.Name = "cbUseLegacyImageEditor";
-            cbUseLegacyImageEditor.UseVisualStyleBackColor = true;
-            cbUseLegacyImageEditor.CheckedChanged += cbUseLegacyImageEditor_CheckedChanged;
             // 
             // txtToolsScreenColorPickerFormatCtrl
             // 
@@ -2420,6 +2434,28 @@
             cbOverrideToolsSettings.Name = "cbOverrideToolsSettings";
             cbOverrideToolsSettings.UseVisualStyleBackColor = true;
             cbOverrideToolsSettings.CheckedChanged += cbUseDefaultToolsSettings_CheckedChanged;
+            // 
+            // tpToolsImageEditor
+            // 
+            tpToolsImageEditor.Controls.Add(cbImageEditorExitConfirmation);
+            tpToolsImageEditor.Controls.Add(cbImageEditorUseLegacyImageEditor);
+            resources.ApplyResources(tpToolsImageEditor, "tpToolsImageEditor");
+            tpToolsImageEditor.Name = "tpToolsImageEditor";
+            tpToolsImageEditor.UseVisualStyleBackColor = true;
+            // 
+            // cbImageEditorExitConfirmation
+            // 
+            resources.ApplyResources(cbImageEditorExitConfirmation, "cbImageEditorExitConfirmation");
+            cbImageEditorExitConfirmation.Name = "cbImageEditorExitConfirmation";
+            cbImageEditorExitConfirmation.UseVisualStyleBackColor = true;
+            cbImageEditorExitConfirmation.CheckedChanged += cbImageEditorExitConfirmation_CheckedChanged;
+            // 
+            // cbImageEditorUseLegacyImageEditor
+            // 
+            resources.ApplyResources(cbImageEditorUseLegacyImageEditor, "cbImageEditorUseLegacyImageEditor");
+            cbImageEditorUseLegacyImageEditor.Name = "cbImageEditorUseLegacyImageEditor";
+            cbImageEditorUseLegacyImageEditor.UseVisualStyleBackColor = true;
+            cbImageEditorUseLegacyImageEditor.CheckedChanged += cbImageEditorUseLegacyImageEditor_CheckedChanged;
             // 
             // tpAdvanced
             // 
@@ -2550,9 +2586,13 @@
             tpWatchFolders.ResumeLayout(false);
             tpWatchFolders.PerformLayout();
             tpTools.ResumeLayout(false);
-            tpTools.PerformLayout();
+            tcTools.ResumeLayout(false);
+            tpToolsGeneral.ResumeLayout(false);
+            tpToolsGeneral.PerformLayout();
             pTools.ResumeLayout(false);
             pTools.PerformLayout();
+            tpToolsImageEditor.ResumeLayout(false);
+            tpToolsImageEditor.PerformLayout();
             tpAdvanced.ResumeLayout(false);
             tpAdvanced.PerformLayout();
             ResumeLayout(false);
@@ -2840,6 +2880,10 @@
         private System.Windows.Forms.TextBox txtCustomActionCompletedSoundPath;
         private System.Windows.Forms.CheckBox cbUseCustomActionCompletedSound;
         private System.Windows.Forms.CheckBox cbCaptureAutoHideDesktopIcons;
-        private System.Windows.Forms.CheckBox cbUseLegacyImageEditor;
+        private System.Windows.Forms.CheckBox cbImageEditorUseLegacyImageEditor;
+        private System.Windows.Forms.TabControl tcTools;
+        private System.Windows.Forms.TabPage tpToolsGeneral;
+        private System.Windows.Forms.TabPage tpToolsImageEditor;
+        private System.Windows.Forms.CheckBox cbImageEditorExitConfirmation;
     }
 }
