@@ -314,6 +314,7 @@
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
             tttvMain = new ShareX.HelpersLib.TabToTreeView();
+            cbImageEditorZoomToFitOnOpen = new System.Windows.Forms.CheckBox();
             tcTaskSettings.SuspendLayout();
             tpTask.SuspendLayout();
             cmsDestinations.SuspendLayout();
@@ -2437,6 +2438,7 @@
             // 
             // tpToolsImageEditor
             // 
+            tpToolsImageEditor.Controls.Add(cbImageEditorZoomToFitOnOpen);
             tpToolsImageEditor.Controls.Add(cbImageEditorExitConfirmation);
             tpToolsImageEditor.Controls.Add(cbImageEditorUseLegacyImageEditor);
             resources.ApplyResources(tpToolsImageEditor, "tpToolsImageEditor");
@@ -2493,6 +2495,13 @@
             tttvMain.TreeViewFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 162);
             tttvMain.TreeViewSize = 190;
             tttvMain.TabChanged += tttvMain_TabChanged;
+            // 
+            // cbImageEditorZoomToFitOnOpen
+            // 
+            resources.ApplyResources(cbImageEditorZoomToFitOnOpen, "cbImageEditorZoomToFitOnOpen");
+            cbImageEditorZoomToFitOnOpen.Name = "cbImageEditorZoomToFitOnOpen";
+            cbImageEditorZoomToFitOnOpen.UseVisualStyleBackColor = true;
+            cbImageEditorZoomToFitOnOpen.CheckedChanged += cbImageEditorZoomToFitOnOpen_CheckedChanged;
             // 
             // TaskSettingsForm
             // 
@@ -2885,5 +2894,6 @@
         private System.Windows.Forms.TabPage tpToolsGeneral;
         private System.Windows.Forms.TabPage tpToolsImageEditor;
         private System.Windows.Forms.CheckBox cbImageEditorExitConfirmation;
+        private System.Windows.Forms.CheckBox cbImageEditorZoomToFitOnOpen;
     }
 }
