@@ -308,13 +308,14 @@
             lblToolsScreenColorPickerFormat = new System.Windows.Forms.Label();
             cbOverrideToolsSettings = new System.Windows.Forms.CheckBox();
             tpToolsImageEditor = new System.Windows.Forms.TabPage();
+            cbImageEditorZoomToFitOnOpen = new System.Windows.Forms.CheckBox();
             cbImageEditorExitConfirmation = new System.Windows.Forms.CheckBox();
             cbImageEditorUseLegacyImageEditor = new System.Windows.Forms.CheckBox();
             tpAdvanced = new System.Windows.Forms.TabPage();
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
             tttvMain = new ShareX.HelpersLib.TabToTreeView();
-            cbImageEditorZoomToFitOnOpen = new System.Windows.Forms.CheckBox();
+            cbImageEditorAutoCloseEditorOnTask = new System.Windows.Forms.CheckBox();
             tcTaskSettings.SuspendLayout();
             tpTask.SuspendLayout();
             cmsDestinations.SuspendLayout();
@@ -2438,12 +2439,20 @@
             // 
             // tpToolsImageEditor
             // 
+            tpToolsImageEditor.Controls.Add(cbImageEditorAutoCloseEditorOnTask);
             tpToolsImageEditor.Controls.Add(cbImageEditorZoomToFitOnOpen);
             tpToolsImageEditor.Controls.Add(cbImageEditorExitConfirmation);
             tpToolsImageEditor.Controls.Add(cbImageEditorUseLegacyImageEditor);
             resources.ApplyResources(tpToolsImageEditor, "tpToolsImageEditor");
             tpToolsImageEditor.Name = "tpToolsImageEditor";
             tpToolsImageEditor.UseVisualStyleBackColor = true;
+            // 
+            // cbImageEditorZoomToFitOnOpen
+            // 
+            resources.ApplyResources(cbImageEditorZoomToFitOnOpen, "cbImageEditorZoomToFitOnOpen");
+            cbImageEditorZoomToFitOnOpen.Name = "cbImageEditorZoomToFitOnOpen";
+            cbImageEditorZoomToFitOnOpen.UseVisualStyleBackColor = true;
+            cbImageEditorZoomToFitOnOpen.CheckedChanged += cbImageEditorZoomToFitOnOpen_CheckedChanged;
             // 
             // cbImageEditorExitConfirmation
             // 
@@ -2496,12 +2505,12 @@
             tttvMain.TreeViewSize = 190;
             tttvMain.TabChanged += tttvMain_TabChanged;
             // 
-            // cbImageEditorZoomToFitOnOpen
+            // cbImageEditorAutoCloseEditorOnTask
             // 
-            resources.ApplyResources(cbImageEditorZoomToFitOnOpen, "cbImageEditorZoomToFitOnOpen");
-            cbImageEditorZoomToFitOnOpen.Name = "cbImageEditorZoomToFitOnOpen";
-            cbImageEditorZoomToFitOnOpen.UseVisualStyleBackColor = true;
-            cbImageEditorZoomToFitOnOpen.CheckedChanged += cbImageEditorZoomToFitOnOpen_CheckedChanged;
+            resources.ApplyResources(cbImageEditorAutoCloseEditorOnTask, "cbImageEditorAutoCloseEditorOnTask");
+            cbImageEditorAutoCloseEditorOnTask.Name = "cbImageEditorAutoCloseEditorOnTask";
+            cbImageEditorAutoCloseEditorOnTask.UseVisualStyleBackColor = true;
+            cbImageEditorAutoCloseEditorOnTask.CheckedChanged += cbImageEditorAutoCloseEditorOnTask_CheckedChanged;
             // 
             // TaskSettingsForm
             // 
@@ -2895,5 +2904,6 @@
         private System.Windows.Forms.TabPage tpToolsImageEditor;
         private System.Windows.Forms.CheckBox cbImageEditorExitConfirmation;
         private System.Windows.Forms.CheckBox cbImageEditorZoomToFitOnOpen;
+        private System.Windows.Forms.CheckBox cbImageEditorAutoCloseEditorOnTask;
     }
 }

@@ -7258,6 +7258,33 @@
   <data name="&gt;&gt;tpToolsGeneral.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="cbImageEditorAutoCloseEditorOnTask.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbImageEditorAutoCloseEditorOnTask.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 80</value>
+  </data>
+  <data name="cbImageEditorAutoCloseEditorOnTask.Size" type="System.Drawing.Size, System.Drawing">
+    <value>143, 17</value>
+  </data>
+  <data name="cbImageEditorAutoCloseEditorOnTask.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="cbImageEditorAutoCloseEditorOnTask.Text" xml:space="preserve">
+    <value>Auto close editor on task</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.Name" xml:space="preserve">
+    <value>cbImageEditorAutoCloseEditorOnTask</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.Parent" xml:space="preserve">
+    <value>tpToolsImageEditor</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="cbImageEditorZoomToFitOnOpen.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -7283,7 +7310,7 @@
     <value>tpToolsImageEditor</value>
   </data>
   <data name="&gt;&gt;cbImageEditorZoomToFitOnOpen.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="cbImageEditorExitConfirmation.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -7310,7 +7337,7 @@
     <value>tpToolsImageEditor</value>
   </data>
   <data name="&gt;&gt;cbImageEditorExitConfirmation.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="cbImageEditorUseLegacyImageEditor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -7337,7 +7364,7 @@
     <value>tpToolsImageEditor</value>
   </data>
   <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="tpToolsImageEditor.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>

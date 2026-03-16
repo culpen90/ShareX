@@ -498,6 +498,7 @@ namespace ShareX
             cbImageEditorUseLegacyImageEditor.Checked = TaskSettings.ToolsSettings.UseLegacyImageEditor;
             cbImageEditorExitConfirmation.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation;
             cbImageEditorZoomToFitOnOpen.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ZoomToFitOnOpen;
+            cbImageEditorAutoCloseEditorOnTask.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCloseEditorOnTask;
 
             #endregion
 
@@ -1866,6 +1867,11 @@ namespace ShareX
         private void cbImageEditorZoomToFitOnOpen_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.ToolsSettings.ImageEditorOptions.ZoomToFitOnOpen = cbImageEditorZoomToFitOnOpen.Checked;
+        }
+
+        private void cbImageEditorAutoCloseEditorOnTask_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.AutoCloseEditorOnTask = cbImageEditorAutoCloseEditorOnTask.Checked;
         }
 
         #endregion
