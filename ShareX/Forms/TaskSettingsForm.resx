@@ -7258,6 +7258,33 @@
   <data name="&gt;&gt;tpToolsGeneral.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="cbImageEditorAutoCopyImageToClipboard.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbImageEditorAutoCopyImageToClipboard.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 104</value>
+  </data>
+  <data name="cbImageEditorAutoCopyImageToClipboard.Size" type="System.Drawing.Size, System.Drawing">
+    <value>163, 17</value>
+  </data>
+  <data name="cbImageEditorAutoCopyImageToClipboard.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="cbImageEditorAutoCopyImageToClipboard.Text" xml:space="preserve">
+    <value>Auto copy image to clipboard</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.Name" xml:space="preserve">
+    <value>cbImageEditorAutoCopyImageToClipboard</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.Parent" xml:space="preserve">
+    <value>tpToolsImageEditor</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="cbImageEditorAutoCloseEditorOnTask.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -7283,7 +7310,7 @@
     <value>tpToolsImageEditor</value>
   </data>
   <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="cbImageEditorZoomToFitOnOpen.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -7310,7 +7337,7 @@
     <value>tpToolsImageEditor</value>
   </data>
   <data name="&gt;&gt;cbImageEditorZoomToFitOnOpen.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="cbImageEditorExitConfirmation.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -7337,7 +7364,7 @@
     <value>tpToolsImageEditor</value>
   </data>
   <data name="&gt;&gt;cbImageEditorExitConfirmation.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="cbImageEditorUseLegacyImageEditor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -7364,7 +7391,7 @@
     <value>tpToolsImageEditor</value>
   </data>
   <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="tpToolsImageEditor.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
