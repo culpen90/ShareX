@@ -475,7 +475,7 @@
     <value>打开时缩放到适当大小</value>
   </data>
   <data name="RegionCaptureForm_SaveChangesBeforeClosingEditor" xml:space="preserve">
-    <value>有尚且保存的修改。
+    <value>有尚未保存的修改。
 
 是否要在关闭图片编辑器前保存修改？</value>
   </data>
