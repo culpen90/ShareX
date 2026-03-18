@@ -530,7 +530,7 @@
     <value>不调整大小</value>
   </data>
   <data name="HotkeyType_StopUploads" xml:space="preserve">
-    <value>停止所有正在上传</value>
+    <value>停止所有正在进行的上传</value>
   </data>
   <data name="AfterUploadTasks_OpenURL" xml:space="preserve">
     <value>打开网址</value>
@@ -1178,9 +1178,6 @@
   <data name="HotkeyType_ActiveWindowBorderless" xml:space="preserve">
     <value>将目前窗口无边框化</value>
   </data>
-  <data name="DownloaderForm_FileDownloader_ProgressChanged_FileSize" xml:space="preserve">
-    <value>档案大小</value>
-  </data>
   <data name="AfterCaptureTasks_BeautifyImage" xml:space="preserve">
     <value>美化图片</value>
   </data>
@@ -1272,7 +1269,7 @@
     <value>分析图片</value>
   </data>
   <data name="HotkeyType_StripMetadata" xml:space="preserve">
-    <value>分割元数据</value>
+    <value>移除元数据</value>
   </data>
   <data name="HotkeyType_AnalyzeImage" xml:space="preserve">
     <value>分析图片</value>

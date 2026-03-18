@@ -121,6 +121,6 @@
     <value>状态：</value>
   </data>
   <data name="btnConnect.Text" xml:space="preserve">
-    <value>链接...</value>
+    <value>连接...</value>
   </data>
 </root>

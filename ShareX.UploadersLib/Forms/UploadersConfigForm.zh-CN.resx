@@ -1300,7 +1300,7 @@
     <value>自定义URL：</value>
   </data>
   <data name="tpPrivateBin.Text" xml:space="preserve">
-    <value>私有垃圾桶</value>
+    <value>PrivateBin</value>
   </data>
   <data name="cbPrivateBinBurnAfterReading.Text" xml:space="preserve">
     <value>阅后即焚</value>
@@ -1318,7 +1318,7 @@
     <value>某些服务器可能需要额外的授权</value>
   </data>
   <data name="gbPrivateBinCredentials.Text" xml:space="preserve">
-    <value>证书</value>
+    <value>凭据</value>
   </data>
   <data name="lblPrivateBinUsername.Text" xml:space="preserve">
     <value>用户名：</value>

@@ -712,6 +712,6 @@
     <value>显示中心十字线</value>
   </data>
   <data name="btnCustomActionCompletedSoundPath.Text" xml:space="preserve">
-    <value>。。。</value>
+    <value>...</value>
   </data>
 </root>
