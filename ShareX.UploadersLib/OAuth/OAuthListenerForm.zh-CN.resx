@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,15 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblError.Text" xml:space="preserve">
-    <value>错误</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>正在等待浏览器完成验证...</value>
   </data>
-  <data name="lblCombineVertical.Text" xml:space="preserve">
-    <value>合并图片
-（垂直）</value>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>取消</value>
   </data>
-  <data name="lblCombineHorizontal.Text" xml:space="preserve">
-    <value>合并图片
-（水平）</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - 验证</value>
   </data>
 </root>
