@@ -1,3 +1,28 @@
+﻿#region License Information (GPL v3)
+
+/*
+    ShareX - A program that allows you to take screenshots and share any file type
+    Copyright (c) 2007-2026 ShareX Team
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+    Optionally you can also view the license at <http://www.gnu.org/licenses/>.
+*/
+
+#endregion License Information (GPL v3)
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -134,7 +159,7 @@ public class EditorSelectionController
         // If we are in Select tool OR user holds Ctrl (multi-select not impl yet) or just clicking existing shapes to move
         // BUT: If active tool is a drawing tool, we usually prioritize drawing NEW shapes unless we click ON a selected shape?
         // ShareX logic: If in Select Tool, selecting works. If in other tools, usually drawing takes precedence unless we click a handle.
-        // But logic in EditorView.axaml.cs had: 
+        // But logic in EditorView.axaml.cs had:
         // if (vm.ActiveTool == EditorTool.Select ...) -> Try select.
 
         if (_view.DataContext is MainViewModel vm)
@@ -1049,8 +1074,6 @@ public class EditorSelectionController
             _balloonTextEditor = null;
         }
 
-
-
         var annotation = balloonControl.Annotation;
         var balloonLeft = Canvas.GetLeft(balloonControl);
         var balloonTop = Canvas.GetTop(balloonControl);
@@ -1158,7 +1181,7 @@ public class EditorSelectionController
         textBox.Resources["TextControlBorderBrushPointerOver"] = Avalonia.Media.Brushes.Transparent;
 
         // Ensure TextBox is above the balloon geometry (ZIndex 100 might not be enough if Overlay is higher)
-        // But AnnotationCanvas is usually below Overlay. 
+        // But AnnotationCanvas is usually below Overlay.
         // We can't put TextBox in Overlay because Overlay is for handles.
         textBox.SetValue(Panel.ZIndexProperty, 9999);
 
@@ -1229,7 +1252,6 @@ public class EditorSelectionController
     {
         _shapeEndpoints[path] = (start, end);
     }
-
 
     private void UpdateHoverState(Canvas canvas, Point currentPoint)
     {

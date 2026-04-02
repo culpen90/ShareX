@@ -1,7 +1,7 @@
-#region License Information (GPL v3)
+﻿#region License Information (GPL v3)
 
 /*
-    ShareX.ImageEditor - The UI-agnostic Editor library for ShareX
+    ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
@@ -109,8 +109,6 @@ public abstract class Annotation
     /// </summary>
     public float RotationAngle { get; set; }
 
-
-
     /// <summary>
     /// Hit test to determine if a point intersects this annotation
     /// </summary>
@@ -157,6 +155,5 @@ public abstract class Annotation
     {
         return SKColor.Parse(hexColor);
     }
-
 
 }

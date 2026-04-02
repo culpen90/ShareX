@@ -1,7 +1,7 @@
-#region License Information (GPL v3)
+﻿#region License Information (GPL v3)
 
 /*
-    ShareX.ImageEditor - The UI-agnostic Editor library for ShareX
+    ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
@@ -119,8 +119,8 @@ internal class EditorHistory : IDisposable
         }
 
         // Rebuild stack (Reverse of keptItems to restore Oldest -> Newest)
-        // keptItems[0] is Newest (Top). 
-        // Stack.Push pushes to Top. 
+        // keptItems[0] is Newest (Top).
+        // Stack.Push pushes to Top.
         // So we push Oldest first.
         for (int i = keptItems.Count - 1; i >= 0; i--)
         {

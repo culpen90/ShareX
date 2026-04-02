@@ -1,7 +1,7 @@
-#region License Information (GPL v3)
+﻿#region License Information (GPL v3)
 
 /*
-    ShareX.ImageEditor - The UI-agnostic Editor library for ShareX
+    ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
@@ -214,7 +214,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 _isSyncingFromCore = true;
 
                 // SIP-FIX: Calculate dimensions string BEFORE setting PreviewImage.
-                // Setting PreviewImage can trigger bindings that might dispose the source 
+                // Setting PreviewImage can trigger bindings that might dispose the source
                 // via EditorCore updates if not handled carefully.
                 string dimStr = $"{preview.Width} x {preview.Height}";
 

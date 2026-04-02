@@ -1,7 +1,7 @@
 ﻿#region License Information (GPL v3)
 
 /*
-    ShareX.ImageEditor - The UI-agnostic Editor library for ShareX
+    ShareX - A program that allows you to take screenshots and share any file type
     Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
@@ -663,7 +663,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             // Prevent property change callbacks from overwriting options while loading
             // We can just set fields directly or use a flag, but setting properties is safer for UI updates.
             // However, setting properties triggers On...Changed which calls UpdateOptionsFrom...
-            // Use a flag to suppress updates back to Options? 
+            // Use a flag to suppress updates back to Options?
             // Actually, if we set the property to the value from Options, updating Options back to the same value is harmless.
 
             switch (tool)
