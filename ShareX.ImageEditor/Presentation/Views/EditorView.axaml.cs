@@ -26,6 +26,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform;
@@ -341,6 +342,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 // File menu event handlers (Image Editor Mode)
                 vm.NewImageRequested += OnNewImageRequested;
                 vm.OpenImageRequested += OnOpenImageRequested;
+                vm.CopyRequested += OnCopyImageRequested;
                 vm.SaveRequested += OnSaveRequested;
                 vm.SaveAsRequested += OnSaveAsRequested;
 
@@ -1576,9 +1578,35 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
+        private async void OnCopyImageRequested()
+        {
+            if (DataContext is not MainViewModel vm) return;
+            if (vm.HasHostCopyHandler) return;
+
+            TopLevel? topLevel = TopLevel.GetTopLevel(this);
+            IClipboard? clipboard = topLevel?.Clipboard;
+            if (clipboard == null) return;
+
+            using var skBitmap = GetSnapshot();
+            if (skBitmap == null) return;
+
+            using var image = SKImage.FromBitmap(skBitmap);
+            using var encoded = image.Encode(SKEncodedImageFormat.Png, 100);
+            using var memStream = new System.IO.MemoryStream(encoded.ToArray());
+            var bitmap = new Avalonia.Media.Imaging.Bitmap(memStream);
+
+            DataTransfer data = new DataTransfer();
+            DataTransferItem item = new DataTransferItem();
+            item.SetBitmap(bitmap);
+            data.Add(item);
+
+            await clipboard.SetDataAsync(data);
+        }
+
         private void OnSaveRequested()
         {
             if (DataContext is not MainViewModel vm) return;
+            if (vm.HasHostSaveHandler) return;
 
             if (!string.IsNullOrEmpty(vm.LastSavedPath))
             {
@@ -1589,6 +1617,9 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private async void OnSaveAsRequested()
         {
+            if (DataContext is not MainViewModel vm) return;
+            if (vm.HasHostSaveAsHandler) return;
+
             await SaveAsAsync();
         }
 

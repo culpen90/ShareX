@@ -25,10 +25,7 @@
 
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input;
-using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media.Imaging;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
@@ -39,6 +36,8 @@ namespace ShareX.ImageEditor.App
 {
     public partial class App : Application
     {
+        private static readonly string[] ImageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".tif", ".webp", ".ico"];
+
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -75,37 +74,11 @@ namespace ShareX.ImageEditor.App
                     {
                         window.LoadImage(imagePath);
                     }
-
-                    vm.CopyRequested += async () =>
-                    {
-                        IClipboard? clipboard = desktop.MainWindow?.Clipboard;
-
-                        if (clipboard != null)
-                        {
-                            byte[]? bytes = window.GetResultBytes();
-
-                            if (bytes != null)
-                            {
-                                using (MemoryStream stream = new MemoryStream(bytes))
-                                {
-                                    Bitmap bitmap = new Bitmap(stream);
-                                    DataTransfer data = new DataTransfer();
-                                    DataTransferItem item = new DataTransferItem();
-                                    item.SetBitmap(bitmap);
-                                    data.Add(item);
-
-                                    await clipboard.SetDataAsync(data);
-                                }
-                            }
-                        }
-                    };
                 }
             }
 
             base.OnFrameworkInitializationCompleted();
         }
-
-        private static readonly string[] ImageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".tif", ".webp", ".ico"];
 
         private string? GetImagePathFromArgs(string[]? args)
         {

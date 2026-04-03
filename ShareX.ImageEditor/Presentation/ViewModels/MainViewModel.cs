@@ -198,6 +198,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             add { _copyRequested += value; CopyCommand.NotifyCanExecuteChanged(); }
             remove { _copyRequested -= value; CopyCommand.NotifyCanExecuteChanged(); }
         }
+        public bool HasHostCopyHandler { get; set; }
         public bool CanCopy() => _copyRequested != null && HasPreviewImage;
 
         private Action? _saveRequested;
@@ -206,6 +207,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             add { _saveRequested += value; SaveCommand.NotifyCanExecuteChanged(); }
             remove { _saveRequested -= value; SaveCommand.NotifyCanExecuteChanged(); }
         }
+        public bool HasHostSaveHandler { get; set; }
         public bool CanSave() => _saveRequested != null && HasPreviewImage && !string.IsNullOrEmpty(LastSavedPath);
 
         private Action? _saveAsRequested;
@@ -214,6 +216,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             add { _saveAsRequested += value; SaveAsCommand.NotifyCanExecuteChanged(); }
             remove { _saveAsRequested -= value; SaveAsCommand.NotifyCanExecuteChanged(); }
         }
+        public bool HasHostSaveAsHandler { get; set; }
         public bool CanSaveAs() => _saveAsRequested != null && HasPreviewImage;
 
         private Action? _pinRequested;
