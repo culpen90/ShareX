@@ -32,7 +32,6 @@ using Avalonia.Media.Imaging;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
-using SkiaSharp;
 using System;
 using System.IO;
 
@@ -49,8 +48,6 @@ namespace ShareX.ImageEditor.App
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                EditorServices.EnsureDefaultDesktopWallpaperService();
-
                 ImageEditorOptions options = new ImageEditorOptions();
 
 #if DEBUG
@@ -66,15 +63,17 @@ namespace ShareX.ImageEditor.App
 
                     string? imagePath = GetImagePathFromArgs(desktop.Args);
 
-                    if (imagePath != null)
+#if DEBUG
+                    if (string.IsNullOrEmpty(imagePath))
+                    {
+                        string location = AppDomain.CurrentDomain.BaseDirectory;
+                        imagePath = Path.Combine(location, "Assets", "Sample.png");
+                    }
+#endif
+
+                    if (!string.IsNullOrEmpty(imagePath))
                     {
                         window.LoadImage(imagePath);
-                    }
-                    else
-                    {
-#if DEBUG
-                        LoadExampleImage(vm);
-#endif
                     }
 
                     vm.CopyRequested += async () =>
@@ -128,22 +127,6 @@ namespace ShareX.ImageEditor.App
             }
 
             return null;
-        }
-
-        private void LoadExampleImage(MainViewModel vm)
-        {
-            string location = AppDomain.CurrentDomain.BaseDirectory;
-            string path = Path.Combine(location, "Assets", "Sample.png");
-
-            if (File.Exists(path))
-            {
-                using (FileStream stream = File.OpenRead(path))
-                {
-                    SKBitmap skBitmap = SKBitmap.Decode(stream);
-
-                    vm.UpdatePreview(skBitmap);
-                }
-            }
         }
     }
 }
