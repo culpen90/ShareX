@@ -1494,7 +1494,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         _isSyncingToVM = true;
                         vm.ImageFilePath = null;
-                        vm.LastSavedPath = null;
                         vm.IsDirty = false;
                         vm.HasAnnotations = false;
                         vm.UpdateCoreHistoryState(_editorCore.CanUndo, _editorCore.CanRedo);
@@ -1567,7 +1566,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     _isSyncingToVM = true;
                     vm.ImageFilePath = files[0].Path.LocalPath;
-                    vm.LastSavedPath = files[0].Path.LocalPath;
                     vm.IsDirty = false;
                     vm.HasAnnotations = false;
                     vm.UpdateCoreHistoryState(_editorCore.CanUndo, _editorCore.CanRedo);
@@ -1614,9 +1612,9 @@ namespace ShareX.ImageEditor.Presentation.Views
             if (DataContext is not MainViewModel vm) return;
             if (vm.HasHostSaveHandler) return;
 
-            if (!string.IsNullOrEmpty(vm.LastSavedPath))
+            if (!string.IsNullOrEmpty(vm.ImageFilePath))
             {
-                SaveSnapshotToFile(vm.LastSavedPath!);
+                SaveSnapshotToFile(vm.ImageFilePath!);
                 vm.IsDirty = false;
             }
         }
@@ -1655,7 +1653,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                 var path = file.Path.LocalPath;
                 SaveSnapshotToFile(path);
                 vm.ImageFilePath = path;
-                vm.LastSavedPath = path;
                 vm.IsDirty = false;
             }
         }
