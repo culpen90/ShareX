@@ -247,6 +247,7 @@ namespace ShareX.ImageEditor.Hosting
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
+                            vm.IsDirty = false;
                         }
                     }
                 };
@@ -264,6 +265,7 @@ namespace ShareX.ImageEditor.Hosting
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
+                            vm.IsDirty = false;
                         }
                     }
                 };
