@@ -164,9 +164,9 @@ public class EditorSelectionController
 
         if (_view.DataContext is MainViewModel vm)
         {
-            // Allow dragging selected shapes even when not in Select tool mode
-            // This enables immediate repositioning after creating an annotation
-            if (_selectedShape != null && vm.ActiveTool != EditorTool.Select)
+            // When a drawing tool is active, allow selecting and dragging any existing shape
+            // that belongs to the same tool type, without switching to the Select tool.
+            if (vm.ActiveTool != EditorTool.Select && vm.ActiveTool != EditorTool.Spotlight)
             {
                 // Hit test - find the direct child of the canvas
                 var hitSource = e.Source as global::Avalonia.Visual;
@@ -182,17 +182,21 @@ public class EditorSelectionController
                     hitSource = hitSource.GetVisualParent();
                 }
 
-                // Fallback: Use manual hit test if strict visual hit test failed (e.g. thin lines)
-                if (hitTarget != _selectedShape)
+                // Fallback: manual hit test for thin shapes (e.g. lines, arrows)
+                var manualHit = HitTestShape(canvas, point);
+                if (hitTarget == null || GetControlToolType(hitTarget) != vm.ActiveTool)
                 {
-                    var manualHit = HitTestShape(canvas, point);
-                    if (manualHit == _selectedShape)
+                    if (manualHit != null && GetControlToolType(manualHit) == vm.ActiveTool)
                     {
                         hitTarget = manualHit;
                     }
+                    else if (hitTarget != null && GetControlToolType(hitTarget) != vm.ActiveTool)
+                    {
+                        hitTarget = null;
+                    }
                 }
 
-                if (hitTarget == _selectedShape)
+                if (hitTarget != null && GetControlToolType(hitTarget) == vm.ActiveTool)
                 {
                     if (hitTarget is OutlinedTextControl otc && e.ClickCount == 2)
                     {
@@ -208,9 +212,12 @@ public class EditorSelectionController
                         return true;
                     }
 
+                    _selectedShape = hitTarget;
+                    UpdateBoundsObserver();
                     _isDraggingShape = true;
                     _lastDragPoint = point;
                     UpdateSelectionHandles();
+                    SelectionChanged?.Invoke(true);
                     e.Pointer.Capture(hitTarget);
                     e.Handled = true;
                     return true;
@@ -1255,19 +1262,13 @@ public class EditorSelectionController
 
     private void UpdateHoverState(Canvas canvas, Point currentPoint)
     {
-        // Only show hover outlines when Select tool is active
+        // Crop/CutOut tools never show hover outlines
         if (_view.DataContext is MainViewModel vm)
         {
-            // If Select/Spotlight tool inactive, we generally clear hover.
-            // BUT: If there is an active selection (e.g. just created shape), we KEEP it highlighted.
-            if (vm.ActiveTool != EditorTool.Select && vm.ActiveTool != EditorTool.Spotlight)
+            if (vm.ActiveTool == EditorTool.Crop || vm.ActiveTool == EditorTool.CutOut)
             {
-                if (_selectedShape == null)
-                {
-                    ClearHoverOutline();
-                    return;
-                }
-                // Fall through to hit testing to check if we are hovering the selected shape
+                ClearHoverOutline();
+                return;
             }
         }
 
@@ -1280,12 +1281,12 @@ public class EditorSelectionController
             if (!(hitShape is SpotlightControl)) hitShape = null;
         }
 
-        // Filter: If using other tools (Rect, etc), only allow hovering the ACTIVE selection
+        // Filter: If using other tools (Rect, etc), only allow hovering shapes of the same tool type
         if (_view.DataContext is MainViewModel vm3 &&
             vm3.ActiveTool != EditorTool.Select &&
             vm3.ActiveTool != EditorTool.Spotlight)
         {
-            if (hitShape != _selectedShape) hitShape = null;
+            if (hitShape != null && GetControlToolType(hitShape) != vm3.ActiveTool) hitShape = null;
         }
 
         // If we're hovering over the selected shape, keep showing ant lines on it
@@ -1694,6 +1695,19 @@ public class EditorSelectionController
     }
 
     private static SKPoint ToSKPoint(Point point) => new((float)point.X, (float)point.Y);
+
+    /// <summary>
+    /// Returns the EditorTool that created the given control, or null if not determinable.
+    /// </summary>
+    private static EditorTool? GetControlToolType(Control control)
+    {
+        if (control is OutlinedTextControl otc) return otc.Annotation?.ToolType;
+        if (control is SpeechBalloonControl sbc) return sbc.Annotation?.ToolType;
+        if (control is SpotlightControl sc) return sc.Annotation?.ToolType;
+        if (control is StepControl stc) return stc.Annotation?.ToolType;
+        if (control.Tag is Annotation ann) return ann.ToolType;
+        return null;
+    }
     public void UpdateActiveTextEditorProperties()
     {
         if (_balloonTextEditor == null || !(_selectedShape is SpeechBalloonControl balloonControl)) return;
