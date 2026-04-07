@@ -576,7 +576,7 @@ public class EditorSelectionController
 
             sa.StartPoint = ToSKPoint(new Point(newLeft, newTop));
             sa.EndPoint = ToSKPoint(new Point(newLeft + newWidth, newTop + newHeight));
-            spotlight.InvalidateVisual();
+            _view.RefreshSpotlightOverlay();
 
             _startPoint = currentPoint;
             UpdateSelectionHandles();
@@ -751,7 +751,7 @@ public class EditorSelectionController
             var currentEnd = sa.EndPoint;
             sa.StartPoint = new SKPoint(currentStart.X + (float)deltaX, currentStart.Y + (float)deltaY);
             sa.EndPoint = new SKPoint(currentEnd.X + (float)deltaX, currentEnd.Y + (float)deltaY);
-            spotlight.InvalidateVisual();
+            _view.RefreshSpotlightOverlay();
 
             _lastDragPoint = currentPoint;
             UpdateSelectionHandles();

@@ -28,6 +28,7 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Hosting;
+using ShareX.ImageEditor.Presentation.Controls;
 using ShareX.ImageEditor.Presentation.Rendering;
 using ShareX.ImageEditor.Presentation.ViewModels;
 
@@ -48,6 +49,28 @@ namespace ShareX.ImageEditor.Presentation.Views
         {
             // Initial sync of metadata if needed
             UpdateViewModelHistoryState(vm);
+        }
+
+        internal void RefreshSpotlightOverlay()
+        {
+            var spotlightOverlay = this.FindControl<SpotlightOverlayControl>("SpotlightOverlayControl");
+            var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
+            if (spotlightOverlay == null || annotationCanvas == null)
+            {
+                return;
+            }
+
+            var spotlights = annotationCanvas.Children
+                .OfType<SpotlightControl>()
+                .Select(control => control.Annotation)
+                .Where(annotation => annotation != null)
+                .Cast<SpotlightAnnotation>()
+                .ToList();
+
+            int canvasWidth = Math.Max(1, (int)Math.Ceiling(_editorCore.CanvasSize.Width));
+            int canvasHeight = Math.Max(1, (int)Math.Ceiling(_editorCore.CanvasSize.Height));
+
+            spotlightOverlay.UpdateSpotlights(spotlights, canvasWidth, canvasHeight);
         }
 
         private void RenderCore()
@@ -287,6 +310,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                     }
                 }
             }
+
+            RefreshSpotlightOverlay();
 
             RenderCore();
 

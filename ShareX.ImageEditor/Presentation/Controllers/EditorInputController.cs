@@ -468,6 +468,11 @@ public class EditorInputController
             {
                 canvas.Children.Add(_currentShape);
             }
+
+            if (_currentShape.Tag is SpotlightAnnotation)
+            {
+                _view.RefreshSpotlightOverlay();
+            }
             // ISSUE-019 fix: Dead code removed - undo handled by EditorCore
         }
     }
@@ -647,7 +652,7 @@ public class EditorInputController
             {
                 spotAnn.StartPoint = ToSKPoint(new Point(left, top));
                 spotAnn.EndPoint = ToSKPoint(new Point(left + width, top + height));
-                spotlight.InvalidateVisual();
+                _view.RefreshSpotlightOverlay();
             }
         }
         else if (_currentShape is SpeechBalloonControl balloon)
@@ -744,11 +749,19 @@ public class EditorInputController
                         // Discard shape if too small (prevents accidental clicks creating tiny shapes)
                         if (shapeWidth < MinShapeSize && shapeHeight < MinShapeSize)
                         {
-                            canvas.Children.Remove(_currentShape);
+                            bool wasSpotlight = _currentShape?.Tag is SpotlightAnnotation;
+                            if (_currentShape != null)
+                            {
+                                canvas.Children.Remove(_currentShape);
+                            }
                             _currentShape = null;
                             _cachedSkBitmap?.Dispose();
                             _cachedSkBitmap = null;
                             _isCreatingEffect = false;
+                            if (wasSpotlight)
+                            {
+                                _view.RefreshSpotlightOverlay();
+                            }
                             _view.ClearInteractiveEffectPreviewCache();
                             return;
                         }
