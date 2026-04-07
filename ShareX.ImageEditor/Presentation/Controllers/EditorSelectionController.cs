@@ -507,6 +507,11 @@ public class EditorSelectionController
                 double angleRad = Math.Atan2(dx, -dy); // 0 = up, clockwise positive
                 double angleDeg = angleRad * 180.0 / Math.PI;
 
+                if (isShiftHeld)
+                {
+                    angleDeg = Math.Round(angleDeg / 45.0) * 45.0;
+                }
+
                 rotateTextAnn.RotationAngle = (float)angleDeg;
 
                 rotateTextBox.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
@@ -1628,8 +1633,10 @@ public class EditorSelectionController
         _hoverOutlineWhite.Width = width + 4;
         _hoverOutlineWhite.Height = height + 4;
 
-        // Apply rotation to hover outline for rotated shapes (e.g. TextBox)
-        if (_hoveredShape is TextBox hoveredTb && hoveredTb.Tag is TextAnnotation hoveredTextAnn && hoveredTextAnn.RotationAngle != 0)
+        // Apply rotation to hover/selection outline for rotated text shapes.
+        if (_hoveredShape is OutlinedTextControl outlinedTextControl
+            && outlinedTextControl.Tag is TextAnnotation hoveredTextAnn
+            && hoveredTextAnn.RotationAngle != 0)
         {
             var rotTransform = new RotateTransform(hoveredTextAnn.RotationAngle);
             // Rotate around the center of the outline (which matches the shape center)
