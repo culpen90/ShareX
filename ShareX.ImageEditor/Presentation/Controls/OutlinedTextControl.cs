@@ -59,6 +59,37 @@ namespace ShareX.ImageEditor.Presentation.Controls
             ClipToBounds = true;
         }
 
+        internal static Size MeasureNaturalSize(TextAnnotation annotation)
+        {
+            if (annotation == null || string.IsNullOrEmpty(annotation.Text))
+            {
+                return new Size(0, 0);
+            }
+
+            var typeface = new Typeface(
+                annotation.FontFamily,
+                annotation.IsItalic ? FontStyle.Italic : FontStyle.Normal,
+                annotation.IsBold ? FontWeight.Bold : FontWeight.Normal);
+
+            var formattedText = new FormattedText(
+                annotation.Text,
+                CultureInfo.CurrentUICulture,
+                FlowDirection.LeftToRight,
+                typeface,
+                annotation.FontSize,
+                Brushes.Black);
+
+            double strokePadding = annotation.StrokeWidth;
+            double padding = TextPadding * 2;
+            double width = formattedText.Width + padding + (strokePadding * 2);
+            double height = formattedText.Height + padding + (strokePadding * 2);
+
+            if (double.IsNaN(width) || width < 0) width = 0;
+            if (double.IsNaN(height) || height < 0) height = 0;
+
+            return new Size(width, height);
+        }
+
         public override void Render(DrawingContext context)
         {
             base.Render(context);

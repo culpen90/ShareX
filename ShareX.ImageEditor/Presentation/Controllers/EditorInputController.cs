@@ -1653,9 +1653,12 @@ public class EditorInputController
                 {
                     // Update annotation with final text and bounds
                     annotation.Text = tb.Text ?? string.Empty;
+                    Size naturalSize = OutlinedTextControl.MeasureNaturalSize(annotation);
+                    double initialWidth = naturalSize.Width > 0 ? naturalSize.Width : tb.Bounds.Width;
+                    double initialHeight = naturalSize.Height > 0 ? naturalSize.Height : tb.Bounds.Height;
                     annotation.EndPoint = new SKPoint(
-                        (float)(Canvas.GetLeft(tb) + tb.Bounds.Width),
-                        (float)(Canvas.GetTop(tb) + tb.Bounds.Height));
+                        (float)(Canvas.GetLeft(tb) + initialWidth),
+                        (float)(Canvas.GetTop(tb) + initialHeight));
 
                     // Add to EditorCore to enable undo/redo
                     // ISSUE-012 fix: Null check for EditorCore in closure
