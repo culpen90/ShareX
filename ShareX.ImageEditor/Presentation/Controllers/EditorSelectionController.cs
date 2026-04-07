@@ -1816,7 +1816,10 @@ public class EditorSelectionController
             FontStyle = annotation.IsItalic ? FontStyle.Italic : FontStyle.Normal,
             Padding = new Thickness(4),
             AcceptsReturn = false,
-            TextWrapping = TextWrapping.NoWrap,
+            TextAlignment = TextAlignment.Center,
+            HorizontalContentAlignment = global::Avalonia.Layout.HorizontalAlignment.Center,
+            VerticalContentAlignment = global::Avalonia.Layout.VerticalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap,
             MinWidth = 20
         };
 
@@ -1835,6 +1838,8 @@ public class EditorSelectionController
         var annotationBounds = annotation.GetBounds();
         Canvas.SetLeft(textBox, ToOverlayCoordinate(annotationBounds.Left));
         Canvas.SetTop(textBox, ToOverlayCoordinate(annotationBounds.Top));
+        textBox.Width = Math.Max(20, annotationBounds.Width);
+        textBox.Height = Math.Max(20, annotationBounds.Height);
 
         EventHandler<global::Avalonia.Interactivity.RoutedEventArgs>? lostFocusHandler = null;
         EventHandler<KeyEventArgs>? keyUpHandler = null;
@@ -1849,22 +1854,13 @@ public class EditorSelectionController
             // Remove from overlay
             overlay.Children.Remove(textBox);
 
-            // Unhide the original control and measure it to compute correct sizes
+            // Keep the existing annotation rectangle so wrapped text stays inside the resized bounds.
             textControl.IsVisible = true;
-            textControl.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            textControl.InvalidateMeasure();
             textControl.InvalidateVisual();
 
             // Fire RequestUpdateEffect to save new state if needed
             RequestUpdateEffect?.Invoke(textControl);
-
-            // Sync Bounds based on new measured dimension
-            var newWidth = textControl.DesiredSize.Width > 0 ? textControl.DesiredSize.Width : 20;
-            var newHeight = textControl.DesiredSize.Height > 0 ? textControl.DesiredSize.Height : 20;
-
-            annotation.EndPoint = new SKPoint(
-                (float)(Canvas.GetLeft(textControl) + newWidth),
-                (float)(Canvas.GetTop(textControl) + newHeight)
-            );
 
             UpdateSelectionHandles();
             UpdateHoverOutline();

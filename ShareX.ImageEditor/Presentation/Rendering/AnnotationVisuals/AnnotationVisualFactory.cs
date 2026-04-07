@@ -122,8 +122,11 @@ public static class AnnotationVisualFactory
 
             case TextAnnotation text when control is OutlinedTextControl textControl:
                 var textBounds = text.GetBounds();
+                textControl.Annotation = text;
                 Canvas.SetLeft(textControl, textBounds.Left);
                 Canvas.SetTop(textControl, textBounds.Top);
+                textControl.Width = Math.Max(1, textBounds.Width);
+                textControl.Height = Math.Max(1, textBounds.Height);
 
                 // Note: The text content, font size, bold/italic, etc. are handled automatically by the control's rendering
                 // using the bound Annotation property, but we must apply the transform and invalidate it explicitly here.
