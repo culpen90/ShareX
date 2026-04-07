@@ -31,6 +31,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Core.ImageEffects.Helpers;
@@ -467,6 +468,11 @@ public class EditorInputController
             {
                 canvas.Children.Add(_currentShape);
             }
+
+            if (_currentShape.Tag is SpotlightAnnotation)
+            {
+                _view.RefreshSpotlightOverlay();
+            }
             // ISSUE-019 fix: Dead code removed - undo handled by EditorCore
         }
     }
@@ -646,7 +652,7 @@ public class EditorInputController
             {
                 spotAnn.StartPoint = ToSKPoint(new Point(left, top));
                 spotAnn.EndPoint = ToSKPoint(new Point(left + width, top + height));
-                spotlight.InvalidateVisual();
+                _view.RefreshSpotlightOverlay();
             }
         }
         else if (_currentShape is SpeechBalloonControl balloon)
@@ -743,11 +749,20 @@ public class EditorInputController
                         // Discard shape if too small (prevents accidental clicks creating tiny shapes)
                         if (shapeWidth < MinShapeSize && shapeHeight < MinShapeSize)
                         {
-                            canvas.Children.Remove(_currentShape);
+                            bool wasSpotlight = _currentShape?.Tag is SpotlightAnnotation;
+                            if (_currentShape != null)
+                            {
+                                canvas.Children.Remove(_currentShape);
+                            }
                             _currentShape = null;
                             _cachedSkBitmap?.Dispose();
                             _cachedSkBitmap = null;
                             _isCreatingEffect = false;
+                            if (wasSpotlight)
+                            {
+                                _view.RefreshSpotlightOverlay();
+                            }
+                            _view.ClearInteractiveEffectPreviewCache();
                             return;
                         }
                     }
@@ -789,6 +804,7 @@ public class EditorInputController
             _cachedSkBitmap?.Dispose();
             _cachedSkBitmap = null;
             _isCreatingEffect = false;
+            _view.ClearInteractiveEffectPreviewCache();
         }
     }
 
@@ -828,10 +844,7 @@ public class EditorInputController
         {
             if (_cachedSkBitmap != null)
             {
-                AnnotationEffectVisualUpdater.UpdateEffectVisual(
-                    shape,
-                    _cachedSkBitmap,
-                    new Rect(x, y, width, height));
+                _view.UpdateInteractiveEffectVisual(shape, _cachedSkBitmap, new Rect(x, y, width, height));
             }
         }
         catch { }
@@ -1672,6 +1685,20 @@ public class EditorInputController
                                 _view!.EditorCore!.CanvasSize.Height);
 
                             control.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                            var desiredWidth = control.DesiredSize.Width > 0 ? control.DesiredSize.Width : tb.Bounds.Width;
+                            var desiredHeight = control.DesiredSize.Height > 0 ? control.DesiredSize.Height : tb.Bounds.Height;
+
+                            annotation.EndPoint = new SKPoint(
+                                (float)(Canvas.GetLeft(control) + desiredWidth),
+                                (float)(Canvas.GetTop(control) + desiredHeight));
+
+                            AnnotationVisualFactory.UpdateVisualControl(
+                                control,
+                                annotation,
+                                AnnotationVisualMode.Persisted,
+                                _view!.EditorCore!.CanvasSize.Width,
+                                _view!.EditorCore!.CanvasSize.Height);
+
                             control.InvalidateVisual();
 
                             // Auto-select the newly created text
@@ -1684,9 +1711,9 @@ public class EditorInputController
 
         textBox.LostFocus += OnCreationLostFocus;
 
-        textBox.KeyDown += (s, args) =>
+        textBox.KeyUp += (s, args) =>
         {
-            if (args.Key == Key.Enter)
+            if (args.Key == Key.Enter || args.Key == Key.Escape)
             {
                 args.Handled = true;
                 _view.Focus();
@@ -1694,7 +1721,21 @@ public class EditorInputController
         };
 
         canvas.Children.Add(textBox);
-        textBox.Focus();
+
+        var canvasScrollViewer = _view.FindControl<ScrollViewer>("CanvasScrollViewer");
+        var preservedOffset = canvasScrollViewer?.Offset ?? default;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            textBox.Focus();
+            textBox.CaretIndex = 0;
+
+            if (canvasScrollViewer != null)
+            {
+                canvasScrollViewer.Offset = preservedOffset;
+            }
+        }, DispatcherPriority.Render);
+
         _isDrawing = false;
     }
 
