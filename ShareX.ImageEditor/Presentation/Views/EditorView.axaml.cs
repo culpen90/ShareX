@@ -56,6 +56,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private readonly EditorInputController _inputController;
 
         internal EditorCore EditorCore => _editorCore;
+
         // SIP0018: Hybrid Rendering
         private SKCanvasControl? _canvasControl;
         private readonly EditorCore _editorCore;
@@ -402,6 +403,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             UnhookAnnotationToolbarEvents();
             _selectionController.RequestUpdateEffect -= OnRequestUpdateEffect;
+            ClearBlurPreviewCache();
             SetPlatformSettings(null);
         }
 
@@ -741,6 +743,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 else if (e.PropertyName == nameof(MainViewModel.PreviewImage))
                 {
                     bool isInitialImageLoad = vm.PreviewImage != null && _editorCore.SourceImage == null;
+                    ClearBlurPreviewCache();
                     _zoomController.ResetScrollViewerOffset();
                     // During smart padding, use UpdateSourceImage to preserve history and annotations
                     if (vm.IsSmartPaddingInProgress)

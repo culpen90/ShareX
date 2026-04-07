@@ -35,6 +35,10 @@ namespace ShareX.ImageEditor.Presentation.Views
 {
     public partial class EditorView : UserControl
     {
+        private SkiaSharp.SKBitmap? _cachedBlurPreviewSource;
+        private SkiaSharp.SKBitmap? _cachedBlurPreviewBitmap;
+        private float _cachedBlurPreviewAmount = -1;
+
         private void UpdateViewModelHistoryState(MainViewModel vm)
         {
             vm.UpdateCoreHistoryState(_editorCore.CanUndo, _editorCore.CanRedo);
@@ -132,6 +136,53 @@ namespace ShareX.ImageEditor.Presentation.Views
             return Task.FromResult<Bitmap?>(snapshot);
         }
 
+        private bool TryUpdateCachedBlurEffectVisual(Control shape, BlurAnnotation annotation, SkiaSharp.SKBitmap sourceBitmap)
+        {
+            if (!ReferenceEquals(sourceBitmap, _editorCore.SourceImage))
+            {
+                return false;
+            }
+
+            if (!EnsureBlurPreviewCache(annotation, sourceBitmap) || _cachedBlurPreviewBitmap == null)
+            {
+                return false;
+            }
+
+            annotation.UpdateEffectFromBlurredSource(sourceBitmap, _cachedBlurPreviewBitmap);
+            AnnotationEffectVisualUpdater.ApplyEffectBrush(shape, annotation);
+            return true;
+        }
+
+        private bool EnsureBlurPreviewCache(BlurAnnotation annotation, SkiaSharp.SKBitmap sourceBitmap)
+        {
+            if (_cachedBlurPreviewBitmap != null
+                && ReferenceEquals(_cachedBlurPreviewSource, sourceBitmap)
+                && Math.Abs(_cachedBlurPreviewAmount - annotation.Amount) < 0.001f)
+            {
+                return true;
+            }
+
+            ClearBlurPreviewCache();
+
+            _cachedBlurPreviewBitmap = BlurAnnotation.CreateBlurredSourceCache(sourceBitmap, annotation.Amount);
+            if (_cachedBlurPreviewBitmap == null)
+            {
+                return false;
+            }
+
+            _cachedBlurPreviewSource = sourceBitmap;
+            _cachedBlurPreviewAmount = annotation.Amount;
+            return true;
+        }
+
+        private void ClearBlurPreviewCache()
+        {
+            _cachedBlurPreviewBitmap?.Dispose();
+            _cachedBlurPreviewBitmap = null;
+            _cachedBlurPreviewSource = null;
+            _cachedBlurPreviewAmount = -1;
+        }
+
         // This is called by SelectionController/InputController via event when an effect logic needs update
         // We replicate the UpdateEffectVisual logic here or expose it
         private void OnRequestUpdateEffect(Control shape)
@@ -153,6 +204,12 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     temporarySource = BitmapConversionHelpers.ToSKBitmap(vm.PreviewImage);
                     sourceBitmap = temporarySource;
+                }
+
+                if (shape.Tag is BlurAnnotation blurAnnotation
+                    && TryUpdateCachedBlurEffectVisual(shape, blurAnnotation, sourceBitmap))
+                {
+                    return;
                 }
 
                 AnnotationEffectVisualUpdater.UpdateEffectVisual(shape, sourceBitmap);
