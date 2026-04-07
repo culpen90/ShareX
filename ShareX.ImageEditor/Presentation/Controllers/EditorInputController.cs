@@ -748,6 +748,7 @@ public class EditorInputController
                             _cachedSkBitmap?.Dispose();
                             _cachedSkBitmap = null;
                             _isCreatingEffect = false;
+                            _view.ClearInteractiveEffectPreviewCache();
                             return;
                         }
                     }
@@ -789,6 +790,7 @@ public class EditorInputController
             _cachedSkBitmap?.Dispose();
             _cachedSkBitmap = null;
             _isCreatingEffect = false;
+            _view.ClearInteractiveEffectPreviewCache();
         }
     }
 
@@ -828,10 +830,7 @@ public class EditorInputController
         {
             if (_cachedSkBitmap != null)
             {
-                AnnotationEffectVisualUpdater.UpdateEffectVisual(
-                    shape,
-                    _cachedSkBitmap,
-                    new Rect(x, y, width, height));
+                _view.UpdateInteractiveEffectVisual(shape, _cachedSkBitmap, new Rect(x, y, width, height));
             }
         }
         catch { }

@@ -40,6 +40,35 @@ public partial class PixelateAnnotation : BaseEffectAnnotation
         Amount = 10; // Default pixel size
     }
 
+    internal static SKBitmap? CreatePixelatedSourceCache(SKBitmap source, float pixelAmount)
+    {
+        if (source == null) return null;
+
+        var pixelSize = (int)Math.Max(1, pixelAmount);
+        int w = Math.Max(1, source.Width / pixelSize);
+        int h = Math.Max(1, source.Height / pixelSize);
+
+        var info = new SKImageInfo(w, h);
+        using var small = source.Resize(info, SKFilterQuality.Low);
+        if (small == null)
+        {
+            return null;
+        }
+
+        info = new SKImageInfo(source.Width, source.Height);
+        return small.Resize(info, SKFilterQuality.None);
+    }
+
+    internal override SKBitmap? CreateInteractionCacheBitmap(SKBitmap source)
+    {
+        return CreatePixelatedSourceCache(source, Amount);
+    }
+
+    internal override void UpdateEffectFromInteractionCache(SKBitmap source, SKBitmap cachedEffectBitmap)
+    {
+        UpdateEffectFromAlignedCache(source, cachedEffectBitmap);
+    }
+
     public override void UpdateEffect(SKBitmap source)
     {
         if (source == null) return;
@@ -82,9 +111,21 @@ public partial class PixelateAnnotation : BaseEffectAnnotation
 
         var info = new SKImageInfo(w, h);
         using var small = crop.Resize(info, SKFilterQuality.Low);
+        if (small == null)
+        {
+            EffectBitmap?.Dispose();
+            EffectBitmap = result;
+            return;
+        }
 
         info = new SKImageInfo(crop.Width, crop.Height);
         using var pixelated = small.Resize(info, SKFilterQuality.None); // Nearest neighbor upscale
+        if (pixelated == null)
+        {
+            EffectBitmap?.Dispose();
+            EffectBitmap = result;
+            return;
+        }
 
         // Draw pixelated region into result at correct offset
         int drawX = validRect.Left - annotationRect.Left;

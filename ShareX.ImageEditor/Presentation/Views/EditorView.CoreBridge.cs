@@ -35,9 +35,9 @@ namespace ShareX.ImageEditor.Presentation.Views
 {
     public partial class EditorView : UserControl
     {
-        private SkiaSharp.SKBitmap? _cachedBlurPreviewSource;
-        private SkiaSharp.SKBitmap? _cachedBlurPreviewBitmap;
-        private float _cachedBlurPreviewAmount = -1;
+        private SkiaSharp.SKBitmap? _cachedEffectPreviewSource;
+        private SkiaSharp.SKBitmap? _cachedEffectPreviewBitmap;
+        private string? _cachedEffectPreviewKey;
 
         private void UpdateViewModelHistoryState(MainViewModel vm)
         {
@@ -136,51 +136,80 @@ namespace ShareX.ImageEditor.Presentation.Views
             return Task.FromResult<Bitmap?>(snapshot);
         }
 
-        private bool TryUpdateCachedBlurEffectVisual(Control shape, BlurAnnotation annotation, SkiaSharp.SKBitmap sourceBitmap)
+        private bool TryUpdateCachedEffectVisual(Control shape, BaseEffectAnnotation annotation, SkiaSharp.SKBitmap sourceBitmap, Rect? overrideBounds = null)
         {
-            if (!ReferenceEquals(sourceBitmap, _editorCore.SourceImage))
+            if (overrideBounds.HasValue)
+            {
+                var bounds = overrideBounds.Value;
+                if (bounds.Width <= 0 || bounds.Height <= 0)
+                {
+                    return false;
+                }
+
+                annotation.StartPoint = new SkiaSharp.SKPoint((float)bounds.X, (float)bounds.Y);
+                annotation.EndPoint = new SkiaSharp.SKPoint((float)(bounds.X + bounds.Width), (float)(bounds.Y + bounds.Height));
+            }
+
+            if (!EnsureEffectPreviewCache(annotation, sourceBitmap) || _cachedEffectPreviewBitmap == null)
             {
                 return false;
             }
 
-            if (!EnsureBlurPreviewCache(annotation, sourceBitmap) || _cachedBlurPreviewBitmap == null)
-            {
-                return false;
-            }
-
-            annotation.UpdateEffectFromBlurredSource(sourceBitmap, _cachedBlurPreviewBitmap);
+            annotation.UpdateEffectFromInteractionCache(sourceBitmap, _cachedEffectPreviewBitmap);
             AnnotationEffectVisualUpdater.ApplyEffectBrush(shape, annotation);
             return true;
         }
 
-        private bool EnsureBlurPreviewCache(BlurAnnotation annotation, SkiaSharp.SKBitmap sourceBitmap)
+        private bool EnsureEffectPreviewCache(BaseEffectAnnotation annotation, SkiaSharp.SKBitmap sourceBitmap)
         {
-            if (_cachedBlurPreviewBitmap != null
-                && ReferenceEquals(_cachedBlurPreviewSource, sourceBitmap)
-                && Math.Abs(_cachedBlurPreviewAmount - annotation.Amount) < 0.001f)
+            string cacheKey = annotation.GetInteractionCacheKey();
+
+            if (_cachedEffectPreviewBitmap != null
+                && ReferenceEquals(_cachedEffectPreviewSource, sourceBitmap)
+                && string.Equals(_cachedEffectPreviewKey, cacheKey, StringComparison.Ordinal))
             {
                 return true;
             }
 
-            ClearBlurPreviewCache();
+            ClearEffectPreviewCache();
 
-            _cachedBlurPreviewBitmap = BlurAnnotation.CreateBlurredSourceCache(sourceBitmap, annotation.Amount);
-            if (_cachedBlurPreviewBitmap == null)
+            _cachedEffectPreviewBitmap = annotation.CreateInteractionCacheBitmap(sourceBitmap);
+            if (_cachedEffectPreviewBitmap == null)
             {
                 return false;
             }
 
-            _cachedBlurPreviewSource = sourceBitmap;
-            _cachedBlurPreviewAmount = annotation.Amount;
+            _cachedEffectPreviewSource = sourceBitmap;
+            _cachedEffectPreviewKey = cacheKey;
             return true;
         }
 
-        private void ClearBlurPreviewCache()
+        private void ClearEffectPreviewCache()
         {
-            _cachedBlurPreviewBitmap?.Dispose();
-            _cachedBlurPreviewBitmap = null;
-            _cachedBlurPreviewSource = null;
-            _cachedBlurPreviewAmount = -1;
+            _cachedEffectPreviewBitmap?.Dispose();
+            _cachedEffectPreviewBitmap = null;
+            _cachedEffectPreviewSource = null;
+            _cachedEffectPreviewKey = null;
+        }
+
+        internal void ClearInteractiveEffectPreviewCache()
+        {
+            ClearEffectPreviewCache();
+        }
+
+        internal void UpdateInteractiveEffectVisual(Control shape, SkiaSharp.SKBitmap sourceBitmap, Rect? overrideBounds = null)
+        {
+            if (shape?.Tag is not BaseEffectAnnotation effectAnnotation || sourceBitmap == null)
+            {
+                return;
+            }
+
+            if (TryUpdateCachedEffectVisual(shape, effectAnnotation, sourceBitmap, overrideBounds))
+            {
+                return;
+            }
+
+            AnnotationEffectVisualUpdater.UpdateEffectVisual(shape, sourceBitmap, overrideBounds);
         }
 
         // This is called by SelectionController/InputController via event when an effect logic needs update
@@ -206,13 +235,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     sourceBitmap = temporarySource;
                 }
 
-                if (shape.Tag is BlurAnnotation blurAnnotation
-                    && TryUpdateCachedBlurEffectVisual(shape, blurAnnotation, sourceBitmap))
-                {
-                    return;
-                }
-
-                AnnotationEffectVisualUpdater.UpdateEffectVisual(shape, sourceBitmap);
+                UpdateInteractiveEffectVisual(shape, sourceBitmap);
             }
             catch (Exception ex)
             {

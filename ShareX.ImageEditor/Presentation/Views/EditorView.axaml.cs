@@ -403,7 +403,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             UnhookAnnotationToolbarEvents();
             _selectionController.RequestUpdateEffect -= OnRequestUpdateEffect;
-            ClearBlurPreviewCache();
+            ClearEffectPreviewCache();
             SetPlatformSettings(null);
         }
 
@@ -743,7 +743,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 else if (e.PropertyName == nameof(MainViewModel.PreviewImage))
                 {
                     bool isInitialImageLoad = vm.PreviewImage != null && _editorCore.SourceImage == null;
-                    ClearBlurPreviewCache();
+                    ClearEffectPreviewCache();
                     _zoomController.ResetScrollViewerOffset();
                     // During smart padding, use UpdateSourceImage to preserve history and annotations
                     if (vm.IsSmartPaddingInProgress)
