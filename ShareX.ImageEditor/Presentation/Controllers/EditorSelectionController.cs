@@ -1208,7 +1208,7 @@ public class EditorSelectionController
             }
         };
 
-        textBox.KeyDown += (s, args) =>
+        textBox.KeyUp += (s, args) =>
         {
             if (args.Key == Key.Enter || args.Key == Key.Escape)
             {
@@ -1652,12 +1652,12 @@ public class EditorSelectionController
     private void AttachTextBoxEditHandlers(TextBox tb)
     {
         EventHandler<global::Avalonia.Interactivity.RoutedEventArgs>? lostFocusHandler = null;
-        EventHandler<KeyEventArgs>? keyDownHandler = null;
+        EventHandler<KeyEventArgs>? keyUpHandler = null;
 
         lostFocusHandler = (s, args) =>
         {
             if (lostFocusHandler != null) tb.LostFocus -= lostFocusHandler;
-            if (keyDownHandler != null) tb.KeyDown -= keyDownHandler;
+            if (keyUpHandler != null) tb.KeyUp -= keyUpHandler;
 
             tb.IsHitTestVisible = false;
 
@@ -1681,9 +1681,9 @@ public class EditorSelectionController
             }
         };
 
-        keyDownHandler = (s, args) =>
+        keyUpHandler = (s, args) =>
         {
-            if (args.Key == Key.Enter)
+            if (args.Key == Key.Enter || args.Key == Key.Escape)
             {
                 args.Handled = true;
                 _view.Focus();
@@ -1691,7 +1691,7 @@ public class EditorSelectionController
         };
 
         tb.LostFocus += lostFocusHandler;
-        tb.KeyDown += keyDownHandler;
+        tb.KeyUp += keyUpHandler;
     }
 
     private static SKPoint ToSKPoint(Point point) => new((float)point.X, (float)point.Y);
@@ -1830,12 +1830,12 @@ public class EditorSelectionController
         Canvas.SetTop(textBox, ToOverlayCoordinate(annotationBounds.Top));
 
         EventHandler<global::Avalonia.Interactivity.RoutedEventArgs>? lostFocusHandler = null;
-        EventHandler<KeyEventArgs>? keyDownHandler = null;
+        EventHandler<KeyEventArgs>? keyUpHandler = null;
 
         void CompleteEditing()
         {
             if (lostFocusHandler != null) textBox.LostFocus -= lostFocusHandler;
-            if (keyDownHandler != null) textBox.KeyDown -= keyDownHandler;
+            if (keyUpHandler != null) textBox.KeyUp -= keyUpHandler;
 
             annotation.Text = textBox.Text ?? string.Empty;
 
@@ -1865,9 +1865,9 @@ public class EditorSelectionController
 
         lostFocusHandler = (s, args) => CompleteEditing();
 
-        keyDownHandler = (s, args) =>
+        keyUpHandler = (s, args) =>
         {
-            if (args.Key == Key.Enter)
+            if (args.Key == Key.Enter || args.Key == Key.Escape)
             {
                 args.Handled = true;
                 _view.Focus();
@@ -1875,10 +1875,13 @@ public class EditorSelectionController
         };
 
         textBox.LostFocus += lostFocusHandler;
-        textBox.KeyDown += keyDownHandler;
+        textBox.KeyUp += keyUpHandler;
 
         overlay.Children.Add(textBox);
         textBox.Focus();
+        textBox.CaretIndex = textBox.Text?.Length ?? 0;
+        textBox.SelectionStart = textBox.CaretIndex;
+        textBox.SelectionEnd = textBox.CaretIndex;
     }
 
     private void UpdateBoundsObserver()

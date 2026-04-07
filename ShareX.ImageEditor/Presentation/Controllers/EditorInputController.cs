@@ -1671,6 +1671,20 @@ public class EditorInputController
                                 _view!.EditorCore!.CanvasSize.Height);
 
                             control.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                            var desiredWidth = control.DesiredSize.Width > 0 ? control.DesiredSize.Width : tb.Bounds.Width;
+                            var desiredHeight = control.DesiredSize.Height > 0 ? control.DesiredSize.Height : tb.Bounds.Height;
+
+                            annotation.EndPoint = new SKPoint(
+                                (float)(Canvas.GetLeft(control) + desiredWidth),
+                                (float)(Canvas.GetTop(control) + desiredHeight));
+
+                            AnnotationVisualFactory.UpdateVisualControl(
+                                control,
+                                annotation,
+                                AnnotationVisualMode.Persisted,
+                                _view!.EditorCore!.CanvasSize.Width,
+                                _view!.EditorCore!.CanvasSize.Height);
+
                             control.InvalidateVisual();
 
                             // Auto-select the newly created text
@@ -1683,9 +1697,9 @@ public class EditorInputController
 
         textBox.LostFocus += OnCreationLostFocus;
 
-        textBox.KeyDown += (s, args) =>
+        textBox.KeyUp += (s, args) =>
         {
-            if (args.Key == Key.Enter)
+            if (args.Key == Key.Enter || args.Key == Key.Escape)
             {
                 args.Handled = true;
                 _view.Focus();
@@ -1694,6 +1708,7 @@ public class EditorInputController
 
         canvas.Children.Add(textBox);
         textBox.Focus();
+        textBox.CaretIndex = 0;
         _isDrawing = false;
     }
 
