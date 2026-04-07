@@ -31,6 +31,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Core.ImageEffects.Helpers;
@@ -1707,8 +1708,21 @@ public class EditorInputController
         };
 
         canvas.Children.Add(textBox);
-        textBox.Focus();
-        textBox.CaretIndex = 0;
+
+        var canvasScrollViewer = _view.FindControl<ScrollViewer>("CanvasScrollViewer");
+        var preservedOffset = canvasScrollViewer?.Offset ?? default;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            textBox.Focus();
+            textBox.CaretIndex = 0;
+
+            if (canvasScrollViewer != null)
+            {
+                canvasScrollViewer.Offset = preservedOffset;
+            }
+        }, DispatcherPriority.Render);
+
         _isDrawing = false;
     }
 
