@@ -139,14 +139,31 @@ namespace ShareX.ImageEditor.Presentation.Views
             if (shape == null || shape.Tag is not BaseEffectAnnotation) return;
             if (DataContext is not MainViewModel vm || vm.PreviewImage == null) return;
 
+            SkiaSharp.SKBitmap? temporarySource = null;
+
             try
             {
-                using var skBitmap = BitmapConversionHelpers.ToSKBitmap(vm.PreviewImage);
-                AnnotationEffectVisualUpdater.UpdateEffectVisual(shape, skBitmap);
+                // Reuse the core source bitmap during interactive effect updates.
+                // Converting PreviewImage to a fresh SKBitmap on every drag frame is the
+                // main difference from the creation path and causes the lag seen after
+                // an effect annotation has been created.
+                var sourceBitmap = _editorCore.SourceImage;
+
+                if (sourceBitmap == null)
+                {
+                    temporarySource = BitmapConversionHelpers.ToSKBitmap(vm.PreviewImage);
+                    sourceBitmap = temporarySource;
+                }
+
+                AnnotationEffectVisualUpdater.UpdateEffectVisual(shape, sourceBitmap);
             }
             catch (Exception ex)
             {
                 EditorServices.ReportWarning(nameof(EditorView), "Failed to update effect annotation preview.", ex);
+            }
+            finally
+            {
+                temporarySource?.Dispose();
             }
         }
 
