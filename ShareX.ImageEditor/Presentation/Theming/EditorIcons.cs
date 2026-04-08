@@ -46,6 +46,8 @@ namespace ShareX.ImageEditor.Presentation.Theming
         public const string ToolSmartEraser = LucideIcons.eraser;
         public const string ToolCrop = LucideIcons.crop;
         public const string ToolCutOut = LucideIcons.scissors;
+        public const string ToolImage = LucideIcons.image;
+        public const string ToolEmoji = LucideIcons.sticker;
 
         public const string ActionUndo = LucideIcons.undo_2;
         public const string ActionRedo = LucideIcons.redo_2;
@@ -105,6 +107,8 @@ namespace ShareX.ImageEditor.Presentation.Theming
             EditorTool.Highlight => ToolHighlight,
             EditorTool.Crop => ToolCrop,
             EditorTool.CutOut => ToolCutOut,
+            EditorTool.Image => ToolImage,
+            EditorTool.Emoji => ToolEmoji,
             _ => ToolSelect
         };
     }

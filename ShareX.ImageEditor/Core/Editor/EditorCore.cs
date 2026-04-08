@@ -1464,8 +1464,8 @@ public class EditorCore : IDisposable
             yield return (HandleType.BottomLeft, rotate ? RotatePoint(bl, center, angle) : bl);
             yield return (HandleType.MiddleLeft, rotate ? RotatePoint(ml, center, angle) : ml);
 
-            // Rotation handle above the top-center for text annotations
-            if (annotation is TextAnnotation)
+            // Rotation handle above the top-center for text and emoji annotations
+            if (annotation is TextAnnotation or EmojiAnnotation)
             {
                 var rotHandle = new SKPoint(bounds.MidX, bounds.Top - RotationHandleOffset);
                 yield return (HandleType.Rotate, rotate ? RotatePoint(rotHandle, center, angle) : rotHandle);

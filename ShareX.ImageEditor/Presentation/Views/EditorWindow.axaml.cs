@@ -69,7 +69,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
 
             e.Cancel = true;
-            _viewModel.RequestClose();
+            _viewModel.RequestClose(ignoreModal: true);
         }
 
         private void InitializeComponent()
