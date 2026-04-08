@@ -91,8 +91,7 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(search))
         {
             query = _catalog
-                .Where(entry => string.Equals(entry.Group, SelectedGroup, StringComparison.Ordinal))
-                .OrderBy(entry => entry.Name, StringComparer.OrdinalIgnoreCase);
+                .Where(entry => string.Equals(entry.Group, SelectedGroup, StringComparison.Ordinal));
 
             ResultsSummary = string.IsNullOrEmpty(SelectedGroup)
                 ? "Browse emojis"
@@ -104,7 +103,6 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
                 .Select(entry => (Entry: entry, Score: entry.GetSearchScore(search)))
                 .Where(match => match.Score != int.MaxValue)
                 .OrderBy(match => match.Score)
-                .ThenBy(match => match.Entry.Name, StringComparer.OrdinalIgnoreCase)
                 .Select(match => match.Entry);
 
             ResultsSummary = $"Search results • {query.Count()} matches";
