@@ -27,6 +27,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using ShareX.ImageEditor.Presentation.ViewModels;
 
 namespace ShareX.ImageEditor.Presentation.Views;
 
@@ -48,6 +49,11 @@ public partial class EmojiPickerDialogView : UserControl
         if (this.FindControl<TextBox>("SearchBox") is TextBox searchBox)
         {
             Dispatcher.UIThread.Post(() => searchBox.Focus(), DispatcherPriority.Input);
+        }
+
+        if (DataContext is EmojiPickerDialogViewModel viewModel)
+        {
+            Dispatcher.UIThread.Post(async () => await viewModel.InitializeAsync(), DispatcherPriority.Background);
         }
     }
 }
