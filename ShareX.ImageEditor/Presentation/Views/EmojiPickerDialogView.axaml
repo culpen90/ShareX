@@ -11,123 +11,97 @@
              x:DataType="vm:EmojiPickerDialogViewModel">
 
     <UserControl.Styles>
-        <Style Selector="Button.emoji-tile">
-            <Setter Property="Width" Value="60"/>
-            <Setter Property="Height" Value="60"/>
+        <Style Selector="Button.effect-item.emoji-tile">
+            <Setter Property="Width" Value="52"/>
+            <Setter Property="Height" Value="52"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Control.Background}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Border}"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </UserControl.Styles>
 
-    <Border Background="{DynamicResource ShareX.Brush.Background.Popup}"
+    <Border Background="{DynamicResource ShareX.Brush.Background.Panel}"
             BorderBrush="{DynamicResource ShareX.Brush.Border}"
             BorderThickness="1"
             CornerRadius="4"
-            Padding="0"
             Width="760"
             Height="640"
             BoxShadow="0 6 18 0 #40000000">
-        <Grid RowDefinitions="Auto,Auto,Auto,*,Auto"
-              Background="{DynamicResource ShareX.Brush.Background.Popup}">
-            <Border Grid.Row="0"
-                    Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
-                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                    BorderThickness="0,0,0,1"
-                    Padding="12,8">
-                <TextBlock Text="Emoji Picker"
-                           FontWeight="Normal"/>
-            </Border>
-
-            <Grid Grid.Row="1"
+        <Grid RowDefinitions="Auto,*">
+            <Grid Grid.Row="0"
                   ColumnDefinitions="*,220"
                   ColumnSpacing="12"
-                  Margin="16,16,16,8">
+                  Margin="12,12,12,0">
                 <TextBox x:Name="SearchBox"
                          Grid.Column="0"
+                         Classes="effect-search"
                          Text="{Binding SearchText, Mode=TwoWay}"
-                         Watermark="Search emojis"
-                         HorizontalAlignment="Stretch"/>
+                         Watermark="Search emojis"/>
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding GroupOptions}"
                           SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
-                          HorizontalAlignment="Stretch"/>
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"/>
             </Grid>
 
-            <TextBlock Grid.Row="2"
-                       Margin="16,0,16,8"
-                       Text="{Binding ResultsSummary}"
-                       FontSize="11"
-                       Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+            <ScrollViewer Grid.Row="1"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <Grid Margin="12,8,12,12"
+                      RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0"
+                               Text="{Binding ResultsSummary}"
+                               Classes="category-header"
+                               Margin="8,8,0,8"/>
 
-            <Border Grid.Row="3"
-                    Margin="16,0,16,16"
-                    Background="{DynamicResource ShareX.Brush.Background.Panel}"
-                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                    BorderThickness="1"
-                    CornerRadius="10">
-                <Grid>
-                    <ScrollViewer IsVisible="{Binding HasResults}"
-                                  HorizontalScrollBarVisibility="Disabled"
-                                  VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding VisibleEmojis}"
-                                      Margin="12">
+                    <Grid Grid.Row="1">
+                        <ItemsControl IsVisible="{Binding HasResults}"
+                                      ItemsSource="{Binding VisibleEmojis}"
+                                      Margin="0,0,0,8">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Horizontal"
-                                               ItemWidth="60"
-                                               ItemHeight="60"/>
+                                    <WrapPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="emoji:EmojiCatalogEntry">
-                                    <Button Classes="editor-button emoji-tile"
+                                    <Button Classes="effect-item emoji-tile"
                                             Command="{Binding #Root.DataContext.SelectEmojiCommand}"
                                             CommandParameter="{Binding}"
                                             ToolTip.Tip="{Binding Name}">
                                         <controls:EmojiPreviewImage UnicodeSequence="{Binding Unicode}"
-                                                                    PreviewSize="40"
-                                                                    Width="40"
-                                                                    Height="40"
+                                                                    PreviewSize="34"
+                                                                    Width="34"
+                                                                    Height="34"
                                                                     HorizontalAlignment="Center"
                                                                     VerticalAlignment="Center"/>
                                     </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                    </ScrollViewer>
 
-                    <StackPanel IsVisible="{Binding !HasResults}"
-                                Spacing="8"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                        <TextBlock Text="No emojis match this search."
-                                   HorizontalAlignment="Center"/>
-                        <TextBlock Text="Try a different keyword."
-                                   HorizontalAlignment="Center"
-                                   FontSize="11"
-                                   Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
-                    </StackPanel>
+                        <StackPanel IsVisible="{Binding !HasResults}"
+                                    Spacing="8"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="No emojis match this search."
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Try a different keyword."
+                                       HorizontalAlignment="Center"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+                            <Button Classes="editor-button"
+                                    Content="Cancel"
+                                    Command="{Binding CancelCommand}"
+                                    Padding="20,0"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
-            </Border>
-
-            <Border Grid.Row="4"
-                    Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
-                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                    BorderThickness="0,1,0,0"
-                    Padding="10">
-                <StackPanel Orientation="Horizontal"
-                            Spacing="5"
-                            HorizontalAlignment="Right">
-                    <Button Classes="editor-button"
-                            Padding="20,0"
-                            Content="Cancel"
-                            Command="{Binding CancelCommand}"
-                            HorizontalContentAlignment="Center"/>
-                </StackPanel>
-            </Border>
+            </ScrollViewer>
         </Grid>
     </Border>
 </UserControl>
