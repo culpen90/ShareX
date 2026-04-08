@@ -47,6 +47,9 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
     [ObservableProperty]
     private string _resultsSummary = string.Empty;
 
+    [ObservableProperty]
+    private string _searchWatermark = "Search emojis";
+
     public IReadOnlyList<string> GroupOptions { get; }
 
     public bool HasResults => VisibleEmojis.Count > 0;
@@ -86,12 +89,18 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
     private void RefreshResults()
     {
         string search = SearchText.Trim();
+        EmojiCatalogEntry[] categoryEntries =
+        [
+            .. _catalog.Where(entry => string.Equals(entry.Group, SelectedGroup, StringComparison.Ordinal))
+        ];
+
+        SearchWatermark = $"Search emojis... ({categoryEntries.Length})";
+
         IEnumerable<EmojiCatalogEntry> query;
 
         if (string.IsNullOrWhiteSpace(search))
         {
-            query = _catalog
-                .Where(entry => string.Equals(entry.Group, SelectedGroup, StringComparison.Ordinal));
+            query = categoryEntries;
 
             ResultsSummary = string.IsNullOrEmpty(SelectedGroup)
                 ? "Browse emojis"
@@ -99,7 +108,7 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
         }
         else
         {
-            query = _catalog
+            query = categoryEntries
                 .Select(entry => (Entry: entry, Score: entry.GetSearchScore(search)))
                 .Where(match => match.Score != int.MaxValue)
                 .OrderBy(match => match.Score)

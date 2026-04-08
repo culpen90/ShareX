@@ -38,7 +38,7 @@
                          Grid.Column="0"
                          Classes="effect-search"
                          Text="{Binding SearchText, Mode=TwoWay}"
-                         Watermark="Search emojis"/>
+                         Watermark="{Binding SearchWatermark}"/>
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding GroupOptions}"
                           SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
@@ -49,14 +49,7 @@
             <ScrollViewer Grid.Row="1"
                           HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollBarVisibility="Auto">
-                <Grid Margin="12,8,12,12"
-                      RowDefinitions="Auto,*">
-                    <TextBlock Grid.Row="0"
-                               Text="{Binding ResultsSummary}"
-                               Classes="category-header"
-                               Margin="8,8,0,8"/>
-
-                    <Grid Grid.Row="1">
+                <Grid Margin="12,8,12,12">
                         <ItemsControl IsVisible="{Binding HasResults}"
                                       ItemsSource="{Binding VisibleEmojis}"
                                       Margin="0,0,0,8">
@@ -72,9 +65,9 @@
                                             CommandParameter="{Binding}"
                                             ToolTip.Tip="{Binding Name}">
                                         <controls:EmojiPreviewImage UnicodeSequence="{Binding Unicode}"
-                                                                    PreviewSize="34"
-                                                                    Width="34"
-                                                                    Height="34"
+                                                                    PreviewSize="48"
+                                                                    Width="48"
+                                                                    Height="48"
                                                                     HorizontalAlignment="Center"
                                                                     VerticalAlignment="Center"/>
                                     </Button>
@@ -99,7 +92,6 @@
                                     HorizontalAlignment="Center"
                                     HorizontalContentAlignment="Center"/>
                         </StackPanel>
-                    </Grid>
                 </Grid>
             </ScrollViewer>
         </Grid>

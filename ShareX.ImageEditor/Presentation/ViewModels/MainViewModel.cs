@@ -131,11 +131,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             RequestClose();
         }
 
-        public void RequestClose()
+        public void RequestClose(bool ignoreModal = false)
         {
-            if (IsModalOpen)
+            if (IsModalOpen && !ignoreModal)
             {
                 return;
+            }
+
+            if (IsModalOpen && ignoreModal)
+            {
+                CloseModal();
             }
 
             TaskResult = EditorTaskResult.Cancel;
