@@ -1358,6 +1358,40 @@ namespace ShareX.ImageEditor.Presentation.Views
             _selectionController.SetSelectedShape(imageControl);
         }
 
+        private void InsertEmojiAnnotation(string unicodeSequence, string displayName, Point? dropPosition = null)
+        {
+            var canvas = this.FindControl<Canvas>("AnnotationCanvas");
+            if (canvas == null || DataContext is not MainViewModel vm)
+            {
+                return;
+            }
+
+            const int defaultSize = 160;
+
+            var posX = dropPosition?.X ?? (_editorCore.CanvasSize.Width / 2 - defaultSize / 2.0);
+            var posY = dropPosition?.Y ?? (_editorCore.CanvasSize.Height / 2 - defaultSize / 2.0);
+
+            var annotation = new EmojiAnnotation
+            {
+                UnicodeSequence = unicodeSequence,
+                DisplayName = displayName,
+                StartPoint = new SKPoint((float)posX, (float)posY),
+                EndPoint = new SKPoint((float)(posX + defaultSize), (float)(posY + defaultSize))
+            };
+
+            var control = CreateControlForAnnotation(annotation);
+            if (control == null)
+            {
+                return;
+            }
+
+            canvas.Children.Add(control);
+            _editorCore.AddAnnotation(annotation);
+            vm.HasAnnotations = true;
+            vm.ActiveTool = EditorTool.Select;
+            _selectionController.SetSelectedShape(control);
+        }
+
         /// <summary>
         /// Handles DragOver event to show appropriate drag cursor.
         /// </summary>
@@ -1595,13 +1629,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         {
             try
             {
-                SKBitmap? emojiBitmap = WindowsEmojiBitmapRenderer.RenderStickerBitmap(e.UnicodeSequence);
-                if (emojiBitmap == null)
-                {
-                    return;
-                }
-
-                InsertImageAnnotation(emojiBitmap);
+                InsertEmojiAnnotation(e.UnicodeSequence, e.DisplayName);
             }
             catch (Exception ex)
             {

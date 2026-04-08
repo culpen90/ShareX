@@ -29,6 +29,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.Controls;
+using ShareX.ImageEditor.Presentation.Emoji;
 using SkiaSharp;
 
 namespace ShareX.ImageEditor.Presentation.Rendering;
@@ -179,17 +180,21 @@ public static class AnnotationVisualFactory
                 spotlightControl.InvalidateVisual();
                 break;
 
+            case EmojiAnnotation emojiAnnotation when control is Image emojiControl:
+                RefreshEmojiImage(emojiAnnotation, emojiControl);
+                break;
+
             case ImageAnnotation imageAnnotation when control is Image imageControl:
                 if (imageAnnotation.ImageBitmap != null)
                 {
                     imageControl.Source = BitmapConversionHelpers.ToAvaloniBitmap(imageAnnotation.ImageBitmap);
-                    imageControl.Width = imageAnnotation.ImageBitmap.Width;
-                    imageControl.Height = imageAnnotation.ImageBitmap.Height;
                 }
 
                 var imageBounds = imageAnnotation.GetBounds();
                 Canvas.SetLeft(imageControl, imageBounds.Left);
                 Canvas.SetTop(imageControl, imageBounds.Top);
+                imageControl.Width = Math.Max(1, imageBounds.Width);
+                imageControl.Height = Math.Max(1, imageBounds.Height);
                 break;
 
             default:
@@ -216,9 +221,21 @@ public static class AnnotationVisualFactory
             HighlightAnnotation highlight => highlight.CreateVisual(),
             SpotlightAnnotation spotlight => spotlight.CreateVisual(),
             FreehandAnnotation freehand => freehand.CreateVisual(),
+            EmojiAnnotation emoji => CreateEmojiVisual(emoji),
             ImageAnnotation image => CreateImageVisual(image),
             _ => null
         };
+    }
+
+    private static Control CreateEmojiVisual(EmojiAnnotation emojiAnnotation)
+    {
+        var image = new Image
+        {
+            Tag = emojiAnnotation
+        };
+
+        RefreshEmojiImage(emojiAnnotation, image);
+        return image;
     }
 
     private static Control CreateImageVisual(ImageAnnotation imageAnnotation)
@@ -231,11 +248,43 @@ public static class AnnotationVisualFactory
         if (imageAnnotation.ImageBitmap != null)
         {
             image.Source = BitmapConversionHelpers.ToAvaloniBitmap(imageAnnotation.ImageBitmap);
-            image.Width = imageAnnotation.ImageBitmap.Width;
-            image.Height = imageAnnotation.ImageBitmap.Height;
         }
 
+        var imageBounds = imageAnnotation.GetBounds();
+        image.Width = Math.Max(1, imageBounds.Width);
+        image.Height = Math.Max(1, imageBounds.Height);
+
         return image;
+    }
+
+    private static void RefreshEmojiImage(EmojiAnnotation emojiAnnotation, Image imageControl)
+    {
+        var imageBounds = emojiAnnotation.GetBounds();
+        int renderSize = Math.Max(1, (int)Math.Ceiling(Math.Max(imageBounds.Width, imageBounds.Height)));
+
+        if (!string.IsNullOrWhiteSpace(emojiAnnotation.UnicodeSequence))
+        {
+            var renderedBitmap = WindowsEmojiBitmapRenderer.RenderStickerBitmap(emojiAnnotation.UnicodeSequence, renderSize);
+            if (renderedBitmap != null)
+            {
+                emojiAnnotation.SetImage(renderedBitmap);
+            }
+        }
+
+        if (emojiAnnotation.ImageBitmap != null)
+        {
+            if (imageControl.Source is IDisposable previousSource)
+            {
+                previousSource.Dispose();
+            }
+
+            imageControl.Source = BitmapConversionHelpers.ToAvaloniBitmap(emojiAnnotation.ImageBitmap);
+        }
+
+        Canvas.SetLeft(imageControl, imageBounds.Left);
+        Canvas.SetTop(imageControl, imageBounds.Top);
+        imageControl.Width = Math.Max(1, imageBounds.Width);
+        imageControl.Height = Math.Max(1, imageBounds.Height);
     }
 
     private static Control CreateTextPreviewPlaceholder(TextAnnotation annotation)

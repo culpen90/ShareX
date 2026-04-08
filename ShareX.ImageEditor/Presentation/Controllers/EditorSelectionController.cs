@@ -488,6 +488,14 @@ public class EditorSelectionController
             return;
         }
 
+        if (_selectedShape.Tag is EmojiAnnotation emojiAnnotation)
+        {
+            ResizeEmojiAnnotation(emojiAnnotation, currentPoint, handleTag);
+            _startPoint = currentPoint;
+            UpdateSelectionHandles();
+            return;
+        }
+
         // Rotation handling for OutlinedTextControl (Text annotation)
         if (_selectedShape is OutlinedTextControl rotateTextBox && handleTag == "Rotate")
         {
@@ -583,7 +591,11 @@ public class EditorSelectionController
             return;
         }
 
-        if (_selectedShape is global::Avalonia.Controls.Shapes.Rectangle || _selectedShape is global::Avalonia.Controls.Shapes.Ellipse || _selectedShape is Grid || _selectedShape is OutlinedTextControl)
+        if (_selectedShape is global::Avalonia.Controls.Shapes.Rectangle
+            || _selectedShape is global::Avalonia.Controls.Shapes.Ellipse
+            || _selectedShape is global::Avalonia.Controls.Image
+            || _selectedShape is Grid
+            || _selectedShape is OutlinedTextControl)
         {
             double newLeft = left;
             double newTop = top;
@@ -617,6 +629,91 @@ public class EditorSelectionController
         {
             RequestUpdateEffect?.Invoke(_selectedShape);
         }
+    }
+
+    private void ResizeEmojiAnnotation(EmojiAnnotation annotation, Point currentPoint, string handleTag)
+    {
+        if (_selectedShape is not global::Avalonia.Controls.Image imageControl)
+        {
+            return;
+        }
+
+        const double minSize = 16;
+
+        var bounds = GetLogicalRect(imageControl);
+        double left = bounds.Left;
+        double top = bounds.Top;
+        double right = bounds.Right;
+        double bottom = bounds.Bottom;
+        double centerX = bounds.Center.X;
+        double centerY = bounds.Center.Y;
+
+        double newLeft = left;
+        double newTop = top;
+        double newSize;
+
+        if (handleTag.Contains("Left") && handleTag.Contains("Top"))
+        {
+            newSize = Math.Max(minSize, Math.Max(right - currentPoint.X, bottom - currentPoint.Y));
+            newLeft = right - newSize;
+            newTop = bottom - newSize;
+        }
+        else if (handleTag.Contains("Right") && handleTag.Contains("Top"))
+        {
+            newSize = Math.Max(minSize, Math.Max(currentPoint.X - left, bottom - currentPoint.Y));
+            newLeft = left;
+            newTop = bottom - newSize;
+        }
+        else if (handleTag.Contains("Left") && handleTag.Contains("Bottom"))
+        {
+            newSize = Math.Max(minSize, Math.Max(right - currentPoint.X, currentPoint.Y - top));
+            newLeft = right - newSize;
+            newTop = top;
+        }
+        else if (handleTag.Contains("Right") && handleTag.Contains("Bottom"))
+        {
+            newSize = Math.Max(minSize, Math.Max(currentPoint.X - left, currentPoint.Y - top));
+            newLeft = left;
+            newTop = top;
+        }
+        else if (handleTag.Contains("Left"))
+        {
+            newSize = Math.Max(minSize, right - currentPoint.X);
+            newLeft = right - newSize;
+            newTop = centerY - (newSize / 2.0);
+        }
+        else if (handleTag.Contains("Right"))
+        {
+            newSize = Math.Max(minSize, currentPoint.X - left);
+            newLeft = left;
+            newTop = centerY - (newSize / 2.0);
+        }
+        else if (handleTag.Contains("Top"))
+        {
+            newSize = Math.Max(minSize, bottom - currentPoint.Y);
+            newLeft = centerX - (newSize / 2.0);
+            newTop = bottom - newSize;
+        }
+        else if (handleTag.Contains("Bottom"))
+        {
+            newSize = Math.Max(minSize, currentPoint.Y - top);
+            newLeft = centerX - (newSize / 2.0);
+            newTop = top;
+        }
+        else
+        {
+            return;
+        }
+
+        annotation.StartPoint = new SKPoint((float)newLeft, (float)newTop);
+        annotation.EndPoint = new SKPoint((float)(newLeft + newSize), (float)(newTop + newSize));
+
+        AnnotationVisualFactory.UpdateVisualControl(
+            imageControl,
+            annotation,
+            AnnotationVisualMode.Persisted,
+            _view.EditorCore.CanvasSize.Width,
+            _view.EditorCore.CanvasSize.Height);
     }
 
     public void MoveSelectedShape(double deltaX, double deltaY)
