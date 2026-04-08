@@ -41,11 +41,13 @@ public static class WindowsEmojiBitmapRenderer
     private const string EmojiFontFamily = "Segoe UI Emoji";
     private const int PreviewPadding = 6;
     private const int StickerPadding = 14;
+    private const int MaxStickerCacheEntries = 256;
     private const float RawCanvasScale = 2.0f;
     private const float RawFontScale = 1.32f;
 
     private static readonly object SyncRoot = new();
     private static readonly Dictionary<string, Bitmap> PreviewCache = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, SKBitmap> StickerCache = new(StringComparer.Ordinal);
     private static readonly ID2D1Factory7? D2DFactory;
     private static readonly IDWriteFactory? DWriteFactoryInstance;
     private static readonly IWICImagingFactory? WicFactory;
@@ -97,10 +99,30 @@ public static class WindowsEmojiBitmapRenderer
             return null;
         }
 
-        lock (SyncRoot)
+        return RenderStickerBitmapCore(unicodeSequence, size);
+    }
+
+    public static SKBitmap? RenderInteractiveStickerBitmap(string unicodeSequence, int size = 160)
+    {
+        if (string.IsNullOrWhiteSpace(unicodeSequence) || size <= 0)
         {
-            return RenderSquareBitmap(unicodeSequence, size, StickerPadding);
+            return null;
         }
+
+        return RenderStickerBitmapCore(unicodeSequence, GetInteractiveStickerSize(size));
+    }
+
+    public static int GetInteractiveStickerSize(int size)
+    {
+        size = Math.Max(1, size);
+
+        if (size <= 64)
+        {
+            return size;
+        }
+
+        int step = size <= 128 ? 4 : size <= 256 ? 8 : 12;
+        return Math.Max(64, (int)Math.Round(size / (double)step) * step);
     }
 
     private static SKBitmap? RenderSquareBitmap(string unicodeSequence, int size, int padding)
@@ -258,5 +280,42 @@ public static class WindowsEmojiBitmapRenderer
 
         canvas.DrawBitmap(source, new SKRect(left, top, left + drawWidth, top + drawHeight), paint);
         return output;
+    }
+
+    private static SKBitmap? RenderStickerBitmapCore(string unicodeSequence, int size)
+    {
+        string cacheKey = $"{unicodeSequence}:{size}";
+
+        lock (SyncRoot)
+        {
+            if (StickerCache.TryGetValue(cacheKey, out SKBitmap? cachedBitmap))
+            {
+                return cachedBitmap.Copy();
+            }
+
+            SKBitmap? renderedBitmap = RenderSquareBitmap(unicodeSequence, size, StickerPadding);
+            if (renderedBitmap == null)
+            {
+                return null;
+            }
+
+            if (StickerCache.Count >= MaxStickerCacheEntries)
+            {
+                ClearStickerCache();
+            }
+
+            StickerCache[cacheKey] = renderedBitmap.Copy();
+            return renderedBitmap;
+        }
+    }
+
+    private static void ClearStickerCache()
+    {
+        foreach (SKBitmap bitmap in StickerCache.Values)
+        {
+            bitmap.Dispose();
+        }
+
+        StickerCache.Clear();
     }
 }

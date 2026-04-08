@@ -81,7 +81,8 @@ public static class AnnotationVisualFactory
         Annotation annotation,
         AnnotationVisualMode mode = AnnotationVisualMode.Persisted,
         double canvasWidth = 0,
-        double canvasHeight = 0)
+        double canvasHeight = 0,
+        bool useInteractiveEmojiRender = false)
     {
         ArgumentNullException.ThrowIfNull(control);
         ArgumentNullException.ThrowIfNull(annotation);
@@ -132,16 +133,7 @@ public static class AnnotationVisualFactory
                 // Note: The text content, font size, bold/italic, etc. are handled automatically by the control's rendering
                 // using the bound Annotation property, but we must apply the transform and invalidate it explicitly here.
 
-                // Apply rotation transform if set
-                if (text.RotationAngle != 0)
-                {
-                    textControl.RenderTransformOrigin = new Avalonia.RelativePoint(0.5, 0.5, Avalonia.RelativeUnit.Relative);
-                    textControl.RenderTransform = new RotateTransform(text.RotationAngle);
-                }
-                else
-                {
-                    textControl.RenderTransform = null;
-                }
+                ApplyRotationTransform(textControl, text.RotationAngle);
 
                 textControl.InvalidateVisual();
                 textControl.InvalidateMeasure();
@@ -181,7 +173,7 @@ public static class AnnotationVisualFactory
                 break;
 
             case EmojiAnnotation emojiAnnotation when control is Image emojiControl:
-                RefreshEmojiImage(emojiAnnotation, emojiControl);
+                RefreshEmojiImage(emojiAnnotation, emojiControl, useInteractiveEmojiRender);
                 break;
 
             case ImageAnnotation imageAnnotation when control is Image imageControl:
@@ -257,21 +249,32 @@ public static class AnnotationVisualFactory
         return image;
     }
 
-    private static void RefreshEmojiImage(EmojiAnnotation emojiAnnotation, Image imageControl)
+    private static void RefreshEmojiImage(EmojiAnnotation emojiAnnotation, Image imageControl, bool useInteractiveRender = false)
     {
         var imageBounds = emojiAnnotation.GetBounds();
         int renderSize = Math.Max(1, (int)Math.Ceiling(Math.Max(imageBounds.Width, imageBounds.Height)));
+        int targetBitmapSize = useInteractiveRender
+            ? WindowsEmojiBitmapRenderer.GetInteractiveStickerSize(renderSize)
+            : renderSize;
 
-        if (!string.IsNullOrWhiteSpace(emojiAnnotation.UnicodeSequence))
+        bool needsBitmapRefresh = !string.IsNullOrWhiteSpace(emojiAnnotation.UnicodeSequence)
+            && (emojiAnnotation.ImageBitmap == null
+                || emojiAnnotation.ImageBitmap.Width != targetBitmapSize
+                || emojiAnnotation.ImageBitmap.Height != targetBitmapSize);
+
+        if (needsBitmapRefresh)
         {
-            var renderedBitmap = WindowsEmojiBitmapRenderer.RenderStickerBitmap(emojiAnnotation.UnicodeSequence, renderSize);
+            var renderedBitmap = useInteractiveRender
+                ? WindowsEmojiBitmapRenderer.RenderInteractiveStickerBitmap(emojiAnnotation.UnicodeSequence, renderSize)
+                : WindowsEmojiBitmapRenderer.RenderStickerBitmap(emojiAnnotation.UnicodeSequence, renderSize);
+
             if (renderedBitmap != null)
             {
                 emojiAnnotation.SetImage(renderedBitmap);
             }
         }
 
-        if (emojiAnnotation.ImageBitmap != null)
+        if (emojiAnnotation.ImageBitmap != null && (needsBitmapRefresh || imageControl.Source == null))
         {
             if (imageControl.Source is IDisposable previousSource)
             {
@@ -285,6 +288,7 @@ public static class AnnotationVisualFactory
         Canvas.SetTop(imageControl, imageBounds.Top);
         imageControl.Width = Math.Max(1, imageBounds.Width);
         imageControl.Height = Math.Max(1, imageBounds.Height);
+        ApplyRotationTransform(imageControl, emojiAnnotation.RotationAngle);
     }
 
     private static Control CreateTextPreviewPlaceholder(TextAnnotation annotation)
@@ -381,5 +385,18 @@ public static class AnnotationVisualFactory
         Canvas.SetTop(control, top);
         control.Width = width;
         control.Height = height;
+    }
+
+    private static void ApplyRotationTransform(Control control, float rotationAngle)
+    {
+        if (rotationAngle != 0)
+        {
+            control.RenderTransformOrigin = new Avalonia.RelativePoint(0.5, 0.5, Avalonia.RelativeUnit.Relative);
+            control.RenderTransform = new RotateTransform(rotationAngle);
+        }
+        else
+        {
+            control.RenderTransform = null;
+        }
     }
 }
