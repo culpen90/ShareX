@@ -38,6 +38,7 @@ using ShareX.ImageEditor.Core.Editor;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Controllers;
 using ShareX.ImageEditor.Presentation.Controls;
+using ShareX.ImageEditor.Presentation.Emoji;
 using ShareX.ImageEditor.Presentation.Rendering;
 using ShareX.ImageEditor.Presentation.Theming;
 using ShareX.ImageEditor.Presentation.ViewModels;
@@ -339,6 +340,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.DuplicateRequested += OnDuplicateRequested;
                 vm.ZoomToFitRequested += OnZoomToFitRequested;
                 vm.FlattenRequested += OnFlattenRequested;
+                vm.EmojiInsertionRequested += OnEmojiInsertionRequested;
 
                 // File menu event handlers (Image Editor Mode)
                 vm.NewImageRequested += OnNewImageRequested;
@@ -399,6 +401,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.OpenImageRequested -= OnOpenImageRequested;
                 vm.SaveRequested -= OnSaveRequested;
                 vm.SaveAsRequested -= OnSaveAsRequested;
+                vm.EmojiInsertionRequested -= OnEmojiInsertionRequested;
             }
 
             UnhookAnnotationToolbarEvents();
@@ -1107,6 +1110,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                             case Key.A: vm.SelectToolCommand.Execute(EditorTool.Arrow); e.Handled = true; break;
                             case Key.F: vm.SelectToolCommand.Execute(EditorTool.Freehand); e.Handled = true; break; // Freehand
                             case Key.T: vm.SelectToolCommand.Execute(EditorTool.Text); e.Handled = true; break;
+                            case Key.J: vm.SelectToolCommand.Execute(EditorTool.Emoji); e.Handled = true; break;
                             case Key.O: vm.SelectToolCommand.Execute(EditorTool.SpeechBalloon); e.Handled = true; break;
                             case Key.N: vm.SelectToolCommand.Execute(EditorTool.Step); e.Handled = true; break;
                             case Key.W: vm.SelectToolCommand.Execute(EditorTool.SmartEraser); e.Handled = true; break;
@@ -1584,6 +1588,24 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     _isSyncingToVM = false;
                 }
+            }
+        }
+
+        private void OnEmojiInsertionRequested(object? sender, EmojiSelectionRequest e)
+        {
+            try
+            {
+                SKBitmap? emojiBitmap = WindowsEmojiBitmapRenderer.RenderStickerBitmap(e.UnicodeSequence);
+                if (emojiBitmap == null)
+                {
+                    return;
+                }
+
+                InsertImageAnnotation(emojiBitmap);
+            }
+            catch (Exception ex)
+            {
+                EditorServices.ReportWarning(nameof(EditorView), $"Failed to render emoji '{e.DisplayName}'.", ex);
             }
         }
 

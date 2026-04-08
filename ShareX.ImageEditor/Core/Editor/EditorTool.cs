@@ -118,5 +118,10 @@ public enum EditorTool
     /// <summary>
     /// Insert image/sticker
     /// </summary>
-    Image
+    Image,
+
+    /// <summary>
+    /// Insert emoji sticker
+    /// </summary>
+    Emoji
 }
