@@ -1815,7 +1815,7 @@ public class EditorSelectionController
 
     private void AttachTextBoxEditHandlers(TextBox tb)
     {
-        EventHandler<global::Avalonia.Interactivity.RoutedEventArgs>? lostFocusHandler = null;
+        EventHandler<FocusChangedEventArgs>? lostFocusHandler = null;
         EventHandler<KeyEventArgs>? keyUpHandler = null;
 
         lostFocusHandler = (s, args) =>
@@ -1998,7 +1998,7 @@ public class EditorSelectionController
         textBox.Width = Math.Max(20, annotationBounds.Width);
         textBox.Height = Math.Max(20, annotationBounds.Height);
 
-        EventHandler<global::Avalonia.Interactivity.RoutedEventArgs>? lostFocusHandler = null;
+        EventHandler<FocusChangedEventArgs>? lostFocusHandler = null;
         EventHandler<KeyEventArgs>? keyUpHandler = null;
 
         void CompleteEditing()

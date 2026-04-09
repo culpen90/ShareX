@@ -38,18 +38,22 @@
                          Grid.Column="0"
                          Classes="effect-search"
                          Text="{Binding SearchText, Mode=TwoWay}"
-                         Watermark="{Binding SearchWatermark}"/>
+                         Watermark="{Binding SearchWatermark}"
+                         IsEnabled="{Binding !IsLoading}"/>
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding GroupOptions}"
                           SelectedItem="{Binding SelectedGroup, Mode=TwoWay}"
                           HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch"/>
+                          VerticalAlignment="Stretch"
+                          IsEnabled="{Binding !IsLoading}"/>
             </Grid>
 
-            <ScrollViewer Grid.Row="1"
-                          HorizontalScrollBarVisibility="Disabled"
-                          VerticalScrollBarVisibility="Auto">
-                <Grid Margin="12,8,12,12">
+            <Grid Grid.Row="1"
+                  Margin="12,8,12,12">
+                <ScrollViewer IsVisible="{Binding !IsLoading}"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid>
                         <ItemsControl IsVisible="{Binding HasResults}"
                                       ItemsSource="{Binding VisibleEmojis}"
                                       Margin="0,0,0,8">
@@ -92,8 +96,26 @@
                                     HorizontalAlignment="Center"
                                     HorizontalContentAlignment="Center"/>
                         </StackPanel>
-                </Grid>
-            </ScrollViewer>
+                    </Grid>
+                </ScrollViewer>
+
+                <StackPanel IsVisible="{Binding IsLoading}"
+                            Spacing="14"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <ProgressBar Width="180"
+                                 Height="4"
+                                 IsIndeterminate="True"/>
+                    <TextBlock Text="Loading emojis..."
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="The picker is ready. Emoji previews are loading in the background."
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               MaxWidth="330"
+                               FontSize="11"
+                               Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
