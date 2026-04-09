@@ -76,14 +76,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         /// <summary>
         /// Resize the image to new dimensions with specified quality.
         /// </summary>
-        public void ResizeImage(int newWidth, int newHeight, SkiaSharp.SKFilterQuality quality = SkiaSharp.SKFilterQuality.High)
+        public void ResizeImage(int newWidth, int newHeight, SkiaSharp.SKSamplingOptions sampling = default)
         {
             if (newWidth <= 0 || newHeight <= 0)
             {
                 return;
             }
 
-            _editorCore?.ResizeImage(newWidth, newHeight, quality);
+            _editorCore?.ResizeImage(newWidth, newHeight, sampling);
         }
 
         /// <summary>

@@ -72,6 +72,6 @@ public sealed class ScaleImageEffect : ImageEffectBase
         }
 
         SKImageInfo info = new SKImageInfo(width, height, source.ColorType, source.AlphaType, source.ColorSpace);
-        return source.Resize(info, SKFilterQuality.High) ?? source.Copy();
+        return source.Resize(info, new SKSamplingOptions(SKCubicResampler.CatmullRom)) ?? source.Copy();
     }
 }

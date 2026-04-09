@@ -103,17 +103,14 @@ public sealed class MatrixDigitalRainImageEffect : ImageEffectBase
         }
 
         SKTypeface? customTypeface = SKTypeface.FromFamilyName("Consolas");
+        using SKFont glyphFont = new SKFont(customTypeface ?? SKTypeface.Default, cell * 1.02f);
         using SKPaint glyphPaint = new SKPaint
         {
-            IsAntialias = true,
-            Typeface = customTypeface ?? SKTypeface.Default,
-            TextSize = cell * 1.02f
+            IsAntialias = true
         };
         using SKPaint glowPaint = new SKPaint
         {
-            IsAntialias = true,
-            Typeface = customTypeface ?? SKTypeface.Default,
-            TextSize = cell * 1.02f
+            IsAntialias = true
         };
         if (glow > 0f)
         {
@@ -171,7 +168,7 @@ public sealed class MatrixDigitalRainImageEffect : ImageEffectBase
                         ProceduralEffectHelper.ClampToByte(180f + (intensity * 60f)),
                         ProceduralEffectHelper.ClampToByte(56f + (intensity * 70f)),
                         ProceduralEffectHelper.ClampToByte(glowStrength * 180f));
-                    canvas.DrawText(glyph.ToString(), x0, y0 + baseline, glowPaint);
+                    canvas.DrawText(glyph.ToString(), x0, y0 + baseline, glyphFont, glowPaint);
                 }
 
                 glyphPaint.MaskFilter = null;
@@ -180,7 +177,7 @@ public sealed class MatrixDigitalRainImageEffect : ImageEffectBase
                     ProceduralEffectHelper.ClampToByte(120f + (intensity * 135f)),
                     ProceduralEffectHelper.ClampToByte(28f + (intensity * 118f)),
                     alpha);
-                canvas.DrawText(glyph.ToString(), x0, y0 + baseline, glyphPaint);
+                canvas.DrawText(glyph.ToString(), x0, y0 + baseline, glyphFont, glyphPaint);
             }
         }
 

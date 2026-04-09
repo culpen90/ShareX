@@ -196,10 +196,10 @@ public sealed class DrawImageEffect : ImageEffectBase
 
         SKBitmap result = source.Copy();
         using SKCanvas canvas = new SKCanvas(result);
+        SKSamplingOptions sampling = DrawingEffectHelpers.GetSamplingOptions(InterpolationMode);
         using SKPaint paint = new SKPaint
         {
             IsAntialias = true,
-            FilterQuality = DrawingEffectHelpers.GetFilterQuality(InterpolationMode),
             BlendMode = DrawingEffectHelpers.GetBlendMode(CompositingMode)
         };
 
@@ -211,10 +211,12 @@ public sealed class DrawImageEffect : ImageEffectBase
 
         if (Tile)
         {
-            using SKShader shader = SKShader.CreateBitmap(
-                watermark,
+            using SKImage watermarkImage = SKImage.FromBitmap(watermark);
+            using SKShader shader = SKShader.CreateImage(
+                watermarkImage,
                 SKShaderTileMode.Repeat,
-                SKShaderTileMode.Repeat);
+                SKShaderTileMode.Repeat,
+                sampling);
             paint.Shader = shader;
             canvas.Save();
             canvas.Translate(imageRect.Left, imageRect.Top);
@@ -223,7 +225,8 @@ public sealed class DrawImageEffect : ImageEffectBase
         }
         else
         {
-            canvas.DrawBitmap(watermark, new SKRect(imageRect.Left, imageRect.Top, imageRect.Right, imageRect.Bottom), paint);
+            using SKImage watermarkImage = SKImage.FromBitmap(watermark);
+            canvas.DrawImage(watermarkImage, new SKRect(imageRect.Left, imageRect.Top, imageRect.Right, imageRect.Bottom), sampling, paint);
         }
 
         return result;

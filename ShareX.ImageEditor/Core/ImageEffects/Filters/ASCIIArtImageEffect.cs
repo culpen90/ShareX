@@ -77,12 +77,10 @@ public sealed class ASCIIArtImageEffect : ImageEffectBase
         canvas.Clear(DarkBackground ? new SKColor(12, 12, 12, 255) : SKColors.White);
 
         SKTypeface? customTypeface = SKTypeface.FromFamilyName("Consolas");
+        using SKFont font = new SKFont(customTypeface ?? SKTypeface.Default, cell * 1.02f);
         using SKPaint paint = new SKPaint
         {
-            IsAntialias = true,
-            FilterQuality = SKFilterQuality.High,
-            Typeface = customTypeface ?? SKTypeface.Default,
-            TextSize = cell * 1.02f
+            IsAntialias = true
         };
 
         int columns = (int)Math.Ceiling(width / (float)cell);
@@ -128,7 +126,7 @@ public sealed class ASCIIArtImageEffect : ImageEffectBase
                         avgA)
                     : GetMonochromeColor(DarkBackground, luminance, avgA);
 
-                canvas.DrawText(c.ToString(), x0, y0 + baselineOffset, paint);
+                canvas.DrawText(c.ToString(), x0, y0 + baselineOffset, font, paint);
             }
         }
 

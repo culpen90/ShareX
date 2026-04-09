@@ -126,11 +126,12 @@ public partial class MagnifyAnnotation : BaseEffectAnnotation
         int drawY = validRect.Top - annotationRect.Top;
 
         using (var resultCanvas = new SKCanvas(result))
-        using (var paint = new SKPaint { FilterQuality = SKFilterQuality.Medium })
+        using (var paint = new SKPaint())
+        using (var drawSourceImage = SKImage.FromBitmap(drawSource))
         {
             var sourceRect = new SKRect(captureRect.Left, captureRect.Top, captureRect.Right, captureRect.Bottom);
             var destinationRect = new SKRect(drawX, drawY, drawX + validRect.Width, drawY + validRect.Height);
-            resultCanvas.DrawBitmap(drawSource, sourceRect, destinationRect, paint);
+            resultCanvas.DrawImage(drawSourceImage, sourceRect, destinationRect, new SKSamplingOptions(SKCubicResampler.Mitchell), paint);
         }
 
         EffectBitmap?.Dispose();

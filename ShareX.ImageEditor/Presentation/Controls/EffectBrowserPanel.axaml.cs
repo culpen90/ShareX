@@ -33,7 +33,6 @@ using ShareX.ImageEditor.Core.ImageEffects;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Effects;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 
 namespace ShareX.ImageEditor.Presentation.Controls
@@ -580,7 +579,7 @@ namespace ShareX.ImageEditor.Presentation.Controls
                 .Where(category => !IsPinnedCategory(category))
                 .Sum(category => category.AllEffects.Count);
 
-            searchBox.Watermark = string.Format(SearchWatermarkFormat, totalEffectCount);
+            searchBox.PlaceholderText = string.Format(SearchWatermarkFormat, totalEffectCount);
         }
 
         private void PersistRecentToOptions()

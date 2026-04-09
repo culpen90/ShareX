@@ -83,11 +83,13 @@ public sealed class DrawBackgroundImageEffect : ImageEffectBase
                 tileY = (result.Height - backgroundImage.Height) / 2 % backgroundImage.Height;
             }
 
-            using SKShader shader = SKShader.CreateBitmap(
-                backgroundImage,
+            using SKImage backgroundSKImage = SKImage.FromBitmap(backgroundImage);
+            using SKShader shader = SKShader.CreateImage(
+                backgroundSKImage,
                 SKShaderTileMode.Repeat,
-                SKShaderTileMode.Repeat);
-            using SKPaint paint = new SKPaint { Shader = shader, IsAntialias = true, FilterQuality = SKFilterQuality.High };
+                SKShaderTileMode.Repeat,
+                new SKSamplingOptions(SKCubicResampler.CatmullRom));
+            using SKPaint paint = new SKPaint { Shader = shader, IsAntialias = true };
 
             if (Center)
             {
@@ -116,8 +118,9 @@ public sealed class DrawBackgroundImageEffect : ImageEffectBase
             int x = Center ? (result.Width - width) / 2 : 0;
             int y = Center ? (result.Height - height) / 2 : 0;
 
-            using SKPaint paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High };
-            canvas.DrawBitmap(backgroundImage, new SKRect(x, y, x + width, y + height), paint);
+            using SKPaint paint = new SKPaint { IsAntialias = true };
+            using SKImage backgroundSKImage2 = SKImage.FromBitmap(backgroundImage);
+            canvas.DrawImage(backgroundSKImage2, new SKRect(x, y, x + width, y + height), new SKSamplingOptions(SKCubicResampler.CatmullRom), paint);
         }
 
         canvas.DrawBitmap(source, 0, 0);

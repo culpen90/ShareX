@@ -125,7 +125,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
         // Top highlight
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(0, 0), new SKPoint(0, bevelWidth),
                 [highlightColor.WithAlpha((byte)(200 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
@@ -134,7 +135,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
         // Left highlight
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(0, 0), new SKPoint(bevelWidth, 0),
                 [highlightColor.WithAlpha((byte)(180 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
@@ -143,7 +145,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
         // Bottom shadow
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(0, height), new SKPoint(0, height - bevelWidth),
                 [darkColor.WithAlpha((byte)(200 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
@@ -152,7 +155,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
         // Right shadow
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(width, 0), new SKPoint(width - bevelWidth, 0),
                 [darkColor.WithAlpha((byte)(200 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
@@ -163,7 +167,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
 
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(0, size), new SKPoint(0, size - innerBevelWidth),
                 [darkColor.WithAlpha((byte)(160 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
@@ -171,7 +176,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
 
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(size, 0), new SKPoint(size - innerBevelWidth, 0),
                 [darkColor.WithAlpha((byte)(140 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
@@ -179,7 +185,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
 
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(0, height - size), new SKPoint(0, height - size + innerBevelWidth),
                 [lightColor.WithAlpha((byte)(140 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
@@ -187,7 +194,8 @@ public sealed class GoldenBorderImageEffect : ImageEffectBase
 
         using (SKPaint p = new()
         {
-            IsAntialias = true, Style = SKPaintStyle.Fill,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
             Shader = SKShader.CreateLinearGradient(new SKPoint(width - size, 0), new SKPoint(width - size + innerBevelWidth, 0),
                 [lightColor.WithAlpha((byte)(140 * bevel)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
         })
