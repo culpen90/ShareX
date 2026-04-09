@@ -49,14 +49,14 @@ public partial class PixelateAnnotation : BaseEffectAnnotation
         int h = Math.Max(1, source.Height / pixelSize);
 
         var info = new SKImageInfo(w, h);
-        using var small = source.Resize(info, SKFilterQuality.Low);
+        using var small = source.Resize(info, new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.None));
         if (small == null)
         {
             return null;
         }
 
         info = new SKImageInfo(source.Width, source.Height);
-        return small.Resize(info, SKFilterQuality.None);
+        return small.Resize(info, new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None));
     }
 
     internal override SKBitmap? CreateInteractionCacheBitmap(SKBitmap source)
@@ -110,7 +110,7 @@ public partial class PixelateAnnotation : BaseEffectAnnotation
         int h = Math.Max(1, crop.Height / pixelSize);
 
         var info = new SKImageInfo(w, h);
-        using var small = crop.Resize(info, SKFilterQuality.Low);
+        using var small = crop.Resize(info, new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.None));
         if (small == null)
         {
             EffectBitmap?.Dispose();
@@ -119,7 +119,7 @@ public partial class PixelateAnnotation : BaseEffectAnnotation
         }
 
         info = new SKImageInfo(crop.Width, crop.Height);
-        using var pixelated = small.Resize(info, SKFilterQuality.None); // Nearest neighbor upscale
+        using var pixelated = small.Resize(info, new SKSamplingOptions(SKFilterMode.Nearest, SKMipmapMode.None)); // Nearest neighbor upscale
         if (pixelated == null)
         {
             EffectBitmap?.Dispose();

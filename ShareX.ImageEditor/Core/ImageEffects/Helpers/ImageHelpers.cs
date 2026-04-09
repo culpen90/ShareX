@@ -181,7 +181,7 @@ public static class ImageHelpers
     /// <param name="maintainAspectRatio">If true, scales proportionally to fit within width/height</param>
     /// <param name="quality">Filter quality for scaling</param>
     /// <returns>New resized bitmap</returns>
-    public static SKBitmap Resize(SKBitmap source, int width, int height, bool maintainAspectRatio = false, SKFilterQuality quality = SKFilterQuality.High)
+    public static SKBitmap Resize(SKBitmap source, int width, int height, bool maintainAspectRatio = false, SKSamplingOptions sampling = default)
     {
         // Quality ignored in Effect currently or hardcoded to High
         return new ResizeImageEffect { Width = width, Height = height, MaintainAspectRatio = maintainAspectRatio }.Apply(source);

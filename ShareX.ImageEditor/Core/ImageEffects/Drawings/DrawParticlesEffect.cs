@@ -244,8 +244,7 @@ public sealed class DrawParticlesEffect : ImageEffectBase
 
         using SKPaint paint = new SKPaint
         {
-            IsAntialias = true,
-            FilterQuality = SKFilterQuality.High
+            IsAntialias = true
         };
 
         if (alpha < 255)
@@ -253,7 +252,8 @@ public sealed class DrawParticlesEffect : ImageEffectBase
             paint.ColorFilter = SKColorFilter.CreateBlendMode(new SKColor(255, 255, 255, (byte)alpha), SKBlendMode.Modulate);
         }
 
-        canvas.DrawBitmap(particle, new SKRect(rect.Left, rect.Top, rect.Right, rect.Bottom), paint);
+        using SKImage particleImage = SKImage.FromBitmap(particle);
+        canvas.DrawImage(particleImage, new SKRect(rect.Left, rect.Top, rect.Right, rect.Bottom), new SKSamplingOptions(SKCubicResampler.CatmullRom), paint);
         canvas.Restore();
     }
 

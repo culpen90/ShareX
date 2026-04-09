@@ -544,10 +544,11 @@ public sealed class RemoveBackgroundImageEffect : ImageEffectBase
         SKBitmap resized = new SKBitmap(width, height, source.ColorType, source.AlphaType);
 
         using (SKCanvas canvas = new(resized))
-        using (SKPaint paint = new() { FilterQuality = SKFilterQuality.High, IsAntialias = true })
+        using (SKPaint paint = new() { IsAntialias = true })
         {
             canvas.Clear(SKColors.Transparent);
-            canvas.DrawBitmap(source, new SKRect(0, 0, width, height), paint);
+            using SKImage sourceImage = SKImage.FromBitmap(source);
+            canvas.DrawImage(sourceImage, new SKRect(0, 0, width, height), new SKSamplingOptions(SKCubicResampler.CatmullRom), paint);
         }
 
         return resized;

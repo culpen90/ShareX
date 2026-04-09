@@ -190,8 +190,9 @@ public sealed class Rotate3DBoxImageEffect : ImageEffectBase
             if (AutoResize) canvas.Translate(-minX, -minY);
             canvas.Concat(in frontMat);
 
-            using SKPaint frontPaint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High };
-            canvas.DrawBitmap(source, 0, 0, frontPaint);
+            using SKPaint frontPaint = new SKPaint { IsAntialias = true };
+            using SKImage sourceImage = SKImage.FromBitmap(source);
+            canvas.DrawImage(sourceImage, 0, 0, new SKSamplingOptions(SKCubicResampler.CatmullRom), frontPaint);
         }
         return result;
     }
