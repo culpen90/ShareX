@@ -25,6 +25,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
@@ -83,6 +84,10 @@ public partial class SchemaDrivenEffectDialog : UserControl, IEffectDialog
 
         AttachedToVisualTree += OnAttachedToVisualTree;
         DetachedFromVisualTree += OnDetachedFromVisualTree;
+
+        // Handle Esc even when a TextBox inside the dialog has focus (handledEventsToo: true
+        // ensures this fires even after a child TextBox marks the KeyUp event as handled).
+        AddHandler(KeyUpEvent, OnEscapeKeyUp, RoutingStrategies.Bubble, handledEventsToo: true);
 
         EditorServices.ReportDebug(
             nameof(SchemaDrivenEffectDialog),
@@ -236,6 +241,15 @@ public partial class SchemaDrivenEffectDialog : UserControl, IEffectDialog
             $"ApplyClicked effectId={Definition.Id} params={TruncateSnapshot(BuildParameterSnapshot())}");
 
         ApplyRequested?.Invoke(this, BuildEffectEventArgs($"Applied {Definition.Name}"));
+    }
+
+    private void OnEscapeKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
+        {
+            CancelRequested?.Invoke(this, EventArgs.Empty);
+            e.Handled = true;
+        }
     }
 
     private void OnCancelClick(object? sender, RoutedEventArgs e)

@@ -1143,10 +1143,32 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnKeyUp(object? sender, KeyEventArgs e)
         {
+            if (DataContext is MainViewModel vm && e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
+            {
+                // Close emoji modal dialog on Escape (before TextBox short-circuit)
+                if (vm.IsModalOpen)
+                {
+                    vm.CloseModalCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                }
+
+                // Close image effects panel on Escape (before TextBox short-circuit)
+                // Covers both the effects browser (EffectsPanelContent == null) and specific
+                // effect dialogs (EffectsPanelContent != null) to prevent Esc from falling
+                // through to the editor-close path when any effects panel state is active.
+                if (vm.IsEffectsPanelOpen)
+                {
+                    vm.CloseEffectsPanelCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                }
+            }
+
             // Skip shortcuts when the user is typing in a text field
             if (_parentWindow?.FocusManager?.GetFocusedElement() is TextBox) return;
 
-            if (DataContext is MainViewModel vm && e.KeyModifiers == KeyModifiers.None)
+            if (DataContext is MainViewModel vm2 && e.KeyModifiers == KeyModifiers.None)
             {
                 switch (e.Key)
                 {
@@ -1160,14 +1182,14 @@ namespace ShareX.ImageEditor.Presentation.Views
                             _selectionController.ClearSelection();
                             e.Handled = true;
                         }
-                        else if (vm.ImageEditorMode)
+                        else if (vm2.ImageEditorMode)
                         {
-                            vm.ExitEditorCommand.Execute(null);
+                            vm2.ExitEditorCommand.Execute(null);
                             e.Handled = true;
                         }
                         else
                         {
-                            vm.CancelCommand.Execute(null);
+                            vm2.CancelCommand.Execute(null);
                             e.Handled = true;
                         }
                         break;
