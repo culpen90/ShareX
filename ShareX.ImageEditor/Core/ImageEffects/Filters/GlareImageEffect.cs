@@ -23,7 +23,6 @@
 
 #endregion License Information (GPL v3)
 
-using ShareX.ImageEditor.Core.ImageEffects.Helpers;
 using ShareX.ImageEditor.Core.ImageEffects.Parameters;
 using ShareX.ImageEditor.Presentation.Theming;
 using SkiaSharp;

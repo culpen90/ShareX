@@ -27,7 +27,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShareX.ImageEditor.Presentation.Emoji;
 using System.Collections.ObjectModel;
-using System.Threading;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels;
 

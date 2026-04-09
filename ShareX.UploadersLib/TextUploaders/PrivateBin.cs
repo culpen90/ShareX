@@ -23,6 +23,9 @@
 
 #endregion License Information (GPL v3)
 
+using Newtonsoft.Json;
+using ShareX.HelpersLib;
+using ShareX.UploadersLib.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -33,9 +36,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using ShareX.HelpersLib;
-using ShareX.UploadersLib.Properties;
 
 namespace ShareX.UploadersLib.TextUploaders
 {

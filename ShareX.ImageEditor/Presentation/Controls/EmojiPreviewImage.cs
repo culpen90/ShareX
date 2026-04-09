@@ -27,7 +27,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using ShareX.ImageEditor.Presentation.Emoji;
-using System.Threading;
 
 namespace ShareX.ImageEditor.Presentation.Controls;
 

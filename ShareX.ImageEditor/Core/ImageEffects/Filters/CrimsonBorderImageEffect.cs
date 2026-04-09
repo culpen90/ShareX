@@ -83,7 +83,8 @@ public sealed class CrimsonBorderImageEffect : ImageEffectBase
             // Top glow (dark edge -> lighter)
             using (SKPaint p = new()
             {
-                IsAntialias = true, Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
                 Shader = SKShader.CreateLinearGradient(new SKPoint(0, 0), new SKPoint(0, glowWidth),
                     [darkColor.WithAlpha((byte)(200 * glow)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
             })
@@ -92,7 +93,8 @@ public sealed class CrimsonBorderImageEffect : ImageEffectBase
             // Bottom glow
             using (SKPaint p = new()
             {
-                IsAntialias = true, Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
                 Shader = SKShader.CreateLinearGradient(new SKPoint(0, newHeight), new SKPoint(0, newHeight - glowWidth),
                     [darkColor.WithAlpha((byte)(200 * glow)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
             })
@@ -101,7 +103,8 @@ public sealed class CrimsonBorderImageEffect : ImageEffectBase
             // Left glow
             using (SKPaint p = new()
             {
-                IsAntialias = true, Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
                 Shader = SKShader.CreateLinearGradient(new SKPoint(0, 0), new SKPoint(glowWidth, 0),
                     [darkColor.WithAlpha((byte)(180 * glow)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
             })
@@ -110,7 +113,8 @@ public sealed class CrimsonBorderImageEffect : ImageEffectBase
             // Right glow
             using (SKPaint p = new()
             {
-                IsAntialias = true, Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
                 Shader = SKShader.CreateLinearGradient(new SKPoint(newWidth, 0), new SKPoint(newWidth - glowWidth, 0),
                     [darkColor.WithAlpha((byte)(180 * glow)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
             })
@@ -120,7 +124,8 @@ public sealed class CrimsonBorderImageEffect : ImageEffectBase
             float innerGlowW = size * 0.4f;
             using (SKPaint p = new()
             {
-                IsAntialias = true, Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
                 Shader = SKShader.CreateLinearGradient(new SKPoint(0, size), new SKPoint(0, size - innerGlowW),
                     [lightColor.WithAlpha((byte)(120 * glow)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
             })
@@ -128,7 +133,8 @@ public sealed class CrimsonBorderImageEffect : ImageEffectBase
 
             using (SKPaint p = new()
             {
-                IsAntialias = true, Style = SKPaintStyle.Fill,
+                IsAntialias = true,
+                Style = SKPaintStyle.Fill,
                 Shader = SKShader.CreateLinearGradient(new SKPoint(0, newHeight - size), new SKPoint(0, newHeight - size + innerGlowW),
                     [lightColor.WithAlpha((byte)(120 * glow)), baseColor.WithAlpha(0)], SKShaderTileMode.Clamp)
             })

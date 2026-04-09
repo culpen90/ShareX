@@ -188,7 +188,7 @@ public sealed class Rotate3DBoxImageEffect : ImageEffectBase
             // Draw Front face
             canvas.ResetMatrix();
             if (AutoResize) canvas.Translate(-minX, -minY);
-            canvas.Concat(ref frontMat);
+            canvas.Concat(in frontMat);
 
             using SKPaint frontPaint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High };
             canvas.DrawBitmap(source, 0, 0, frontPaint);
