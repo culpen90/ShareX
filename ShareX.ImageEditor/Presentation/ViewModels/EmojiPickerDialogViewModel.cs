@@ -115,6 +115,8 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
         _isInitialized = true;
 
         await RefreshResultsAsync();
+
+        IsLoading = false;
     }
 
     private void SelectEmoji(EmojiCatalogEntry? emoji)
@@ -133,8 +135,6 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
         string search = SearchText.Trim();
         string selectedGroup = SelectedGroup;
 
-        IsLoading = true;
-
         EmojiQueryResult result = await Task.Run(() => BuildQueryResult(search, selectedGroup));
         if (version != _refreshVersion)
         {
@@ -144,7 +144,6 @@ public partial class EmojiPickerDialogViewModel : ObservableObject
         SearchWatermark = $"Search emojis... ({result.CategoryCount})";
         ResultsSummary = result.ResultsSummary;
         VisibleEmojis = [.. result.Entries];
-        IsLoading = false;
         OnPropertyChanged(nameof(HasResults));
     }
 

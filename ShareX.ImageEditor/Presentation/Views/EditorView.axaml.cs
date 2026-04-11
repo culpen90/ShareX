@@ -1020,6 +1020,9 @@ namespace ShareX.ImageEditor.Presentation.Views
             // Skip shortcuts when the user is typing in a text field
             if (_parentWindow?.FocusManager?.GetFocusedElement() is TextBox) return;
 
+            // Skip shortcuts when a modal dialog is open (e.g. emoji picker search box)
+            if (DataContext is MainViewModel { IsModalOpen: true }) return;
+
             if (DataContext is MainViewModel vm)
             {
                 if (e.Key == Key.Delete)

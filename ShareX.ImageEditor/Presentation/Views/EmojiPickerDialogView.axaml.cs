@@ -63,14 +63,18 @@ public partial class EmojiPickerDialogView : UserControl
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (this.FindControl<TextBox>("SearchBox") is TextBox searchBox)
-        {
-            Dispatcher.UIThread.Post(() => searchBox.Focus(), DispatcherPriority.Input);
-        }
-
         if (DataContext is EmojiPickerDialogViewModel viewModel)
         {
-            Dispatcher.UIThread.Post(async () => await viewModel.InitializeAsync(), DispatcherPriority.Background);
+            Dispatcher.UIThread.Post(async () =>
+            {
+                await viewModel.InitializeAsync();
+
+                // Focus the search box after loading completes so it is enabled and ready.
+                if (this.FindControl<TextBox>("SearchBox") is TextBox searchBox)
+                {
+                    searchBox.Focus();
+                }
+            }, DispatcherPriority.Background);
         }
     }
 }
