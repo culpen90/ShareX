@@ -61,6 +61,8 @@ public class EditorZoomController
         _view = view;
     }
 
+    public bool IsPanning => _isPanning;
+
     public void InitLastZoom(double zoom)
     {
         _lastZoom = zoom;
@@ -273,20 +275,13 @@ public class EditorZoomController
 
     private void UpdateCanvasCursorsForPanning(bool isPanning)
     {
-        Cursor cursor = isPanning
-            ? CursorAssetLoader.GetClosedHandCursor()
-            : GetDefaultCanvasCursor();
-
-        var annotationCanvas = _view.FindControl<Canvas>("AnnotationCanvas");
-        if (annotationCanvas != null)
+        if (isPanning)
         {
-            annotationCanvas.Cursor = cursor;
+            _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
         }
-
-        var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
-        if (overlayCanvas != null)
+        else
         {
-            overlayCanvas.Cursor = cursor;
+            _view.RestoreEditorSurfaceCursorForActiveTool();
         }
     }
 

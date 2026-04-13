@@ -45,12 +45,16 @@ using ShareX.ImageEditor.Presentation.Theming;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using SkiaSharp;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace ShareX.ImageEditor.Presentation.Views
 {
     public partial class EditorView : UserControl
     {
         private static readonly Cursor ArrowCursor = new(StandardCursorType.Arrow);
+        private static readonly MethodInfo? PresentationSourceSetCursorOverrideMethod = typeof(UserControl).Assembly
+            .GetType("Avalonia.Controls.PresentationSource")
+            ?.GetMethod("SetCursorOverride", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Cursor) }, null);
         internal const double OverlayCanvasBleed = 24;
 
         private readonly EditorZoomController _zoomController;
@@ -74,6 +78,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private double _lastOverlayCanvasZoom = -1;
         private EffectBrowserPanel? _effectBrowserPanel;
         private ImageEditorOptions? _effectBrowserPanelOptions;
+        private Cursor? _interactionCursorOverride;
 
         // Window-level key handler reference (so shortcuts work regardless of focus)
         private Window? _parentWindow;
@@ -825,6 +830,23 @@ namespace ShareX.ImageEditor.Presentation.Views
         {
             if (DataContext is not MainViewModel vm) return;
 
+            if (_interactionCursorOverride != null)
+            {
+                if (_selectionController.IsInteractionActive || _zoomController.IsPanning || _inputController.IsCropInteractionActive)
+                {
+                    ApplyPresentationCursorOverride(_interactionCursorOverride);
+                }
+                else
+                {
+                    _interactionCursorOverride = null;
+                    ApplyPresentationCursorOverride(null);
+                }
+            }
+            else
+            {
+                ApplyPresentationCursorOverride(null);
+            }
+
             var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
             var overlayCanvas = this.FindControl<Canvas>("OverlayCanvas");
             if (annotationCanvas == null && overlayCanvas == null) return;
@@ -845,6 +867,40 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 overlayCanvas.Cursor = cursor;
             }
+        }
+
+        internal void ApplyInteractionCursor(Cursor cursor)
+        {
+            _interactionCursorOverride = cursor;
+            ApplyPresentationCursorOverride(cursor);
+        }
+
+        internal void RestoreEditorSurfaceCursorForActiveTool()
+        {
+            if (_selectionController.IsInteractionActive || _zoomController.IsPanning || _inputController.IsCropInteractionActive)
+            {
+                return;
+            }
+
+            _interactionCursorOverride = null;
+            ApplyPresentationCursorOverride(null);
+            UpdateCursorForTool();
+        }
+
+        private void ApplyPresentationCursorOverride(Cursor? cursor)
+        {
+            if (PresentationSourceSetCursorOverrideMethod == null)
+            {
+                return;
+            }
+
+            var presentationSource = this.GetPresentationSource();
+            if (presentationSource == null)
+            {
+                return;
+            }
+
+            PresentationSourceSetCursorOverrideMethod.Invoke(presentationSource, new object?[] { cursor });
         }
 
         // --- Public/Internal Methods for Controllers ---

@@ -81,6 +81,8 @@ public class EditorInputController
         _zoomController = zoomController;
     }
 
+    public bool IsCropInteractionActive => _isDraggingCropHandle;
+
     private MainViewModel? ViewModel => _view.DataContext as MainViewModel;
     private static double ToOverlayCoordinate(double value) => value + EditorView.OverlayCanvasBleed;
     private static double FromOverlayCoordinate(double value) => value - EditorView.OverlayCanvasBleed;
@@ -192,6 +194,7 @@ public class EditorInputController
                     _cropDragStartPoint = e.GetPosition(canvas);
                     _draggedCropHandleTag = cropTag;
                     _isDraggingCropHandle = true;
+                    _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
                     e.Pointer.Capture(cropBorder);
                     e.Handled = true;
                     return;
@@ -218,6 +221,7 @@ public class EditorInputController
                     _cropDragStartPoint = clickPos;
                     _draggedCropHandleTag = "Crop_Move";
                     _isDraggingCropHandle = true;
+                    _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
                     e.Pointer.Capture(canvas);
                     e.Handled = true;
                     return;
@@ -490,6 +494,7 @@ public class EditorInputController
             var cvs = _view.FindControl<Canvas>("AnnotationCanvas") ?? sender as Canvas;
             if (cvs != null)
             {
+                _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
                 var cropCurrent = e.GetPosition(cvs);
                 var newRect = ComputeCropHandleResizedRect(_draggedCropHandleTag!, _cropDragStartPoint, cropCurrent, _cropDragStartRect, cvs.Bounds.Width, cvs.Bounds.Height);
                 UpdateCropOverlayBounds(newRect);
@@ -689,6 +694,7 @@ public class EditorInputController
         {
             _isDraggingCropHandle = false;
             _draggedCropHandleTag = null;
+            _view.RestoreEditorSurfaceCursorForActiveTool();
             e.Pointer.Capture(null);
             return;
         }
