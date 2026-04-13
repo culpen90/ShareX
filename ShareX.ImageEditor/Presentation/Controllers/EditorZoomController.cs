@@ -232,9 +232,8 @@ public class EditorZoomController
         _isPanning = true;
         _panStart = e.GetPosition(scrollViewer);
         _panOrigin = scrollViewer.Offset;
-        scrollViewer.Cursor = CursorAssetLoader.GetClosedHandCursor();
+        _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
         UpdateCanvasCursorsForPanning(true);
-        e.Pointer.Capture(scrollViewer);
         e.Handled = true;
     }
 

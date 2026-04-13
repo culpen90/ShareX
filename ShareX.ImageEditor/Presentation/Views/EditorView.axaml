@@ -591,6 +591,16 @@
             </StackPanel>
         </Border>
 
+        <Border x:Name="InteractionCaptureLayer"
+                Grid.Row="0"
+                Background="Transparent"
+                IsVisible="False"
+                IsHitTestVisible="False"
+                Cursor="Arrow"
+                ZIndex="25"
+                PointerMoved="OnCanvasPointerMoved"
+                PointerReleased="OnCanvasPointerReleased"/>
+
         <!-- Effect Browser Panel Overlay -->
         <Grid Grid.Row="0"
               IsHitTestVisible="{Binding IsEffectBrowserVisible}"

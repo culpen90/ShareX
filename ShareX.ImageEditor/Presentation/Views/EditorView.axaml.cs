@@ -45,16 +45,12 @@ using ShareX.ImageEditor.Presentation.Theming;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using SkiaSharp;
 using System.ComponentModel;
-using System.Reflection;
 
 namespace ShareX.ImageEditor.Presentation.Views
 {
     public partial class EditorView : UserControl
     {
         private static readonly Cursor ArrowCursor = new(StandardCursorType.Arrow);
-        private static readonly MethodInfo? PresentationSourceSetCursorOverrideMethod = typeof(UserControl).Assembly
-            .GetType("Avalonia.Controls.PresentationSource")
-            ?.GetMethod("SetCursorOverride", BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Cursor) }, null);
         internal const double OverlayCanvasBleed = 24;
 
         private readonly EditorZoomController _zoomController;
@@ -834,17 +830,13 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 if (_selectionController.IsInteractionActive || _zoomController.IsPanning || _inputController.IsCropInteractionActive)
                 {
-                    ApplyPresentationCursorOverride(_interactionCursorOverride);
+                    ApplyInteractionCursor(_interactionCursorOverride);
                 }
                 else
                 {
                     _interactionCursorOverride = null;
-                    ApplyPresentationCursorOverride(null);
+                    HideInteractionCaptureLayer();
                 }
-            }
-            else
-            {
-                ApplyPresentationCursorOverride(null);
             }
 
             var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
@@ -872,7 +864,24 @@ namespace ShareX.ImageEditor.Presentation.Views
         internal void ApplyInteractionCursor(Cursor cursor)
         {
             _interactionCursorOverride = cursor;
-            ApplyPresentationCursorOverride(cursor);
+            var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
+            if (interactionLayer != null)
+            {
+                interactionLayer.Cursor = cursor;
+                interactionLayer.IsHitTestVisible = true;
+                interactionLayer.IsVisible = true;
+            }
+        }
+
+        internal void BeginInteractionCursorCapture(IPointer pointer, Cursor cursor)
+        {
+            ApplyInteractionCursor(cursor);
+
+            var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
+            if (interactionLayer != null)
+            {
+                pointer.Capture(interactionLayer);
+            }
         }
 
         internal void RestoreEditorSurfaceCursorForActiveTool()
@@ -883,24 +892,19 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
 
             _interactionCursorOverride = null;
-            ApplyPresentationCursorOverride(null);
+            HideInteractionCaptureLayer();
             UpdateCursorForTool();
         }
 
-        private void ApplyPresentationCursorOverride(Cursor? cursor)
+        private void HideInteractionCaptureLayer()
         {
-            if (PresentationSourceSetCursorOverrideMethod == null)
+            var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
+            if (interactionLayer != null)
             {
-                return;
+                interactionLayer.IsHitTestVisible = false;
+                interactionLayer.IsVisible = false;
+                interactionLayer.Cursor = ArrowCursor;
             }
-
-            var presentationSource = this.GetPresentationSource();
-            if (presentationSource == null)
-            {
-                return;
-            }
-
-            PresentationSourceSetCursorOverrideMethod.Invoke(presentationSource, new object?[] { cursor });
         }
 
         // --- Public/Internal Methods for Controllers ---

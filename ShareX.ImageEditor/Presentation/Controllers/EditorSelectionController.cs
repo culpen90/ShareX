@@ -152,7 +152,7 @@ public class EditorSelectionController
                 _isDraggingHandle = true;
                 _draggedHandle = handleSource;
                 _startPoint = point; // Capture start for resize delta
-                e.Pointer.Capture(handleSource);
+                _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                 e.Handled = true;
                 return true;
             }
@@ -221,7 +221,7 @@ public class EditorSelectionController
                     _lastDragPoint = point;
                     UpdateSelectionHandles();
                     SelectionChanged?.Invoke(true);
-                    e.Pointer.Capture(hitTarget);
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                     e.Handled = true;
                     return true;
                 }
@@ -311,7 +311,7 @@ public class EditorSelectionController
                         _lastDragPoint = point;
                         UpdateSelectionHandles();
                         SelectionChanged?.Invoke(true);
-                        e.Pointer.Capture(manualHit);
+                        _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                         e.Handled = true;
                         return true;
                     }

@@ -194,8 +194,7 @@ public class EditorInputController
                     _cropDragStartPoint = e.GetPosition(canvas);
                     _draggedCropHandleTag = cropTag;
                     _isDraggingCropHandle = true;
-                    _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
-                    e.Pointer.Capture(cropBorder);
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                     e.Handled = true;
                     return;
                 }
@@ -221,8 +220,7 @@ public class EditorInputController
                     _cropDragStartPoint = clickPos;
                     _draggedCropHandleTag = "Crop_Move";
                     _isDraggingCropHandle = true;
-                    _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
-                    e.Pointer.Capture(canvas);
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                     e.Handled = true;
                     return;
                 }
