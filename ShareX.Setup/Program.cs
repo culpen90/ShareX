@@ -409,8 +409,6 @@ namespace ShareX.Setup
                 FileHelpers.CopyAll(Path.Combine(OutputDir, "exiftool_files"), Path.Combine(destination, "exiftool_files"));
             }
 
-            FileHelpers.CopyAll(Path.Combine(ParentDir, @"ShareX.ScreenCaptureLib\Stickers"), Path.Combine(destination, "Stickers"));
-
             if (job == SetupJobs.CreatePortable)
             {
                 FileHelpers.CreateEmptyFile(Path.Combine(destination, "Portable"));
