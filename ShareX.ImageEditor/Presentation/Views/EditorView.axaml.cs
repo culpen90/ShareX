@@ -74,6 +74,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private double _lastOverlayCanvasZoom = -1;
         private EffectBrowserPanel? _effectBrowserPanel;
         private ImageEditorOptions? _effectBrowserPanelOptions;
+        private Cursor? _interactionCursorOverride;
 
         // Window-level key handler reference (so shortcuts work regardless of focus)
         private Window? _parentWindow;
@@ -825,6 +826,19 @@ namespace ShareX.ImageEditor.Presentation.Views
         {
             if (DataContext is not MainViewModel vm) return;
 
+            if (_interactionCursorOverride != null)
+            {
+                if (_selectionController.IsInteractionActive || _zoomController.IsPanning || _inputController.IsCropInteractionActive)
+                {
+                    ApplyInteractionCursor(_interactionCursorOverride);
+                }
+                else
+                {
+                    _interactionCursorOverride = null;
+                    HideInteractionCaptureLayer();
+                }
+            }
+
             var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
             var overlayCanvas = this.FindControl<Canvas>("OverlayCanvas");
             if (annotationCanvas == null && overlayCanvas == null) return;
@@ -844,6 +858,52 @@ namespace ShareX.ImageEditor.Presentation.Views
             if (overlayCanvas != null)
             {
                 overlayCanvas.Cursor = cursor;
+            }
+        }
+
+        internal void ApplyInteractionCursor(Cursor cursor)
+        {
+            _interactionCursorOverride = cursor;
+            var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
+            if (interactionLayer != null)
+            {
+                interactionLayer.Cursor = cursor;
+                interactionLayer.IsHitTestVisible = true;
+                interactionLayer.IsVisible = true;
+            }
+        }
+
+        internal void BeginInteractionCursorCapture(IPointer pointer, Cursor cursor)
+        {
+            ApplyInteractionCursor(cursor);
+
+            var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
+            if (interactionLayer != null)
+            {
+                pointer.Capture(interactionLayer);
+            }
+        }
+
+        internal void RestoreEditorSurfaceCursorForActiveTool()
+        {
+            if (_selectionController.IsInteractionActive || _zoomController.IsPanning || _inputController.IsCropInteractionActive)
+            {
+                return;
+            }
+
+            _interactionCursorOverride = null;
+            HideInteractionCaptureLayer();
+            UpdateCursorForTool();
+        }
+
+        private void HideInteractionCaptureLayer()
+        {
+            var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
+            if (interactionLayer != null)
+            {
+                interactionLayer.IsHitTestVisible = false;
+                interactionLayer.IsVisible = false;
+                interactionLayer.Cursor = ArrowCursor;
             }
         }
 
@@ -1019,6 +1079,9 @@ namespace ShareX.ImageEditor.Presentation.Views
         {
             // Skip shortcuts when the user is typing in a text field
             if (_parentWindow?.FocusManager?.GetFocusedElement() is TextBox) return;
+
+            // Skip shortcuts when a modal dialog is open (e.g. emoji picker search box)
+            if (DataContext is MainViewModel { IsModalOpen: true }) return;
 
             if (DataContext is MainViewModel vm)
             {

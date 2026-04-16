@@ -74,6 +74,7 @@ public class EditorSelectionController
     private TextBox? _balloonTextEditor;
 
     public Control? SelectedShape => _selectedShape;
+    public bool IsInteractionActive => IsSelectionInteractionActive();
 
     // Event invoked when visual needs update (for Effects)
     public event Action<Control>? RequestUpdateEffect;
@@ -151,7 +152,7 @@ public class EditorSelectionController
                 _isDraggingHandle = true;
                 _draggedHandle = handleSource;
                 _startPoint = point; // Capture start for resize delta
-                e.Pointer.Capture(handleSource);
+                _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                 e.Handled = true;
                 return true;
             }
@@ -220,7 +221,7 @@ public class EditorSelectionController
                     _lastDragPoint = point;
                     UpdateSelectionHandles();
                     SelectionChanged?.Invoke(true);
-                    e.Pointer.Capture(hitTarget);
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                     e.Handled = true;
                     return true;
                 }
@@ -310,7 +311,7 @@ public class EditorSelectionController
                         _lastDragPoint = point;
                         UpdateSelectionHandles();
                         SelectionChanged?.Invoke(true);
-                        e.Pointer.Capture(manualHit);
+                        _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                         e.Handled = true;
                         return true;
                     }
@@ -1197,20 +1198,13 @@ public class EditorSelectionController
 
     private void UpdateCanvasCursorForSelectionInteraction()
     {
-        Cursor cursor = IsSelectionInteractionActive()
-            ? CursorAssetLoader.GetClosedHandCursor()
-            : GetDefaultCanvasCursor();
-
-        var annotationCanvas = _view.FindControl<Canvas>("AnnotationCanvas");
-        if (annotationCanvas != null)
+        if (IsSelectionInteractionActive())
         {
-            annotationCanvas.Cursor = cursor;
+            _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
         }
-
-        var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
-        if (overlayCanvas != null)
+        else
         {
-            overlayCanvas.Cursor = cursor;
+            _view.RestoreEditorSurfaceCursorForActiveTool();
         }
     }
 
