@@ -347,6 +347,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                 // File menu event handlers (Image Editor Mode)
                 vm.NewImageRequested += OnNewImageRequested;
                 vm.OpenImageRequested += OnOpenImageRequested;
+                vm.StartScreenRequested += OnStartScreenRequested;
+                vm.LoadFromClipboardRequested += OnLoadFromClipboardRequested;
+                vm.LoadFromUrlRequested += OnLoadFromUrlRequested;
+                vm.LoadRecentFileRequested += OnLoadRecentFileRequested;
                 vm.CopyRequested += OnCopyImageRequested;
                 vm.SaveRequested += OnSaveRequested;
                 vm.SaveAsRequested += OnSaveAsRequested;
@@ -371,6 +375,11 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         QueueAutoCopyImageToClipboard(vm);
                     }
+                }
+                else
+                {
+                    // No image loaded — show the start screen dialog
+                    vm.ShowStartScreen();
                 }
 
                 // Reset dirty flag after initial load — loading the image fires HistoryChanged
@@ -401,6 +410,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.ZoomToFitRequested -= OnZoomToFitRequested;
                 vm.NewImageRequested -= OnNewImageRequested;
                 vm.OpenImageRequested -= OnOpenImageRequested;
+                vm.StartScreenRequested -= OnStartScreenRequested;
+                vm.LoadFromClipboardRequested -= OnLoadFromClipboardRequested;
+                vm.LoadFromUrlRequested -= OnLoadFromUrlRequested;
+                vm.LoadRecentFileRequested -= OnLoadRecentFileRequested;
                 vm.SaveRequested -= OnSaveRequested;
                 vm.SaveAsRequested -= OnSaveAsRequested;
                 vm.EmojiInsertionRequested -= OnEmojiInsertionRequested;
@@ -1677,37 +1690,295 @@ namespace ShareX.ImageEditor.Presentation.Views
                 var skBitmap = SKBitmap.Decode(memStream);
                 if (skBitmap == null) return;
 
-                // Clear annotation visuals
-                var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
-                annotationCanvas?.Children.Clear();
-                _selectionController.ClearSelection();
+                LoadBitmapIntoEditor(vm, skBitmap, files[0].Path.LocalPath);
+            }
+        }
 
-                // Load fresh image into core (clears history and annotations)
-                _skipNextCoreImageChanged = true;
-                _editorCore.LoadImage(skBitmap);
+        private void OnStartScreenRequested(object? sender, EventArgs e)
+        {
+            if (DataContext is not MainViewModel vm) return;
 
-                // Initialize canvas control
-                _canvasControl?.Initialize(skBitmap.Width, skBitmap.Height);
-                RenderCore();
+            EnsureStartScreenDialog(vm);
+        }
 
-                // Sync to VM
-                try
+        private StartScreenDialogViewModel EnsureStartScreenDialog(MainViewModel vm)
+        {
+            if (vm.ModalContent is StartScreenDialogViewModel existingDialog)
+            {
+                vm.IsModalOpen = true;
+                return existingDialog;
+            }
+
+            StartScreenDialogViewModel? dialog = null;
+
+            dialog = new StartScreenDialogViewModel(
+                recentFiles: vm.Options.RecentImageFiles,
+                onNewImage: () =>
                 {
-                    _isSyncingToVM = true;
-                    vm.ImageFilePath = files[0].Path.LocalPath;
-                    vm.IsDirty = false;
-                    vm.HasAnnotations = false;
-                    vm.UpdateCoreHistoryState(_editorCore.CanUndo, _editorCore.CanRedo);
-
-                    using var image = SKImage.FromBitmap(skBitmap);
-                    using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-                    using var pngStream = new MemoryStream(data.ToArray());
-                    vm.PreviewImage = new Avalonia.Media.Imaging.Bitmap(pngStream);
-                }
-                finally
+                    vm.CloseModalCommand.Execute(null);
+                    vm.NewImageCommand.Execute(null);
+                },
+                onOpenFile: () =>
                 {
-                    _isSyncingToVM = false;
+                    vm.CloseModalCommand.Execute(null);
+                    vm.OpenImageCommand.Execute(null);
+                },
+                onLoadFromClipboard: () =>
+                {
+                    vm.RequestLoadFromClipboard();
+                },
+                onShowUrlInput: () =>
+                {
+                    if (dialog != null)
+                    {
+                        _ = PrepareStartScreenUrlInputAsync(dialog);
+                    }
+                },
+                onSubmitUrl: url =>
+                {
+                    vm.RequestLoadFromUrl(url);
+                },
+                onClose: () =>
+                {
+                    vm.CloseModalCommand.Execute(null);
+                },
+                onExit: () =>
+                {
+                    vm.CloseModalCommand.Execute(null);
+                    vm.ExitEditorCommand.Execute(null);
+                },
+                onOpenRecentFile: path =>
+                {
+                    vm.RequestLoadRecentFile(path);
+                });
+
+            vm.ModalContent = dialog;
+            vm.IsModalOpen = true;
+
+            return dialog;
+        }
+
+        private async Task PrepareStartScreenUrlInputAsync(StartScreenDialogViewModel dialog)
+        {
+            string? clipboardUrl = null;
+
+            try
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel?.Clipboard != null)
+                {
+                    var text = await topLevel.Clipboard.TryGetTextAsync();
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        text = text.Trim();
+                        if (Uri.TryCreate(text, UriKind.Absolute, out var uri) &&
+                            (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+                        {
+                            clipboardUrl = text;
+                        }
+                    }
                 }
+            }
+            catch
+            {
+                // Ignore clipboard read errors while preparing the inline URL entry.
+            }
+
+            dialog.ShowUrlInput(clipboardUrl);
+        }
+
+        private void ShowStartScreenStatus(MainViewModel vm, string message)
+        {
+            var dialog = EnsureStartScreenDialog(vm);
+            dialog.ShowStatus(message);
+        }
+
+        private async void OnLoadFromClipboardRequested(object? sender, EventArgs e)
+        {
+            if (DataContext is not MainViewModel vm) return;
+
+            var topLevel = TopLevel.GetTopLevel(this);
+            if (topLevel?.Clipboard == null)
+            {
+                ShowStartScreenStatus(vm, "Failed to load image from clipboard.");
+                return;
+            }
+
+            try
+            {
+                var clipboard = topLevel.Clipboard;
+
+                // Try to get bitmap from clipboard
+                var clipboardBitmap = await clipboard.TryGetBitmapAsync();
+                if (clipboardBitmap != null)
+                {
+                    using var ms = new MemoryStream();
+                    clipboardBitmap.Save(ms);
+                    (clipboardBitmap as IDisposable)?.Dispose();
+                    ms.Position = 0;
+
+                    var skBitmap = SKBitmap.Decode(ms);
+                    if (skBitmap != null)
+                    {
+                        vm.CloseModalCommand.Execute(null);
+                        LoadBitmapIntoEditor(vm, skBitmap, null);
+                        return;
+                    }
+                }
+
+                // Try files
+                var files = await clipboard.TryGetFilesAsync();
+                if (files != null)
+                {
+                    foreach (var file in files)
+                    {
+                        if (file is not IStorageFile storageFile) continue;
+
+                        try
+                        {
+                            using var stream = await storageFile.OpenReadAsync();
+                            using var memStream = new MemoryStream();
+                            await stream.CopyToAsync(memStream);
+                            memStream.Position = 0;
+
+                            var skBitmap = SKBitmap.Decode(memStream);
+                            if (skBitmap != null)
+                            {
+                                vm.CloseModalCommand.Execute(null);
+                                LoadBitmapIntoEditor(vm, skBitmap, storageFile.Path.LocalPath);
+                                return;
+                            }
+                        }
+                        catch
+                        {
+                            // Try next file
+                        }
+                    }
+                }
+
+                ShowStartScreenStatus(vm, "Failed to load image from clipboard.\nClipboard does not contain an image.");
+            }
+            catch (Exception ex)
+            {
+                EditorServices.ReportError(nameof(EditorView), "Failed to load image from clipboard.", ex);
+                ShowStartScreenStatus(vm, "Failed to load image from clipboard.");
+            }
+        }
+
+        private async void OnLoadFromUrlRequested(object? sender, string url)
+        {
+            if (DataContext is not MainViewModel vm) return;
+
+            StartScreenDialogViewModel? startScreenDialog = vm.ModalContent as StartScreenDialogViewModel;
+            startScreenDialog?.ClearStatus();
+            startScreenDialog?.SetUrlLoading(true);
+
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.Timeout = TimeSpan.FromSeconds(30);
+                httpClient.DefaultRequestHeaders.Add("User-Agent", "ShareX");
+
+                var response = await httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                using var stream = await response.Content.ReadAsStreamAsync();
+                using var memStream = new MemoryStream();
+                await stream.CopyToAsync(memStream);
+                memStream.Position = 0;
+
+                var skBitmap = SKBitmap.Decode(memStream);
+                if (skBitmap == null)
+                {
+                    startScreenDialog?.SetUrlLoading(false);
+                    startScreenDialog?.ShowStatus("The URL does not point to a valid image.");
+                    return;
+                }
+
+                vm.CloseModalCommand.Execute(null);
+                LoadBitmapIntoEditor(vm, skBitmap, null);
+            }
+            catch (Exception ex)
+            {
+                startScreenDialog?.SetUrlLoading(false);
+                startScreenDialog?.ShowStatus($"Failed to download image: {ex.Message}");
+            }
+        }
+
+        private void OnLoadRecentFileRequested(object? sender, string filePath)
+        {
+            if (DataContext is not MainViewModel vm) return;
+
+            if (!File.Exists(filePath))
+            {
+                vm.Options.RecentImageFiles.Remove(filePath);
+                if (vm.ModalContent is StartScreenDialogViewModel startScreenDialog)
+                {
+                    startScreenDialog.RecentFiles.Remove(filePath);
+                }
+                ShowStartScreenStatus(vm, $"The file no longer exists.\n{filePath}");
+                return;
+            }
+
+            try
+            {
+                using var stream = File.OpenRead(filePath);
+                var skBitmap = SKBitmap.Decode(stream);
+                if (skBitmap == null)
+                {
+                    EditorServices.ReportError(nameof(EditorView), $"Failed to decode image file '{filePath}'.");
+                    ShowStartScreenStatus(vm, $"Failed to load image file.\n{filePath}");
+                    return;
+                }
+
+                vm.CloseModalCommand.Execute(null);
+                LoadBitmapIntoEditor(vm, skBitmap, filePath);
+            }
+            catch (Exception ex)
+            {
+                EditorServices.ReportError(nameof(EditorView), $"Failed to load image file '{filePath}'.", ex);
+                ShowStartScreenStatus(vm, $"Failed to load image file.\n{filePath}");
+            }
+        }
+
+        private void LoadBitmapIntoEditor(MainViewModel vm, SKBitmap skBitmap, string? filePath)
+        {
+            // Clear annotation visuals
+            var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
+            annotationCanvas?.Children.Clear();
+            _selectionController.ClearSelection();
+
+            // Load fresh image into core (clears history and annotations)
+            _skipNextCoreImageChanged = true;
+            _editorCore.LoadImage(skBitmap);
+
+            // Initialize canvas control
+            _canvasControl?.Initialize(skBitmap.Width, skBitmap.Height);
+            RenderCore();
+
+            // Sync to VM
+            try
+            {
+                _isSyncingToVM = true;
+                vm.ImageFilePath = filePath;
+                vm.IsDirty = false;
+                vm.HasAnnotations = false;
+                vm.UpdateCoreHistoryState(_editorCore.CanUndo, _editorCore.CanRedo);
+
+                using var image = SKImage.FromBitmap(skBitmap);
+                using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+                using var pngStream = new MemoryStream(data.ToArray());
+                vm.PreviewImage = new Avalonia.Media.Imaging.Bitmap(pngStream);
+            }
+            finally
+            {
+                _isSyncingToVM = false;
+            }
+
+            // Track in recent files
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                vm.Options.AddRecentImageFile(filePath);
             }
         }
 

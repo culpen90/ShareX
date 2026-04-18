@@ -1152,12 +1152,19 @@ namespace ShareX
         {
             if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
 
-            using (EditorStartupForm editorStartupForm = new EditorStartupForm(taskSettings.CaptureSettingsReference.SurfaceOptions))
+            if (taskSettings.ToolsSettings.UseLegacyImageEditor)
             {
-                if (editorStartupForm.ShowDialog() == DialogResult.OK)
+                using (EditorStartupForm editorStartupForm = new EditorStartupForm(taskSettings.CaptureSettingsReference.SurfaceOptions))
                 {
-                    AnnotateImageAsync(editorStartupForm.Image, editorStartupForm.ImageFilePath, taskSettings);
+                    if (editorStartupForm.ShowDialog() == DialogResult.OK)
+                    {
+                        AnnotateImageAsync(editorStartupForm.Image, editorStartupForm.ImageFilePath, taskSettings);
+                    }
                 }
+            }
+            else
+            {
+                AnnotateImageAsync(null, null, taskSettings);
             }
         }
 
@@ -1342,6 +1349,8 @@ namespace ShareX
                     }
                 };
 
+                byte[] bytesResult = null;
+
                 if (bmp != null)
                 {
                     using (MemoryStream ms = new MemoryStream())
@@ -1349,14 +1358,19 @@ namespace ShareX
                         bmp.Save(ms, ImageFormat.Png);
                         ms.Position = 0;
 
-                        byte[] bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                        bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, taskSettings.ToolsSettingsReference.ImageEditorOptions,
                             events, taskMode, filePath);
-
-                        if (bytesResult != null)
-                        {
-                            bmpResult = ImageHelpers.ByteArrayToBitmap(bytesResult);
-                        }
                     }
+                }
+                else
+                {
+                    bytesResult = AvaloniaIntegration.ShowEditorDialog(taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                        events, taskMode, filePath);
+                }
+
+                if (bytesResult != null)
+                {
+                    bmpResult = ImageHelpers.ByteArrayToBitmap(bytesResult);
                 }
             });
 

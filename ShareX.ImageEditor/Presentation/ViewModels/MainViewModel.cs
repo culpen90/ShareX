@@ -104,6 +104,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         // File menu events (Image Editor Mode)
         public event EventHandler? NewImageRequested;
         public event EventHandler? OpenImageRequested;
+        public event EventHandler? StartScreenRequested;
+        public event EventHandler? LoadFromClipboardRequested;
+        public event EventHandler<string>? LoadFromUrlRequested;
+        public event EventHandler<string>? LoadRecentFileRequested;
 
         [ObservableProperty]
         private bool _taskMode;
@@ -1149,6 +1153,26 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private void OpenImage()
         {
             OpenImageRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ShowStartScreen()
+        {
+            StartScreenRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void RequestLoadFromClipboard()
+        {
+            LoadFromClipboardRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void RequestLoadFromUrl(string url)
+        {
+            LoadFromUrlRequested?.Invoke(this, url);
+        }
+
+        public void RequestLoadRecentFile(string filePath)
+        {
+            LoadRecentFileRequested?.Invoke(this, filePath);
         }
 
         [RelayCommand]
