@@ -66,7 +66,7 @@ namespace ShareX.ImageEditor.App
                     if (string.IsNullOrEmpty(imagePath))
                     {
                         string location = AppDomain.CurrentDomain.BaseDirectory;
-                        imagePath = Path.Combine(location, "Assets", "Sample.png");
+                        //imagePath = Path.Combine(location, "Assets", "Sample.png");
                     }
 #endif
 
