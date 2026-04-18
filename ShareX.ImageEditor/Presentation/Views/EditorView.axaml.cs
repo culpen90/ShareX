@@ -1699,7 +1699,20 @@ namespace ShareX.ImageEditor.Presentation.Views
         {
             if (DataContext is not MainViewModel vm) return;
 
-            var dialog = new StartScreenDialogViewModel(
+            EnsureStartScreenDialog(vm);
+        }
+
+        private StartScreenDialogViewModel EnsureStartScreenDialog(MainViewModel vm)
+        {
+            if (vm.ModalContent is StartScreenDialogViewModel existingDialog)
+            {
+                vm.IsModalOpen = true;
+                return existingDialog;
+            }
+
+            StartScreenDialogViewModel? dialog = null;
+
+            dialog = new StartScreenDialogViewModel(
                 recentFiles: vm.Options.RecentImageFiles,
                 onNewImage: () =>
                 {
@@ -1713,28 +1726,72 @@ namespace ShareX.ImageEditor.Presentation.Views
                 },
                 onLoadFromClipboard: () =>
                 {
-                    vm.CloseModalCommand.Execute(null);
                     vm.RequestLoadFromClipboard();
                 },
-                onLoadFromUrl: () =>
+                onShowUrlInput: () =>
+                {
+                    if (dialog != null)
+                    {
+                        _ = PrepareStartScreenUrlInputAsync(dialog);
+                    }
+                },
+                onSubmitUrl: url =>
+                {
+                    vm.RequestLoadFromUrl(url);
+                },
+                onClose: () =>
                 {
                     vm.CloseModalCommand.Execute(null);
-                    ShowUrlInputDialog();
                 },
                 onExit: () =>
                 {
                     vm.CloseModalCommand.Execute(null);
                     vm.ExitEditorCommand.Execute(null);
                 },
-                onOpenRecentFile: (path) =>
+                onOpenRecentFile: path =>
                 {
-                    vm.CloseModalCommand.Execute(null);
                     vm.RequestLoadRecentFile(path);
-                }
-            );
+                });
 
             vm.ModalContent = dialog;
             vm.IsModalOpen = true;
+
+            return dialog;
+        }
+
+        private async Task PrepareStartScreenUrlInputAsync(StartScreenDialogViewModel dialog)
+        {
+            string? clipboardUrl = null;
+
+            try
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel?.Clipboard != null)
+                {
+                    var text = await topLevel.Clipboard.TryGetTextAsync();
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        text = text.Trim();
+                        if (Uri.TryCreate(text, UriKind.Absolute, out var uri) &&
+                            (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+                        {
+                            clipboardUrl = text;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore clipboard read errors while preparing the inline URL entry.
+            }
+
+            dialog.ShowUrlInput(clipboardUrl);
+        }
+
+        private void ShowStartScreenStatus(MainViewModel vm, string message)
+        {
+            var dialog = EnsureStartScreenDialog(vm);
+            dialog.ShowStatus(message);
         }
 
         private async void OnLoadFromClipboardRequested(object? sender, EventArgs e)
@@ -1742,7 +1799,11 @@ namespace ShareX.ImageEditor.Presentation.Views
             if (DataContext is not MainViewModel vm) return;
 
             var topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel?.Clipboard == null) return;
+            if (topLevel?.Clipboard == null)
+            {
+                ShowStartScreenStatus(vm, "Failed to load image from clipboard.");
+                return;
+            }
 
             try
             {
@@ -1760,6 +1821,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     var skBitmap = SKBitmap.Decode(ms);
                     if (skBitmap != null)
                     {
+                        vm.CloseModalCommand.Execute(null);
                         LoadBitmapIntoEditor(vm, skBitmap, null);
                         return;
                     }
@@ -1783,6 +1845,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                             var skBitmap = SKBitmap.Decode(memStream);
                             if (skBitmap != null)
                             {
+                                vm.CloseModalCommand.Execute(null);
                                 LoadBitmapIntoEditor(vm, skBitmap, storageFile.Path.LocalPath);
                                 return;
                             }
@@ -1794,77 +1857,22 @@ namespace ShareX.ImageEditor.Presentation.Views
                     }
                 }
 
-                // No image found in clipboard
-                var errorDialog = new ConfirmationDialogViewModel(
-                    onYes: () => vm.CloseModalCommand.Execute(null),
-                    onNo: () => vm.CloseModalCommand.Execute(null),
-                    onCancel: () => vm.CloseModalCommand.Execute(null),
-                    title: "Clipboard",
-                    message: "The clipboard does not contain an image.");
-
-                vm.ModalContent = errorDialog;
-                vm.IsModalOpen = true;
+                ShowStartScreenStatus(vm, "Failed to load image from clipboard. Clipboard does not contain an image.");
             }
             catch (Exception ex)
             {
                 EditorServices.ReportError(nameof(EditorView), "Failed to load image from clipboard.", ex);
+                ShowStartScreenStatus(vm, "Failed to load image from clipboard.");
             }
-        }
-
-        private async void ShowUrlInputDialog()
-        {
-            if (DataContext is not MainViewModel vm) return;
-
-            // Check if clipboard contains a URL to auto-fill
-            string? clipboardUrl = null;
-            try
-            {
-                var topLevel = TopLevel.GetTopLevel(this);
-                if (topLevel?.Clipboard != null)
-                {
-                    var text = await topLevel.Clipboard.TryGetTextAsync();
-                    if (!string.IsNullOrWhiteSpace(text))
-                    {
-                        text = text.Trim();
-                        if (Uri.TryCreate(text, UriKind.Absolute, out var uri) &&
-                            (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
-                        {
-                            clipboardUrl = text;
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // Ignore clipboard read errors
-            }
-
-            var dialog = new UrlInputDialogViewModel(
-                onOk: (url) =>
-                {
-                    vm.RequestLoadFromUrl(url);
-                },
-                onCancel: () =>
-                {
-                    vm.CloseModalCommand.Execute(null);
-                },
-                initialUrl: clipboardUrl
-            );
-
-            vm.ModalContent = dialog;
-            vm.IsModalOpen = true;
         }
 
         private async void OnLoadFromUrlRequested(object? sender, string url)
         {
             if (DataContext is not MainViewModel vm) return;
 
-            // Show loading state on the URL dialog if it's still the modal content
-            if (vm.ModalContent is UrlInputDialogViewModel urlDialog)
-            {
-                urlDialog.IsLoading = true;
-                urlDialog.ErrorMessage = null;
-            }
+            StartScreenDialogViewModel? startScreenDialog = vm.ModalContent as StartScreenDialogViewModel;
+            startScreenDialog?.ClearStatus();
+            startScreenDialog?.SetUrlLoading(true);
 
             try
             {
@@ -1883,11 +1891,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                 var skBitmap = SKBitmap.Decode(memStream);
                 if (skBitmap == null)
                 {
-                    if (vm.ModalContent is UrlInputDialogViewModel dlg)
-                    {
-                        dlg.IsLoading = false;
-                        dlg.ErrorMessage = "The URL does not point to a valid image.";
-                    }
+                    startScreenDialog?.SetUrlLoading(false);
+                    startScreenDialog?.ShowStatus("The URL does not point to a valid image.");
                     return;
                 }
 
@@ -1896,11 +1901,8 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
             catch (Exception ex)
             {
-                if (vm.ModalContent is UrlInputDialogViewModel dlg)
-                {
-                    dlg.IsLoading = false;
-                    dlg.ErrorMessage = $"Failed to download image: {ex.Message}";
-                }
+                startScreenDialog?.SetUrlLoading(false);
+                startScreenDialog?.ShowStatus($"Failed to download image: {ex.Message}");
             }
         }
 
@@ -1911,16 +1913,11 @@ namespace ShareX.ImageEditor.Presentation.Views
             if (!File.Exists(filePath))
             {
                 vm.Options.RecentImageFiles.Remove(filePath);
-
-                var errorDialog = new ConfirmationDialogViewModel(
-                    onYes: () => vm.CloseModalCommand.Execute(null),
-                    onNo: () => vm.CloseModalCommand.Execute(null),
-                    onCancel: () => vm.CloseModalCommand.Execute(null),
-                    title: "File not found",
-                    message: $"The file no longer exists:\n{filePath}");
-
-                vm.ModalContent = errorDialog;
-                vm.IsModalOpen = true;
+                if (vm.ModalContent is StartScreenDialogViewModel startScreenDialog)
+                {
+                    startScreenDialog.RecentFiles.Remove(filePath);
+                }
+                ShowStartScreenStatus(vm, $"The file no longer exists.\n{filePath}");
                 return;
             }
 
@@ -1931,14 +1928,17 @@ namespace ShareX.ImageEditor.Presentation.Views
                 if (skBitmap == null)
                 {
                     EditorServices.ReportError(nameof(EditorView), $"Failed to decode image file '{filePath}'.");
+                    ShowStartScreenStatus(vm, $"Failed to load image file.\n{filePath}");
                     return;
                 }
 
+                vm.CloseModalCommand.Execute(null);
                 LoadBitmapIntoEditor(vm, skBitmap, filePath);
             }
             catch (Exception ex)
             {
                 EditorServices.ReportError(nameof(EditorView), $"Failed to load image file '{filePath}'.", ex);
+                ShowStartScreenStatus(vm, $"Failed to load image file.\n{filePath}");
             }
         }
 

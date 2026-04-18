@@ -31,9 +31,6 @@
         <DataTemplate DataType="{x:Type vm:StartScreenDialogViewModel}" x:DataType="vm:StartScreenDialogViewModel">
             <views:StartScreenDialogView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:UrlInputDialogViewModel}" x:DataType="vm:UrlInputDialogViewModel">
-            <views:UrlInputDialogView />
-        </DataTemplate>
     </UserControl.DataTemplates>
 
     <UserControl.Resources>

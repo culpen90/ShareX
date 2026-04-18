@@ -8,114 +8,219 @@
              x:Class="ShareX.ImageEditor.Presentation.Views.StartScreenDialogView"
              x:DataType="vm:StartScreenDialogViewModel">
 
-    <Border Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
+    <Border Background="{DynamicResource ShareX.Brush.Background.Popup}"
             BorderBrush="{DynamicResource ShareX.Brush.Border}"
             BorderThickness="1"
-            Width="250"
+            Width="750"
+            MaxWidth="750"
             CornerRadius="4"
-            Padding="4"
+            Padding="0"
             BoxShadow="0 8 24 0 #50000000">
-        <Grid RowDefinitions="Auto,Auto,Auto">
-            <!-- Action Buttons -->
-            <StackPanel Grid.Row="1" Spacing="4">
-                <Button Classes="editor-button" Command="{Binding NewImageCommand}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="12,10" Height="42">
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="{x:Static theming:LucideIcons.image_plus}"
-                                   FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="18" FontWeight="Normal"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="Create new image..." FontWeight="Normal" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+        <Grid RowDefinitions="Auto,*" Background="{DynamicResource ShareX.Brush.Background.Panel}">
+            <Border Grid.Row="0"
+                    Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
+                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                    BorderThickness="0,0,0,1"
+                    Padding="14,8">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding Title}"
+                               FontSize="15"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource ShareX.Brush.Text}"/>
 
-                <Button Classes="editor-button" Command="{Binding OpenFileCommand}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="12,10" Height="42">
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="{x:Static theming:LucideIcons.folder_open}"
+                    <Button Grid.Column="1"
+                            Classes="editor-button toolbar-button"
+                            Command="{Binding CloseCommand}"
+                            Width="32"
+                            MinWidth="32"
+                            Height="32"
+                            Padding="0"
+                            HorizontalAlignment="Right">
+                        <TextBlock Text="{x:Static theming:LucideIcons.x}"
                                    FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="18" FontWeight="Normal"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="Open image file..." FontWeight="Normal" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Classes="editor-button" Command="{Binding LoadFromClipboardCommand}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="12,10" Height="42">
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="{x:Static theming:LucideIcons.clipboard_paste}"
-                                   FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="18" FontWeight="Normal"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="Load image from clipboard" FontWeight="Normal" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Classes="editor-button" Command="{Binding LoadFromUrlCommand}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="12,10" Height="42">
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="{x:Static theming:LucideIcons.link}"
-                                   FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="18" FontWeight="Normal"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="Load image from URL..." FontWeight="Normal" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Classes="editor-button" Command="{Binding ExitCommand}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="12,10" Height="42">
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <TextBlock Text="{x:Static theming:LucideIcons.log_out}"
-                                   FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="18" FontWeight="Normal"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="Exit" FontWeight="Normal" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
-
-            <!-- Recent Files -->
-            <Border Grid.Row="2"
-                    IsVisible="{Binding HasRecentFiles}"
-                    BorderBrush="{DynamicResource ShareX.Brush.Border}" BorderThickness="0,1,0,0"
-                    Margin="0,4,0,0">
-                <StackPanel Margin="12,8,12,12" Spacing="2">
-                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,0,0,4">
-                        <TextBlock Text="{x:Static theming:LucideIcons.history}"
-                                   FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                   FontSize="14" FontWeight="Normal"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
-                        <TextBlock Text="Recent files"
-                                   FontSize="12" FontWeight="Normal"
-                                   Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-
-                    <ItemsControl ItemsSource="{Binding RecentFiles}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <Button Classes="editor-button"
-                                        Command="{Binding $parent[ItemsControl].((vm:StartScreenDialogViewModel)DataContext).OpenRecentFileCommand}"
-                                        CommandParameter="{Binding}"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Left"
-                                        Padding="12,6" Height="32">
-                                    <TextBlock Text="{Binding}"
-                                               FontSize="12" FontWeight="Normal"
-                                               TextTrimming="CharacterEllipsis"
-                                               ToolTip.Tip="{Binding}"/>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
+                                   FontWeight="Normal"
+                                   FontSize="16"/>
+                    </Button>
+                </Grid>
             </Border>
+
+            <Grid Grid.Row="1" ColumnDefinitions="350,*">
+                <StackPanel Grid.Column="0" Margin="14" Spacing="6">
+                    <Button Classes="editor-button" Command="{Binding NewImageCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="12,10" Height="42">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="{x:Static theming:LucideIcons.image_plus}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="18" FontWeight="Normal"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Create new image..." FontWeight="Normal" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Classes="editor-button" Command="{Binding OpenFileCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="12,10" Height="42">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="{x:Static theming:LucideIcons.folder_open}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="18" FontWeight="Normal"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Open image file..." FontWeight="Normal" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Classes="editor-button" Command="{Binding LoadFromClipboardCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="12,10" Height="42">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="{x:Static theming:LucideIcons.clipboard_paste}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="18" FontWeight="Normal"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Load image from clipboard" FontWeight="Normal" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Classes="editor-button" Command="{Binding LoadFromUrlCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="12,10" Height="42">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="{x:Static theming:LucideIcons.link}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="18" FontWeight="Normal"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Load image from URL..." FontWeight="Normal" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Classes="editor-button" Command="{Binding ExitCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="12,10" Height="42">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="{x:Static theming:LucideIcons.log_out}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="18" FontWeight="Normal"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Exit" FontWeight="Normal" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Border IsVisible="{Binding IsUrlInputVisible}"
+                            Background="{DynamicResource ShareX.Brush.Background.Panel}"
+                            BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12"
+                            Margin="0,6,0,0">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Image URL"
+                                       Foreground="{DynamicResource ShareX.Brush.Text}"
+                                       FontSize="13"/>
+                            <TextBox Text="{Binding Url, Mode=TwoWay}"
+                                     PlaceholderText="https://example.com/image.png"
+                                     IsEnabled="{Binding !IsUrlLoading}"/>
+                            <TextBlock Text="Paste or type a direct HTTP or HTTPS image URL."
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+                            <ProgressBar IsVisible="{Binding IsUrlLoading}"
+                                         IsIndeterminate="True"
+                                         Height="4"/>
+                            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+                                <Button Classes="editor-button"
+                                        Content="Load"
+                                        Command="{Binding SubmitUrlCommand}"
+                                        Padding="18,0"/>
+                                <Button Classes="editor-button"
+                                        Content="Cancel"
+                                        Command="{Binding CancelUrlCommand}"
+                                        Padding="18,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border IsVisible="{Binding HasStatusMessage}"
+                            Background="{DynamicResource ShareX.Brush.Background.Panel}"
+                            BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <TextBlock Text="{x:Static theming:LucideIcons.circle_x}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="16"
+                                       FontWeight="Normal"
+                                       VerticalAlignment="Top"
+                                       Foreground="{DynamicResource ShareX.Brush.Accent}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding StatusMessage}"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource ShareX.Brush.Text}"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <Border Grid.Column="1"
+                        BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                        BorderThickness="1,0,0,0"
+                        Background="{DynamicResource ShareX.Brush.Background.Panel}">
+                    <Grid RowDefinitions="Auto,*">
+                        <StackPanel Grid.Row="0" Margin="14,14,14,10" Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{x:Static theming:LucideIcons.history}"
+                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                           FontSize="14"
+                                           FontWeight="Normal"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+                                <TextBlock Text="Recent files"
+                                           FontSize="12"
+                                           FontWeight="Normal"
+                                           Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <ScrollViewer Grid.Row="1" Margin="14,0,14,14" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Spacing="4">
+                                <Border IsVisible="{Binding !HasRecentFiles}"
+                                        Background="{DynamicResource ShareX.Brush.Background.Popup}"
+                                        BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="12">
+                                    <TextBlock Text="No recent image files yet."
+                                               FontWeight="Normal"
+                                               TextWrapping="Wrap"
+                                               Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+                                </Border>
+
+                                <ItemsControl IsVisible="{Binding HasRecentFiles}" ItemsSource="{Binding RecentFiles}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <Button Classes="editor-button"
+                                                    Command="{Binding $parent[ItemsControl].((vm:StartScreenDialogViewModel)DataContext).OpenRecentFileCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="Left"
+                                                    Padding="12,6"
+                                                    Height="36">
+                                                <TextBlock Text="{Binding}"
+                                                           FontSize="12"
+                                                           FontWeight="Normal"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip.Tip="{Binding}"/>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

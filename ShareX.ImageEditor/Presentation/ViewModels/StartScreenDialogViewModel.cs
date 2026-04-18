@@ -31,21 +31,42 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 {
     public partial class StartScreenDialogViewModel : ObservableObject
     {
+        public string Title => "Start Screen";
+
         public ObservableCollection<string> RecentFiles { get; }
 
         public bool HasRecentFiles => RecentFiles.Count > 0;
+
+        public bool HasStatusMessage => !string.IsNullOrWhiteSpace(StatusMessage);
+
+        [ObservableProperty]
+        private string _url = string.Empty;
+
+        [ObservableProperty]
+        private bool _isUrlInputVisible;
+
+        [ObservableProperty]
+        private bool _isUrlLoading;
+
+        [ObservableProperty]
+        private string? _statusMessage;
 
         public IRelayCommand NewImageCommand { get; }
         public IRelayCommand OpenFileCommand { get; }
         public IRelayCommand LoadFromClipboardCommand { get; }
         public IRelayCommand LoadFromUrlCommand { get; }
+        public IRelayCommand SubmitUrlCommand { get; }
+        public IRelayCommand CancelUrlCommand { get; }
+        public IRelayCommand CloseCommand { get; }
         public IRelayCommand ExitCommand { get; }
         public IRelayCommand<string> OpenRecentFileCommand { get; }
 
         private readonly Action _onNewImage;
         private readonly Action _onOpenFile;
         private readonly Action _onLoadFromClipboard;
-        private readonly Action _onLoadFromUrl;
+        private readonly Action _onShowUrlInput;
+        private readonly Action<string> _onSubmitUrl;
+        private readonly Action _onClose;
         private readonly Action _onExit;
         private readonly Action<string> _onOpenRecentFile;
 
@@ -54,29 +75,117 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             Action onNewImage,
             Action onOpenFile,
             Action onLoadFromClipboard,
-            Action onLoadFromUrl,
+            Action onShowUrlInput,
+            Action<string> onSubmitUrl,
+            Action onClose,
             Action onExit,
             Action<string> onOpenRecentFile)
         {
             _onNewImage = onNewImage;
             _onOpenFile = onOpenFile;
             _onLoadFromClipboard = onLoadFromClipboard;
-            _onLoadFromUrl = onLoadFromUrl;
+            _onShowUrlInput = onShowUrlInput;
+            _onSubmitUrl = onSubmitUrl;
+            _onClose = onClose;
             _onExit = onExit;
             _onOpenRecentFile = onOpenRecentFile;
 
             RecentFiles = new ObservableCollection<string>(recentFiles);
+            RecentFiles.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasRecentFiles));
 
             NewImageCommand = new RelayCommand(() => _onNewImage());
             OpenFileCommand = new RelayCommand(() => _onOpenFile());
-            LoadFromClipboardCommand = new RelayCommand(() => _onLoadFromClipboard());
-            LoadFromUrlCommand = new RelayCommand(() => _onLoadFromUrl());
+            LoadFromClipboardCommand = new RelayCommand(() =>
+            {
+                ClearStatus();
+                _onLoadFromClipboard();
+            });
+            LoadFromUrlCommand = new RelayCommand(() => _onShowUrlInput());
+            SubmitUrlCommand = new RelayCommand(SubmitUrl, CanSubmitUrl);
+            CancelUrlCommand = new RelayCommand(HideUrlInput);
+            CloseCommand = new RelayCommand(() => _onClose());
             ExitCommand = new RelayCommand(() => _onExit());
             OpenRecentFileCommand = new RelayCommand<string>(path =>
             {
                 if (!string.IsNullOrEmpty(path))
                     _onOpenRecentFile(path);
             });
+        }
+
+        partial void OnUrlChanged(string value)
+        {
+            ClearStatus();
+            SubmitUrlCommand.NotifyCanExecuteChanged();
+        }
+
+        partial void OnIsUrlInputVisibleChanged(bool value)
+        {
+            SubmitUrlCommand.NotifyCanExecuteChanged();
+        }
+
+        partial void OnIsUrlLoadingChanged(bool value)
+        {
+            SubmitUrlCommand.NotifyCanExecuteChanged();
+        }
+
+        partial void OnStatusMessageChanged(string? value)
+        {
+            OnPropertyChanged(nameof(HasStatusMessage));
+        }
+
+        public void ShowUrlInput(string? initialUrl = null)
+        {
+            ClearStatus();
+            IsUrlInputVisible = true;
+            IsUrlLoading = false;
+
+            if (!string.IsNullOrWhiteSpace(initialUrl))
+            {
+                Url = initialUrl;
+            }
+        }
+
+        public void HideUrlInput()
+        {
+            IsUrlLoading = false;
+            IsUrlInputVisible = false;
+            ClearStatus();
+        }
+
+        public void ShowStatus(string message)
+        {
+            StatusMessage = message;
+        }
+
+        public void ClearStatus()
+        {
+            StatusMessage = null;
+        }
+
+        public void SetUrlLoading(bool value)
+        {
+            IsUrlLoading = value;
+        }
+
+        private bool CanSubmitUrl()
+        {
+            return IsUrlInputVisible && !IsUrlLoading && !string.IsNullOrWhiteSpace(Url);
+        }
+
+        private void SubmitUrl()
+        {
+            ClearStatus();
+
+            string trimmedUrl = Url.Trim();
+
+            if (!Uri.TryCreate(trimmedUrl, UriKind.Absolute, out var uri) ||
+                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            {
+                ShowStatus("Please enter a valid HTTP or HTTPS URL.");
+                return;
+            }
+
+            _onSubmitUrl(trimmedUrl);
         }
     }
 }
