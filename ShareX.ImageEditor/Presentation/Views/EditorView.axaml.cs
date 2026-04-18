@@ -376,7 +376,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                         QueueAutoCopyImageToClipboard(vm);
                     }
                 }
-                else if (vm.ImageEditorMode)
+                else
                 {
                     // No image loaded — show the start screen dialog
                     vm.ShowStartScreen();

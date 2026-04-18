@@ -125,7 +125,13 @@ namespace ShareX.ImageEditor.Hosting
             window.Show();
         }
 
-        public static byte[]? ShowEditorDialog(Stream imageStream, ImageEditorOptions options, EditorEvents? events = null,
+        public static byte[]? ShowEditorDialog(ImageEditorOptions options, EditorEvents? events = null,
+            bool taskMode = false, string? imageFilePath = null)
+        {
+            return ShowEditorDialog(null, options, events, taskMode, imageFilePath);
+        }
+
+        public static byte[]? ShowEditorDialog(Stream? imageStream, ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
             byte[]? result = null;
