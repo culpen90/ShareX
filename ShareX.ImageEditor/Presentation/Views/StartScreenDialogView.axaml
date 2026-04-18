@@ -116,36 +116,14 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Classes="editor-button" Command="{Binding ExitCommand}"
-                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                            Padding="12,10" Height="42">
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <TextBlock Text="{x:Static theming:LucideIcons.log_out}"
-                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                       FontSize="18" FontWeight="Normal"
-                                       VerticalAlignment="Center"/>
-                            <TextBlock Text="Exit" FontWeight="Normal" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
                     <Border IsVisible="{Binding IsUrlInputVisible}"
-                            Background="{DynamicResource ShareX.Brush.Background.Panel}"
-                            BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                            BorderThickness="1"
-                            CornerRadius="4"
-                            Padding="12"
-                            Margin="0,6,0,0">
+                            BorderThickness="0"
+                            Margin="0,8">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Image URL"
-                                       Foreground="{DynamicResource ShareX.Brush.Text}"
-                                       FontSize="13"/>
                             <TextBox Text="{Binding Url, Mode=TwoWay}"
                                      PlaceholderText="https://example.com/image.png"
-                                     IsEnabled="{Binding !IsUrlLoading}"/>
-                            <TextBlock Text="Paste or type a direct HTTP or HTTPS image URL."
-                                       FontWeight="Normal"
-                                       TextWrapping="Wrap"
-                                       Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+                                     IsEnabled="{Binding !IsUrlLoading}"
+                                     VerticalContentAlignment="Center"/>
                             <ProgressBar IsVisible="{Binding IsUrlLoading}"
                                          IsIndeterminate="True"
                                          Height="4"/>
@@ -161,6 +139,18 @@
                             </StackPanel>
                         </StackPanel>
                     </Border>
+
+                    <Button Classes="editor-button" Command="{Binding ExitCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="12,10" Height="42">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <TextBlock Text="{x:Static theming:LucideIcons.log_out}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="18" FontWeight="Normal"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Exit" FontWeight="Normal" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <Border Grid.Column="1"
