@@ -46,6 +46,28 @@
 
             <Grid Grid.Row="1" ColumnDefinitions="350,*">
                 <StackPanel Grid.Column="0" Margin="14" Spacing="6">
+                    <Border IsVisible="{Binding HasStatusMessage}"
+                            Background="{DynamicResource ShareX.Brush.TaskMode.Cancel.Background}"
+                            BorderBrush="{DynamicResource ShareX.Brush.TaskMode.Cancel.Border}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12"
+                            Margin="0,0,0,4">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <TextBlock Text="{x:Static theming:LucideIcons.circle_x}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="18"
+                                       FontWeight="Normal"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource ShareX.Brush.Text}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding StatusMessage}"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource ShareX.Brush.Text}"/>
+                        </Grid>
+                    </Border>
+
                     <Button Classes="editor-button" Command="{Binding NewImageCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                             Padding="12,10" Height="42">
@@ -138,27 +160,6 @@
                                         Padding="18,0"/>
                             </StackPanel>
                         </StackPanel>
-                    </Border>
-
-                    <Border IsVisible="{Binding HasStatusMessage}"
-                            Background="{DynamicResource ShareX.Brush.Background.Panel}"
-                            BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                            BorderThickness="1"
-                            CornerRadius="4"
-                            Padding="12">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                            <TextBlock Text="{x:Static theming:LucideIcons.circle_x}"
-                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                       FontSize="16"
-                                       FontWeight="Normal"
-                                       VerticalAlignment="Top"
-                                       Foreground="{DynamicResource ShareX.Brush.Accent}"/>
-                            <TextBlock Grid.Column="1"
-                                       Text="{Binding StatusMessage}"
-                                       FontWeight="Normal"
-                                       TextWrapping="Wrap"
-                                       Foreground="{DynamicResource ShareX.Brush.Text}"/>
-                        </Grid>
                     </Border>
                 </StackPanel>
 

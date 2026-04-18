@@ -45,7 +45,6 @@ using ShareX.ImageEditor.Presentation.Theming;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using SkiaSharp;
 using System.ComponentModel;
-using System.Net.Http;
 
 namespace ShareX.ImageEditor.Presentation.Views
 {
@@ -1857,7 +1856,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     }
                 }
 
-                ShowStartScreenStatus(vm, "Failed to load image from clipboard. Clipboard does not contain an image.");
+                ShowStartScreenStatus(vm, "Failed to load image from clipboard.\nClipboard does not contain an image.");
             }
             catch (Exception ex)
             {
