@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -23,29 +23,15 @@
 
 #endregion License Information (GPL v3)
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using Avalonia.Controls;
 
-namespace ShareX.ImageEditor.Presentation.ViewModels
+namespace ShareX.ImageEditor.Presentation.Views
 {
-    public partial class ConfirmationDialogViewModel : ObservableObject
+    public partial class UrlInputDialogView : UserControl
     {
-        public string Title { get; }
-        public string Message { get; }
-
-        public IRelayCommand YesCommand { get; }
-        public IRelayCommand NoCommand { get; }
-        public IRelayCommand CancelCommand { get; }
-
-        public ConfirmationDialogViewModel(Action onYes, Action onNo, Action onCancel,
-            string title = "ShareX - Image editor",
-            string message = "There are unsaved changes.\n\nWould you like to save the changes before closing the image editor?")
+        public UrlInputDialogView()
         {
-            Title = title;
-            Message = message;
-            YesCommand = new RelayCommand(onYes);
-            NoCommand = new RelayCommand(onNo);
-            CancelCommand = new RelayCommand(onCancel);
+            InitializeComponent();
         }
     }
 }

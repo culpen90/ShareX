@@ -142,6 +142,23 @@ namespace ShareX.ImageEditor.Hosting
         public Color BackgroundColor { get => HexToColor(BackgroundColorHex); set => BackgroundColorHex = ColorToHex(value); }
         public string BackgroundImagePath { get; set; } = "";
 
+        // Recent image files
+        public List<string> RecentImageFiles { get; set; } = new List<string>();
+        public int MaxRecentImageFiles { get; set; } = 10;
+
+        public void AddRecentImageFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return;
+
+            RecentImageFiles.Remove(filePath);
+            RecentImageFiles.Insert(0, filePath);
+
+            if (RecentImageFiles.Count > MaxRecentImageFiles)
+            {
+                RecentImageFiles.RemoveRange(MaxRecentImageFiles, RecentImageFiles.Count - MaxRecentImageFiles);
+            }
+        }
+
         // Image effects
         public List<string> RecentEffects { get; set; } = new List<string>();
         public List<string> FavoriteEffects { get; set; } = new List<string>(DefaultFavoriteEffects);
