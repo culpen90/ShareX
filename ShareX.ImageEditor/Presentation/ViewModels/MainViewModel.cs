@@ -71,19 +71,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private string _windowTitle = "ShareX - Image Editor";
 
         [ObservableProperty]
-        private bool _showTaskModeButtons = true;
+        private bool _showFileMenu;
 
         [ObservableProperty]
-        private bool _imageEditorMode;
+        private bool _showTaskButtons = true;
 
-        public bool ShowBottomToolbar => !ImageEditorMode;
+        [ObservableProperty]
+        private bool _showBottomToolbar = true;
 
-        partial void OnImageEditorModeChanged(bool value)
-        {
-            OnPropertyChanged(nameof(ShowBottomToolbar));
-
-            ShowTaskModeButtons = !value;
-        }
+        [ObservableProperty]
+        private bool _showStartScreen = true;
 
         // Events to signal View to perform canvas operations
         public event EventHandler? UndoRequested;
@@ -110,11 +107,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public event EventHandler<string>? LoadRecentFileRequested;
 
         [ObservableProperty]
-        private bool _taskMode;
+        private bool _useContinueWorkflow;
 
-        public string ContinueButtonTooltip => TaskMode ? "Continue (Enter)" : "Run after capture tasks (Enter)";
+        public string ContinueButtonTooltip => UseContinueWorkflow ? "Continue (Enter)" : "Run after capture tasks (Enter)";
 
-        partial void OnTaskModeChanged(bool value)
+        partial void OnUseContinueWorkflowChanged(bool value)
         {
             OnPropertyChanged(nameof(ContinueButtonTooltip));
         }
@@ -1155,7 +1152,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OpenImageRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        public void ShowStartScreen()
+        public void RequestStartScreen()
         {
             StartScreenRequested?.Invoke(this, EventArgs.Empty);
         }

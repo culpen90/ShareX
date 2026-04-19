@@ -530,7 +530,7 @@
 
                 <!-- Task Mode Buttons -->
                 <Grid Width="90" Height="40" Margin="4,0,10,0" ClipToBounds="False" VerticalAlignment="Bottom"
-                      IsVisible="{Binding ShowTaskModeButtons}">
+                      IsVisible="{Binding ShowTaskButtons}">
                     <!-- Cancel Button: Red Rectangle (Behind) -->
                     <Button Command="{Binding CancelCommand}"
                             Classes="task-mode-button danger"

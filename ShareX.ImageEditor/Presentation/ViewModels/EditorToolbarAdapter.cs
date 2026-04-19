@@ -205,7 +205,7 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public ICommand ToggleEffectsPanelCommand => _viewModel.ToggleEffectsPanelCommand;
 
-    public bool ImageEditorMode => _viewModel.ImageEditorMode;
+    public bool ShowFileMenu => _viewModel.ShowFileMenu;
 
     public ICommand NewImageCommand => _viewModel.NewImageCommand;
 
@@ -270,8 +270,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
             case nameof(MainViewModel.IsSettingsPanelOpen):
                 OnPropertyChanged(nameof(IsSettingsPanelOpen));
                 break;
-            case nameof(MainViewModel.ImageEditorMode):
-                OnPropertyChanged(nameof(ImageEditorMode));
+            case nameof(MainViewModel.ShowFileMenu):
+                OnPropertyChanged(nameof(ShowFileMenu));
                 break;
         }
     }

@@ -58,15 +58,19 @@ namespace ShareX.ImageEditor.App
 
                 if (window.DataContext is MainViewModel vm)
                 {
-                    vm.ImageEditorMode = true;
+                    vm.ShowFileMenu = true;
+                    vm.ShowTaskButtons = true;
+                    vm.UseContinueWorkflow = false;
+                    vm.ShowBottomToolbar = true;
+                    vm.ShowStartScreen = true;
 
                     string? imagePath = GetImagePathFromArgs(desktop.Args);
 
 #if DEBUG
-                    if (string.IsNullOrEmpty(imagePath))
+                    if (!vm.ShowStartScreen && string.IsNullOrEmpty(imagePath))
                     {
                         string location = AppDomain.CurrentDomain.BaseDirectory;
-                        //imagePath = Path.Combine(location, "Assets", "Sample.png");
+                        imagePath = Path.Combine(location, "Assets", "Sample.png");
                     }
 #endif
 
