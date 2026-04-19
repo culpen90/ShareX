@@ -376,10 +376,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                         QueueAutoCopyImageToClipboard(vm);
                     }
                 }
-                else
+                else if (vm.ShowStartScreen)
                 {
                     // No image loaded — show the start screen dialog
-                    vm.ShowStartScreen();
+                    vm.RequestStartScreen();
                 }
 
                 // Reset dirty flag after initial load — loading the image fires HistoryChanged
@@ -1205,7 +1205,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                                 {
                                     e.Handled = true;
                                 }
-                                else if (!vm.ImageEditorMode)
+                                else if (vm.UseContinueWorkflow)
                                 {
                                     vm.ContinueCommand.Execute(null);
                                     e.Handled = true;
@@ -1258,14 +1258,14 @@ namespace ShareX.ImageEditor.Presentation.Views
                             _selectionController.ClearSelection();
                             e.Handled = true;
                         }
-                        else if (vm2.ImageEditorMode)
+                        else if (vm2.UseContinueWorkflow)
                         {
-                            vm2.ExitEditorCommand.Execute(null);
+                            vm2.CancelCommand.Execute(null);
                             e.Handled = true;
                         }
                         else
                         {
-                            vm2.CancelCommand.Execute(null);
+                            vm2.ExitEditorCommand.Execute(null);
                             e.Handled = true;
                         }
                         break;

@@ -27,7 +27,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <StackPanel Orientation="Horizontal"
                                 Spacing="4"
-                                IsVisible="{ReflectionBinding ImageEditorMode}">
+                                IsVisible="{ReflectionBinding ShowFileMenu}">
                         <Button Classes="editor-button toolbar-button"
                                 ToolTip.Tip="File"
                                 x:Name="FileMenuButton"
