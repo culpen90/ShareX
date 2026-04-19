@@ -179,13 +179,14 @@ namespace ShareX.ImageEditor.Hosting
 
             // Set file path from events or parameter
             string? filePath = imageFilePath ?? events?.ImageFilePath;
-            if (!string.IsNullOrEmpty(filePath) && window.DataContext is MainViewModel vmForPath)
-            {
-                vmForPath.ImageFilePath = filePath;
-            }
 
             if (window.DataContext is MainViewModel vm)
             {
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    vm.ImageFilePath = filePath;
+                }
+
                 vm.ShowFileMenu = !taskMode;
                 vm.ShowTaskButtons = true;
                 vm.UseContinueWorkflow = taskMode;
