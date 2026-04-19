@@ -184,9 +184,13 @@ namespace ShareX.ImageEditor.Hosting
                 vmForPath.ImageFilePath = filePath;
             }
 
-            if (taskMode && window.DataContext is MainViewModel vm)
+            if (window.DataContext is MainViewModel vm)
             {
-                vm.TaskMode = true;
+                vm.ShowFileMenu = !taskMode;
+                vm.ShowTaskButtons = true;
+                vm.UseContinueWorkflow = taskMode;
+                vm.ShowBottomToolbar = true;
+                vm.ShowStartScreen = !taskMode;
             }
 
             SetupEvents(window, events, () =>
