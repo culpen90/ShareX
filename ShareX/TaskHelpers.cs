@@ -1990,6 +1990,7 @@ namespace ShareX
                     case AfterCaptureTasks.PerformActions: return Resources.application_terminal;
                     case AfterCaptureTasks.CopyFileToClipboard: return Resources.clipboard_block;
                     case AfterCaptureTasks.CopyFilePathToClipboard: return Resources.clipboard_list;
+                    case AfterCaptureTasks.CopyFolderPathToClipboard: return Resources.clipboard_folder;
                     case AfterCaptureTasks.ShowInExplorer: return Resources.folder_stand;
                     case AfterCaptureTasks.AnalyzeImage: return Resources.robot;
                     case AfterCaptureTasks.ScanQRCode: return ShareXResources.IsDarkTheme ? Resources.barcode_2d_white : Resources.barcode_2d;
