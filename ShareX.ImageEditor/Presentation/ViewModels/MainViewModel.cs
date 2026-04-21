@@ -26,7 +26,6 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShareX.ImageEditor.Core.Abstractions;
@@ -34,7 +33,6 @@ using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Core.Editor;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Emoji;
-using ShareX.ImageEditor.Presentation.Theming;
 using System.Collections.ObjectModel;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
@@ -733,18 +731,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             IsModalOpen = false;
             ModalContent = null;
-        }
-
-        [RelayCommand]
-        private void SetTheme(string themeName)
-        {
-            var theme = themeName switch
-            {
-                "ShareXDark" => ThemeManager.ShareXDark,
-                "ShareXLight" => ThemeManager.ShareXLight,
-                _ => ThemeVariant.Default
-            };
-            ThemeManager.SetTheme(theme);
         }
 
         [ObservableProperty]

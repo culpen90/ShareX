@@ -124,16 +124,6 @@
                     <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionSendToBack}"/>
                 </MenuItem.Icon>
             </MenuItem>
-
-            <Separator/>
-
-            <MenuItem Header="Theme">
-                <MenuItem.Icon>
-                    <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.MenuTheme}"/>
-                </MenuItem.Icon>
-                <MenuItem Header="Dark" Command="{Binding SetThemeCommand}" CommandParameter="ShareXDark"/>
-                <MenuItem Header="Light" Command="{Binding SetThemeCommand}" CommandParameter="ShareXLight"/>
-            </MenuItem>
         </ContextMenu>
     </UserControl.Resources>
 
