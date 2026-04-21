@@ -496,11 +496,12 @@ namespace ShareX
             #region Image editor
 
             cbImageEditorUseLegacyImageEditor.Checked = TaskSettings.ToolsSettings.UseLegacyImageEditor;
+            cbImageEditorUseSystemTheme.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme;
+            cbImageEditorUseSystemAccentColor.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemAccentColor;
             cbImageEditorExitConfirmation.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation;
             cbImageEditorZoomToFitOnOpen.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ZoomToFitOnOpen;
             cbImageEditorAutoCloseEditorOnTask.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCloseEditorOnTask;
             cbImageEditorAutoCopyImageToClipboard.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCopyImageToClipboard;
-            cbImageEditorUseSystemTheme.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme;
 
             #endregion
 
@@ -1861,6 +1862,16 @@ namespace ShareX
             TaskSettings.ToolsSettings.UseLegacyImageEditor = cbImageEditorUseLegacyImageEditor.Checked;
         }
 
+        private void cbImageEditorUseSystemTheme_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme = cbImageEditorUseSystemTheme.Checked;
+        }
+
+        private void cbImageEditorUseSystemAccentColor_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemAccentColor = cbImageEditorUseSystemAccentColor.Checked;
+        }
+
         private void cbImageEditorExitConfirmation_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation = cbImageEditorExitConfirmation.Checked;
@@ -1879,11 +1890,6 @@ namespace ShareX
         private void cbImageEditorAutoCopyImageToClipboard_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.ToolsSettings.ImageEditorOptions.AutoCopyImageToClipboard = cbImageEditorAutoCopyImageToClipboard.Checked;
-        }
-
-        private void cbImageEditorUseSystemTheme_CheckedChanged(object sender, EventArgs e)
-        {
-            TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme = cbImageEditorUseSystemTheme.Checked;
         }
 
         #endregion

@@ -285,6 +285,8 @@
             lblToolsScreenColorPickerFormat = new System.Windows.Forms.Label();
             cbOverrideToolsSettings = new System.Windows.Forms.CheckBox();
             tpToolsImageEditor = new System.Windows.Forms.TabPage();
+            cbImageEditorUseSystemAccentColor = new System.Windows.Forms.CheckBox();
+            cbImageEditorUseSystemTheme = new System.Windows.Forms.CheckBox();
             cbImageEditorAutoCopyImageToClipboard = new System.Windows.Forms.CheckBox();
             cbImageEditorAutoCloseEditorOnTask = new System.Windows.Forms.CheckBox();
             cbImageEditorZoomToFitOnOpen = new System.Windows.Forms.CheckBox();
@@ -317,7 +319,6 @@
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
             tttvMain = new ShareX.HelpersLib.TabToTreeView();
-            cbImageEditorUseSystemTheme = new System.Windows.Forms.CheckBox();
             tcTaskSettings.SuspendLayout();
             tpTask.SuspendLayout();
             cmsDestinations.SuspendLayout();
@@ -2276,6 +2277,7 @@
             // 
             // tpToolsImageEditor
             // 
+            tpToolsImageEditor.Controls.Add(cbImageEditorUseSystemAccentColor);
             tpToolsImageEditor.Controls.Add(cbImageEditorUseSystemTheme);
             tpToolsImageEditor.Controls.Add(cbImageEditorAutoCopyImageToClipboard);
             tpToolsImageEditor.Controls.Add(cbImageEditorAutoCloseEditorOnTask);
@@ -2285,6 +2287,20 @@
             resources.ApplyResources(tpToolsImageEditor, "tpToolsImageEditor");
             tpToolsImageEditor.Name = "tpToolsImageEditor";
             tpToolsImageEditor.UseVisualStyleBackColor = true;
+            // 
+            // cbImageEditorUseSystemAccentColor
+            // 
+            resources.ApplyResources(cbImageEditorUseSystemAccentColor, "cbImageEditorUseSystemAccentColor");
+            cbImageEditorUseSystemAccentColor.Name = "cbImageEditorUseSystemAccentColor";
+            cbImageEditorUseSystemAccentColor.UseVisualStyleBackColor = true;
+            cbImageEditorUseSystemAccentColor.CheckedChanged += cbImageEditorUseSystemAccentColor_CheckedChanged;
+            // 
+            // cbImageEditorUseSystemTheme
+            // 
+            resources.ApplyResources(cbImageEditorUseSystemTheme, "cbImageEditorUseSystemTheme");
+            cbImageEditorUseSystemTheme.Name = "cbImageEditorUseSystemTheme";
+            cbImageEditorUseSystemTheme.UseVisualStyleBackColor = true;
+            cbImageEditorUseSystemTheme.CheckedChanged += cbImageEditorUseSystemTheme_CheckedChanged;
             // 
             // cbImageEditorAutoCopyImageToClipboard
             // 
@@ -2522,13 +2538,6 @@
             tttvMain.TreeViewFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 162);
             tttvMain.TreeViewSize = 190;
             tttvMain.TabChanged += tttvMain_TabChanged;
-            // 
-            // cbImageEditorUseSystemTheme
-            // 
-            resources.ApplyResources(cbImageEditorUseSystemTheme, "cbImageEditorUseSystemTheme");
-            cbImageEditorUseSystemTheme.Name = "cbImageEditorUseSystemTheme";
-            cbImageEditorUseSystemTheme.UseVisualStyleBackColor = true;
-            cbImageEditorUseSystemTheme.CheckedChanged += cbImageEditorUseSystemTheme_CheckedChanged;
             // 
             // TaskSettingsForm
             // 
@@ -2925,5 +2934,6 @@
         private System.Windows.Forms.CheckBox cbImageEditorAutoCloseEditorOnTask;
         private System.Windows.Forms.CheckBox cbImageEditorAutoCopyImageToClipboard;
         private System.Windows.Forms.CheckBox cbImageEditorUseSystemTheme;
+        private System.Windows.Forms.CheckBox cbImageEditorUseSystemAccentColor;
     }
 }
