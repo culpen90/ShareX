@@ -308,6 +308,7 @@
             lblToolsScreenColorPickerFormat = new System.Windows.Forms.Label();
             cbOverrideToolsSettings = new System.Windows.Forms.CheckBox();
             tpToolsImageEditor = new System.Windows.Forms.TabPage();
+            cbImageEditorAutoCopyImageToClipboard = new System.Windows.Forms.CheckBox();
             cbImageEditorAutoCloseEditorOnTask = new System.Windows.Forms.CheckBox();
             cbImageEditorZoomToFitOnOpen = new System.Windows.Forms.CheckBox();
             cbImageEditorExitConfirmation = new System.Windows.Forms.CheckBox();
@@ -316,7 +317,6 @@
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
             tttvMain = new ShareX.HelpersLib.TabToTreeView();
-            cbImageEditorAutoCopyImageToClipboard = new System.Windows.Forms.CheckBox();
             tcTaskSettings.SuspendLayout();
             tpTask.SuspendLayout();
             cmsDestinations.SuspendLayout();
@@ -438,9 +438,9 @@
             tcTaskSettings.Controls.Add(tpImage);
             tcTaskSettings.Controls.Add(tpCapture);
             tcTaskSettings.Controls.Add(tpUpload);
+            tcTaskSettings.Controls.Add(tpTools);
             tcTaskSettings.Controls.Add(tpActions);
             tcTaskSettings.Controls.Add(tpWatchFolders);
-            tcTaskSettings.Controls.Add(tpTools);
             tcTaskSettings.Controls.Add(tpAdvanced);
             resources.ApplyResources(tcTaskSettings, "tcTaskSettings");
             tcTaskSettings.Name = "tcTaskSettings";
@@ -2449,6 +2449,13 @@
             tpToolsImageEditor.Name = "tpToolsImageEditor";
             tpToolsImageEditor.UseVisualStyleBackColor = true;
             // 
+            // cbImageEditorAutoCopyImageToClipboard
+            // 
+            resources.ApplyResources(cbImageEditorAutoCopyImageToClipboard, "cbImageEditorAutoCopyImageToClipboard");
+            cbImageEditorAutoCopyImageToClipboard.Name = "cbImageEditorAutoCopyImageToClipboard";
+            cbImageEditorAutoCopyImageToClipboard.UseVisualStyleBackColor = true;
+            cbImageEditorAutoCopyImageToClipboard.CheckedChanged += cbImageEditorAutoCopyImageToClipboard_CheckedChanged;
+            // 
             // cbImageEditorAutoCloseEditorOnTask
             // 
             resources.ApplyResources(cbImageEditorAutoCloseEditorOnTask, "cbImageEditorAutoCloseEditorOnTask");
@@ -2513,13 +2520,6 @@
             tttvMain.TreeViewFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 162);
             tttvMain.TreeViewSize = 190;
             tttvMain.TabChanged += tttvMain_TabChanged;
-            // 
-            // cbImageEditorAutoCopyImageToClipboard
-            // 
-            resources.ApplyResources(cbImageEditorAutoCopyImageToClipboard, "cbImageEditorAutoCopyImageToClipboard");
-            cbImageEditorAutoCopyImageToClipboard.Name = "cbImageEditorAutoCopyImageToClipboard";
-            cbImageEditorAutoCopyImageToClipboard.UseVisualStyleBackColor = true;
-            cbImageEditorAutoCopyImageToClipboard.CheckedChanged += cbImageEditorAutoCopyImageToClipboard_CheckedChanged;
             // 
             // TaskSettingsForm
             // 
