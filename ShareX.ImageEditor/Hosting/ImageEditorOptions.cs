@@ -50,13 +50,13 @@ namespace ShareX.ImageEditor.Hosting
         private static Color HexToColor(string hex) => Color.Parse(hex);
 
         // Editor
+        public bool UseSystemTheme { get; set; } = true;
+        public bool UseSystemAccentColor { get; set; } = true;
         public bool ShowExitConfirmation { get; set; } = true;
         public bool ZoomToFitOnOpen { get; set; } = false;
         public bool AutoCloseEditorOnTask { get; set; } = false;
         public bool AutoCopyImageToClipboard { get; set; } = false;
         public EditorTool LastUsedAnnotationTool { get; set; } = EditorTool.Rectangle;
-        public bool UseSystemTheme { get; set; } = true;
-        public bool UseSystemAccentColor { get; set; } = true;
 
         // Shared
         public string BorderColorHex { get; set; } = ColorToHex(PrimaryColor);
