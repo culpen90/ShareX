@@ -500,6 +500,7 @@ namespace ShareX
             cbImageEditorZoomToFitOnOpen.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ZoomToFitOnOpen;
             cbImageEditorAutoCloseEditorOnTask.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCloseEditorOnTask;
             cbImageEditorAutoCopyImageToClipboard.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCopyImageToClipboard;
+            cbImageEditorUseSystemTheme.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme;
 
             #endregion
 
@@ -1878,6 +1879,11 @@ namespace ShareX
         private void cbImageEditorAutoCopyImageToClipboard_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.ToolsSettings.ImageEditorOptions.AutoCopyImageToClipboard = cbImageEditorAutoCopyImageToClipboard.Checked;
+        }
+
+        private void cbImageEditorUseSystemTheme_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme = cbImageEditorUseSystemTheme.Checked;
         }
 
         #endregion

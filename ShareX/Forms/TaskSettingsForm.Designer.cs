@@ -273,6 +273,23 @@
             lblUploaderFiltersExtensionsExample = new System.Windows.Forms.Label();
             lblUploaderFiltersExtensions = new System.Windows.Forms.Label();
             txtUploaderFiltersExtensions = new System.Windows.Forms.TextBox();
+            tpTools = new System.Windows.Forms.TabPage();
+            tcTools = new System.Windows.Forms.TabControl();
+            tpToolsGeneral = new System.Windows.Forms.TabPage();
+            pTools = new System.Windows.Forms.Panel();
+            txtToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.TextBox();
+            lblToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.Label();
+            txtToolsScreenColorPickerInfoText = new System.Windows.Forms.TextBox();
+            lblToolsScreenColorPickerInfoText = new System.Windows.Forms.Label();
+            txtToolsScreenColorPickerFormat = new System.Windows.Forms.TextBox();
+            lblToolsScreenColorPickerFormat = new System.Windows.Forms.Label();
+            cbOverrideToolsSettings = new System.Windows.Forms.CheckBox();
+            tpToolsImageEditor = new System.Windows.Forms.TabPage();
+            cbImageEditorAutoCopyImageToClipboard = new System.Windows.Forms.CheckBox();
+            cbImageEditorAutoCloseEditorOnTask = new System.Windows.Forms.CheckBox();
+            cbImageEditorZoomToFitOnOpen = new System.Windows.Forms.CheckBox();
+            cbImageEditorExitConfirmation = new System.Windows.Forms.CheckBox();
+            cbImageEditorUseLegacyImageEditor = new System.Windows.Forms.CheckBox();
             tpActions = new System.Windows.Forms.TabPage();
             pActions = new System.Windows.Forms.Panel();
             btnActions = new System.Windows.Forms.Button();
@@ -296,27 +313,11 @@
             chWatchFolderIncludeSubdirectories = new System.Windows.Forms.ColumnHeader();
             btnWatchFolderRemove = new System.Windows.Forms.Button();
             btnWatchFolderAdd = new System.Windows.Forms.Button();
-            tpTools = new System.Windows.Forms.TabPage();
-            tcTools = new System.Windows.Forms.TabControl();
-            tpToolsGeneral = new System.Windows.Forms.TabPage();
-            pTools = new System.Windows.Forms.Panel();
-            txtToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.TextBox();
-            lblToolsScreenColorPickerFormatCtrl = new System.Windows.Forms.Label();
-            txtToolsScreenColorPickerInfoText = new System.Windows.Forms.TextBox();
-            lblToolsScreenColorPickerInfoText = new System.Windows.Forms.Label();
-            txtToolsScreenColorPickerFormat = new System.Windows.Forms.TextBox();
-            lblToolsScreenColorPickerFormat = new System.Windows.Forms.Label();
-            cbOverrideToolsSettings = new System.Windows.Forms.CheckBox();
-            tpToolsImageEditor = new System.Windows.Forms.TabPage();
-            cbImageEditorAutoCopyImageToClipboard = new System.Windows.Forms.CheckBox();
-            cbImageEditorAutoCloseEditorOnTask = new System.Windows.Forms.CheckBox();
-            cbImageEditorZoomToFitOnOpen = new System.Windows.Forms.CheckBox();
-            cbImageEditorExitConfirmation = new System.Windows.Forms.CheckBox();
-            cbImageEditorUseLegacyImageEditor = new System.Windows.Forms.CheckBox();
             tpAdvanced = new System.Windows.Forms.TabPage();
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
             tttvMain = new ShareX.HelpersLib.TabToTreeView();
+            cbImageEditorUseSystemTheme = new System.Windows.Forms.CheckBox();
             tcTaskSettings.SuspendLayout();
             tpTask.SuspendLayout();
             cmsDestinations.SuspendLayout();
@@ -373,14 +374,14 @@
             ((System.ComponentModel.ISupportInitialize)nudAutoIncrementNumber).BeginInit();
             tpUploadClipboard.SuspendLayout();
             tpUploaderFilters.SuspendLayout();
-            tpActions.SuspendLayout();
-            pActions.SuspendLayout();
-            tpWatchFolders.SuspendLayout();
             tpTools.SuspendLayout();
             tcTools.SuspendLayout();
             tpToolsGeneral.SuspendLayout();
             pTools.SuspendLayout();
             tpToolsImageEditor.SuspendLayout();
+            tpActions.SuspendLayout();
+            pActions.SuspendLayout();
+            tpWatchFolders.SuspendLayout();
             tpAdvanced.SuspendLayout();
             SuspendLayout();
             // 
@@ -2197,6 +2198,129 @@
             resources.ApplyResources(txtUploaderFiltersExtensions, "txtUploaderFiltersExtensions");
             txtUploaderFiltersExtensions.Name = "txtUploaderFiltersExtensions";
             // 
+            // tpTools
+            // 
+            tpTools.BackColor = System.Drawing.SystemColors.Window;
+            tpTools.Controls.Add(tcTools);
+            resources.ApplyResources(tpTools, "tpTools");
+            tpTools.Name = "tpTools";
+            // 
+            // tcTools
+            // 
+            tcTools.Controls.Add(tpToolsGeneral);
+            tcTools.Controls.Add(tpToolsImageEditor);
+            resources.ApplyResources(tcTools, "tcTools");
+            tcTools.Name = "tcTools";
+            tcTools.SelectedIndex = 0;
+            // 
+            // tpToolsGeneral
+            // 
+            tpToolsGeneral.Controls.Add(pTools);
+            tpToolsGeneral.Controls.Add(cbOverrideToolsSettings);
+            resources.ApplyResources(tpToolsGeneral, "tpToolsGeneral");
+            tpToolsGeneral.Name = "tpToolsGeneral";
+            tpToolsGeneral.UseVisualStyleBackColor = true;
+            // 
+            // pTools
+            // 
+            pTools.Controls.Add(txtToolsScreenColorPickerFormatCtrl);
+            pTools.Controls.Add(lblToolsScreenColorPickerFormatCtrl);
+            pTools.Controls.Add(txtToolsScreenColorPickerInfoText);
+            pTools.Controls.Add(lblToolsScreenColorPickerInfoText);
+            pTools.Controls.Add(txtToolsScreenColorPickerFormat);
+            pTools.Controls.Add(lblToolsScreenColorPickerFormat);
+            resources.ApplyResources(pTools, "pTools");
+            pTools.Name = "pTools";
+            // 
+            // txtToolsScreenColorPickerFormatCtrl
+            // 
+            resources.ApplyResources(txtToolsScreenColorPickerFormatCtrl, "txtToolsScreenColorPickerFormatCtrl");
+            txtToolsScreenColorPickerFormatCtrl.Name = "txtToolsScreenColorPickerFormatCtrl";
+            txtToolsScreenColorPickerFormatCtrl.TextChanged += txtToolsScreenColorPickerFormatCtrl_TextChanged;
+            // 
+            // lblToolsScreenColorPickerFormatCtrl
+            // 
+            resources.ApplyResources(lblToolsScreenColorPickerFormatCtrl, "lblToolsScreenColorPickerFormatCtrl");
+            lblToolsScreenColorPickerFormatCtrl.Name = "lblToolsScreenColorPickerFormatCtrl";
+            // 
+            // txtToolsScreenColorPickerInfoText
+            // 
+            resources.ApplyResources(txtToolsScreenColorPickerInfoText, "txtToolsScreenColorPickerInfoText");
+            txtToolsScreenColorPickerInfoText.Name = "txtToolsScreenColorPickerInfoText";
+            txtToolsScreenColorPickerInfoText.TextChanged += txtToolsScreenColorPickerInfoText_TextChanged;
+            // 
+            // lblToolsScreenColorPickerInfoText
+            // 
+            resources.ApplyResources(lblToolsScreenColorPickerInfoText, "lblToolsScreenColorPickerInfoText");
+            lblToolsScreenColorPickerInfoText.Name = "lblToolsScreenColorPickerInfoText";
+            // 
+            // txtToolsScreenColorPickerFormat
+            // 
+            resources.ApplyResources(txtToolsScreenColorPickerFormat, "txtToolsScreenColorPickerFormat");
+            txtToolsScreenColorPickerFormat.Name = "txtToolsScreenColorPickerFormat";
+            txtToolsScreenColorPickerFormat.TextChanged += txtToolsScreenColorPickerFormat_TextChanged;
+            // 
+            // lblToolsScreenColorPickerFormat
+            // 
+            resources.ApplyResources(lblToolsScreenColorPickerFormat, "lblToolsScreenColorPickerFormat");
+            lblToolsScreenColorPickerFormat.Name = "lblToolsScreenColorPickerFormat";
+            // 
+            // cbOverrideToolsSettings
+            // 
+            resources.ApplyResources(cbOverrideToolsSettings, "cbOverrideToolsSettings");
+            cbOverrideToolsSettings.Checked = true;
+            cbOverrideToolsSettings.CheckState = System.Windows.Forms.CheckState.Checked;
+            cbOverrideToolsSettings.Name = "cbOverrideToolsSettings";
+            cbOverrideToolsSettings.UseVisualStyleBackColor = true;
+            cbOverrideToolsSettings.CheckedChanged += cbUseDefaultToolsSettings_CheckedChanged;
+            // 
+            // tpToolsImageEditor
+            // 
+            tpToolsImageEditor.Controls.Add(cbImageEditorUseSystemTheme);
+            tpToolsImageEditor.Controls.Add(cbImageEditorAutoCopyImageToClipboard);
+            tpToolsImageEditor.Controls.Add(cbImageEditorAutoCloseEditorOnTask);
+            tpToolsImageEditor.Controls.Add(cbImageEditorZoomToFitOnOpen);
+            tpToolsImageEditor.Controls.Add(cbImageEditorExitConfirmation);
+            tpToolsImageEditor.Controls.Add(cbImageEditorUseLegacyImageEditor);
+            resources.ApplyResources(tpToolsImageEditor, "tpToolsImageEditor");
+            tpToolsImageEditor.Name = "tpToolsImageEditor";
+            tpToolsImageEditor.UseVisualStyleBackColor = true;
+            // 
+            // cbImageEditorAutoCopyImageToClipboard
+            // 
+            resources.ApplyResources(cbImageEditorAutoCopyImageToClipboard, "cbImageEditorAutoCopyImageToClipboard");
+            cbImageEditorAutoCopyImageToClipboard.Name = "cbImageEditorAutoCopyImageToClipboard";
+            cbImageEditorAutoCopyImageToClipboard.UseVisualStyleBackColor = true;
+            cbImageEditorAutoCopyImageToClipboard.CheckedChanged += cbImageEditorAutoCopyImageToClipboard_CheckedChanged;
+            // 
+            // cbImageEditorAutoCloseEditorOnTask
+            // 
+            resources.ApplyResources(cbImageEditorAutoCloseEditorOnTask, "cbImageEditorAutoCloseEditorOnTask");
+            cbImageEditorAutoCloseEditorOnTask.Name = "cbImageEditorAutoCloseEditorOnTask";
+            cbImageEditorAutoCloseEditorOnTask.UseVisualStyleBackColor = true;
+            cbImageEditorAutoCloseEditorOnTask.CheckedChanged += cbImageEditorAutoCloseEditorOnTask_CheckedChanged;
+            // 
+            // cbImageEditorZoomToFitOnOpen
+            // 
+            resources.ApplyResources(cbImageEditorZoomToFitOnOpen, "cbImageEditorZoomToFitOnOpen");
+            cbImageEditorZoomToFitOnOpen.Name = "cbImageEditorZoomToFitOnOpen";
+            cbImageEditorZoomToFitOnOpen.UseVisualStyleBackColor = true;
+            cbImageEditorZoomToFitOnOpen.CheckedChanged += cbImageEditorZoomToFitOnOpen_CheckedChanged;
+            // 
+            // cbImageEditorExitConfirmation
+            // 
+            resources.ApplyResources(cbImageEditorExitConfirmation, "cbImageEditorExitConfirmation");
+            cbImageEditorExitConfirmation.Name = "cbImageEditorExitConfirmation";
+            cbImageEditorExitConfirmation.UseVisualStyleBackColor = true;
+            cbImageEditorExitConfirmation.CheckedChanged += cbImageEditorExitConfirmation_CheckedChanged;
+            // 
+            // cbImageEditorUseLegacyImageEditor
+            // 
+            resources.ApplyResources(cbImageEditorUseLegacyImageEditor, "cbImageEditorUseLegacyImageEditor");
+            cbImageEditorUseLegacyImageEditor.Name = "cbImageEditorUseLegacyImageEditor";
+            cbImageEditorUseLegacyImageEditor.UseVisualStyleBackColor = true;
+            cbImageEditorUseLegacyImageEditor.CheckedChanged += cbImageEditorUseLegacyImageEditor_CheckedChanged;
+            // 
             // tpActions
             // 
             tpActions.BackColor = System.Drawing.SystemColors.Window;
@@ -2362,128 +2486,6 @@
             btnWatchFolderAdd.UseVisualStyleBackColor = true;
             btnWatchFolderAdd.Click += btnWatchFolderAdd_Click;
             // 
-            // tpTools
-            // 
-            tpTools.BackColor = System.Drawing.SystemColors.Window;
-            tpTools.Controls.Add(tcTools);
-            resources.ApplyResources(tpTools, "tpTools");
-            tpTools.Name = "tpTools";
-            // 
-            // tcTools
-            // 
-            tcTools.Controls.Add(tpToolsGeneral);
-            tcTools.Controls.Add(tpToolsImageEditor);
-            resources.ApplyResources(tcTools, "tcTools");
-            tcTools.Name = "tcTools";
-            tcTools.SelectedIndex = 0;
-            // 
-            // tpToolsGeneral
-            // 
-            tpToolsGeneral.Controls.Add(pTools);
-            tpToolsGeneral.Controls.Add(cbOverrideToolsSettings);
-            resources.ApplyResources(tpToolsGeneral, "tpToolsGeneral");
-            tpToolsGeneral.Name = "tpToolsGeneral";
-            tpToolsGeneral.UseVisualStyleBackColor = true;
-            // 
-            // pTools
-            // 
-            pTools.Controls.Add(txtToolsScreenColorPickerFormatCtrl);
-            pTools.Controls.Add(lblToolsScreenColorPickerFormatCtrl);
-            pTools.Controls.Add(txtToolsScreenColorPickerInfoText);
-            pTools.Controls.Add(lblToolsScreenColorPickerInfoText);
-            pTools.Controls.Add(txtToolsScreenColorPickerFormat);
-            pTools.Controls.Add(lblToolsScreenColorPickerFormat);
-            resources.ApplyResources(pTools, "pTools");
-            pTools.Name = "pTools";
-            // 
-            // txtToolsScreenColorPickerFormatCtrl
-            // 
-            resources.ApplyResources(txtToolsScreenColorPickerFormatCtrl, "txtToolsScreenColorPickerFormatCtrl");
-            txtToolsScreenColorPickerFormatCtrl.Name = "txtToolsScreenColorPickerFormatCtrl";
-            txtToolsScreenColorPickerFormatCtrl.TextChanged += txtToolsScreenColorPickerFormatCtrl_TextChanged;
-            // 
-            // lblToolsScreenColorPickerFormatCtrl
-            // 
-            resources.ApplyResources(lblToolsScreenColorPickerFormatCtrl, "lblToolsScreenColorPickerFormatCtrl");
-            lblToolsScreenColorPickerFormatCtrl.Name = "lblToolsScreenColorPickerFormatCtrl";
-            // 
-            // txtToolsScreenColorPickerInfoText
-            // 
-            resources.ApplyResources(txtToolsScreenColorPickerInfoText, "txtToolsScreenColorPickerInfoText");
-            txtToolsScreenColorPickerInfoText.Name = "txtToolsScreenColorPickerInfoText";
-            txtToolsScreenColorPickerInfoText.TextChanged += txtToolsScreenColorPickerInfoText_TextChanged;
-            // 
-            // lblToolsScreenColorPickerInfoText
-            // 
-            resources.ApplyResources(lblToolsScreenColorPickerInfoText, "lblToolsScreenColorPickerInfoText");
-            lblToolsScreenColorPickerInfoText.Name = "lblToolsScreenColorPickerInfoText";
-            // 
-            // txtToolsScreenColorPickerFormat
-            // 
-            resources.ApplyResources(txtToolsScreenColorPickerFormat, "txtToolsScreenColorPickerFormat");
-            txtToolsScreenColorPickerFormat.Name = "txtToolsScreenColorPickerFormat";
-            txtToolsScreenColorPickerFormat.TextChanged += txtToolsScreenColorPickerFormat_TextChanged;
-            // 
-            // lblToolsScreenColorPickerFormat
-            // 
-            resources.ApplyResources(lblToolsScreenColorPickerFormat, "lblToolsScreenColorPickerFormat");
-            lblToolsScreenColorPickerFormat.Name = "lblToolsScreenColorPickerFormat";
-            // 
-            // cbOverrideToolsSettings
-            // 
-            resources.ApplyResources(cbOverrideToolsSettings, "cbOverrideToolsSettings");
-            cbOverrideToolsSettings.Checked = true;
-            cbOverrideToolsSettings.CheckState = System.Windows.Forms.CheckState.Checked;
-            cbOverrideToolsSettings.Name = "cbOverrideToolsSettings";
-            cbOverrideToolsSettings.UseVisualStyleBackColor = true;
-            cbOverrideToolsSettings.CheckedChanged += cbUseDefaultToolsSettings_CheckedChanged;
-            // 
-            // tpToolsImageEditor
-            // 
-            tpToolsImageEditor.Controls.Add(cbImageEditorAutoCopyImageToClipboard);
-            tpToolsImageEditor.Controls.Add(cbImageEditorAutoCloseEditorOnTask);
-            tpToolsImageEditor.Controls.Add(cbImageEditorZoomToFitOnOpen);
-            tpToolsImageEditor.Controls.Add(cbImageEditorExitConfirmation);
-            tpToolsImageEditor.Controls.Add(cbImageEditorUseLegacyImageEditor);
-            resources.ApplyResources(tpToolsImageEditor, "tpToolsImageEditor");
-            tpToolsImageEditor.Name = "tpToolsImageEditor";
-            tpToolsImageEditor.UseVisualStyleBackColor = true;
-            // 
-            // cbImageEditorAutoCopyImageToClipboard
-            // 
-            resources.ApplyResources(cbImageEditorAutoCopyImageToClipboard, "cbImageEditorAutoCopyImageToClipboard");
-            cbImageEditorAutoCopyImageToClipboard.Name = "cbImageEditorAutoCopyImageToClipboard";
-            cbImageEditorAutoCopyImageToClipboard.UseVisualStyleBackColor = true;
-            cbImageEditorAutoCopyImageToClipboard.CheckedChanged += cbImageEditorAutoCopyImageToClipboard_CheckedChanged;
-            // 
-            // cbImageEditorAutoCloseEditorOnTask
-            // 
-            resources.ApplyResources(cbImageEditorAutoCloseEditorOnTask, "cbImageEditorAutoCloseEditorOnTask");
-            cbImageEditorAutoCloseEditorOnTask.Name = "cbImageEditorAutoCloseEditorOnTask";
-            cbImageEditorAutoCloseEditorOnTask.UseVisualStyleBackColor = true;
-            cbImageEditorAutoCloseEditorOnTask.CheckedChanged += cbImageEditorAutoCloseEditorOnTask_CheckedChanged;
-            // 
-            // cbImageEditorZoomToFitOnOpen
-            // 
-            resources.ApplyResources(cbImageEditorZoomToFitOnOpen, "cbImageEditorZoomToFitOnOpen");
-            cbImageEditorZoomToFitOnOpen.Name = "cbImageEditorZoomToFitOnOpen";
-            cbImageEditorZoomToFitOnOpen.UseVisualStyleBackColor = true;
-            cbImageEditorZoomToFitOnOpen.CheckedChanged += cbImageEditorZoomToFitOnOpen_CheckedChanged;
-            // 
-            // cbImageEditorExitConfirmation
-            // 
-            resources.ApplyResources(cbImageEditorExitConfirmation, "cbImageEditorExitConfirmation");
-            cbImageEditorExitConfirmation.Name = "cbImageEditorExitConfirmation";
-            cbImageEditorExitConfirmation.UseVisualStyleBackColor = true;
-            cbImageEditorExitConfirmation.CheckedChanged += cbImageEditorExitConfirmation_CheckedChanged;
-            // 
-            // cbImageEditorUseLegacyImageEditor
-            // 
-            resources.ApplyResources(cbImageEditorUseLegacyImageEditor, "cbImageEditorUseLegacyImageEditor");
-            cbImageEditorUseLegacyImageEditor.Name = "cbImageEditorUseLegacyImageEditor";
-            cbImageEditorUseLegacyImageEditor.UseVisualStyleBackColor = true;
-            cbImageEditorUseLegacyImageEditor.CheckedChanged += cbImageEditorUseLegacyImageEditor_CheckedChanged;
-            // 
             // tpAdvanced
             // 
             tpAdvanced.BackColor = System.Drawing.SystemColors.Window;
@@ -2520,6 +2522,13 @@
             tttvMain.TreeViewFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 162);
             tttvMain.TreeViewSize = 190;
             tttvMain.TabChanged += tttvMain_TabChanged;
+            // 
+            // cbImageEditorUseSystemTheme
+            // 
+            resources.ApplyResources(cbImageEditorUseSystemTheme, "cbImageEditorUseSystemTheme");
+            cbImageEditorUseSystemTheme.Name = "cbImageEditorUseSystemTheme";
+            cbImageEditorUseSystemTheme.UseVisualStyleBackColor = true;
+            cbImageEditorUseSystemTheme.CheckedChanged += cbImageEditorUseSystemTheme_CheckedChanged;
             // 
             // TaskSettingsForm
             // 
@@ -2606,12 +2615,6 @@
             tpUploadClipboard.PerformLayout();
             tpUploaderFilters.ResumeLayout(false);
             tpUploaderFilters.PerformLayout();
-            tpActions.ResumeLayout(false);
-            tpActions.PerformLayout();
-            pActions.ResumeLayout(false);
-            pActions.PerformLayout();
-            tpWatchFolders.ResumeLayout(false);
-            tpWatchFolders.PerformLayout();
             tpTools.ResumeLayout(false);
             tcTools.ResumeLayout(false);
             tpToolsGeneral.ResumeLayout(false);
@@ -2620,6 +2623,12 @@
             pTools.PerformLayout();
             tpToolsImageEditor.ResumeLayout(false);
             tpToolsImageEditor.PerformLayout();
+            tpActions.ResumeLayout(false);
+            tpActions.PerformLayout();
+            pActions.ResumeLayout(false);
+            pActions.PerformLayout();
+            tpWatchFolders.ResumeLayout(false);
+            tpWatchFolders.PerformLayout();
             tpAdvanced.ResumeLayout(false);
             tpAdvanced.PerformLayout();
             ResumeLayout(false);
@@ -2915,5 +2924,6 @@
         private System.Windows.Forms.CheckBox cbImageEditorZoomToFitOnOpen;
         private System.Windows.Forms.CheckBox cbImageEditorAutoCloseEditorOnTask;
         private System.Windows.Forms.CheckBox cbImageEditorAutoCopyImageToClipboard;
+        private System.Windows.Forms.CheckBox cbImageEditorUseSystemTheme;
     }
 }
