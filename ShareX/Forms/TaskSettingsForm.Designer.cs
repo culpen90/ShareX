@@ -285,6 +285,7 @@
             lblToolsScreenColorPickerFormat = new System.Windows.Forms.Label();
             cbOverrideToolsSettings = new System.Windows.Forms.CheckBox();
             tpToolsImageEditor = new System.Windows.Forms.TabPage();
+            cbImageEditorRememberWindowState = new System.Windows.Forms.CheckBox();
             cbImageEditorUseSystemAccentColor = new System.Windows.Forms.CheckBox();
             cbImageEditorUseSystemTheme = new System.Windows.Forms.CheckBox();
             cbImageEditorAutoCopyImageToClipboard = new System.Windows.Forms.CheckBox();
@@ -319,7 +320,6 @@
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
             tttvMain = new ShareX.HelpersLib.TabToTreeView();
-            cbImageEditorRememberWindowState = new System.Windows.Forms.CheckBox();
             tcTaskSettings.SuspendLayout();
             tpTask.SuspendLayout();
             cmsDestinations.SuspendLayout();
@@ -2290,6 +2290,13 @@
             tpToolsImageEditor.Name = "tpToolsImageEditor";
             tpToolsImageEditor.UseVisualStyleBackColor = true;
             // 
+            // cbImageEditorRememberWindowState
+            // 
+            resources.ApplyResources(cbImageEditorRememberWindowState, "cbImageEditorRememberWindowState");
+            cbImageEditorRememberWindowState.Name = "cbImageEditorRememberWindowState";
+            cbImageEditorRememberWindowState.UseVisualStyleBackColor = true;
+            cbImageEditorRememberWindowState.CheckedChanged += cbImageEditorRememberWindowState_CheckedChanged;
+            // 
             // cbImageEditorUseSystemAccentColor
             // 
             resources.ApplyResources(cbImageEditorUseSystemAccentColor, "cbImageEditorUseSystemAccentColor");
@@ -2540,13 +2547,6 @@
             tttvMain.TreeViewFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 162);
             tttvMain.TreeViewSize = 190;
             tttvMain.TabChanged += tttvMain_TabChanged;
-            // 
-            // cbImageEditorRememberWindowState
-            // 
-            resources.ApplyResources(cbImageEditorRememberWindowState, "cbImageEditorRememberWindowState");
-            cbImageEditorRememberWindowState.Name = "cbImageEditorRememberWindowState";
-            cbImageEditorRememberWindowState.UseVisualStyleBackColor = true;
-            cbImageEditorRememberWindowState.CheckedChanged += cbImageEditorRememberWindowState_CheckedChanged;
             // 
             // TaskSettingsForm
             // 
