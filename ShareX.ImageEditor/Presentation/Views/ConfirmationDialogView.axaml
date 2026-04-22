@@ -23,12 +23,12 @@
             </Border>
 
             <!-- Content -->
-            <StackPanel Grid.Row="1" Margin="20" Spacing="10">
-                <StackPanel Orientation="Horizontal" Spacing="25" VerticalAlignment="Center">
-                    <TextBlock Text="⚠️" FontSize="40" VerticalAlignment="Center" FontWeight="Normal"/>
-                    <TextBlock Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Center" MaxWidth="300" FontWeight="Normal"/>
-                </StackPanel>
-            </StackPanel>
+            <Border Grid.Row="1" BorderThickness="0" Padding="25">
+                <Grid ColumnDefinitions="Auto,25,*" VerticalAlignment="Center">
+                    <TextBlock Grid.Column="0" Text="⚠️" FontSize="40" VerticalAlignment="Center" FontWeight="Normal"/>
+                    <TextBlock Grid.Column="2" Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Normal"/>
+                </Grid>
+            </Border>
 
             <!-- Buttons -->
             <Border Grid.Row="2" Background="{DynamicResource ShareX.Brush.Background.Toolbar}" 
