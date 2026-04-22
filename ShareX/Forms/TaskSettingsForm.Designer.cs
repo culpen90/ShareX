@@ -319,6 +319,7 @@
             pgTaskSettings = new System.Windows.Forms.PropertyGrid();
             cbOverrideAdvancedSettings = new System.Windows.Forms.CheckBox();
             tttvMain = new ShareX.HelpersLib.TabToTreeView();
+            cbImageEditorRememberWindowState = new System.Windows.Forms.CheckBox();
             tcTaskSettings.SuspendLayout();
             tpTask.SuspendLayout();
             cmsDestinations.SuspendLayout();
@@ -2277,6 +2278,7 @@
             // 
             // tpToolsImageEditor
             // 
+            tpToolsImageEditor.Controls.Add(cbImageEditorRememberWindowState);
             tpToolsImageEditor.Controls.Add(cbImageEditorUseSystemAccentColor);
             tpToolsImageEditor.Controls.Add(cbImageEditorUseSystemTheme);
             tpToolsImageEditor.Controls.Add(cbImageEditorAutoCopyImageToClipboard);
@@ -2538,6 +2540,13 @@
             tttvMain.TreeViewFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 162);
             tttvMain.TreeViewSize = 190;
             tttvMain.TabChanged += tttvMain_TabChanged;
+            // 
+            // cbImageEditorRememberWindowState
+            // 
+            resources.ApplyResources(cbImageEditorRememberWindowState, "cbImageEditorRememberWindowState");
+            cbImageEditorRememberWindowState.Name = "cbImageEditorRememberWindowState";
+            cbImageEditorRememberWindowState.UseVisualStyleBackColor = true;
+            cbImageEditorRememberWindowState.CheckedChanged += cbImageEditorRememberWindowState_CheckedChanged;
             // 
             // TaskSettingsForm
             // 
@@ -2935,5 +2944,6 @@
         private System.Windows.Forms.CheckBox cbImageEditorAutoCopyImageToClipboard;
         private System.Windows.Forms.CheckBox cbImageEditorUseSystemTheme;
         private System.Windows.Forms.CheckBox cbImageEditorUseSystemAccentColor;
+        private System.Windows.Forms.CheckBox cbImageEditorRememberWindowState;
     }
 }

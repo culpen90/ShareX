@@ -52,6 +52,10 @@ namespace ShareX.ImageEditor.Hosting
         // Editor
         public bool UseSystemTheme { get; set; } = true;
         public bool UseSystemAccentColor { get; set; } = true;
+        public bool RememberWindowState { get; set; } = true;
+        public bool IsWindowMaximized { get; set; } = true;
+        public double WindowWidth { get; set; } = 1280;
+        public double WindowHeight { get; set; } = 720;
         public bool ShowExitConfirmation { get; set; } = true;
         public bool ZoomToFitOnOpen { get; set; } = false;
         public bool AutoCloseEditorOnTask { get; set; } = false;

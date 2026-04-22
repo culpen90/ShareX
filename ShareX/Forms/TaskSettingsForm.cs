@@ -498,6 +498,7 @@ namespace ShareX
             cbImageEditorUseLegacyImageEditor.Checked = TaskSettings.ToolsSettings.UseLegacyImageEditor;
             cbImageEditorUseSystemTheme.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme;
             cbImageEditorUseSystemAccentColor.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemAccentColor;
+            cbImageEditorRememberWindowState.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.RememberWindowState;
             cbImageEditorExitConfirmation.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation;
             cbImageEditorZoomToFitOnOpen.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ZoomToFitOnOpen;
             cbImageEditorAutoCloseEditorOnTask.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCloseEditorOnTask;
@@ -1870,6 +1871,11 @@ namespace ShareX
         private void cbImageEditorUseSystemAccentColor_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemAccentColor = cbImageEditorUseSystemAccentColor.Checked;
+        }
+
+        private void cbImageEditorRememberWindowState_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.RememberWindowState = cbImageEditorRememberWindowState.Checked;
         }
 
         private void cbImageEditorExitConfirmation_CheckedChanged(object sender, EventArgs e)
