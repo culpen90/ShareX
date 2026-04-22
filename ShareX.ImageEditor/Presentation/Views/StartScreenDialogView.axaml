@@ -189,6 +189,11 @@
                                 </Border>
 
                                 <ItemsControl IsVisible="{Binding HasRecentFiles}" ItemsSource="{Binding RecentFiles}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Spacing="4"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="x:String">
                                             <Button Classes="editor-button"
@@ -197,12 +202,12 @@
                                                     HorizontalAlignment="Stretch"
                                                     HorizontalContentAlignment="Left"
                                                     Padding="12,6"
-                                                    Height="36">
+                                                    Height="36"
+                                                    ToolTip.Tip="{Binding}">
                                                 <TextBlock Text="{Binding}"
                                                            FontSize="12"
                                                            FontWeight="Normal"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           ToolTip.Tip="{Binding}"/>
+                                                           TextTrimming="LeadingCharacterEllipsis"/>
                                             </Button>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
