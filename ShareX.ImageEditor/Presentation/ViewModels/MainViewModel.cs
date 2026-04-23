@@ -54,8 +54,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         }
 
         private readonly ImageEditorOptions _options;
+        private readonly ObservableCollection<string> _recentImageFiles;
         public ImageEditorOptions Options => _options;
         public IAnnotationToolbarAdapter ToolbarAdapter { get; }
+        public ReadOnlyObservableCollection<string> RecentImageFiles { get; }
+        public bool HasRecentImageFiles => RecentImageFiles.Count > 0;
 
         private const string OutputRatioAuto = "Auto";
 
@@ -761,6 +764,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public MainViewModel(ImageEditorOptions? options = null)
         {
             _options = options ?? new ImageEditorOptions();
+            _recentImageFiles = new ObservableCollection<string>(_options.RecentImageFiles);
+            _recentImageFiles.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasRecentImageFiles));
+            RecentImageFiles = new ReadOnlyObservableCollection<string>(_recentImageFiles);
             _activeTool = GetInitialAnnotationTool();
 
             ToolbarAdapter = new EditorToolbarAdapter(this);
@@ -801,6 +807,40 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
             ApplySelectedBackgroundMode();
             UpdateCanvasProperties();
+        }
+
+        public void AddRecentImageFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return;
+            }
+
+            _options.AddRecentImageFile(filePath);
+            SyncRecentImageFiles();
+        }
+
+        public void RemoveRecentImageFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return;
+            }
+
+            if (_options.RecentImageFiles.Remove(filePath))
+            {
+                SyncRecentImageFiles();
+            }
+        }
+
+        private void SyncRecentImageFiles()
+        {
+            _recentImageFiles.Clear();
+
+            foreach (string filePath in _options.RecentImageFiles)
+            {
+                _recentImageFiles.Add(filePath);
+            }
         }
 
         private static string BuildWindowTitle(double width, double height, string? fileName)
@@ -1156,6 +1196,15 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public void RequestLoadRecentFile(string filePath)
         {
             LoadRecentFileRequested?.Invoke(this, filePath);
+        }
+
+        [RelayCommand]
+        private void OpenRecentImage(string? filePath)
+        {
+            if (!string.IsNullOrWhiteSpace(filePath))
+            {
+                RequestLoadRecentFile(filePath);
+            }
         }
 
         [RelayCommand]

@@ -1713,7 +1713,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             StartScreenDialogViewModel? dialog = null;
 
             dialog = new StartScreenDialogViewModel(
-                recentFiles: vm.Options.RecentImageFiles,
+                recentFiles: vm.RecentImageFiles,
                 onNewImage: () =>
                 {
                     vm.CloseModalCommand.Execute(null);
@@ -1912,7 +1912,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             if (!File.Exists(filePath))
             {
-                vm.Options.RecentImageFiles.Remove(filePath);
+                vm.RemoveRecentImageFile(filePath);
                 if (vm.ModalContent is StartScreenDialogViewModel startScreenDialog)
                 {
                     startScreenDialog.RecentFiles.Remove(filePath);
@@ -1980,7 +1980,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             // Track in recent files
             if (!string.IsNullOrEmpty(filePath))
             {
-                vm.Options.AddRecentImageFile(filePath);
+                vm.AddRecentImageFile(filePath);
             }
         }
 

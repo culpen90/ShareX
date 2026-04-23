@@ -23,9 +23,12 @@
 
 #endregion License Information (GPL v3)
 
+using Avalonia.Controls;
 using Avalonia.Media;
 using ShareX.ImageEditor.Core.Abstractions;
 using ShareX.ImageEditor.Core.Annotations;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -37,6 +40,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels;
 public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 {
     private readonly MainViewModel _viewModel;
+    private readonly ObservableCollection<MenuItem> _recentImageMenuItems = new();
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -44,7 +48,17 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     {
         _viewModel = viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        RecentImageMenuItems = new ReadOnlyObservableCollection<MenuItem>(_recentImageMenuItems);
+
+        if (_viewModel.RecentImageFiles is INotifyCollectionChanged recentFiles)
+        {
+            recentFiles.CollectionChanged += OnRecentImageFilesChanged;
+        }
+
+        SyncRecentImageMenuItems();
     }
+
+    public ReadOnlyObservableCollection<MenuItem> RecentImageMenuItems { get; }
 
     public EditorTool ActiveTool
     {
@@ -207,15 +221,49 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public bool ShowFileMenu => _viewModel.ShowFileMenu;
 
+    public ReadOnlyObservableCollection<string> RecentImageFiles => _viewModel.RecentImageFiles;
+
+    public bool HasRecentImageFiles => _viewModel.HasRecentImageFiles;
+
     public ICommand NewImageCommand => _viewModel.NewImageCommand;
 
     public ICommand OpenImageCommand => _viewModel.OpenImageCommand;
+
+    public ICommand OpenRecentImageCommand => _viewModel.OpenRecentImageCommand;
 
     public ICommand SaveCommand => _viewModel.SaveCommand;
 
     public ICommand SaveAsCommand => _viewModel.SaveAsCommand;
 
     public ICommand ExitEditorCommand => _viewModel.ExitEditorCommand;
+
+    private void OnRecentImageFilesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        SyncRecentImageMenuItems();
+    }
+
+    private void SyncRecentImageMenuItems()
+    {
+        _recentImageMenuItems.Clear();
+
+        foreach (string filePath in _viewModel.RecentImageFiles)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = new TextBlock
+                {
+                    Text = filePath,
+                    MaxWidth = 300,
+                    TextTrimming = TextTrimming.LeadingCharacterEllipsis
+                },
+                Command = _viewModel.OpenRecentImageCommand,
+                CommandParameter = filePath
+            };
+
+            menuItem.SetValue(ToolTip.TipProperty, filePath);
+            _recentImageMenuItems.Add(menuItem);
+        }
+    }
 
     public void SelectTool(EditorTool tool) => _viewModel.SelectToolCommand.Execute(tool);
 
@@ -272,6 +320,9 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
                 break;
             case nameof(MainViewModel.ShowFileMenu):
                 OnPropertyChanged(nameof(ShowFileMenu));
+                break;
+            case nameof(MainViewModel.HasRecentImageFiles):
+                OnPropertyChanged(nameof(HasRecentImageFiles));
                 break;
         }
     }
