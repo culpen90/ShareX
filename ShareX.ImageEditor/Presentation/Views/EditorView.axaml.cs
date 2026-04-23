@@ -1621,6 +1621,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     // Clear annotation visuals
                     var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
                     annotationCanvas?.Children.Clear();
+                    RefreshSpotlightOverlay();
                     _selectionController.ClearSelection();
 
                     // Load fresh image into core (clears history and annotations)
@@ -1946,6 +1947,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             // Clear annotation visuals
             var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
             annotationCanvas?.Children.Clear();
+            RefreshSpotlightOverlay();
             _selectionController.ClearSelection();
 
             // Load fresh image into core (clears history and annotations)
