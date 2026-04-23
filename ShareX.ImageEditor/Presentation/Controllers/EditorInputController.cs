@@ -57,6 +57,9 @@ public class EditorInputController
     private bool _isDrawing;
     private bool _isCreatingEffect;
 
+    private static bool UsesCrosshairInteractionCapture(EditorTool tool)
+        => tool != EditorTool.Image && tool != EditorTool.Text;
+
     // Track cut-out direction (null = not determined yet, true = vertical, false = horizontal)
     private bool? _cutOutDirection;
 
@@ -241,7 +244,14 @@ public class EditorInputController
         var point = e.GetPosition(canvas);
         _startPoint = point;
         _isDrawing = true;
-        e.Pointer.Capture(canvas);
+        if (UsesCrosshairInteractionCapture(vm.ActiveTool))
+        {
+            _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetCrosshairCursor());
+        }
+        else
+        {
+            e.Pointer.Capture(canvas);
+        }
 
         var brush = new SolidColorBrush(Color.Parse(vm.SelectedColor));
 
@@ -432,6 +442,8 @@ public class EditorInputController
 
         if (_currentShape != null)
         {
+            _currentShape.Cursor = CursorAssetLoader.GetCrosshairCursor();
+
             var currentLeft = Canvas.GetLeft(_currentShape);
             var currentTop = Canvas.GetTop(_currentShape);
 
@@ -704,10 +716,16 @@ public class EditorInputController
 
             e.Pointer.Capture(null);
             _isDrawing = false;
+            _view.RestoreEditorSurfaceCursorForActiveTool();
 
             var vm = ViewModel;
             if (vm != null)
             {
+                if (_currentShape != null)
+                {
+                    _currentShape.Cursor = null;
+                }
+
                 if (vm.ActiveTool == EditorTool.Crop)
                 {
                     var cropOverlay = _view.FindControl<global::Avalonia.Controls.Shapes.Rectangle>("CropOverlay");
@@ -828,6 +846,7 @@ public class EditorInputController
         _currentShape = null;
         _cutOutDirection = null;
         _isDrawing = false;
+        _view.RestoreEditorSurfaceCursorForActiveTool();
     }
 
     private void UpdateEffectVisual(Control shape, double x, double y, double width, double height)
