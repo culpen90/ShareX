@@ -15,12 +15,12 @@
             Padding="0"
             Width="340"
             BoxShadow="0 4 10 0 #40000000">
-        <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource ShareX.Brush.Background.Popup}">
+        <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource ShareX.Brush.Background.Panel}">
             <!-- Title Bar -->
             <Border Grid.Row="0" Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
                     BorderBrush="{DynamicResource ShareX.Brush.Border}" BorderThickness="0,0,0,1"
-                    Padding="10,6">
-                <TextBlock Text="New Image" FontWeight="Normal"/>
+                    Padding="14,8">
+                <TextBlock Text="New Image" FontSize="15" VerticalAlignment="Center"/>
             </Border>
 
             <!-- Content -->
