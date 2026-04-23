@@ -38,7 +38,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public IRelayCommand CancelCommand { get; }
 
         public ConfirmationDialogViewModel(Action onYes, Action onNo, Action onCancel,
-            string title = "ShareX - Image editor",
+            string title = "Exit Confirmation",
             string message = "There are unsaved changes.\n\nWould you like to save the changes before closing the image editor?")
         {
             Title = title;
