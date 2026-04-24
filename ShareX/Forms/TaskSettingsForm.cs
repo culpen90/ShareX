@@ -319,6 +319,7 @@ namespace ShareX
             nudRegionCaptureMagnifierPixelSize.Minimum = RegionCaptureOptions.MagnifierPixelSizeMinimum;
             nudRegionCaptureMagnifierPixelSize.Maximum = RegionCaptureOptions.MagnifierPixelSizeMaximum;
             nudRegionCaptureMagnifierPixelSize.SetValue(TaskSettings.CaptureSettings.SurfaceOptions.MagnifierPixelSize);
+            cbRegionCaptureShowCenterCrosshair.Checked = TaskSettings.CaptureSettings.SurfaceOptions.ShowCenterCrosshair;
             cbRegionCaptureShowCrosshair.Checked = TaskSettings.CaptureSettings.SurfaceOptions.ShowCrosshair;
             cbRegionCaptureIsFixedSize.Checked = TaskSettings.CaptureSettings.SurfaceOptions.IsFixedSize;
             nudRegionCaptureFixedSizeWidth.Enabled = nudRegionCaptureFixedSizeHeight.Enabled = TaskSettings.CaptureSettings.SurfaceOptions.IsFixedSize;
@@ -479,6 +480,8 @@ namespace ShareX
 
             #region Tools
 
+            #region General
+
             CodeMenu.Create<CodeMenuEntryPixelInfo>(txtToolsScreenColorPickerFormat);
             txtToolsScreenColorPickerFormat.Text = TaskSettings.ToolsSettings.ScreenColorPickerFormat;
 
@@ -487,6 +490,21 @@ namespace ShareX
 
             CodeMenu.Create<CodeMenuEntryPixelInfo>(txtToolsScreenColorPickerInfoText);
             txtToolsScreenColorPickerInfoText.Text = TaskSettings.ToolsSettings.ScreenColorPickerInfoText;
+
+            #endregion
+
+            #region Image editor
+
+            cbImageEditorUseLegacyImageEditor.Checked = TaskSettings.ToolsSettings.UseLegacyImageEditor;
+            cbImageEditorUseSystemTheme.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme;
+            cbImageEditorUseSystemAccentColor.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemAccentColor;
+            cbImageEditorRememberWindowState.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.RememberWindowState;
+            cbImageEditorExitConfirmation.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation;
+            cbImageEditorZoomToFitOnOpen.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.ZoomToFitOnOpen;
+            cbImageEditorAutoCloseEditorOnTask.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCloseEditorOnTask;
+            cbImageEditorAutoCopyImageToClipboard.Checked = TaskSettings.ToolsSettings.ImageEditorOptions.AutoCopyImageToClipboard;
+
+            #endregion
 
             #endregion Tools
 
@@ -533,7 +551,7 @@ namespace ShareX
                 pCapture.Enabled = tpRegionCapture.Enabled = tpScreenRecorder.Enabled = tpOCR.Enabled = !TaskSettings.UseDefaultCaptureSettings;
                 pActions.Enabled = !TaskSettings.UseDefaultActions;
                 tpFileNaming.Enabled = tpUploadClipboard.Enabled = tpUploaderFilters.Enabled = !TaskSettings.UseDefaultUploadSettings;
-                pTools.Enabled = !TaskSettings.UseDefaultToolsSettings;
+                pTools.Enabled = tpToolsImageEditor.Enabled = !TaskSettings.UseDefaultToolsSettings;
                 pgTaskSettings.Enabled = !TaskSettings.UseDefaultAdvancedSettings;
             }
         }
@@ -1257,6 +1275,11 @@ namespace ShareX
             }
         }
 
+        private void cbRegionCaptureShowCenterCrosshair_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.CaptureSettings.SurfaceOptions.ShowCenterCrosshair = cbRegionCaptureShowCenterCrosshair.Checked;
+        }
+
         private void cbRegionCaptureShowCrosshair_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.CaptureSettings.SurfaceOptions.ShowCrosshair = cbRegionCaptureShowCrosshair.Checked;
@@ -1808,6 +1831,8 @@ namespace ShareX
 
         #region Tools
 
+        #region General
+
         private void cbUseDefaultToolsSettings_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.UseDefaultToolsSettings = !cbOverrideToolsSettings.Checked;
@@ -1828,6 +1853,52 @@ namespace ShareX
         {
             TaskSettings.ToolsSettings.ScreenColorPickerInfoText = txtToolsScreenColorPickerInfoText.Text;
         }
+
+        #endregion
+
+        #region Image editor
+
+        private void cbImageEditorUseLegacyImageEditor_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.UseLegacyImageEditor = cbImageEditorUseLegacyImageEditor.Checked;
+        }
+
+        private void cbImageEditorUseSystemTheme_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemTheme = cbImageEditorUseSystemTheme.Checked;
+        }
+
+        private void cbImageEditorUseSystemAccentColor_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.UseSystemAccentColor = cbImageEditorUseSystemAccentColor.Checked;
+        }
+
+        private void cbImageEditorRememberWindowState_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.RememberWindowState = cbImageEditorRememberWindowState.Checked;
+        }
+
+        private void cbImageEditorExitConfirmation_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.ShowExitConfirmation = cbImageEditorExitConfirmation.Checked;
+        }
+
+        private void cbImageEditorZoomToFitOnOpen_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.ZoomToFitOnOpen = cbImageEditorZoomToFitOnOpen.Checked;
+        }
+
+        private void cbImageEditorAutoCloseEditorOnTask_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.AutoCloseEditorOnTask = cbImageEditorAutoCloseEditorOnTask.Checked;
+        }
+
+        private void cbImageEditorAutoCopyImageToClipboard_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.ImageEditorOptions.AutoCopyImageToClipboard = cbImageEditorAutoCopyImageToClipboard.Checked;
+        }
+
+        #endregion
 
         #endregion Tools
 

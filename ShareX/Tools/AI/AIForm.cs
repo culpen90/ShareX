@@ -80,7 +80,7 @@ namespace ShareX
             switch (Options.Provider)
             {
                 case AIProvider.OpenAI:
-                case AIProvider.Custom:
+                case AIProvider.OpenAILegacy:
                     return !string.IsNullOrEmpty(Options.OpenAIAPIKey);
                 case AIProvider.Gemini:
                     return !string.IsNullOrEmpty(Options.GeminiAPIKey);
