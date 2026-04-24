@@ -334,7 +334,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: ShareX ${{ env.APP_VERSION }}
           body_path: ${{ env.RELEASE_BODY_PATH }}
-          draft: false
+          draft: true
           prerelease: true
           files: |
             Output/ShareX-${{ env.APP_VERSION }}-setup-x64.exe
