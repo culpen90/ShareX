@@ -25,6 +25,7 @@
 
 using Avalonia.Controls;
 using ShareX.ImageEditor.Core.Annotations;
+using ShareX.ImageEditor.Core.ImageEffects.Manipulations;
 using ShareX.ImageEditor.Presentation.Controls;
 using ShareX.ImageEditor.Presentation.Effects;
 using ShareX.ImageEditor.Presentation.ViewModels;
@@ -317,6 +318,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                         break;
                     case EditorOperationKind.ResizeImage:
                         int rw = 0, rh = 0;
+                        bool maintainAspectRatio = false;
                         foreach (EffectParameterState state in dialog.ParameterStates)
                         {
                             if (state is NumericParameterState n)
@@ -327,9 +329,24 @@ namespace ShareX.ImageEditor.Presentation.Views
                                     case "height": rh = (int)(n.Value ?? 0); break;
                                 }
                             }
+                            else if (state is CheckboxParameterState cb &&
+                                     string.Equals(state.Key, "maintain_aspect_ratio", StringComparison.OrdinalIgnoreCase))
+                            {
+                                maintainAspectRatio = cb.Value;
+                            }
                         }
 
-                        _editorCore.ResizeImage(rw, rh);
+                        if (_editorCore.SourceImage != null)
+                        {
+                            SKSizeI targetSize = ResizeImageEffect.ResolveTargetSize(
+                                _editorCore.SourceImage.Width,
+                                _editorCore.SourceImage.Height,
+                                rw,
+                                rh,
+                                maintainAspectRatio);
+
+                            _editorCore.ResizeImage(targetSize.Width, targetSize.Height);
+                        }
                         break;
                     case EditorOperationKind.ResizeCanvas:
                         int top = 0, right = 0, bottom = 0, left = 0;
