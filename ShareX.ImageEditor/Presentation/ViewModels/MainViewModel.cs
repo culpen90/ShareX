@@ -500,23 +500,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             get
             {
-                if (!AreBackgroundEffectsActive || PreviewImage == null || BackgroundPadding <= 0)
+                if (!AreBackgroundEffectsActive || PreviewImage == null)
                 {
                     return Brushes.Transparent;
                 }
 
                 try
                 {
-                    int sampleX = 0;
-                    int sampleY = 0;
-
-                    if (IsSmartPaddingActive)
-                    {
-                        sampleX = (int)Math.Round(Math.Max(0, _smartPaddingCropInsets.Left));
-                        sampleY = (int)Math.Round(Math.Max(0, _smartPaddingCropInsets.Top));
-                    }
-
-                    var topLeftColor = SamplePixelColor(PreviewImage, sampleX, sampleY);
+                    var topLeftColor = SamplePixelColor(PreviewImage, 0, 0);
                     return new SolidColorBrush(topLeftColor);
                 }
                 catch (Exception ex)
