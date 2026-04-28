@@ -70,6 +70,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private bool _pendingZoomToFitOnOpen;
         private int _pendingZoomToFitRetryCount;
         private int _pendingAutoCopyImageVersion;
+        private bool _overlayCanvasLayoutUpdatePending;
         private Rect? _lastOverlayCanvasRect;
         private double _lastOverlayCanvasZoom = -1;
         private EffectBrowserPanel? _effectBrowserPanel;
@@ -164,12 +165,27 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnLayoutUpdated(object? sender, EventArgs e)
         {
-            UpdateOverlayCanvasLayout();
+            RequestOverlayCanvasLayoutUpdate();
         }
 
         private void OnCanvasScrollChanged(object? sender, ScrollChangedEventArgs e)
         {
-            UpdateOverlayCanvasLayout();
+            RequestOverlayCanvasLayoutUpdate();
+        }
+
+        private void RequestOverlayCanvasLayoutUpdate()
+        {
+            if (_overlayCanvasLayoutUpdatePending)
+            {
+                return;
+            }
+
+            _overlayCanvasLayoutUpdatePending = true;
+            Dispatcher.UIThread.Post(() =>
+            {
+                _overlayCanvasLayoutUpdatePending = false;
+                UpdateOverlayCanvasLayout();
+            }, DispatcherPriority.Render);
         }
 
         private void UpdateOverlayCanvasLayout()
@@ -205,7 +221,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                 contentWidth + (OverlayCanvasBleed * 2),
                 contentHeight + (OverlayCanvasBleed * 2));
 
-            if (_lastOverlayCanvasRect == overlayRect && Math.Abs(_lastOverlayCanvasZoom - zoom) < 0.0001)
+            Rect? previousOverlayRect = _lastOverlayCanvasRect;
+            bool zoomChanged = Math.Abs(_lastOverlayCanvasZoom - zoom) >= 0.0001;
+
+            if (previousOverlayRect == overlayRect && !zoomChanged)
             {
                 return;
             }
@@ -213,12 +232,31 @@ namespace ShareX.ImageEditor.Presentation.Views
             _lastOverlayCanvasRect = overlayRect;
             _lastOverlayCanvasZoom = zoom;
 
-            overlayCanvas.Width = overlayRect.Width;
-            overlayCanvas.Height = overlayRect.Height;
-            Canvas.SetLeft(overlayCanvas, overlayRect.Left);
-            Canvas.SetTop(overlayCanvas, overlayRect.Top);
-            overlayCanvas.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-            overlayCanvas.RenderTransform = new ScaleTransform(zoom, zoom);
+            if (!previousOverlayRect.HasValue || Math.Abs(previousOverlayRect.Value.Width - overlayRect.Width) >= 0.0001)
+            {
+                overlayCanvas.Width = overlayRect.Width;
+            }
+
+            if (!previousOverlayRect.HasValue || Math.Abs(previousOverlayRect.Value.Height - overlayRect.Height) >= 0.0001)
+            {
+                overlayCanvas.Height = overlayRect.Height;
+            }
+
+            if (!previousOverlayRect.HasValue || Math.Abs(previousOverlayRect.Value.Left - overlayRect.Left) >= 0.0001)
+            {
+                Canvas.SetLeft(overlayCanvas, overlayRect.Left);
+            }
+
+            if (!previousOverlayRect.HasValue || Math.Abs(previousOverlayRect.Value.Top - overlayRect.Top) >= 0.0001)
+            {
+                Canvas.SetTop(overlayCanvas, overlayRect.Top);
+            }
+
+            if (zoomChanged || overlayCanvas.RenderTransform is null)
+            {
+                overlayCanvas.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
+                overlayCanvas.RenderTransform = new ScaleTransform(zoom, zoom);
+            }
         }
 
         private void OnSelectionChanged(bool hasSelection)

@@ -351,7 +351,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             {
                 double width = ImageWidth;
 
-                if (BackgroundSmartPadding && AreBackgroundEffectsActive)
+                if (IsSmartPaddingActive)
                 {
                     width -= _smartPaddingCropInsets.Left + _smartPaddingCropInsets.Right;
                 }
@@ -366,7 +366,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             {
                 double height = ImageHeight;
 
-                if (BackgroundSmartPadding && AreBackgroundEffectsActive)
+                if (IsSmartPaddingActive)
                 {
                     height -= _smartPaddingCropInsets.Top + _smartPaddingCropInsets.Bottom;
                 }
@@ -379,7 +379,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             get
             {
-                if (!BackgroundSmartPadding || !AreBackgroundEffectsActive)
+                if (!IsSmartPaddingActive)
                 {
                     return 0;
                 }
@@ -392,7 +392,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             get
             {
-                if (!BackgroundSmartPadding || !AreBackgroundEffectsActive)
+                if (!IsSmartPaddingActive)
                 {
                     return 0;
                 }
@@ -401,7 +401,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
         }
 
-        private void NotifySmartPaddingLayoutChanged()
+        private void NotifySmartPaddingStateChanged()
         {
             OnPropertyChanged(nameof(SmartPaddingColor));
             OnPropertyChanged(nameof(SmartPaddingThickness));
@@ -409,6 +409,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(SmartPaddingViewportHeight));
             OnPropertyChanged(nameof(SmartPaddingOffsetX));
             OnPropertyChanged(nameof(SmartPaddingOffsetY));
+        }
+
+        private void NotifySmartPaddingPaddingChanged()
+        {
+            OnPropertyChanged(nameof(SmartPaddingThickness));
+
+            if (!SmartPaddingProbeDisabled)
+            {
+                OnPropertyChanged(nameof(SmartPaddingColor));
+            }
         }
 
         private void OnPreviewImageChanged(Bitmap? value)
@@ -424,12 +434,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     IsDirty = true;
                 }
 
-                NotifySmartPaddingLayoutChanged();
+                NotifySmartPaddingStateChanged();
 
                 // Apply smart padding crop if enabled (but not if we're already applying it)
                 // Only trigger if background effects are active to avoid overwriting live previews
                 // Also skip if we are syncing from Core (to prevent infinite loops)
-                if (BackgroundSmartPadding && !_isApplyingSmartPadding && AreBackgroundEffectsActive && !_isSyncingFromCore)
+                if (IsSmartPaddingActive && !_isApplyingSmartPadding && !_isSyncingFromCore)
                 {
                     ApplySmartPaddingCrop();
                 }
@@ -442,7 +452,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 ImageWidth = 0;
                 ImageHeight = 0;
                 _smartPaddingCropInsets = new Thickness(0);
-                NotifySmartPaddingLayoutChanged();
+                NotifySmartPaddingStateChanged();
                 HasPreviewImage = false;
             }
         }
@@ -455,6 +465,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         [ObservableProperty]
         private bool _backgroundSmartPadding = true;
+
+        // Temporary probe: disable smart padding end-to-end while measuring padding slider performance.
+        private static readonly bool SmartPaddingProbeDisabled = true;
+
+        private bool IsSmartPaddingActive =>
+            !SmartPaddingProbeDisabled && BackgroundSmartPadding && AreBackgroundEffectsActive;
 
         /// <summary>
         /// ISSUE-022 fix: Recursion guard flag for smart padding event chain.
@@ -486,7 +502,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     int sampleX = 0;
                     int sampleY = 0;
 
-                    if (BackgroundSmartPadding && AreBackgroundEffectsActive)
+                    if (IsSmartPaddingActive)
                     {
                         sampleX = (int)Math.Round(Math.Max(0, _smartPaddingCropInsets.Left));
                         sampleY = (int)Math.Round(Math.Max(0, _smartPaddingCropInsets.Top));
@@ -560,6 +576,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             if (_originalSourceImage != null)
             {
                 ApplySmartPaddingCrop();
+            }
+            else
+            {
+                NotifySmartPaddingStateChanged();
             }
         }
 
@@ -932,8 +952,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
 
             Options.BackgroundPadding = value;
-            NotifySmartPaddingLayoutChanged();
             UpdateCanvasProperties();
+            NotifySmartPaddingPaddingChanged();
         }
 
         partial void OnBackgroundSmartPaddingChanged(bool value)
@@ -944,6 +964,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
 
             Options.BackgroundSmartPadding = value;
+
+            if (SmartPaddingProbeDisabled)
+            {
+                return;
+            }
+
             ApplySmartPaddingCrop();
         }
 

@@ -87,6 +87,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             {
                 _smartPaddingCropInsets = new Thickness(0);
                 UpdateCanvasProperties();
+                NotifySmartPaddingStateChanged();
                 return;
             }
 
@@ -95,10 +96,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 return;
             }
 
-            if (!BackgroundSmartPadding || !AreBackgroundEffectsActive)
+            if (!IsSmartPaddingActive)
             {
                 _smartPaddingCropInsets = new Thickness(0);
                 UpdateCanvasProperties();
+                NotifySmartPaddingStateChanged();
                 return;
             }
 
@@ -110,6 +112,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 {
                     _smartPaddingCropInsets = new Thickness(0);
                     UpdateCanvasProperties();
+                    NotifySmartPaddingStateChanged();
                     return;
                 }
 
@@ -269,6 +272,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 }
 
                 UpdateCanvasProperties();
+                NotifySmartPaddingStateChanged();
             }
             catch (Exception ex)
             {
@@ -316,7 +320,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 CanvasShadow = new BoxShadows(); // No shadow
                 CanvasCornerRadius = 0;
             }
-            NotifySmartPaddingLayoutChanged();
         }
 
         private Thickness CalculateOutputPadding(double basePadding, double? targetAspectRatio)
