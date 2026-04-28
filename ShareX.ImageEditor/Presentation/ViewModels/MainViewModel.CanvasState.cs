@@ -61,46 +61,53 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             return Color.FromArgb(pixel.Alpha, pixel.Red, pixel.Green, pixel.Blue);
         }
 
-        /// <summary>
-        /// Applies smart padding crop to remove uniform-colored borders from the image.
-        /// <para><strong>ISSUE-022 fix: Event Chain Documentation</strong></para>
-        /// <para>
-        /// This method is part of a complex event chain that requires recursion prevention:
-        /// </para>
-        /// <list type="number">
-        /// <item>User toggles BackgroundSmartPadding property → OnPropertyChanged fires</item>
-        /// <item>Property change triggers this method via partial method hook</item>
-        /// <item>Method modifies PreviewImage (via UpdatePreview or direct assignment)</item>
-        /// <item>PreviewImage change would trigger this method again → infinite loop</item>
-        /// </list>
-        /// <para>
-        /// Solution: <c>_isApplyingSmartPadding</c> flag prevents re-entry during execution.
-        /// </para>
-        /// <para>
-        /// Additionally, this method is called automatically when background effects are applied,
-        /// ensuring the smart padding is re-applied to maintain correct image bounds.
-        /// </para>
-        /// </summary>
-        private void ApplySmartPaddingCrop()
+        private void InvalidateSmartPaddingCache()
         {
+            _smartPaddingCropInsets = new Thickness(0);
+            _smartPaddingCacheValid = false;
+        }
+
+        private void DisableBackgroundSmartPaddingIfUnavailable()
+        {
+            if (!BackgroundSmartPadding)
+            {
+                return;
+            }
+
+            _suppressSmartPaddingChangeHandling = true;
+
+            try
+            {
+                BackgroundSmartPadding = false;
+            }
+            finally
+            {
+                _suppressSmartPaddingChangeHandling = false;
+            }
+
+            Options.BackgroundSmartPadding = false;
+        }
+
+        private void EnsureSmartPaddingCache(bool forceRefresh = false)
+        {
+            if (forceRefresh)
+            {
+                InvalidateSmartPaddingCache();
+            }
+
+            if (_smartPaddingCacheValid)
+            {
+                return;
+            }
+
             if (_originalSourceImage == null || PreviewImage == null)
             {
-                _smartPaddingCropInsets = new Thickness(0);
-                UpdateCanvasProperties();
-                NotifySmartPaddingStateChanged();
+                InvalidateSmartPaddingCache();
                 return;
             }
 
             if (_isApplyingSmartPadding)
             {
-                return;
-            }
-
-            if (!IsSmartPaddingActive)
-            {
-                _smartPaddingCropInsets = new Thickness(0);
-                UpdateCanvasProperties();
-                NotifySmartPaddingStateChanged();
                 return;
             }
 
@@ -110,9 +117,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 var skBitmap = _originalSourceImage;
                 if (skBitmap == null)
                 {
-                    _smartPaddingCropInsets = new Thickness(0);
-                    UpdateCanvasProperties();
-                    NotifySmartPaddingStateChanged();
+                    InvalidateSmartPaddingCache();
                     return;
                 }
 
@@ -271,12 +276,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     _smartPaddingCropInsets = new Thickness(minX, minY, cropRight, cropBottom);
                 }
 
-                UpdateCanvasProperties();
-                NotifySmartPaddingStateChanged();
+                _smartPaddingCacheValid = true;
+
+                if (!HasDetectedSmartPadding)
+                {
+                    DisableBackgroundSmartPaddingIfUnavailable();
+                }
             }
             catch (Exception ex)
             {
                 EditorServices.ReportError(nameof(MainViewModel), "Failed to apply smart padding crop.", ex);
+                InvalidateSmartPaddingCache();
             }
             finally
             {

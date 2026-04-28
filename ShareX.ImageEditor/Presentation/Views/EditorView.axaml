@@ -184,6 +184,7 @@
                                     Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
                             <CheckBox x:Name="BackgroundSmartPaddingCheckBox"
                                       IsChecked="{Binding BackgroundSmartPadding}"
+                                      IsEnabled="{Binding CanUseBackgroundSmartPadding}"
                                       Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
                                       Content="Smart padding"
                                       Margin="0,0,0,8"/>

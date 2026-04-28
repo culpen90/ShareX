@@ -1678,11 +1678,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.IsDirty = false;
                         vm.HasAnnotations = false;
                         vm.UpdateCoreHistoryState(_editorCore.CanUndo, _editorCore.CanRedo);
-
-                        using var image = SKImage.FromBitmap(skBitmap);
-                        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-                        using var stream = new MemoryStream(data.ToArray());
-                        vm.PreviewImage = new Avalonia.Media.Imaging.Bitmap(stream);
+                        vm.UpdatePreviewImageOnly(skBitmap, syncSourceState: true);
                     }
                     finally
                     {
@@ -2004,11 +2000,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.IsDirty = false;
                 vm.HasAnnotations = false;
                 vm.UpdateCoreHistoryState(_editorCore.CanUndo, _editorCore.CanRedo);
-
-                using var image = SKImage.FromBitmap(skBitmap);
-                using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-                using var pngStream = new MemoryStream(data.ToArray());
-                vm.PreviewImage = new Avalonia.Media.Imaging.Bitmap(pngStream);
+                vm.UpdatePreviewImageOnly(skBitmap, syncSourceState: true);
             }
             finally
             {
