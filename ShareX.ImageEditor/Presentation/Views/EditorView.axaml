@@ -451,7 +451,6 @@
                     <Canvas Name="OverlayCanvas"
                             Width="0"
                             Height="0"
-                            Background="Transparent"
                             ClipToBounds="False"
                             IsHitTestVisible="True"
                             Cursor="Arrow"
