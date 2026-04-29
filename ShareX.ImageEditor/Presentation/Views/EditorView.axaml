@@ -386,7 +386,7 @@
                                     <Border Background="{Binding SmartPaddingColor}"
                                             Padding="{Binding SmartPaddingThickness}"
                                             CornerRadius="{Binding CanvasCornerRadius, Converter={StaticResource DoubleToCornerRadius}}"
-                                            ClipToBounds="False">
+                                            ClipToBounds="True">
                                         <Canvas Background="Transparent"
                                                 Width="{Binding SmartPaddingViewportWidth}"
                                                 Height="{Binding SmartPaddingViewportHeight}"
