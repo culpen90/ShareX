@@ -23,9 +23,9 @@
 
 #endregion License Information (GPL v3)
 
+using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Win32;
 
 namespace ShareX.ImageEditor.Hosting;
 
@@ -35,7 +35,7 @@ namespace ShareX.ImageEditor.Hosting;
 internal sealed class WindowsDesktopWallpaperService : IDesktopWallpaperService
 {
     private const int SpiGetDesktopWallpaper = 0x0073;
-    private const int MaxWallpaperPath = 260;
+    private const int MaxWallpaperPath = short.MaxValue;
     private const string DesktopRegistrySubKey = @"Control Panel\Desktop";
     private const string TranscodedImageCacheValueName = "TranscodedImageCache";
 
