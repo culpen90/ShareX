@@ -761,11 +761,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         private string? _imageFilePath;
 
-        [ObservableProperty]
-        private string _applicationName = "ShareX";
-
-        public string EditorTitle => $"{ApplicationName} Editor";
-
         public static MainViewModel Current { get; private set; } = null!;
 
         public MainViewModel(ImageEditorOptions? options = null)
@@ -907,11 +902,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
             _zoomToFitOnNextImageLoad = false;
             return true;
-        }
-
-        partial void OnApplicationNameChanged(string value)
-        {
-            OnPropertyChanged(nameof(EditorTitle));
         }
 
         partial void OnSelectedOutputRatioChanged(string value)
