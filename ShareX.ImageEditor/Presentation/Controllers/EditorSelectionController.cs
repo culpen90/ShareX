@@ -283,7 +283,7 @@ public class EditorSelectionController
                     _lastDragPoint = point;
                     UpdateSelectionHandles();
                     SelectionChanged?.Invoke(true);
-                    e.Pointer.Capture(hitTarget);
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
                     e.Handled = true;
                     return true;
                 }

@@ -723,7 +723,7 @@ public class EditorInputController
             {
                 if (_currentShape != null)
                 {
-                    _currentShape.Cursor = null;
+                    _view.SyncAnnotationCursor(_currentShape);
                 }
 
                 if (vm.ActiveTool == EditorTool.Crop)
@@ -1567,6 +1567,7 @@ public class EditorInputController
                 var annotation = new ImageAnnotation();
                 annotation.SetImage(BitmapConversionHelpers.ToSKBitmap(bitmap));
                 imageControl.Tag = annotation;
+                _view.SyncAnnotationCursor(imageControl);
 
                 Canvas.SetLeft(imageControl, point.X - bitmap.Size.Width / 2);
                 Canvas.SetTop(imageControl, point.Y - bitmap.Size.Height / 2);

@@ -873,6 +873,31 @@ namespace ShareX.ImageEditor.Presentation.Views
         /// ISSUE-018 fix: Updates the editor canvas cursor based on the active tool.
         /// The overlay canvas sits on top of the annotation canvas, so both must stay in sync.
         /// </summary>
+        internal Cursor GetCursorForActiveTool()
+        {
+            if (DataContext is not MainViewModel vm)
+            {
+                return ArrowCursor;
+            }
+
+            return vm.ActiveTool switch
+            {
+                EditorTool.Select => ArrowCursor,
+                EditorTool.Crop or EditorTool.CutOut => CursorAssetLoader.GetCrosshairCursor(),
+                _ => CursorAssetLoader.GetCrosshairCursor()
+            };
+        }
+
+        internal void SyncAnnotationCursor(Control? control)
+        {
+            if (control == null || control.Tag is not Annotation)
+            {
+                return;
+            }
+
+            ApplyCursorToControlTree(control, GetCursorForActiveTool());
+        }
+
         private void UpdateCursorForTool()
         {
             if (DataContext is not MainViewModel vm) return;
@@ -894,21 +919,41 @@ namespace ShareX.ImageEditor.Presentation.Views
             var overlayCanvas = this.FindControl<Canvas>("OverlayCanvas");
             if (annotationCanvas == null && overlayCanvas == null) return;
 
-            Cursor cursor = vm.ActiveTool switch
-            {
-                EditorTool.Select => ArrowCursor,
-                EditorTool.Crop or EditorTool.CutOut => CursorAssetLoader.GetCrosshairCursor(),
-                _ => CursorAssetLoader.GetCrosshairCursor() // Drawing tools (Rectangle, Ellipse, Pen, etc.)
-            };
+            Cursor cursor = GetCursorForActiveTool();
 
             if (annotationCanvas != null)
             {
                 annotationCanvas.Cursor = cursor;
+                UpdateAnnotationCanvasChildCursors(annotationCanvas, cursor);
             }
 
             if (overlayCanvas != null)
             {
                 overlayCanvas.Cursor = cursor;
+            }
+        }
+
+        private void UpdateAnnotationCanvasChildCursors(Canvas annotationCanvas, Cursor cursor)
+        {
+            foreach (var child in annotationCanvas.Children)
+            {
+                if (child is Control control && control.Tag is Annotation)
+                {
+                    ApplyCursorToControlTree(control, cursor);
+                }
+            }
+        }
+
+        private static void ApplyCursorToControlTree(Control control, Cursor cursor)
+        {
+            control.Cursor = cursor;
+
+            foreach (var descendant in control.GetVisualDescendants())
+            {
+                if (descendant is InputElement inputElement)
+                {
+                    inputElement.Cursor = cursor;
+                }
             }
         }
 
@@ -1366,6 +1411,8 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 OnRequestUpdateEffect(control);
             }
+
+            SyncAnnotationCursor(control);
 
             return control;
         }
