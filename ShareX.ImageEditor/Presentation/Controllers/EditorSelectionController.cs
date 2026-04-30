@@ -109,8 +109,15 @@ public class EditorSelectionController
         var wasNull = _selectedShape == null;
         _selectedShape = shape;
         UpdateBoundsObserver();
+
+        if (_hoveredShape != shape)
+        {
+            ClearHoverOutline();
+        }
+
         // Set the hovered shape to the selected shape so ant lines appear
         _hoveredShape = shape;
+        ApplyHoveredShapeCursor();
         UpdateHoverOutline();
         UpdateSelectionHandles();
 
@@ -167,8 +174,8 @@ public class EditorSelectionController
 
         if (_view.DataContext is MainViewModel vm)
         {
-            // When a drawing tool is active, allow selecting and dragging any existing shape
-            // that belongs to the same tool type, without switching to the Select tool.
+            // When a drawing tool is active, allow selecting and dragging only shapes
+            // that belong to the same tool type, without switching to the Select tool.
             if (vm.ActiveTool != EditorTool.Select && vm.ActiveTool != EditorTool.Spotlight)
             {
                 // Hit test - find the direct child of the canvas
@@ -1438,12 +1445,15 @@ public class EditorSelectionController
             if (!(hitShape is SpotlightControl)) hitShape = null;
         }
 
-        // Filter: If using other tools (Rect, etc), only allow hovering shapes of the same tool type
-        if (_view.DataContext is MainViewModel vm3 &&
-            vm3.ActiveTool != EditorTool.Select &&
-            vm3.ActiveTool != EditorTool.Spotlight)
+        // When a drawing tool is active, only hover shapes created by that same tool.
+        if (_view.DataContext is MainViewModel vm3
+            && vm3.ActiveTool != EditorTool.Select
+            && vm3.ActiveTool != EditorTool.Spotlight)
         {
-            if (hitShape != null && GetControlToolType(hitShape) != vm3.ActiveTool) hitShape = null;
+            if (hitShape != null && GetControlToolType(hitShape) != vm3.ActiveTool)
+            {
+                hitShape = null;
+            }
         }
 
         // If we're hovering over the selected shape, keep showing ant lines on it
@@ -1456,6 +1466,7 @@ public class EditorSelectionController
                 ClearHoverOutline();
                 _hoveredShape = _selectedShape;
             }
+            ApplyHoveredShapeCursor();
             UpdateHoverOutline();
         }
         else if (hitShape != _hoveredShape)
@@ -1466,12 +1477,14 @@ public class EditorSelectionController
 
             if (_hoveredShape != null)
             {
+                ApplyHoveredShapeCursor();
                 UpdateHoverOutline();
             }
         }
         else if (_hoveredShape != null)
         {
             // Shape is still hovered, update outline position (in case shape moved)
+            ApplyHoveredShapeCursor();
             UpdateHoverOutline();
         }
     }
@@ -1585,6 +1598,11 @@ public class EditorSelectionController
 
     private void ClearHoverOutline()
     {
+        if (_hoveredShape != null)
+        {
+            _view.SyncAnnotationCursor(_hoveredShape);
+        }
+
         var overlay = _view.FindControl<Canvas>("OverlayCanvas");
         if (_hoverOutlineBlack != null)
         {
@@ -1617,6 +1635,29 @@ public class EditorSelectionController
             _hoverEllipseWhite = null;
         }
         _hoveredShape = null;
+    }
+
+    internal void RefreshHoveredShapeCursor()
+    {
+        ApplyHoveredShapeCursor();
+    }
+
+    private void ApplyHoveredShapeCursor()
+    {
+        if (_hoveredShape == null)
+        {
+            return;
+        }
+
+        if (_view.DataContext is MainViewModel vm
+            && vm.ActiveTool != EditorTool.Crop
+            && vm.ActiveTool != EditorTool.CutOut)
+        {
+            _view.ApplyAnnotationCursor(_hoveredShape, SelectToolCursor);
+            return;
+        }
+
+        _view.SyncAnnotationCursor(_hoveredShape);
     }
 
     private void UpdateHoverOutline()

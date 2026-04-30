@@ -888,14 +888,19 @@ namespace ShareX.ImageEditor.Presentation.Views
             };
         }
 
-        internal void SyncAnnotationCursor(Control? control)
+        internal void ApplyAnnotationCursor(Control? control, Cursor cursor)
         {
             if (control == null || control.Tag is not Annotation)
             {
                 return;
             }
 
-            ApplyCursorToControlTree(control, GetCursorForActiveTool());
+            ApplyCursorToControlTree(control, cursor);
+        }
+
+        internal void SyncAnnotationCursor(Control? control)
+        {
+            ApplyAnnotationCursor(control, GetCursorForActiveTool());
         }
 
         private void UpdateCursorForTool()
@@ -931,6 +936,8 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 overlayCanvas.Cursor = cursor;
             }
+
+            _selectionController.RefreshHoveredShapeCursor();
         }
 
         private void UpdateAnnotationCanvasChildCursors(Canvas annotationCanvas, Cursor cursor)
