@@ -103,40 +103,53 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             // SIP0018: Subscribe to Core events
             _editorCore.InvalidateRequested += () => Avalonia.Threading.Dispatcher.UIThread.Post(RenderCore);
-            _editorCore.ImageChanged += () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            _editorCore.ImageChanged += () =>
             {
-                if (_canvasControl != null)
+                // Capture the one-shot skip synchronously so it applies to the event
+                // raised by the VM->Core sync, not the next unrelated crop/cut/undo event.
+                bool skipVmSync = _skipNextCoreImageChanged;
+                _skipNextCoreImageChanged = false;
+
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
-                    _canvasControl.Initialize((int)_editorCore.CanvasSize.Width, (int)_editorCore.CanvasSize.Height);
-                    RenderCore();
-                    if (DataContext is MainViewModel vm)
+                    if (_canvasControl != null)
                     {
-                        UpdateViewModelHistoryState(vm);
-                        UpdateViewModelMetadata(vm);
-
-                        // Sync Core image back to VM if change originated from Core (Undo/Redo, Core Crop)
-                        if (!_isSyncingFromVM && !_isSyncingToVM && _editorCore.SourceImage != null)
+                        _canvasControl.Initialize((int)_editorCore.CanvasSize.Width, (int)_editorCore.CanvasSize.Height);
+                        RenderCore();
+                        if (DataContext is MainViewModel vm)
                         {
-                            // SIP-FIX: Break feedback loop from async ImageChanged events (e.g. Smart Padding)
-                            if (_skipNextCoreImageChanged)
-                            {
-                                _skipNextCoreImageChanged = false;
-                                return;
-                            }
+                            UpdateViewModelHistoryState(vm);
+                            UpdateViewModelMetadata(vm);
+                            vm.SyncImageDimensions(_editorCore.CanvasSize.Width, _editorCore.CanvasSize.Height);
 
-                            try
+                            // Sync Core image back to VM if change originated from Core (Undo/Redo, Core Crop)
+                            if (!_isSyncingFromVM && !_isSyncingToVM && _editorCore.SourceImage != null)
                             {
-                                _isSyncingToVM = true;
-                                vm.UpdatePreviewImageOnly(_editorCore.SourceImage, syncSourceState: true);
-                            }
-                            finally
-                            {
-                                _isSyncingToVM = false;
+                                if (skipVmSync)
+                                {
+                                    return;
+                                }
+
+                                try
+                                {
+                                    _isSyncingToVM = true;
+                                    vm.UpdatePreviewImageOnly(_editorCore.SourceImage, syncSourceState: true);
+
+                                    // Core-driven destructive image changes resize the backing bitmap
+                                    // before the VM size bindings have updated the layout container.
+                                    // Queue one more redraw after the render pass so the raster layer
+                                    // is repainted against the settled post-resize bounds.
+                                    Avalonia.Threading.Dispatcher.UIThread.Post(RenderCore, DispatcherPriority.Render);
+                                }
+                                finally
+                                {
+                                    _isSyncingToVM = false;
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            };
             _editorCore.AnnotationsRestored += () => Avalonia.Threading.Dispatcher.UIThread.Post(OnAnnotationsRestored);
             _editorCore.AnnotationOrderChanged += () => Avalonia.Threading.Dispatcher.UIThread.Post(OnAnnotationOrderChanged);
             _editorCore.HistoryChanged += () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>

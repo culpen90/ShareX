@@ -63,11 +63,12 @@ public class SKCanvasControl : Control
 
     public override void Render(DrawingContext context)
     {
-        // Draw the bitmap to the control's bounds
-        // We use the full bounds to ensure the image stretches if needed, though usually this control size matches image size
         if (_bitmap != null)
         {
-            context.DrawImage(_bitmap, new Rect(0, 0, Bounds.Width, Bounds.Height));
+            // Keep raster pixels at their native size. Stretching the backing bitmap to
+            // transient stale bounds causes freshly resized images (crop/cut/undo) to be
+            // painted into the previous canvas size until layout catches up.
+            context.DrawImage(_bitmap, new Rect(0, 0, _bitmap.PixelSize.Width, _bitmap.PixelSize.Height));
         }
     }
 

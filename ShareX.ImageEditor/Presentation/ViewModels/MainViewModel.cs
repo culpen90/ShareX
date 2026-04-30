@@ -439,20 +439,23 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             NotifySmartPaddingStateChanged();
         }
 
-        private void OnPreviewImageChanged(Bitmap? value)
+        internal void SyncImageDimensions(double width, double height)
         {
-            if (value != null)
+            bool hasImage = width > 0 && height > 0;
+
+            if (ImageWidth == width && ImageHeight == height && HasPreviewImage == hasImage)
             {
-                ImageWidth = value.Size.Width;
-                ImageHeight = value.Size.Height;
-                HasPreviewImage = true;
+                return;
+            }
 
-                if (!_isSyncingFromCore && !_isApplyingSmartPadding)
-                {
-                    IsDirty = true;
-                }
+            ImageWidth = width;
+            ImageHeight = height;
+            HasPreviewImage = hasImage;
 
-                InvalidateSmartPaddingCache();
+            InvalidateSmartPaddingCache();
+
+            if (hasImage)
+            {
                 RefreshSmartPaddingState(ensureCache: AreBackgroundEffectsActive, forceCacheRefresh: AreBackgroundEffectsActive);
 
                 var fileName = GetFileNameFromPath(ImageFilePath);
@@ -460,11 +463,24 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
             else
             {
-                ImageWidth = 0;
-                ImageHeight = 0;
-                HasPreviewImage = false;
-                InvalidateSmartPaddingCache();
                 NotifySmartPaddingStateChanged();
+            }
+        }
+
+        private void OnPreviewImageChanged(Bitmap? value)
+        {
+            if (value != null)
+            {
+                SyncImageDimensions(value.Size.Width, value.Size.Height);
+
+                if (!_isSyncingFromCore && !_isApplyingSmartPadding)
+                {
+                    IsDirty = true;
+                }
+            }
+            else
+            {
+                SyncImageDimensions(0, 0);
             }
         }
 
