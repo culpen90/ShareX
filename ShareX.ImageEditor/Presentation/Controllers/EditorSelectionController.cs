@@ -1372,9 +1372,21 @@ public class EditorSelectionController
             }
         };
 
+        textBox.KeyDown += (s, args) =>
+        {
+            if (args.Key == Key.Enter && args.KeyModifiers.HasFlag(KeyModifiers.Control))
+            {
+                args.Handled = true;
+                int caretIndex = textBox.CaretIndex;
+                string currentText = textBox.Text ?? string.Empty;
+                textBox.Text = currentText.Substring(0, caretIndex) + "\n" + currentText.Substring(caretIndex);
+                textBox.CaretIndex = caretIndex + 1;
+            }
+        };
+
         textBox.KeyUp += (s, args) =>
         {
-            if (args.Key == Key.Enter || args.Key == Key.Escape)
+            if ((args.Key == Key.Enter && !args.KeyModifiers.HasFlag(KeyModifiers.Control)) || args.Key == Key.Escape)
             {
                 args.Handled = true;
                 _view.Focus();
@@ -1851,11 +1863,13 @@ public class EditorSelectionController
     private void AttachTextBoxEditHandlers(TextBox tb)
     {
         EventHandler<FocusChangedEventArgs>? lostFocusHandler = null;
+        EventHandler<KeyEventArgs>? keyDownHandler = null;
         EventHandler<KeyEventArgs>? keyUpHandler = null;
 
         lostFocusHandler = (s, args) =>
         {
             if (lostFocusHandler != null) tb.LostFocus -= lostFocusHandler;
+            if (keyDownHandler != null) tb.KeyDown -= keyDownHandler;
             if (keyUpHandler != null) tb.KeyUp -= keyUpHandler;
 
             tb.IsHitTestVisible = false;
@@ -1880,9 +1894,21 @@ public class EditorSelectionController
             }
         };
 
+        keyDownHandler = (s, args) =>
+        {
+            if (args.Key == Key.Enter && args.KeyModifiers.HasFlag(KeyModifiers.Control))
+            {
+                args.Handled = true;
+                int caretIndex = tb.CaretIndex;
+                string currentText = tb.Text ?? string.Empty;
+                tb.Text = currentText.Substring(0, caretIndex) + "\n" + currentText.Substring(caretIndex);
+                tb.CaretIndex = caretIndex + 1;
+            }
+        };
+
         keyUpHandler = (s, args) =>
         {
-            if (args.Key == Key.Enter || args.Key == Key.Escape)
+            if ((args.Key == Key.Enter && !args.KeyModifiers.HasFlag(KeyModifiers.Control)) || args.Key == Key.Escape)
             {
                 args.Handled = true;
                 _view.Focus();
@@ -1890,6 +1916,7 @@ public class EditorSelectionController
         };
 
         tb.LostFocus += lostFocusHandler;
+        tb.KeyDown += keyDownHandler;
         tb.KeyUp += keyUpHandler;
     }
 
@@ -2034,11 +2061,13 @@ public class EditorSelectionController
         textBox.Height = Math.Max(20, annotationBounds.Height);
 
         EventHandler<FocusChangedEventArgs>? lostFocusHandler = null;
+        EventHandler<KeyEventArgs>? keyDownHandler = null;
         EventHandler<KeyEventArgs>? keyUpHandler = null;
 
         void CompleteEditing()
         {
             if (lostFocusHandler != null) textBox.LostFocus -= lostFocusHandler;
+            if (keyDownHandler != null) textBox.KeyDown -= keyDownHandler;
             if (keyUpHandler != null) textBox.KeyUp -= keyUpHandler;
 
             annotation.Text = textBox.Text ?? string.Empty;
@@ -2060,9 +2089,21 @@ public class EditorSelectionController
 
         lostFocusHandler = (s, args) => CompleteEditing();
 
+        keyDownHandler = (s, args) =>
+        {
+            if (args.Key == Key.Enter && args.KeyModifiers.HasFlag(KeyModifiers.Control))
+            {
+                args.Handled = true;
+                int caretIndex = textBox.CaretIndex;
+                string currentText = textBox.Text ?? string.Empty;
+                textBox.Text = currentText.Substring(0, caretIndex) + "\n" + currentText.Substring(caretIndex);
+                textBox.CaretIndex = caretIndex + 1;
+            }
+        };
+
         keyUpHandler = (s, args) =>
         {
-            if (args.Key == Key.Enter || args.Key == Key.Escape)
+            if ((args.Key == Key.Enter && !args.KeyModifiers.HasFlag(KeyModifiers.Control)) || args.Key == Key.Escape)
             {
                 args.Handled = true;
                 _view.Focus();
@@ -2070,6 +2111,7 @@ public class EditorSelectionController
         };
 
         textBox.LostFocus += lostFocusHandler;
+        textBox.KeyDown += keyDownHandler;
         textBox.KeyUp += keyUpHandler;
 
         overlay.Children.Add(textBox);
