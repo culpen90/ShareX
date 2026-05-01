@@ -2469,15 +2469,6 @@ namespace ShareX
             return !string.IsNullOrEmpty(content) && Encoding.UTF8.GetByteCount(content) <= 2952;
         }
 
-        public static void ShowBalloonTip(string text, ToolTipIcon icon, int timeout, string title = "ShareX", BalloonTipAction clickAction = null)
-        {
-            if (Program.MainForm != null && !Program.MainForm.IsDisposed && Program.MainForm.niTray != null && Program.MainForm.niTray.Visible)
-            {
-                Program.MainForm.niTray.Tag = clickAction;
-                Program.MainForm.niTray.ShowBalloonTip(timeout, title, text, icon);
-            }
-        }
-
         public static void ShowNotificationTip(string text, string title = "ShareX", int duration = -1)
         {
             if (duration < 0)
