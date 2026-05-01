@@ -263,11 +263,15 @@ public sealed partial class ColorParameterState : EffectParameterState
 
 public sealed partial class NumericParameterState : EffectParameterState
 {
+    private static long s_changeSequence;
+
     private readonly EffectParameterDefinition? _legacyDefinition;
     private readonly CoreNumericParameter? _coreParameter;
 
     [ObservableProperty]
     private decimal? _value;
+
+    public long LastChangedSequence { get; private set; }
 
     public decimal Minimum { get; }
 
@@ -300,6 +304,11 @@ public sealed partial class NumericParameterState : EffectParameterState
     }
 
     internal override object? GetValue() => Value;
+
+    partial void OnValueChanged(decimal? value)
+    {
+        LastChangedSequence = System.Threading.Interlocked.Increment(ref s_changeSequence);
+    }
 
     internal override void ApplyValue(ImageEffect effect)
     {
