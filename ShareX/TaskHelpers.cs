@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using SkiaSharp;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -1295,13 +1296,13 @@ namespace ShareX
             {
                 EditorEvents events = new EditorEvents
                 {
-                    CopyImageRequested = (bytes) =>
+                    CopyImageRequested = (skBitmap) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            MainFormCopyImage(img);
-                        }
+                        // Zero-copy: Bitmap wraps SKBitmap's pixel memory directly — no encode or decode
+                        IntPtr ptr = skBitmap.GetPixels(out _);
+                        using Bitmap img = new Bitmap(skBitmap.Width, skBitmap.Height, skBitmap.RowBytes,
+                            PixelFormat.Format32bppPArgb, ptr);
+                        MainFormCopyImage(img);
                     },
                     SaveImageRequested = (bytes, newFilePath) =>
                     {
@@ -1355,7 +1356,7 @@ namespace ShareX
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
-                        bmp.Save(ms, ImageFormat.Png);
+                        bmp.Save(ms, ImageFormat.Bmp);
                         ms.Position = 0;
 
                         bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, taskSettings.ToolsSettingsReference.ImageEditorOptions,

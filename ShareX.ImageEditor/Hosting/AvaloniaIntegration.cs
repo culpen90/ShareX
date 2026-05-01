@@ -25,6 +25,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using SkiaSharp;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
@@ -55,7 +56,7 @@ namespace ShareX.ImageEditor.Hosting
 
     public class EditorEvents
     {
-        public Action<byte[]>? CopyImageRequested { get; set; }
+        public Action<SKBitmap>? CopyImageRequested { get; set; }
         public Func<byte[], string?, string?>? SaveImageRequested { get; set; }
         public Func<byte[], string?, string?>? SaveImageAsRequested { get; set; }
         public Action<byte[]>? PinImageRequested { get; set; }
@@ -239,10 +240,10 @@ namespace ShareX.ImageEditor.Hosting
                 vm.HasHostCopyHandler = true;
                 vm.CopyRequested += () =>
                 {
-                    byte[]? bytes = window.GetResultBytes();
-                    if (bytes != null)
+                    using var skBitmap = window.GetResultBitmap();
+                    if (skBitmap != null)
                     {
-                        InvokeHostCallback(bytes, events.CopyImageRequested, nameof(EditorEvents.CopyImageRequested));
+                        InvokeHostCallback(skBitmap, events.CopyImageRequested, nameof(EditorEvents.CopyImageRequested));
                     }
                 };
             }
@@ -320,11 +321,11 @@ namespace ShareX.ImageEditor.Hosting
             };
         }
 
-        private static void InvokeHostCallback(byte[] bytes, Action<byte[]> callback, string callbackName)
+        private static void InvokeHostCallback<T>(T data, Action<T> callback, string callbackName)
         {
             try
             {
-                callback(bytes);
+                callback(data);
             }
             catch (Exception ex)
             {

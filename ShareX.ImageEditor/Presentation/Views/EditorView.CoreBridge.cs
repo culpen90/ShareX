@@ -133,11 +133,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                     new Vector(96, 96));
                 rtb.Render(snapshotTarget);
 
-                // Convert Avalonia RenderTargetBitmap → SKBitmap
-                using var stream = new System.IO.MemoryStream();
-                rtb.Save(stream);
-                stream.Position = 0;
-                var skBitmap = SkiaSharp.SKBitmap.Decode(stream);
+                // Convert Avalonia RenderTargetBitmap → SKBitmap via direct pixel copy (no PNG encode/decode)
+                var skBitmap = BitmapConversionHelpers.ToSKBitmap(rtb);
 
                 return skBitmap;
             }
