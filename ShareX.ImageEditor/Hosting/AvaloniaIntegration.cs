@@ -57,10 +57,10 @@ namespace ShareX.ImageEditor.Hosting
     public class EditorEvents
     {
         public Action<SKBitmap>? CopyImageRequested { get; set; }
-        public Func<byte[], string?, string?>? SaveImageRequested { get; set; }
-        public Func<byte[], string?, string?>? SaveImageAsRequested { get; set; }
-        public Action<byte[]>? PinImageRequested { get; set; }
-        public Action<byte[]>? UploadImageRequested { get; set; }
+        public Func<SKBitmap, string?, string?>? SaveImageRequested { get; set; }
+        public Func<SKBitmap, string?, string?>? SaveImageAsRequested { get; set; }
+        public Action<SKBitmap>? PinImageRequested { get; set; }
+        public Action<SKBitmap>? UploadImageRequested { get; set; }
         public Action<EditorDiagnosticEvent>? DiagnosticReported { get; set; }
         public string? ImageFilePath { get; set; }
     }
@@ -253,10 +253,10 @@ namespace ShareX.ImageEditor.Hosting
                 vm.HasHostSaveHandler = true;
                 vm.SaveRequested += () =>
                 {
-                    byte[]? bytes = window.GetResultBytes();
-                    if (bytes != null)
+                    using var skBitmap = window.GetResultBitmap();
+                    if (skBitmap != null)
                     {
-                        string? savedPath = InvokeHostSaveCallback(bytes, vm.ImageFilePath, events.SaveImageRequested, nameof(EditorEvents.SaveImageRequested));
+                        string? savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageRequested, nameof(EditorEvents.SaveImageRequested));
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
@@ -271,10 +271,10 @@ namespace ShareX.ImageEditor.Hosting
                 vm.HasHostSaveAsHandler = true;
                 vm.SaveAsRequested += () =>
                 {
-                    byte[]? bytes = window.GetResultBytes();
-                    if (bytes != null)
+                    using var skBitmap = window.GetResultBitmap();
+                    if (skBitmap != null)
                     {
-                        string? savedPath = InvokeHostSaveCallback(bytes, vm.ImageFilePath, events.SaveImageAsRequested, nameof(EditorEvents.SaveImageAsRequested));
+                        string? savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageAsRequested, nameof(EditorEvents.SaveImageAsRequested));
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
@@ -288,10 +288,10 @@ namespace ShareX.ImageEditor.Hosting
             {
                 vm.PinRequested += () =>
                 {
-                    byte[]? bytes = window.GetResultBytes();
-                    if (bytes != null)
+                    using var skBitmap = window.GetResultBitmap();
+                    if (skBitmap != null)
                     {
-                        InvokeHostCallback(bytes, events.PinImageRequested, nameof(EditorEvents.PinImageRequested));
+                        InvokeHostCallback(skBitmap, events.PinImageRequested, nameof(EditorEvents.PinImageRequested));
                     }
                 };
             }
@@ -300,10 +300,10 @@ namespace ShareX.ImageEditor.Hosting
             {
                 vm.UploadRequested += () =>
                 {
-                    byte[]? bytes = window.GetResultBytes();
-                    if (bytes != null)
+                    using var skBitmap = window.GetResultBitmap();
+                    if (skBitmap != null)
                     {
-                        InvokeHostCallback(bytes, events.UploadImageRequested, nameof(EditorEvents.UploadImageRequested));
+                        InvokeHostCallback(skBitmap, events.UploadImageRequested, nameof(EditorEvents.UploadImageRequested));
                     }
                 };
             }
@@ -333,11 +333,11 @@ namespace ShareX.ImageEditor.Hosting
             }
         }
 
-        private static string? InvokeHostSaveCallback(byte[] bytes, string? filePath, Func<byte[], string?, string?> callback, string callbackName)
+        private static string? InvokeHostSaveCallback(SKBitmap skBitmap, string? filePath, Func<SKBitmap, string?, string?> callback, string callbackName)
         {
             try
             {
-                return callback(bytes, filePath);
+                return callback(skBitmap, filePath);
             }
             catch (Exception ex)
             {

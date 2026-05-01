@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using SkiaSharp;
 using System.IO;
 using System.Linq;
@@ -1298,54 +1299,45 @@ namespace ShareX
                 {
                     CopyImageRequested = (skBitmap) =>
                     {
-                        // Zero-copy: Bitmap wraps SKBitmap's pixel memory directly — no encode or decode
-                        IntPtr ptr = skBitmap.GetPixels(out _);
-                        using Bitmap img = new Bitmap(skBitmap.Width, skBitmap.Height, skBitmap.RowBytes,
-                            PixelFormat.Format32bppPArgb, ptr);
+                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
                         MainFormCopyImage(img);
                     },
-                    SaveImageRequested = (bytes, newFilePath) =>
+                    SaveImageRequested = (skBitmap, newFilePath) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            if (string.IsNullOrEmpty(newFilePath))
-                            {
-                                string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                                string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                                newFilePath = Path.Combine(screenshotsFolder, fileName);
-                            }
+                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
 
-                            ImageHelpers.SaveImage(img, newFilePath);
+                        if (string.IsNullOrEmpty(newFilePath))
+                        {
+                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                            newFilePath = Path.Combine(screenshotsFolder, fileName);
                         }
 
+                        ImageHelpers.SaveImage(img, newFilePath);
                         return newFilePath;
                     },
-                    SaveImageAsRequested = (bytes, newFilePath) =>
+                    SaveImageAsRequested = (skBitmap, newFilePath) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            if (string.IsNullOrEmpty(newFilePath))
-                            {
-                                string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                                string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                                newFilePath = Path.Combine(screenshotsFolder, fileName);
-                            }
+                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
 
-                            newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
+                        if (string.IsNullOrEmpty(newFilePath))
+                        {
+                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                            newFilePath = Path.Combine(screenshotsFolder, fileName);
                         }
 
+                        newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
                         return newFilePath;
                     },
-                    PinImageRequested = (bytes) =>
+                    PinImageRequested = (skBitmap) =>
                     {
-                        Bitmap bmp = ImageHelpers.ByteArrayToBitmap(bytes);
+                        Bitmap bmp = SkBitmapToGdiBitmap(skBitmap);
                         PinToScreen(bmp, taskSettings);
                     },
-                    UploadImageRequested = (bytes) =>
+                    UploadImageRequested = (skBitmap) =>
                     {
-                        Bitmap bmp = ImageHelpers.ByteArrayToBitmap(bytes);
+                        Bitmap bmp = SkBitmapToGdiBitmap(skBitmap);
                         MainFormUploadImage(bmp, taskSettings);
                     }
                 };
@@ -1376,6 +1368,42 @@ namespace ShareX
             });
 
             return bmpResult;
+        }
+
+        // Converts SKBitmap → GDI Bitmap.
+        // Uses LockBits to write into a fresh GDI+-owned pixel buffer — guarantees
+        // the result shares no memory with the source SKBitmap or any wrapper.
+        private static Bitmap SkBitmapToGdiBitmap(SKBitmap sk)
+        {
+            var result = new Bitmap(sk.Width, sk.Height, PixelFormat.Format32bppArgb);
+            BitmapData bmpData = result.LockBits(
+                new Rectangle(0, 0, sk.Width, sk.Height),
+                ImageLockMode.WriteOnly,
+                PixelFormat.Format32bppArgb);
+            try
+            {
+                byte[] srcPixels = sk.Bytes;
+                int srcStride = sk.RowBytes;
+                int dstStride = bmpData.Stride;
+                int rowBytes = sk.Width * 4;
+
+                if (srcStride == dstStride)
+                {
+                    Marshal.Copy(srcPixels, 0, bmpData.Scan0, srcPixels.Length);
+                }
+                else
+                {
+                    for (int y = 0; y < sk.Height; y++)
+                    {
+                        Marshal.Copy(srcPixels, y * srcStride, IntPtr.Add(bmpData.Scan0, y * dstStride), rowBytes);
+                    }
+                }
+            }
+            finally
+            {
+                result.UnlockBits(bmpData);
+            }
+            return result;
         }
 
         public static void MainFormCopyImage(Bitmap bmp)
