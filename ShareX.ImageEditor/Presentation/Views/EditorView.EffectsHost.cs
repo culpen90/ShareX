@@ -25,6 +25,7 @@
 
 using Avalonia.Controls;
 using ShareX.ImageEditor.Core.Annotations;
+using ShareX.ImageEditor.Core.ImageEffects.Manipulations;
 using ShareX.ImageEditor.Presentation.Controls;
 using ShareX.ImageEditor.Presentation.Effects;
 using ShareX.ImageEditor.Presentation.ViewModels;
@@ -316,20 +317,13 @@ namespace ShareX.ImageEditor.Presentation.Views
                         _editorCore.Crop(new SKRect(x, y, x + w, y + h));
                         break;
                     case EditorOperationKind.ResizeImage:
-                        int rw = 0, rh = 0;
-                        foreach (EffectParameterState state in dialog.ParameterStates)
+                        if (_editorCore.SourceImage != null &&
+                            dialog.Definition.CreateConfiguredEffect(dialog.ParameterStates) is ResizeImageEffect resizeImageEffect)
                         {
-                            if (state is NumericParameterState n)
-                            {
-                                switch (state.Key)
-                                {
-                                    case "width": rw = (int)(n.Value ?? 0); break;
-                                    case "height": rh = (int)(n.Value ?? 0); break;
-                                }
-                            }
-                        }
+                            SKSizeI targetSize = resizeImageEffect.GetTargetSize(_editorCore.SourceImage);
 
-                        _editorCore.ResizeImage(rw, rh);
+                            _editorCore.ResizeImage(targetSize.Width, targetSize.Height);
+                        }
                         break;
                     case EditorOperationKind.ResizeCanvas:
                         int top = 0, right = 0, bottom = 0, left = 0;

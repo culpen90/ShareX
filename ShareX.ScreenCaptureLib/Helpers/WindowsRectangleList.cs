@@ -114,7 +114,7 @@ namespace ShareX.ScreenCaptureLib
             // auxiliaries, etc.).  These are never the "real" application the user
             // intends to capture, and including them causes screenshot metadata
             // (filename, window title) to reflect the overlay instead of the app
-            // underneath.  Matches the filtering already present in XerahS.
+            // underneath.
             if (isWindow)
             {
                 const long WS_EX_TOOLWINDOW = 0x00000080L;

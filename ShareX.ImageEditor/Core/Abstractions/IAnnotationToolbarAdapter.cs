@@ -23,11 +23,11 @@
 
 #endregion License Information (GPL v3)
 
-using Avalonia.Media;
 using Avalonia.Controls;
+using Avalonia.Media;
 using ShareX.ImageEditor.Core.Annotations;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace ShareX.ImageEditor.Core.Abstractions;
