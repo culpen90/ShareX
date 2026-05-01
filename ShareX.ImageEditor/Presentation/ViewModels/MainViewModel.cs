@@ -547,6 +547,30 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [ObservableProperty]
         private double _zoom = 1.0;
 
+        // DPI scale reported by the host window (1.0 at 100 %, 1.5 at 150 %, etc.).
+        // Set by EditorView when the window is loaded or moved to a different monitor.
+        private double _dpiScale = 1.0;
+        public double DpiScale
+        {
+            get => _dpiScale;
+            set
+            {
+                double safe = Math.Max(0.01, value);
+                if (Math.Abs(_dpiScale - safe) <= 0.0001) return;
+                _dpiScale = safe;
+                OnPropertyChanged(nameof(DpiScale));
+                OnPropertyChanged(nameof(EffectiveZoom));
+            }
+        }
+
+        /// <summary>
+        /// The scale factor applied to the LayoutTransformControl.
+        /// Combines the user-selected zoom with an inverse DPI compensation so that
+        /// 100 % zoom always shows one image pixel per physical screen pixel,
+        /// regardless of the Windows display scaling setting.
+        /// </summary>
+        public double EffectiveZoom => Zoom / _dpiScale;
+
         [ObservableProperty]
         private string _imageDimensions = "No image";
 
@@ -996,6 +1020,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 Zoom = clamped;
                 return;
             }
+
+            OnPropertyChanged(nameof(EffectiveZoom));
         }
 
         // Static color palette for annotation toolbar

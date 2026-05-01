@@ -73,6 +73,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private bool _overlayCanvasLayoutUpdatePending;
         private Rect? _lastOverlayCanvasRect;
         private double _lastOverlayCanvasZoom = -1;
+        private double _lastRenderScaling = 1.0;
         private EffectBrowserPanel? _effectBrowserPanel;
         private ImageEditorOptions? _effectBrowserPanelOptions;
         private Cursor? _interactionCursorOverride;
@@ -178,6 +179,32 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnLayoutUpdated(object? sender, EventArgs e)
         {
+            UpdateDpiScaleFromTopLevel();
+            RequestOverlayCanvasLayoutUpdate();
+        }
+
+        /// <summary>
+        /// Reads the current render scaling from the host TopLevel and propagates it to the
+        /// ViewModel so that <see cref="MainViewModel.EffectiveZoom"/> can compensate for the
+        /// Windows display scale factor.  Called on every layout pass so that a move to a
+        /// different-DPI monitor is picked up without a dedicated event subscription.
+        /// </summary>
+        private void UpdateDpiScaleFromTopLevel()
+        {
+            double scaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1.0;
+            if (Math.Abs(scaling - _lastRenderScaling) <= 0.0001)
+            {
+                return;
+            }
+
+            _lastRenderScaling = scaling;
+            if (DataContext is MainViewModel vm)
+            {
+                vm.DpiScale = scaling;
+            }
+
+            // Force an immediate overlay canvas refresh after the DPI change so that
+            // selection handles reposition correctly on the rescaled canvas.
             RequestOverlayCanvasLayoutUpdate();
         }
 
@@ -227,7 +254,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 return;
             }
 
-            double zoom = vm?.Zoom ?? 1;
+            double zoom = vm?.EffectiveZoom ?? (vm?.Zoom ?? 1.0);
             var overlayRect = new Rect(
                 contentOrigin.Value.X - (OverlayCanvasBleed * zoom),
                 contentOrigin.Value.Y - (OverlayCanvasBleed * zoom),
