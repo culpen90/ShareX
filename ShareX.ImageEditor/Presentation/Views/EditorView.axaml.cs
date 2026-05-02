@@ -345,6 +345,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     else if (vm.SelectedAnnotation is TextAnnotation text)
                     {
                         vm.FontSize = text.FontSize;
+                        vm.SelectedFontFamily = text.FontFamily;
                         vm.TextBold = text.IsBold;
                         vm.TextItalic = text.IsItalic;
                         vm.TextUnderline = text.IsUnderline;
@@ -354,6 +355,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     else if (vm.SelectedAnnotation is SpeechBalloonAnnotation balloon)
                     {
                         vm.FontSize = balloon.FontSize;
+                        vm.SelectedFontFamily = balloon.FontFamily;
                         vm.FillColor = balloon.FillColor;
                         vm.CornerRadius = balloon.CornerRadius;
                         if (!string.IsNullOrEmpty(balloon.TextColor))

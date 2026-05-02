@@ -318,6 +318,25 @@
                                                          IsVisible="{Binding ShowCornerRadius}"
                                                          ToolTip.Tip="Corner radius"/>
 
+                    <ComboBox x:Name="FontFamilyPicker"
+                              MinWidth="180"
+                              MaxWidth="240"
+                              Height="40"
+                              MaxDropDownHeight="360"
+                              ItemsSource="{Binding AvailableFontFamilies}"
+                              SelectedItem="{Binding SelectedFontFamily, Mode=TwoWay}"
+                              IsVisible="{Binding ShowFontFamily}"
+                              VerticalContentAlignment="Center"
+                              ToolTip.Tip="Font family">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"
+                                           FontFamily="{Binding}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
                     <controls:FontSizePickerDropdown x:Name="FontSizePicker"
                                                      SelectedFontSize="{Binding FontSize, Mode=TwoWay}"
                                                      Height="40"

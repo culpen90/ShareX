@@ -57,6 +57,7 @@ public partial class AnnotationToolbar : UserControl
     public event EventHandler<int>? WidthChanged;
     public event EventHandler<int>? CornerRadiusChanged;
     public event EventHandler<float>? FontSizeChanged;
+    public event EventHandler<string>? FontFamilyChanged;
     public event EventHandler<float>? StrengthChanged;
     public event EventHandler<bool>? TextBoldChanged;
     public event EventHandler<bool>? TextItalicChanged;
@@ -120,6 +121,17 @@ public partial class AnnotationToolbar : UserControl
         if (this.FindControl<FontSizePickerDropdown>("FontSizePicker") is FontSizePickerDropdown fontSizePicker)
         {
             fontSizePicker.FontSizeChanged += (_, fontSize) => FontSizeChanged?.Invoke(this, fontSize);
+        }
+
+        if (this.FindControl<ComboBox>("FontFamilyPicker") is ComboBox fontFamilyPicker)
+        {
+            fontFamilyPicker.SelectionChanged += (_, _) =>
+            {
+                if (fontFamilyPicker.SelectedItem is string fontFamily && !string.IsNullOrWhiteSpace(fontFamily))
+                {
+                    FontFamilyChanged?.Invoke(this, fontFamily);
+                }
+            };
         }
 
         if (this.FindControl<StrengthSlider>("EffectStrengthSlider") is StrengthSlider strengthSlider)

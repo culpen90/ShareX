@@ -27,6 +27,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using ShareX.ImageEditor.Core.Abstractions;
 using ShareX.ImageEditor.Core.Annotations;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -83,6 +84,14 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         get => _viewModel.TextColor;
         set => _viewModel.TextColor = value;
     }
+
+    public string SelectedFontFamily
+    {
+        get => _viewModel.SelectedFontFamily;
+        set => _viewModel.SelectedFontFamily = value;
+    }
+
+    public IReadOnlyList<string> AvailableFontFamilies => _viewModel.AvailableFontFamilies;
 
     public int StrokeWidth
     {
@@ -151,6 +160,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowThickness => _viewModel.ShowThickness;
 
     public bool ShowFontSize => _viewModel.ShowFontSize;
+
+    public bool ShowFontFamily => _viewModel.ShowFontFamily;
 
     public bool ShowCornerRadius => _viewModel.ShowCornerRadius;
 

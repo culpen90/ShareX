@@ -1331,6 +1331,7 @@ public class EditorSelectionController
             Foreground = foregroundBrush,
             CaretBrush = foregroundBrush,
             FontSize = annotation.FontSize,
+            FontFamily = new Avalonia.Media.FontFamily(string.IsNullOrWhiteSpace(annotation.FontFamily) ? "Segoe UI" : annotation.FontFamily),
             Padding = new Thickness(12),
             TextAlignment = TextAlignment.Center,
             VerticalContentAlignment = global::Avalonia.Layout.VerticalAlignment.Center,
@@ -1941,6 +1942,7 @@ public class EditorSelectionController
 
         // Update Font Size
         _balloonTextEditor.FontSize = annotation.FontSize;
+        _balloonTextEditor.FontFamily = new Avalonia.Media.FontFamily(string.IsNullOrWhiteSpace(annotation.FontFamily) ? "Segoe UI" : annotation.FontFamily);
 
         // Re-execute color logic (matching ShowSpeechBalloonTextEditor logic)
         IBrush foregroundBrush = new SolidColorBrush(Avalonia.Media.Color.Parse(annotation.StrokeColor));
@@ -2031,6 +2033,7 @@ public class EditorSelectionController
             BorderThickness = new Thickness(1),
             BorderBrush = Brushes.Gray,
             FontSize = annotation.FontSize,
+            FontFamily = new Avalonia.Media.FontFamily(string.IsNullOrWhiteSpace(annotation.FontFamily) ? "Segoe UI" : annotation.FontFamily),
             FontWeight = annotation.IsBold ? FontWeight.Bold : FontWeight.Normal,
             FontStyle = annotation.IsItalic ? FontStyle.Italic : FontStyle.Normal,
             Padding = new Thickness(4),

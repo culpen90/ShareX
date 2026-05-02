@@ -27,12 +27,19 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.Theming;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
 {
     public partial class MainViewModel : ViewModelBase
     {
         private static EditorTool? _sessionLastUsedAnnotationTool;
+        private const string DefaultAnnotationFontFamily = "Segoe UI";
+        private static readonly IReadOnlyList<string> _availableFontFamilies = BuildAvailableFontFamilies();
+
+        public IReadOnlyList<string> AvailableFontFamilies => _availableFontFamilies;
 
         [ObservableProperty]
         private string _selectedColor = "#EF4444";
@@ -303,6 +310,37 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
         }
 
+        [ObservableProperty]
+        private string _selectedFontFamily = DefaultAnnotationFontFamily;
+
+        partial void OnSelectedFontFamilyChanged(string value)
+        {
+            string normalizedFontFamily = NormalizeFontFamily(value);
+            if (!string.Equals(normalizedFontFamily, value, StringComparison.Ordinal))
+            {
+                SelectedFontFamily = normalizedFontFamily;
+                return;
+            }
+
+            bool isText = ActiveTool == EditorTool.Text;
+            bool isSpeechBalloon = ActiveTool == EditorTool.SpeechBalloon;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
+            {
+                isText = SelectedAnnotation is TextAnnotation;
+                isSpeechBalloon = SelectedAnnotation is SpeechBalloonAnnotation;
+            }
+
+            if (isText)
+            {
+                Options.TextFontFamily = normalizedFontFamily;
+            }
+            else if (isSpeechBalloon)
+            {
+                Options.SpeechBalloonFontFamily = normalizedFontFamily;
+            }
+        }
+
         private bool _isLoadingOptions;
 
         [ObservableProperty]
@@ -458,6 +496,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _ => false
         };
 
+        public bool ShowFontFamily => ActiveTool switch
+        {
+            EditorTool.Text or EditorTool.SpeechBalloon => true,
+            EditorTool.Select => _selectedAnnotation != null && _selectedAnnotation.ToolType switch
+            {
+                EditorTool.Text or EditorTool.SpeechBalloon => true,
+                _ => false
+            },
+            _ => false
+        };
+
         public bool ShowCornerRadius => ActiveTool switch
         {
             EditorTool.Rectangle or EditorTool.SpeechBalloon => true,
@@ -578,6 +627,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowTextColor));
             OnPropertyChanged(nameof(ShowThickness));
             OnPropertyChanged(nameof(ShowFontSize));
+            OnPropertyChanged(nameof(ShowFontFamily));
             OnPropertyChanged(nameof(ShowCornerRadius));
             OnPropertyChanged(nameof(ShowStrength));
             OnPropertyChanged(nameof(ShowTextStyle));
@@ -588,7 +638,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowToolOptionsSeparator));
         }
 
-        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowCornerRadius || ShowStrength || ShowTextStyle || ShowShadow;
+        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowFontFamily || ShowCornerRadius || ShowStrength || ShowTextStyle || ShowShadow;
 
         [ObservableProperty]
         private EditorTool _activeTool = EditorTool.Rectangle;
@@ -688,6 +738,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     StrokeWidth = Options.TextThickness;
                     ShadowEnabled = Options.Shadow;
                     FontSize = Options.TextFontSize;
+                    SelectedFontFamily = NormalizeFontFamily(Options.TextFontFamily);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
                     TextUnderline = Options.TextUnderline;
@@ -700,6 +751,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     CornerRadius = Options.CornerRadius;
                     ShadowEnabled = Options.Shadow;
                     FontSize = Options.SpeechBalloonFontSize;
+                    SelectedFontFamily = NormalizeFontFamily(Options.SpeechBalloonFontFamily);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
                     TextUnderline = Options.TextUnderline;
@@ -731,6 +783,34 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     EffectStrength = Options.SpotlightStrength;
                     break;
             }
+        }
+
+        private static IReadOnlyList<string> BuildAvailableFontFamilies()
+        {
+            try
+            {
+                string[] fontFamilies = FontManager.Current.SystemFonts
+                    .Select(fontFamily => fontFamily.Name)
+                    .Where(fontFamily => !string.IsNullOrWhiteSpace(fontFamily))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(fontFamily => fontFamily, StringComparer.CurrentCultureIgnoreCase)
+                    .ToArray();
+
+                if (fontFamilies.Length > 0)
+                {
+                    return fontFamilies;
+                }
+            }
+            catch
+            {
+            }
+
+            return new[] { DefaultAnnotationFontFamily };
+        }
+
+        private static string NormalizeFontFamily(string? fontFamily)
+        {
+            return string.IsNullOrWhiteSpace(fontFamily) ? DefaultAnnotationFontFamily : fontFamily;
         }
 
     }

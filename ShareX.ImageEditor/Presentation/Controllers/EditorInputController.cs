@@ -363,7 +363,7 @@ public class EditorInputController
                 {
                     fillColor = IsColorLight(vm.SelectedColor) ? "#FF000000" : "#FFFFFFFF";
                 }
-                var balloonAnnotation = new SpeechBalloonAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = fillColor, TextColor = vm.TextColor, FontSize = vm.FontSize, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var balloonAnnotation = new SpeechBalloonAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = fillColor, TextColor = vm.TextColor, FontSize = vm.FontSize, FontFamily = vm.SelectedFontFamily, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 var balloonControl = balloonAnnotation.CreateVisual();
                 balloonControl.Width = 0;
                 balloonControl.Height = 0;
@@ -1612,6 +1612,7 @@ public class EditorInputController
             TextColor = textColor,
             StrokeWidth = (float)strokeWidth,
             FontSize = vm.FontSize,
+            FontFamily = vm.SelectedFontFamily,
             IsBold = vm.TextBold,
             IsItalic = vm.TextItalic,
             IsUnderline = vm.TextUnderline,
@@ -1628,6 +1629,7 @@ public class EditorInputController
             BorderThickness = new Thickness(1),
             BorderBrush = Brushes.White,
             FontSize = vm.FontSize,
+            FontFamily = new Avalonia.Media.FontFamily(textAnnotation.FontFamily),
             FontWeight = vm.TextBold ? Avalonia.Media.FontWeight.Bold : Avalonia.Media.FontWeight.Normal,
             FontStyle = vm.TextItalic ? Avalonia.Media.FontStyle.Italic : Avalonia.Media.FontStyle.Normal,
             TextAlignment = Avalonia.Media.TextAlignment.Center,

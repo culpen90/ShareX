@@ -86,6 +86,7 @@ namespace ShareX.ImageEditor.Hosting
 
         public int TextThickness { get; set; } = 8;
         public float TextFontSize { get; set; } = 48;
+        public string TextFontFamily { get; set; } = "Segoe UI";
         public bool TextBold { get; set; } = true;
         public bool TextItalic { get; set; } = false;
         public bool TextUnderline { get; set; } = false;
@@ -105,6 +106,7 @@ namespace ShareX.ImageEditor.Hosting
 
         public int SpeechBalloonThickness { get; set; } = 4;
         public float SpeechBalloonFontSize { get; set; } = 48;
+        public string SpeechBalloonFontFamily { get; set; } = "Segoe UI";
 
         // Step
         public string StepBorderColorHex { get; set; } = ColorToHex(Colors.Transparent);

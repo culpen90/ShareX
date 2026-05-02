@@ -49,6 +49,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.WidthChanged += OnWidthChanged;
             toolbar.CornerRadiusChanged += OnCornerRadiusChanged;
             toolbar.FontSizeChanged += OnFontSizeChanged;
+            toolbar.FontFamilyChanged += OnFontFamilyChanged;
             toolbar.StrengthChanged += OnStrengthChanged;
             toolbar.TextBoldChanged += OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged += OnToolbarTextItalicChanged;
@@ -70,6 +71,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.WidthChanged -= OnWidthChanged;
             toolbar.CornerRadiusChanged -= OnCornerRadiusChanged;
             toolbar.FontSizeChanged -= OnFontSizeChanged;
+            toolbar.FontFamilyChanged -= OnFontFamilyChanged;
             toolbar.StrengthChanged -= OnStrengthChanged;
             toolbar.TextBoldChanged -= OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged -= OnToolbarTextItalicChanged;
@@ -110,6 +112,15 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 vm.FontSize = fontSize;
                 ApplySelectedFontSize(fontSize);
+            }
+        }
+
+        private void OnFontFamilyChanged(object? sender, string fontFamily)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.SelectedFontFamily = fontFamily;
+                ApplySelectedFontFamily(fontFamily);
             }
         }
 
@@ -436,6 +447,38 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     balloonControl.InvalidateVisual();
                 }
+                _selectionController.UpdateActiveTextEditorProperties();
+            }
+        }
+
+        private void ApplySelectedFontFamily(string fontFamily)
+        {
+            if (string.IsNullOrWhiteSpace(fontFamily))
+            {
+                return;
+            }
+
+            var selected = _selectionController.SelectedShape;
+
+            if (selected?.Tag is TextAnnotation textAnnotation)
+            {
+                textAnnotation.FontFamily = fontFamily;
+
+                if (selected is OutlinedTextControl outlinedText)
+                {
+                    outlinedText.InvalidateMeasure();
+                    outlinedText.InvalidateVisual();
+                }
+            }
+            else if (selected?.Tag is SpeechBalloonAnnotation balloonAnnotation)
+            {
+                balloonAnnotation.FontFamily = fontFamily;
+
+                if (selected is SpeechBalloonControl balloonControl)
+                {
+                    balloonControl.InvalidateVisual();
+                }
+
                 _selectionController.UpdateActiveTextEditorProperties();
             }
         }

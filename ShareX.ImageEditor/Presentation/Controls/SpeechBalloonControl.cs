@@ -89,7 +89,8 @@ namespace ShareX.ImageEditor.Presentation.Controls
             if (!string.IsNullOrEmpty(Annotation.Text))
             {
                 var textColor = Color.Parse(Annotation.TextColor);
-                var typeface = new Typeface(FontFamily.Default);
+                var fontFamily = string.IsNullOrWhiteSpace(Annotation.FontFamily) ? "Segoe UI" : Annotation.FontFamily;
+                var typeface = new Typeface(fontFamily);
                 var formattedText = new FormattedText(
                     Annotation.Text,
                     System.Globalization.CultureInfo.CurrentCulture,
