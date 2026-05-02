@@ -43,7 +43,9 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     string FillColor { get; set; }
     string TextColor { get; set; }
     string SelectedFontFamily { get; set; }
+    ArrowStyle SelectedArrowStyle { get; set; }
     IReadOnlyList<string> AvailableFontFamilies { get; }
+    IReadOnlyList<ArrowStyle> AvailableArrowStyles { get; }
     IBrush SelectedColorBrush { get; set; }
     IBrush FillColorBrush { get; set; }
     IBrush TextColorBrush { get; set; }
@@ -68,6 +70,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowThickness { get; }
     bool ShowFontSize { get; }
     bool ShowFontFamily { get; }
+    bool ShowArrowStyle { get; }
     bool ShowCornerRadius { get; }
     bool ShowStrength { get; }
     bool ShowTextStyle { get; }

@@ -91,7 +91,15 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.SelectedFontFamily = value;
     }
 
+    public ArrowStyle SelectedArrowStyle
+    {
+        get => _viewModel.SelectedArrowStyle;
+        set => _viewModel.SelectedArrowStyle = value;
+    }
+
     public IReadOnlyList<string> AvailableFontFamilies => _viewModel.AvailableFontFamilies;
+
+    public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _viewModel.AvailableArrowStyles;
 
     public int StrokeWidth
     {
@@ -162,6 +170,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowFontSize => _viewModel.ShowFontSize;
 
     public bool ShowFontFamily => _viewModel.ShowFontFamily;
+
+    public bool ShowArrowStyle => _viewModel.ShowArrowStyle;
 
     public bool ShowCornerRadius => _viewModel.ShowCornerRadius;
 

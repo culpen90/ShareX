@@ -36,16 +36,27 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
     /// <summary>
     /// Half-width of the classic ShareX arrow cap, proportional to stroke width.
     /// </summary>
-    public const double ArrowHeadWidthMultiplier = 2.0;
+    public const double ClassicArrowHeadWidthMultiplier = 2.0;
+    public const double ModernArrowHeadWidthMultiplier = 3.0;
     private const double ArrowHeadLengthRatio = 3.0;
     private const double ArrowHeadBackCurveDepthRatio = 0.5;
     private const double ArrowHeadBackCurveControlRatio = 2.0;
     public SKPoint CurvePoint { get; set; }
     public bool CurvePointActivated { get; set; }
+    public ArrowStyle Style { get; set; } = ArrowStyle.Classic;
 
     public ArrowAnnotation()
     {
         ToolType = EditorTool.Arrow;
+    }
+
+    public static double GetArrowHeadWidthMultiplier(ArrowStyle style)
+    {
+        return style switch
+        {
+            ArrowStyle.Modern => ModernArrowHeadWidthMultiplier,
+            _ => ClassicArrowHeadWidthMultiplier
+        };
     }
 
     public static ArrowCapPoints? ComputeArrowCapPoints(
@@ -96,6 +107,36 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
                 (float)(tipX - unitX * backCurveControlDistance),
                 (float)(tipY - unitY * backCurveControlDistance)),
             BackCurveDepth: (float)(headHalfWidth * ArrowHeadBackCurveDepthRatio));
+    }
+
+    public static ModernArrowHeadPoints? ComputeModernArrowHeadPointsFromTangent(
+        float tipX,
+        float tipY,
+        float tangentX,
+        float tangentY,
+        double headSize)
+    {
+        var tangentLength = Math.Sqrt(tangentX * tangentX + tangentY * tangentY);
+        if (tangentLength <= 0)
+        {
+            return null;
+        }
+
+        var unitX = tangentX / tangentLength;
+        var unitY = tangentY / tangentLength;
+        var perpendicularX = -unitY;
+        var perpendicularY = unitX;
+
+        var headHeight = headSize * 2.5;
+        var headWidthBase = headSize * 1.5;
+        var wingWidth = headWidthBase * Math.Tan(Math.PI / 5.14);
+
+        var baseX = tipX - headHeight * unitX;
+        var baseY = tipY - headHeight * unitY;
+
+        return new ModernArrowHeadPoints(
+            WingLeft: new SKPoint((float)(baseX + perpendicularX * wingWidth), (float)(baseY + perpendicularY * wingWidth)),
+            WingRight: new SKPoint((float)(baseX - perpendicularX * wingWidth), (float)(baseY - perpendicularY * wingWidth)));
     }
 
     /// <summary>
@@ -152,6 +193,10 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
         SKPoint RightBase,
         SKPoint BackCurveControl,
         float BackCurveDepth);
+
+    public record struct ModernArrowHeadPoints(
+        SKPoint WingLeft,
+        SKPoint WingRight);
 
     public override bool HitTest(SKPoint point, float tolerance = 5)
     {

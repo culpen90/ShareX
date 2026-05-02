@@ -366,6 +366,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.FillColor = rect.FillColor;
                         vm.CornerRadius = rect.CornerRadius;
                     }
+                    else if (vm.SelectedAnnotation is ArrowAnnotation arrow)
+                    {
+                        vm.SelectedArrowStyle = arrow.Style;
+                    }
                     else if (vm.SelectedAnnotation is EllipseAnnotation ellipse)
                     {
                         vm.FillColor = ellipse.FillColor;

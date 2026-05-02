@@ -72,16 +72,22 @@ public partial class ArrowAnnotation
     {
         var start = new Point(StartPoint.X, StartPoint.Y);
         var end = new Point(EndPoint.X, EndPoint.Y);
-        return CreateArrowGeometry(start, end, StrokeWidth * ArrowHeadWidthMultiplier);
+        return CreateArrowGeometry(start, end, StrokeWidth * GetArrowHeadWidthMultiplier(Style));
     }
 
     public Geometry CreateArrowGeometry(Point start, Point end, double headSize)
     {
-        if (CurvedSegmentHelper.HasCurve(this))
+        return Style switch
         {
-            return CreateCurvedArrowGeometry(start, end, headSize);
-        }
+            ArrowStyle.Modern when CurvedSegmentHelper.HasCurve(this) => CreateCurvedModernArrowGeometry(start, end, headSize),
+            ArrowStyle.Modern => CreateModernArrowGeometry(start, end, headSize),
+            _ when CurvedSegmentHelper.HasCurve(this) => CreateCurvedClassicArrowGeometry(start, end, headSize),
+            _ => CreateClassicArrowGeometry(start, end, headSize)
+        };
+    }
 
+    private Geometry CreateClassicArrowGeometry(Point start, Point end, double headSize)
+    {
         var geometry = new StreamGeometry();
         using (var ctx = geometry.Open())
         {
@@ -111,7 +117,40 @@ public partial class ArrowAnnotation
         return geometry;
     }
 
-    private Geometry CreateCurvedArrowGeometry(Point start, Point end, double headSize)
+    private Geometry CreateModernArrowGeometry(Point start, Point end, double headSize)
+    {
+        var geometry = new StreamGeometry();
+        using (var ctx = geometry.Open())
+        {
+            var points = ComputeArrowPoints(
+                (float)start.X, (float)start.Y,
+                (float)end.X, (float)end.Y,
+                headSize);
+
+            if (points is { } p)
+            {
+                ctx.BeginFigure(start, true);
+                ctx.LineTo(new Point(p.ShaftEndLeft.X, p.ShaftEndLeft.Y));
+                ctx.LineTo(new Point(p.WingLeft.X, p.WingLeft.Y));
+                ctx.LineTo(end);
+                ctx.LineTo(new Point(p.WingRight.X, p.WingRight.Y));
+                ctx.LineTo(new Point(p.ShaftEndRight.X, p.ShaftEndRight.Y));
+                ctx.EndFigure(true);
+            }
+            else
+            {
+                var radius = 2.0;
+                ctx.BeginFigure(new Point(start.X - radius, start.Y), true);
+                ctx.ArcTo(new Point(start.X + radius, start.Y), new Size(radius, radius), 0, false, SweepDirection.Clockwise);
+                ctx.ArcTo(new Point(start.X - radius, start.Y), new Size(radius, radius), 0, false, SweepDirection.Clockwise);
+                ctx.EndFigure(true);
+            }
+        }
+
+        return geometry;
+    }
+
+    private Geometry CreateCurvedClassicArrowGeometry(Point start, Point end, double headSize)
     {
         var geometry = new StreamGeometry();
         var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(this);
@@ -136,6 +175,39 @@ public partial class ArrowAnnotation
             }
 
             AppendArrowCapFigure(context, end, cap.Value);
+        }
+
+        return geometry;
+    }
+
+    private Geometry CreateCurvedModernArrowGeometry(Point start, Point end, double headSize)
+    {
+        var geometry = new StreamGeometry();
+        var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(this);
+        var tangent = CurvedSegmentHelper.GetQuadraticTangentAtEnd(this);
+
+        using (var context = geometry.Open())
+        {
+            context.BeginFigure(start, false);
+            context.QuadraticBezierTo(new Point(curvePoint.X, curvePoint.Y), end);
+            context.EndFigure(false);
+
+            var head = ComputeModernArrowHeadPointsFromTangent(
+                (float)end.X,
+                (float)end.Y,
+                tangent.X,
+                tangent.Y,
+                headSize);
+
+            if (head is null)
+            {
+                return geometry;
+            }
+
+            context.BeginFigure(end, true);
+            context.LineTo(new Point(head.Value.WingLeft.X, head.Value.WingLeft.Y));
+            context.LineTo(new Point(head.Value.WingRight.X, head.Value.WingRight.Y));
+            context.EndFigure(true);
         }
 
         return geometry;

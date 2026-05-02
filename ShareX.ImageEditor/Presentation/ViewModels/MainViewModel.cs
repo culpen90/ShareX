@@ -827,6 +827,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _cornerRadius = _options.CornerRadius;
             _fontSize = _options.TextFontSize;
             _selectedFontFamily = NormalizeFontFamily(_options.TextFontFamily);
+            _selectedArrowStyle = NormalizeArrowStyle(_options.ArrowStyle);
             _shadowEnabled = _options.Shadow;
             _textBold = _options.TextBold;
             _textItalic = _options.TextItalic;

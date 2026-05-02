@@ -74,6 +74,7 @@ namespace ShareX.ImageEditor.Hosting
         public int Thickness { get; set; } = 4;
         public int CornerRadius { get; set; } = 4;
         public bool Shadow { get; set; } = false;
+        public ArrowStyle ArrowStyle { get; set; } = ArrowStyle.Classic;
 
         // Text
         public string TextBorderColorHex { get; set; } = ColorToHex(PrimaryColor);

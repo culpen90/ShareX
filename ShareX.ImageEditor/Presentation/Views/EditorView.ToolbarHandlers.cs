@@ -50,6 +50,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.CornerRadiusChanged += OnCornerRadiusChanged;
             toolbar.FontSizeChanged += OnFontSizeChanged;
             toolbar.FontFamilyChanged += OnFontFamilyChanged;
+            toolbar.ArrowStyleChanged += OnArrowStyleChanged;
             toolbar.StrengthChanged += OnStrengthChanged;
             toolbar.TextBoldChanged += OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged += OnToolbarTextItalicChanged;
@@ -72,6 +73,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.CornerRadiusChanged -= OnCornerRadiusChanged;
             toolbar.FontSizeChanged -= OnFontSizeChanged;
             toolbar.FontFamilyChanged -= OnFontFamilyChanged;
+            toolbar.ArrowStyleChanged -= OnArrowStyleChanged;
             toolbar.StrengthChanged -= OnStrengthChanged;
             toolbar.TextBoldChanged -= OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged -= OnToolbarTextItalicChanged;
@@ -121,6 +123,15 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 vm.SelectedFontFamily = fontFamily;
                 ApplySelectedFontFamily(fontFamily);
+            }
+        }
+
+        private void OnArrowStyleChanged(object? sender, ArrowStyle arrowStyle)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.SelectedArrowStyle = arrowStyle;
+                ApplySelectedArrowStyle(arrowStyle);
             }
         }
 
@@ -480,6 +491,17 @@ namespace ShareX.ImageEditor.Presentation.Views
                 }
 
                 _selectionController.UpdateActiveTextEditorProperties();
+            }
+        }
+
+        private void ApplySelectedArrowStyle(ArrowStyle arrowStyle)
+        {
+            var selected = _selectionController.SelectedShape;
+
+            if (selected?.Tag is ArrowAnnotation arrowAnnotation && selected is global::Avalonia.Controls.Shapes.Path arrowPath)
+            {
+                arrowAnnotation.Style = arrowStyle;
+                AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnnotation);
             }
         }
 

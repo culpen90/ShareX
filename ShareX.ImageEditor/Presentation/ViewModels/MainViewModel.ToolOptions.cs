@@ -38,8 +38,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static EditorTool? _sessionLastUsedAnnotationTool;
         private const string DefaultAnnotationFontFamily = "Segoe UI";
         private static readonly IReadOnlyList<string> _availableFontFamilies = BuildAvailableFontFamilies();
+        private static readonly IReadOnlyList<ArrowStyle> _availableArrowStyles = BuildAvailableArrowStyles();
 
         public IReadOnlyList<string> AvailableFontFamilies => _availableFontFamilies;
+        public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _availableArrowStyles;
 
         [ObservableProperty]
         private string _selectedColor = "#EF4444";
@@ -313,6 +315,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [ObservableProperty]
         private string _selectedFontFamily = DefaultAnnotationFontFamily;
 
+        [ObservableProperty]
+        private ArrowStyle _selectedArrowStyle = ArrowStyle.Classic;
+
         partial void OnSelectedFontFamilyChanged(string value)
         {
             string normalizedFontFamily = NormalizeFontFamily(value);
@@ -338,6 +343,28 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             else if (isSpeechBalloon)
             {
                 Options.SpeechBalloonFontFamily = normalizedFontFamily;
+            }
+        }
+
+        partial void OnSelectedArrowStyleChanged(ArrowStyle value)
+        {
+            ArrowStyle normalizedArrowStyle = NormalizeArrowStyle(value);
+            if (normalizedArrowStyle != value)
+            {
+                SelectedArrowStyle = normalizedArrowStyle;
+                return;
+            }
+
+            bool isArrow = ActiveTool == EditorTool.Arrow;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
+            {
+                isArrow = SelectedAnnotation is ArrowAnnotation;
+            }
+
+            if (isArrow)
+            {
+                Options.ArrowStyle = normalizedArrowStyle;
             }
         }
 
@@ -507,6 +534,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _ => false
         };
 
+        public bool ShowArrowStyle => ActiveTool switch
+        {
+            EditorTool.Arrow => true,
+            EditorTool.Select => _selectedAnnotation is ArrowAnnotation,
+            _ => false
+        };
+
         public bool ShowCornerRadius => ActiveTool switch
         {
             EditorTool.Rectangle or EditorTool.SpeechBalloon => true,
@@ -628,6 +662,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowThickness));
             OnPropertyChanged(nameof(ShowFontSize));
             OnPropertyChanged(nameof(ShowFontFamily));
+            OnPropertyChanged(nameof(ShowArrowStyle));
             OnPropertyChanged(nameof(ShowCornerRadius));
             OnPropertyChanged(nameof(ShowStrength));
             OnPropertyChanged(nameof(ShowTextStyle));
@@ -638,7 +673,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowToolOptionsSeparator));
         }
 
-        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowFontFamily || ShowCornerRadius || ShowStrength || ShowTextStyle || ShowShadow;
+        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowFontFamily || ShowArrowStyle || ShowCornerRadius || ShowStrength || ShowTextStyle || ShowShadow;
 
         [ObservableProperty]
         private EditorTool _activeTool = EditorTool.Rectangle;
@@ -723,7 +758,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 case EditorTool.Rectangle:
                 case EditorTool.Ellipse:
                 case EditorTool.Line:
-                case EditorTool.Arrow:
                 case EditorTool.Freehand:
                     SelectedColorValue = Options.BorderColor;
                     FillColorValue = Options.FillColor;
@@ -731,6 +765,15 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     CornerRadius = Options.CornerRadius;
                     ShadowEnabled = Options.Shadow;
                     FontSize = Options.TextFontSize;
+                    break;
+                case EditorTool.Arrow:
+                    SelectedColorValue = Options.BorderColor;
+                    FillColorValue = Options.FillColor;
+                    StrokeWidth = Options.Thickness;
+                    CornerRadius = Options.CornerRadius;
+                    ShadowEnabled = Options.Shadow;
+                    FontSize = Options.TextFontSize;
+                    SelectedArrowStyle = NormalizeArrowStyle(Options.ArrowStyle);
                     break;
                 case EditorTool.Text:
                     SelectedColorValue = Options.TextBorderColor;
@@ -808,9 +851,19 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             return new[] { DefaultAnnotationFontFamily };
         }
 
+        private static IReadOnlyList<ArrowStyle> BuildAvailableArrowStyles()
+        {
+            return Enum.GetValues<ArrowStyle>();
+        }
+
         private static string NormalizeFontFamily(string? fontFamily)
         {
             return string.IsNullOrWhiteSpace(fontFamily) ? DefaultAnnotationFontFamily : fontFamily;
+        }
+
+        private static ArrowStyle NormalizeArrowStyle(ArrowStyle arrowStyle)
+        {
+            return Enum.IsDefined(arrowStyle) ? arrowStyle : ArrowStyle.Classic;
         }
 
     }

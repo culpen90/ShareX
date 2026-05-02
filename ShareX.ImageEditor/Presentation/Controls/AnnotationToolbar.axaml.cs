@@ -58,6 +58,7 @@ public partial class AnnotationToolbar : UserControl
     public event EventHandler<int>? CornerRadiusChanged;
     public event EventHandler<float>? FontSizeChanged;
     public event EventHandler<string>? FontFamilyChanged;
+    public event EventHandler<ArrowStyle>? ArrowStyleChanged;
     public event EventHandler<float>? StrengthChanged;
     public event EventHandler<bool>? TextBoldChanged;
     public event EventHandler<bool>? TextItalicChanged;
@@ -126,6 +127,11 @@ public partial class AnnotationToolbar : UserControl
         if (this.FindControl<FontFamilyPickerDropdown>("FontFamilyPicker") is FontFamilyPickerDropdown fontFamilyPicker)
         {
             fontFamilyPicker.FontFamilyChanged += (_, fontFamily) => FontFamilyChanged?.Invoke(this, fontFamily);
+        }
+
+        if (this.FindControl<ArrowStylePickerDropdown>("ArrowStylePicker") is ArrowStylePickerDropdown arrowStylePicker)
+        {
+            arrowStylePicker.ArrowStyleChanged += (_, arrowStyle) => ArrowStyleChanged?.Invoke(this, arrowStyle);
         }
 
         if (this.FindControl<StrengthSlider>("EffectStrengthSlider") is StrengthSlider strengthSlider)
