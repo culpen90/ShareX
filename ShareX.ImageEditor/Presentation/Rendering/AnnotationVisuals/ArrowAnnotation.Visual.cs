@@ -85,20 +85,18 @@ public partial class ArrowAnnotation
         var geometry = new StreamGeometry();
         using (var ctx = geometry.Open())
         {
-            var pts = ComputeArrowPoints(
+            var cap = ComputeArrowCapPoints(
                 (float)start.X, (float)start.Y,
                 (float)end.X, (float)end.Y,
                 headSize);
 
-            if (pts is { } p)
+            if (cap is { } p)
             {
-                ctx.BeginFigure(start, true);
-                ctx.LineTo(new Point(p.ShaftEndLeft.X, p.ShaftEndLeft.Y));
-                ctx.LineTo(new Point(p.WingLeft.X, p.WingLeft.Y));
+                ctx.BeginFigure(start, false);
                 ctx.LineTo(end);
-                ctx.LineTo(new Point(p.WingRight.X, p.WingRight.Y));
-                ctx.LineTo(new Point(p.ShaftEndRight.X, p.ShaftEndRight.Y));
-                ctx.EndFigure(true);
+                ctx.EndFigure(false);
+
+                AppendArrowCapFigure(ctx, end, p);
             }
             else
             {
@@ -118,7 +116,6 @@ public partial class ArrowAnnotation
         var geometry = new StreamGeometry();
         var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(this);
         var tangent = CurvedSegmentHelper.GetQuadraticTangentAtEnd(this);
-        var tangentLength = Math.Sqrt(tangent.X * tangent.X + tangent.Y * tangent.Y);
 
         using (var context = geometry.Open())
         {
@@ -126,30 +123,31 @@ public partial class ArrowAnnotation
             context.QuadraticBezierTo(new Point(curvePoint.X, curvePoint.Y), end);
             context.EndFigure(false);
 
-            if (tangentLength <= 0.001)
+            var cap = ComputeArrowCapPointsFromTangent(
+                (float)end.X,
+                (float)end.Y,
+                tangent.X,
+                tangent.Y,
+                headSize);
+
+            if (cap is null)
             {
                 return geometry;
             }
 
-            var unitX = tangent.X / tangentLength;
-            var unitY = tangent.Y / tangentLength;
-            var perpendicularX = -unitY;
-            var perpendicularY = unitX;
-
-            var headHeight = headSize * 2.5;
-            var headWidthBase = headSize * 1.5;
-            var wingWidth = headWidthBase * Math.Tan(Math.PI / 5.14);
-
-            var basePoint = new Point(end.X - headHeight * unitX, end.Y - headHeight * unitY);
-            var leftWing = new Point(basePoint.X + perpendicularX * wingWidth, basePoint.Y + perpendicularY * wingWidth);
-            var rightWing = new Point(basePoint.X - perpendicularX * wingWidth, basePoint.Y - perpendicularY * wingWidth);
-
-            context.BeginFigure(end, true);
-            context.LineTo(leftWing);
-            context.LineTo(rightWing);
-            context.EndFigure(true);
+            AppendArrowCapFigure(context, end, cap.Value);
         }
 
         return geometry;
+    }
+
+    private static void AppendArrowCapFigure(StreamGeometryContext context, Point tip, ArrowCapPoints cap)
+    {
+        context.BeginFigure(tip, true);
+        context.LineTo(new Point(cap.LeftBase.X, cap.LeftBase.Y));
+        context.QuadraticBezierTo(
+            new Point(cap.BackCurveControl.X, cap.BackCurveControl.Y),
+            new Point(cap.RightBase.X, cap.RightBase.Y));
+        context.EndFigure(true);
     }
 }
