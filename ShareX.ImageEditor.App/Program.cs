@@ -45,7 +45,7 @@ namespace ShareX.ImageEditor.App
                 .WithInterFont();
 
 #if DEBUG
-            builder = builder.LogToTrace();
+            builder = builder.LogToTrace().WithDeveloperTools();
 #endif
 
             return builder;
