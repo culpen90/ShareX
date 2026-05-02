@@ -123,15 +123,9 @@ public partial class AnnotationToolbar : UserControl
             fontSizePicker.FontSizeChanged += (_, fontSize) => FontSizeChanged?.Invoke(this, fontSize);
         }
 
-        if (this.FindControl<ComboBox>("FontFamilyPicker") is ComboBox fontFamilyPicker)
+        if (this.FindControl<FontFamilyPickerDropdown>("FontFamilyPicker") is FontFamilyPickerDropdown fontFamilyPicker)
         {
-            fontFamilyPicker.SelectionChanged += (_, _) =>
-            {
-                if (fontFamilyPicker.SelectedItem is string fontFamily && !string.IsNullOrWhiteSpace(fontFamily))
-                {
-                    FontFamilyChanged?.Invoke(this, fontFamily);
-                }
-            };
+            fontFamilyPicker.FontFamilyChanged += (_, fontFamily) => FontFamilyChanged?.Invoke(this, fontFamily);
         }
 
         if (this.FindControl<StrengthSlider>("EffectStrengthSlider") is StrengthSlider strengthSlider)
