@@ -47,11 +47,8 @@ public partial class ArrowAnnotation
             Tag = this
         };
 
-        // Populate the arrow geometry using the annotation's points
-        path.Data = CreateArrowGeometry(
-            new Point(StartPoint.X, StartPoint.Y),
-            new Point(EndPoint.X, EndPoint.Y),
-            StrokeWidth * ArrowHeadWidthMultiplier);
+        // Populate the arrow geometry using the annotation's points.
+        path.Data = CreateArrowGeometry();
 
         if (ShadowEnabled)
         {
@@ -71,8 +68,20 @@ public partial class ArrowAnnotation
     /// Creates arrow geometry for the Avalonia Path.
     /// Consumes <see cref="ComputeArrowPoints"/> to guarantee identical shape with <see cref="Render"/>.
     /// </summary>
+    public Geometry CreateArrowGeometry()
+    {
+        var start = new Point(StartPoint.X, StartPoint.Y);
+        var end = new Point(EndPoint.X, EndPoint.Y);
+        return CreateArrowGeometry(start, end, StrokeWidth * ArrowHeadWidthMultiplier);
+    }
+
     public Geometry CreateArrowGeometry(Point start, Point end, double headSize)
     {
+        if (CurvedSegmentHelper.HasCurve(this))
+        {
+            return CreateCurvedArrowGeometry(start, end, headSize);
+        }
+
         var geometry = new StreamGeometry();
         using (var ctx = geometry.Open())
         {
@@ -99,6 +108,46 @@ public partial class ArrowAnnotation
                 ctx.ArcTo(new Point(start.X - radius, start.Y), new Size(radius, radius), 0, false, SweepDirection.Clockwise);
                 ctx.EndFigure(true);
             }
+        }
+
+        return geometry;
+    }
+
+    private Geometry CreateCurvedArrowGeometry(Point start, Point end, double headSize)
+    {
+        var geometry = new StreamGeometry();
+        var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(this);
+        var tangent = CurvedSegmentHelper.GetQuadraticTangentAtEnd(this);
+        var tangentLength = Math.Sqrt(tangent.X * tangent.X + tangent.Y * tangent.Y);
+
+        using (var context = geometry.Open())
+        {
+            context.BeginFigure(start, false);
+            context.QuadraticBezierTo(new Point(curvePoint.X, curvePoint.Y), end);
+            context.EndFigure(false);
+
+            if (tangentLength <= 0.001)
+            {
+                return geometry;
+            }
+
+            var unitX = tangent.X / tangentLength;
+            var unitY = tangent.Y / tangentLength;
+            var perpendicularX = -unitY;
+            var perpendicularY = unitX;
+
+            var headHeight = headSize * 2.5;
+            var headWidthBase = headSize * 1.5;
+            var wingWidth = headWidthBase * Math.Tan(Math.PI / 5.14);
+
+            var basePoint = new Point(end.X - headHeight * unitX, end.Y - headHeight * unitY);
+            var leftWing = new Point(basePoint.X + perpendicularX * wingWidth, basePoint.Y + perpendicularY * wingWidth);
+            var rightWing = new Point(basePoint.X - perpendicularX * wingWidth, basePoint.Y - perpendicularY * wingWidth);
+
+            context.BeginFigure(end, true);
+            context.LineTo(leftWing);
+            context.LineTo(rightWing);
+            context.EndFigure(true);
         }
 
         return geometry;

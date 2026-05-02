@@ -295,16 +295,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     canvas.Children.Add(shape);
 
-                    // XIP0039 Guardrail 4: Rehydrate the arrow endpoint cache so that
-                    // endpoint drag handles work correctly after undo/redo, paste, and duplicate.
-                    // Previously the cache was only populated during the draw flow, causing
-                    // handle and hit-test degradation on restored annotations.
-                    if (annotation is ArrowAnnotation arrow)
-                    {
-                        var start = new Point(arrow.StartPoint.X, arrow.StartPoint.Y);
-                        var end = new Point(arrow.EndPoint.X, arrow.EndPoint.Y);
-                        _selectionController.RegisterArrowEndpoint(shape, start, end);
-                    }
                 }
             }
 

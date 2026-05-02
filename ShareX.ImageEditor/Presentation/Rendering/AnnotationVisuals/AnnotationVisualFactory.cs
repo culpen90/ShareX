@@ -97,15 +97,12 @@ public static class AnnotationVisualFactory
                 rectangleControl.RadiusY = Math.Max(0, rectangle.CornerRadius);
                 break;
 
-            case LineAnnotation when control is Line line:
-                line.StartPoint = new Avalonia.Point(annotation.StartPoint.X, annotation.StartPoint.Y);
-                line.EndPoint = new Avalonia.Point(annotation.EndPoint.X, annotation.EndPoint.Y);
+            case LineAnnotation lineAnnotation when control is Avalonia.Controls.Shapes.Path linePath:
+                linePath.Data = lineAnnotation.CreateLineGeometry();
                 break;
 
             case ArrowAnnotation arrow when control is Avalonia.Controls.Shapes.Path arrowPath:
-                var start = new Avalonia.Point(annotation.StartPoint.X, annotation.StartPoint.Y);
-                var end = new Avalonia.Point(annotation.EndPoint.X, annotation.EndPoint.Y);
-                arrowPath.Data = arrow.CreateArrowGeometry(start, end, arrow.StrokeWidth * ArrowAnnotation.ArrowHeadWidthMultiplier);
+                arrowPath.Data = arrow.CreateArrowGeometry();
                 break;
 
             case FreehandAnnotation freehand when control is Avalonia.Controls.Shapes.Path freehandPath:

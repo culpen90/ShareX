@@ -42,6 +42,9 @@ namespace ShareX.ImageEditor.Presentation.Controllers;
 public class EditorSelectionController
 {
     private static readonly Cursor SelectToolCursor = new(StandardCursorType.Arrow);
+    private const string SegmentStartHandleTag = "SegmentStart";
+    private const string SegmentEndHandleTag = "SegmentEnd";
+    private const string SegmentCenterHandleTag = "SegmentCenter";
     private static double ToOverlayCoordinate(double value) => value + EditorView.OverlayCanvasBleed;
     private static Point ToOverlayPoint(Point value) => new(ToOverlayCoordinate(value.X), ToOverlayCoordinate(value.Y));
 
@@ -68,9 +71,6 @@ public class EditorSelectionController
     private global::Avalonia.Controls.Shapes.Polyline? _hoverPolylineWhite;
     private global::Avalonia.Controls.Shapes.Ellipse? _hoverEllipseBlack;
     private global::Avalonia.Controls.Shapes.Ellipse? _hoverEllipseWhite;
-
-    // Store arrow/line endpoints for editing
-    private Dictionary<Control, (Point Start, Point End)> _shapeEndpoints = new();
     private TextBox? _balloonTextEditor;
 
     public Control? SelectedShape => _selectedShape;
@@ -156,6 +156,12 @@ public class EditorSelectionController
             var handleSource = e.Source as Control;
             if (handleSource != null && overlay.Children.Contains(handleSource) && handleSource is Border)
             {
+                if (handleSource.Tag?.ToString() == SegmentCenterHandleTag
+                    && _selectedShape?.Tag is ICurvedSegmentAnnotation curvedSegment)
+                {
+                    CurvedSegmentHelper.EnsureCurveActivated(curvedSegment);
+                }
+
                 _isDraggingHandle = true;
                 _draggedHandle = handleSource;
                 _startPoint = point; // Capture start for resize delta
@@ -415,67 +421,34 @@ public class EditorSelectionController
         var deltaX = currentPoint.X - _startPoint.X;
         var deltaY = currentPoint.Y - _startPoint.Y;
 
-        // Special handling for Line endpoints
-        if (_selectedShape is global::Avalonia.Controls.Shapes.Line targetLine)
+        // Special handling for line/arrow endpoints and curve control point.
+        if (_selectedShape is global::Avalonia.Controls.Shapes.Path segmentPath
+            && segmentPath.Tag is Annotation segmentAnnotation
+            && segmentPath.Tag is ICurvedSegmentAnnotation curvedSegment)
         {
-            if (handleTag == "LineStart")
+            var startPoint = new Point(curvedSegment.StartPoint.X, curvedSegment.StartPoint.Y);
+            var endPoint = new Point(curvedSegment.EndPoint.X, curvedSegment.EndPoint.Y);
+
+            if (handleTag == SegmentStartHandleTag)
             {
-                var snappedStart = isShiftHeld
-                    ? EditorInputController.SnapTo45Degrees(targetLine.EndPoint, currentPoint)
+                startPoint = isShiftHeld
+                    ? EditorInputController.SnapTo45Degrees(endPoint, currentPoint)
                     : currentPoint;
-                targetLine.StartPoint = snappedStart;
+                CurvedSegmentHelper.SetEndpoints(curvedSegment, ToSKPoint(startPoint), ToSKPoint(endPoint));
             }
-            else if (handleTag == "LineEnd")
+            else if (handleTag == SegmentEndHandleTag)
             {
-                var snappedEnd = isShiftHeld
-                    ? EditorInputController.SnapTo45Degrees(targetLine.StartPoint, currentPoint)
+                endPoint = isShiftHeld
+                    ? EditorInputController.SnapTo45Degrees(startPoint, currentPoint)
                     : currentPoint;
-                targetLine.EndPoint = snappedEnd;
+                CurvedSegmentHelper.SetEndpoints(curvedSegment, ToSKPoint(startPoint), ToSKPoint(endPoint));
             }
-
-            // Sync annotation points for hit testing
-            if (targetLine.Tag is LineAnnotation lineAnnotation)
+            else if (handleTag == SegmentCenterHandleTag)
             {
-                lineAnnotation.StartPoint = new SKPoint((float)targetLine.StartPoint.X, (float)targetLine.StartPoint.Y);
-                lineAnnotation.EndPoint = new SKPoint((float)targetLine.EndPoint.X, (float)targetLine.EndPoint.Y);
+                CurvedSegmentHelper.SetCurvePoint(curvedSegment, ToSKPoint(currentPoint));
             }
 
-            _startPoint = currentPoint;
-            UpdateSelectionHandles();
-            return;
-        }
-
-        // Special handling for Arrow endpoints
-        if (_selectedShape is global::Avalonia.Controls.Shapes.Path arrowPath)
-        {
-            if (_shapeEndpoints.TryGetValue(arrowPath, out var endpoints))
-            {
-                Point arrowStart = endpoints.Start;
-                Point arrowEnd = endpoints.End;
-
-                if (handleTag == "ArrowStart")
-                {
-                    arrowStart = isShiftHeld
-                        ? EditorInputController.SnapTo45Degrees(arrowEnd, currentPoint)
-                        : currentPoint;
-                }
-                else if (handleTag == "ArrowEnd")
-                {
-                    arrowEnd = isShiftHeld
-                        ? EditorInputController.SnapTo45Degrees(arrowStart, currentPoint)
-                        : currentPoint;
-                }
-
-                _shapeEndpoints[arrowPath] = (arrowStart, arrowEnd);
-
-                // Sync annotation points for hit testing
-                if (arrowPath.Tag is ArrowAnnotation arrowAnnotation)
-                {
-                    arrowAnnotation.StartPoint = new SKPoint((float)arrowStart.X, (float)arrowStart.Y);
-                    arrowAnnotation.EndPoint = new SKPoint((float)arrowEnd.X, (float)arrowEnd.Y);
-                    AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnnotation);
-                }
-            }
+            AnnotationVisualFactory.UpdateVisualControl(segmentPath, segmentAnnotation);
             _startPoint = currentPoint;
             UpdateSelectionHandles();
             return;
@@ -732,37 +705,14 @@ public class EditorSelectionController
         var deltaX = currentPoint.X - _lastDragPoint.X;
         var deltaY = currentPoint.Y - _lastDragPoint.Y;
 
-        if (_selectedShape is global::Avalonia.Controls.Shapes.Line targetLine)
+        if (_selectedShape is global::Avalonia.Controls.Shapes.Path segmentPath
+            && segmentPath.Tag is Annotation segmentAnnotation
+            && segmentPath.Tag is ICurvedSegmentAnnotation curvedSegment)
         {
-            targetLine.StartPoint = new Point(targetLine.StartPoint.X + deltaX, targetLine.StartPoint.Y + deltaY);
-            targetLine.EndPoint = new Point(targetLine.EndPoint.X + deltaX, targetLine.EndPoint.Y + deltaY);
-
-            // Sync annotation points for hit testing
-            if (targetLine.Tag is LineAnnotation lineAnnotation)
-            {
-                lineAnnotation.StartPoint = new SKPoint((float)targetLine.StartPoint.X, (float)targetLine.StartPoint.Y);
-                lineAnnotation.EndPoint = new SKPoint((float)targetLine.EndPoint.X, (float)targetLine.EndPoint.Y);
-            }
-
-            _lastDragPoint = currentPoint;
-            UpdateSelectionHandles();
-            return;
-        }
-
-        if (_selectedShape is global::Avalonia.Controls.Shapes.Path arrowPath && _shapeEndpoints.TryGetValue(arrowPath, out var endpoints))
-        {
-            var newStart = new Point(endpoints.Start.X + deltaX, endpoints.Start.Y + deltaY);
-            var newEnd = new Point(endpoints.End.X + deltaX, endpoints.End.Y + deltaY);
-
-            _shapeEndpoints[arrowPath] = (newStart, newEnd);
-
-            // Sync annotation points for hit testing
-            if (arrowPath.Tag is ArrowAnnotation arrowAnnotation)
-            {
-                arrowAnnotation.StartPoint = new SKPoint((float)newStart.X, (float)newStart.Y);
-                arrowAnnotation.EndPoint = new SKPoint((float)newEnd.X, (float)newEnd.Y);
-                AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnnotation);
-            }
+            curvedSegment.StartPoint = new SKPoint(curvedSegment.StartPoint.X + (float)deltaX, curvedSegment.StartPoint.Y + (float)deltaY);
+            curvedSegment.EndPoint = new SKPoint(curvedSegment.EndPoint.X + (float)deltaX, curvedSegment.EndPoint.Y + (float)deltaY);
+            CurvedSegmentHelper.OffsetCurvePoint(curvedSegment, (float)deltaX, (float)deltaY);
+            AnnotationVisualFactory.UpdateVisualControl(segmentPath, segmentAnnotation);
 
             _lastDragPoint = currentPoint;
             UpdateSelectionHandles();
@@ -884,21 +834,15 @@ public class EditorSelectionController
 
         if (_selectedShape == null) return;
 
-        if (_selectedShape is global::Avalonia.Controls.Shapes.Line line)
+        if (_selectedShape is global::Avalonia.Controls.Shapes.Path segmentPath
+            && segmentPath.Tag is ICurvedSegmentAnnotation curvedSegment)
         {
-            CreateHandle(line.StartPoint.X, line.StartPoint.Y, "LineStart");
-            CreateHandle(line.EndPoint.X, line.EndPoint.Y, "LineEnd");
-            UpdateHoverOutline();
-            return;
-        }
+            CreateHandle(curvedSegment.StartPoint.X, curvedSegment.StartPoint.Y, SegmentStartHandleTag);
+            CreateHandle(curvedSegment.EndPoint.X, curvedSegment.EndPoint.Y, SegmentEndHandleTag);
 
-        if (_selectedShape is global::Avalonia.Controls.Shapes.Path arrowPath)
-        {
-            if (_shapeEndpoints.TryGetValue(arrowPath, out var endpoints))
-            {
-                CreateHandle(endpoints.Start.X, endpoints.Start.Y, "ArrowStart");
-                CreateHandle(endpoints.End.X, endpoints.End.Y, "ArrowEnd");
-            }
+            var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(curvedSegment);
+            CreateHandle(curvePoint.X, curvePoint.Y, SegmentCenterHandleTag);
+
             UpdateHoverOutline();
             return;
         }
@@ -1432,11 +1376,6 @@ public class EditorSelectionController
         }
     }
 
-    public void RegisterArrowEndpoint(Control path, Point start, Point end)
-    {
-        _shapeEndpoints[path] = (start, end);
-    }
-
     private void UpdateHoverState(Canvas canvas, Point currentPoint)
     {
         // Crop/CutOut tools never show hover outlines
@@ -1524,23 +1463,11 @@ public class EditorSelectionController
             // Check if point is within the bounds of this control
             var shapeBounds = GetLogicalRect(child);
 
-            // Special handling for Line
-            if (child is global::Avalonia.Controls.Shapes.Line line)
+            // Special handling for line/arrow paths
+            if (child is global::Avalonia.Controls.Shapes.Path && child.Tag is Annotation curveAnnotation && child.Tag is ICurvedSegmentAnnotation)
             {
-                var minX = Math.Min(line.StartPoint.X, line.EndPoint.X) - 5;
-                var minY = Math.Min(line.StartPoint.Y, line.EndPoint.Y) - 5;
-                var maxX = Math.Max(line.StartPoint.X, line.EndPoint.X) + 5;
-                var maxY = Math.Max(line.StartPoint.Y, line.EndPoint.Y) + 5;
-                shapeBounds = new Rect(minX, minY, maxX - minX, maxY - minY);
-            }
-            // Special handling for Path (Arrow)
-            else if (child is global::Avalonia.Controls.Shapes.Path && _shapeEndpoints.TryGetValue(child, out var endpoints))
-            {
-                var minX = Math.Min(endpoints.Start.X, endpoints.End.X) - 10;
-                var minY = Math.Min(endpoints.Start.Y, endpoints.End.Y) - 10;
-                var maxX = Math.Max(endpoints.Start.X, endpoints.End.X) + 10;
-                var maxY = Math.Max(endpoints.Start.Y, endpoints.End.Y) + 10;
-                shapeBounds = new Rect(minX, minY, maxX - minX, maxY - minY);
+                var bounds = curveAnnotation.GetBounds();
+                shapeBounds = new Rect(bounds.Left - 10, bounds.Top - 10, bounds.Width + 20, bounds.Height + 20);
             }
             // Special handling for Path (Freehand/SmartEraser) - use annotation bounds
             else if (child is global::Avalonia.Controls.Shapes.Path && child.Tag is IPointBasedAnnotation pointAnnotation)
@@ -1684,15 +1611,13 @@ public class EditorSelectionController
         // Used for Line, Arrow (Path), and Freehand (Polyline) to show outline along the stroke
         IList<Point>? outlinePoints = null;
 
-        if (_hoveredShape is global::Avalonia.Controls.Shapes.Line line)
+        if (_hoveredShape is global::Avalonia.Controls.Shapes.Path curvedPath && curvedPath.Tag is ICurvedSegmentAnnotation curvedSegment)
         {
-            outlinePoints = new List<Point> { line.StartPoint, line.EndPoint };
+            outlinePoints = CurvedSegmentHelper.GetPathPoints(curvedSegment)
+                .Select(point => new Point(point.X, point.Y))
+                .ToList();
         }
-        else if (_hoveredShape is global::Avalonia.Controls.Shapes.Path arrowPath && _shapeEndpoints.TryGetValue(arrowPath, out var endpoints))
-        {
-            outlinePoints = new List<Point> { endpoints.Start, endpoints.End };
-        }
-        else if (_hoveredShape is global::Avalonia.Controls.Shapes.Path path && path.Tag is IPointBasedAnnotation pointAnnotation)
+        else if (_hoveredShape is global::Avalonia.Controls.Shapes.Path pointPath && pointPath.Tag is IPointBasedAnnotation pointAnnotation)
         {
             // Convert SKPoints to Avalonia Points for the outline
             outlinePoints = new List<Point>();

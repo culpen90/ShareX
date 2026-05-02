@@ -318,7 +318,6 @@ public class EditorInputController
                 var arrowAnnotation = new ArrowAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = arrowAnnotation.CreateVisual();
                 _currentShape.IsHitTestVisible = false;
-                _selectionController.RegisterArrowEndpoint(_currentShape, _startPoint, _startPoint);
                 break;
             case EditorTool.Text:
                 HandleTextTool(canvas, brush, vm.StrokeWidth);
@@ -640,26 +639,21 @@ public class EditorInputController
             else if (_currentShape.Tag is EllipseAnnotation ellAnn) { ellAnn.StartPoint = ToSKPoint(new Point(left, top)); ellAnn.EndPoint = ToSKPoint(new Point(left + width, top + height)); }
             else if (_currentShape.Tag is BaseEffectAnnotation effectAnn) { effectAnn.StartPoint = ToSKPoint(new Point(left, top)); effectAnn.EndPoint = ToSKPoint(new Point(left + width, top + height)); }
         }
-        else if (_currentShape is global::Avalonia.Controls.Shapes.Line line)
+        else if (_currentShape is global::Avalonia.Controls.Shapes.Path linePath && linePath.Tag is LineAnnotation lineAnn)
         {
             var lineEnd = e.KeyModifiers.HasFlag(KeyModifiers.Shift)
                 ? SnapTo45Degrees(_startPoint, currentPoint)
                 : currentPoint;
-            line.EndPoint = lineEnd;
-            if (line.Tag is LineAnnotation lineAnn) lineAnn.EndPoint = ToSKPoint(lineEnd);
+            lineAnn.EndPoint = ToSKPoint(lineEnd);
+            AnnotationVisualFactory.UpdateVisualControl(linePath, lineAnn);
         }
-        else if (_currentShape is global::Avalonia.Controls.Shapes.Path path) // Arrow
+        else if (_currentShape is global::Avalonia.Controls.Shapes.Path arrowPath && arrowPath.Tag is ArrowAnnotation arrowAnn)
         {
             var arrowEnd = e.KeyModifiers.HasFlag(KeyModifiers.Shift)
                 ? SnapTo45Degrees(_startPoint, currentPoint)
                 : currentPoint;
-            if (path.Tag is ArrowAnnotation arrowAnn)
-            {
-                arrowAnn.EndPoint = ToSKPoint(arrowEnd);
-                AnnotationVisualFactory.UpdateVisualControl(path, arrowAnn);
-            }
-
-            _selectionController.RegisterArrowEndpoint(path, _startPoint, arrowEnd);
+            arrowAnn.EndPoint = ToSKPoint(arrowEnd);
+            AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnn);
         }
         else if (_currentShape is ShareX.ImageEditor.Presentation.Controls.SpotlightControl spotlight)
         {
