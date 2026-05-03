@@ -422,7 +422,9 @@ namespace ShareX.Setup
                 if (File.Exists(manifestPath))
                 {
                     string manifestContent = File.ReadAllText(manifestPath);
-                    manifestContent = manifestContent.Replace("{PLATFORM}", Platform);
+                    manifestContent = manifestContent.
+                        Replace("{PLATFORM}", Platform).
+                        Replace("{VERSION}", AppVersion + ".0"); // 20.0.1.0
                     File.WriteAllText(manifestPath, manifestContent);
                 }
             }
