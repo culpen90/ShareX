@@ -886,7 +886,8 @@ public class EditorSelectionController
             return;
         }
 
-        if (_selectedShape is Polyline)
+        if (_selectedShape is Polyline
+            || _selectedShape is global::Avalonia.Controls.Shapes.Path { Tag: FreehandAnnotation })
         {
             UpdateHoverOutline();
             return;
