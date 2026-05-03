@@ -502,6 +502,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 arrowAnnotation.Style = arrowStyle;
                 AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnnotation);
+                _selectionController.UpdateSelectionHandles();
             }
         }
 

@@ -41,9 +41,22 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
     private const double ArrowHeadLengthRatio = 3.0;
     private const double ArrowHeadBackCurveDepthRatio = 0.5;
     private const double ArrowHeadBackCurveControlRatio = 2.0;
+    private ArrowStyle _style = ArrowStyle.Classic;
     public SKPoint CurvePoint { get; set; }
     public bool CurvePointActivated { get; set; }
-    public ArrowStyle Style { get; set; } = ArrowStyle.Classic;
+    public ArrowStyle Style
+    {
+        get => _style;
+        set
+        {
+            _style = value;
+
+            if (_style == ArrowStyle.Modern)
+            {
+                CurvedSegmentHelper.ResetCurvePoint(this);
+            }
+        }
+    }
 
     public ArrowAnnotation()
     {

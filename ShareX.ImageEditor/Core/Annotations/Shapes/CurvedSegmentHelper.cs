@@ -31,6 +31,15 @@ internal static class CurvedSegmentHelper
 {
     private const float CurveToleranceEpsilon = 0.5f;
 
+    public static bool SupportsCurve(ICurvedSegmentAnnotation annotation)
+    {
+        return annotation switch
+        {
+            ArrowAnnotation { Style: ArrowStyle.Modern } => false,
+            _ => true
+        };
+    }
+
     public static SKPoint GetMidpoint(SKPoint startPoint, SKPoint endPoint)
     {
         return new SKPoint((startPoint.X + endPoint.X) * 0.5f, (startPoint.Y + endPoint.Y) * 0.5f);
@@ -38,14 +47,20 @@ internal static class CurvedSegmentHelper
 
     public static SKPoint GetEffectiveCurvePoint(ICurvedSegmentAnnotation annotation)
     {
-        return annotation.CurvePointActivated
+        return SupportsCurve(annotation) && annotation.CurvePointActivated
             ? annotation.CurvePoint
             : GetMidpoint(annotation.StartPoint, annotation.EndPoint);
     }
 
+    public static void ResetCurvePoint(ICurvedSegmentAnnotation annotation)
+    {
+        annotation.CurvePoint = GetMidpoint(annotation.StartPoint, annotation.EndPoint);
+        annotation.CurvePointActivated = false;
+    }
+
     public static bool HasCurve(ICurvedSegmentAnnotation annotation)
     {
-        if (!annotation.CurvePointActivated)
+        if (!SupportsCurve(annotation) || !annotation.CurvePointActivated)
         {
             return false;
         }
@@ -58,6 +73,12 @@ internal static class CurvedSegmentHelper
 
     public static void EnsureCurveActivated(ICurvedSegmentAnnotation annotation)
     {
+        if (!SupportsCurve(annotation))
+        {
+            ResetCurvePoint(annotation);
+            return;
+        }
+
         if (!annotation.CurvePointActivated)
         {
             annotation.CurvePoint = GetMidpoint(annotation.StartPoint, annotation.EndPoint);
@@ -67,13 +88,19 @@ internal static class CurvedSegmentHelper
 
     public static void SetCurvePoint(ICurvedSegmentAnnotation annotation, SKPoint curvePoint)
     {
+        if (!SupportsCurve(annotation))
+        {
+            ResetCurvePoint(annotation);
+            return;
+        }
+
         annotation.CurvePoint = curvePoint;
         annotation.CurvePointActivated = true;
     }
 
     public static void OffsetCurvePoint(ICurvedSegmentAnnotation annotation, float deltaX, float deltaY)
     {
-        if (!annotation.CurvePointActivated)
+        if (!SupportsCurve(annotation) || !annotation.CurvePointActivated)
         {
             return;
         }
@@ -83,7 +110,7 @@ internal static class CurvedSegmentHelper
 
     public static void SetEndpoints(ICurvedSegmentAnnotation annotation, SKPoint startPoint, SKPoint endPoint)
     {
-        bool keepNeutralCurvePoint = annotation.CurvePointActivated && !HasCurve(annotation);
+        bool keepNeutralCurvePoint = SupportsCurve(annotation) && annotation.CurvePointActivated && !HasCurve(annotation);
 
         annotation.StartPoint = startPoint;
         annotation.EndPoint = endPoint;
@@ -91,6 +118,10 @@ internal static class CurvedSegmentHelper
         if (keepNeutralCurvePoint)
         {
             annotation.CurvePoint = GetMidpoint(startPoint, endPoint);
+        }
+        else if (!SupportsCurve(annotation))
+        {
+            ResetCurvePoint(annotation);
         }
     }
 

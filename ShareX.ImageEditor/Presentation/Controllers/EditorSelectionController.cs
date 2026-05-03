@@ -157,7 +157,8 @@ public class EditorSelectionController
             if (handleSource != null && overlay.Children.Contains(handleSource) && handleSource is Border)
             {
                 if (handleSource.Tag?.ToString() == SegmentCenterHandleTag
-                    && _selectedShape?.Tag is ICurvedSegmentAnnotation curvedSegment)
+                    && _selectedShape?.Tag is ICurvedSegmentAnnotation curvedSegment
+                    && CurvedSegmentHelper.SupportsCurve(curvedSegment))
                 {
                     CurvedSegmentHelper.EnsureCurveActivated(curvedSegment);
                 }
@@ -840,8 +841,11 @@ public class EditorSelectionController
             CreateHandle(curvedSegment.StartPoint.X, curvedSegment.StartPoint.Y, SegmentStartHandleTag);
             CreateHandle(curvedSegment.EndPoint.X, curvedSegment.EndPoint.Y, SegmentEndHandleTag);
 
-            var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(curvedSegment);
-            CreateHandle(curvePoint.X, curvePoint.Y, SegmentCenterHandleTag);
+            if (CurvedSegmentHelper.SupportsCurve(curvedSegment))
+            {
+                var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(curvedSegment);
+                CreateHandle(curvePoint.X, curvePoint.Y, SegmentCenterHandleTag);
+            }
 
             UpdateHoverOutline();
             return;
