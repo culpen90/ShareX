@@ -182,7 +182,7 @@ public class EditorSelectionController
         {
             // When a drawing tool is active, allow selecting and dragging only shapes
             // that belong to the same tool type, without switching to the Select tool.
-            if (vm.ActiveTool != EditorTool.Select && vm.ActiveTool != EditorTool.Spotlight)
+            if (vm.ActiveTool != EditorTool.Select && vm.ActiveTool != EditorTool.Spotlight && vm.ActiveTool != EditorTool.Freehand)
             {
                 // Hit test - find the direct child of the canvas
                 var hitSource = e.Source as global::Avalonia.Visual;
@@ -1378,10 +1378,10 @@ public class EditorSelectionController
 
     private void UpdateHoverState(Canvas canvas, Point currentPoint)
     {
-        // Crop/CutOut tools never show hover outlines
+        // Crop/CutOut/Freehand tools never show hover outlines.
         if (_view.DataContext is MainViewModel vm)
         {
-            if (vm.ActiveTool == EditorTool.Crop || vm.ActiveTool == EditorTool.CutOut)
+            if (vm.ActiveTool == EditorTool.Crop || vm.ActiveTool == EditorTool.CutOut || vm.ActiveTool == EditorTool.Freehand)
             {
                 ClearHoverOutline();
                 return;
