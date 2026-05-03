@@ -377,6 +377,13 @@ namespace ShareX.ImageEditor.Presentation.Views
                 annotation.StrokeWidth = width;
             }
 
+            if (selected.Tag is ArrowAnnotation arrowAnnotation
+                && selected is global::Avalonia.Controls.Shapes.Path arrowPath)
+            {
+                AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnnotation);
+                return;
+            }
+
             switch (selected)
             {
                 case Shape shape:

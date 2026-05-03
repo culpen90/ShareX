@@ -102,6 +102,12 @@ public static class AnnotationVisualFactory
                 break;
 
             case ArrowAnnotation arrow when control is Avalonia.Controls.Shapes.Path arrowPath:
+                var brush = new SolidColorBrush(Color.Parse(arrow.StrokeColor));
+                arrowPath.Stroke = brush;
+                arrowPath.Fill = brush;
+                arrowPath.StrokeThickness = arrow.StrokeWidth;
+                arrowPath.StrokeLineCap = PenLineCap.Round;
+                arrowPath.StrokeJoin = PenLineJoin.Round;
                 arrowPath.Data = arrow.CreateArrowGeometry();
                 break;
 
