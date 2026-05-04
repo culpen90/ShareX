@@ -74,8 +74,8 @@ public partial class LineAnnotation
 
             if (CurvedSegmentHelper.HasCurve(this))
             {
-                var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(this);
-                context.QuadraticBezierTo(new Point(curvePoint.X, curvePoint.Y), end);
+                var controlPoint = CurvedSegmentHelper.GetQuadraticControlPoint(this);
+                context.QuadraticBezierTo(new Point(controlPoint.X, controlPoint.Y), end);
             }
             else
             {

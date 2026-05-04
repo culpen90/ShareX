@@ -52,6 +52,19 @@ internal static class CurvedSegmentHelper
             : GetMidpoint(annotation.StartPoint, annotation.EndPoint);
     }
 
+    public static SKPoint GetQuadraticControlPoint(ICurvedSegmentAnnotation annotation)
+    {
+        var anchorPoint = GetEffectiveCurvePoint(annotation);
+        return GetQuadraticControlPoint(annotation.StartPoint, annotation.EndPoint, anchorPoint);
+    }
+
+    public static SKPoint GetQuadraticControlPoint(SKPoint startPoint, SKPoint endPoint, SKPoint anchorPoint)
+    {
+        return new SKPoint(
+            2f * anchorPoint.X - 0.5f * (startPoint.X + endPoint.X),
+            2f * anchorPoint.Y - 0.5f * (startPoint.Y + endPoint.Y));
+    }
+
     public static void ResetCurvePoint(ICurvedSegmentAnnotation annotation)
     {
         annotation.CurvePoint = GetMidpoint(annotation.StartPoint, annotation.EndPoint);
@@ -132,7 +145,7 @@ internal static class CurvedSegmentHelper
             return new List<SKPoint> { annotation.StartPoint, annotation.EndPoint };
         }
 
-        return SampleQuadraticBezier(annotation.StartPoint, GetEffectiveCurvePoint(annotation), annotation.EndPoint, segments);
+        return SampleQuadraticBezier(annotation.StartPoint, GetQuadraticControlPoint(annotation), annotation.EndPoint, segments);
     }
 
     public static float DistanceToPath(ICurvedSegmentAnnotation annotation, SKPoint point, int segments = 24)
@@ -188,7 +201,7 @@ internal static class CurvedSegmentHelper
 
     public static SKPoint GetQuadraticTangentAtEnd(ICurvedSegmentAnnotation annotation)
     {
-        var controlPoint = GetEffectiveCurvePoint(annotation);
+        var controlPoint = GetQuadraticControlPoint(annotation);
         var tangent = new SKPoint(annotation.EndPoint.X - controlPoint.X, annotation.EndPoint.Y - controlPoint.Y);
 
         if (Math.Abs(tangent.X) < 0.001f && Math.Abs(tangent.Y) < 0.001f)

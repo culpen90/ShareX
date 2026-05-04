@@ -153,13 +153,13 @@ public partial class ArrowAnnotation
     private Geometry CreateCurvedClassicArrowGeometry(Point start, Point end, double headSize)
     {
         var geometry = new StreamGeometry();
-        var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(this);
+        var controlPoint = CurvedSegmentHelper.GetQuadraticControlPoint(this);
         var tangent = CurvedSegmentHelper.GetQuadraticTangentAtEnd(this);
 
         using (var context = geometry.Open())
         {
             context.BeginFigure(start, false);
-            context.QuadraticBezierTo(new Point(curvePoint.X, curvePoint.Y), end);
+            context.QuadraticBezierTo(new Point(controlPoint.X, controlPoint.Y), end);
             context.EndFigure(false);
 
             var cap = ComputeArrowCapPointsFromTangent(
@@ -183,13 +183,13 @@ public partial class ArrowAnnotation
     private Geometry CreateCurvedModernArrowGeometry(Point start, Point end, double headSize)
     {
         var geometry = new StreamGeometry();
-        var curvePoint = CurvedSegmentHelper.GetEffectiveCurvePoint(this);
+        var controlPoint = CurvedSegmentHelper.GetQuadraticControlPoint(this);
         var tangent = CurvedSegmentHelper.GetQuadraticTangentAtEnd(this);
 
         using (var context = geometry.Open())
         {
             context.BeginFigure(start, false);
-            context.QuadraticBezierTo(new Point(curvePoint.X, curvePoint.Y), end);
+            context.QuadraticBezierTo(new Point(controlPoint.X, controlPoint.Y), end);
             context.EndFigure(false);
 
             var head = ComputeModernArrowHeadPointsFromTangent(
