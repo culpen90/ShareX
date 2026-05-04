@@ -467,6 +467,7 @@ namespace ShareX
         public AIOptions AIOptions = new AIOptions();
         public ImageEditorOptions ImageEditorOptions = new ImageEditorOptions();
         public bool UseLegacyImageEditor = false;
+        public bool ShowImageEditorSelector = true;
     }
 
     public class TaskSettingsAdvanced

@@ -33,15 +33,15 @@ using ShareX.Properties;
 using ShareX.ScreenCaptureLib;
 using ShareX.UploadersLib;
 using ShareX.UploadersLib.SharingServices;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using SkiaSharp;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1154,7 +1154,23 @@ namespace ShareX
         {
             if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
 
-            if (taskSettings.ToolsSettings.UseLegacyImageEditor)
+            if (taskSettings.ToolsSettings.ShowImageEditorSelector)
+            {
+                using (ImageEditorSelectorForm selectorForm = new ImageEditorSelectorForm())
+                {
+                    if (selectorForm.ShowDialog() == DialogResult.OK)
+                    {
+                        taskSettings.ToolsSettingsReference.UseLegacyImageEditor = selectorForm.UseLegacyImageEditor;
+                        taskSettings.ToolsSettingsReference.ShowImageEditorSelector = false;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
             {
                 using (EditorStartupForm editorStartupForm = new EditorStartupForm(taskSettings.CaptureSettingsReference.SurfaceOptions))
                 {
@@ -1208,7 +1224,7 @@ namespace ShareX
 
         public static Bitmap AnnotateImage(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
-            if (taskSettings.ToolsSettings.UseLegacyImageEditor)
+            if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
             {
                 return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
             }
