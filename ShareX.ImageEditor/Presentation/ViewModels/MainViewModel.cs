@@ -233,7 +233,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             remove { _saveRequested -= value; SaveCommand.NotifyCanExecuteChanged(); }
         }
         public bool HasHostSaveHandler { get; set; }
-        public bool CanSave() => _saveRequested != null && HasPreviewImage && !string.IsNullOrEmpty(ImageFilePath);
+        public bool CanSave() => _saveRequested != null && HasPreviewImage;
 
         private Action? _saveAsRequested;
         public event Action? SaveAsRequested
