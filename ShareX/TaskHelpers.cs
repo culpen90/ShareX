@@ -1150,10 +1150,8 @@ namespace ShareX
             clipboardViewerForm.Show();
         }
 
-        public static void OpenImageEditor(TaskSettings taskSettings = null)
+        private static void ShowImageEditorSelector(TaskSettings taskSettings)
         {
-            if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
-
             if (taskSettings.ToolsSettings.ShowImageEditorSelector)
             {
                 using (ImageEditorSelectorForm selectorForm = new ImageEditorSelectorForm())
@@ -1169,6 +1167,13 @@ namespace ShareX
                     }
                 }
             }
+        }
+
+        public static void OpenImageEditor(TaskSettings taskSettings = null)
+        {
+            if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
+
+            ShowImageEditorSelector(taskSettings);
 
             if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
             {
@@ -1224,6 +1229,8 @@ namespace ShareX
 
         public static Bitmap AnnotateImage(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
+            ShowImageEditorSelector(taskSettings);
+
             if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
             {
                 return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
@@ -1232,7 +1239,7 @@ namespace ShareX
             return AnnotateImageModern(bmp, filePath, taskSettings, taskMode);
         }
 
-        public static Bitmap AnnotateImageLegacy(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
+        private static Bitmap AnnotateImageLegacy(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
             if (bmp != null)
             {
@@ -1305,7 +1312,7 @@ namespace ShareX
             return null;
         }
 
-        public static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
+        private static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
             Bitmap bmpResult = null;
 
