@@ -1560,39 +1560,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         /// </remarks>
         public void InsertImageAnnotation(SKBitmap skBitmap, Point? dropPosition = null)
         {
-            var canvas = this.FindControl<Canvas>("AnnotationCanvas");
-            if (canvas == null || DataContext is not MainViewModel vm)
-            {
-                return;
-            }
-
-            // Calculate position: drop point or center of canvas
-            var posX = dropPosition?.X ?? (_editorCore.CanvasSize.Width / 2 - skBitmap.Width / 2);
-            var posY = dropPosition?.Y ?? (_editorCore.CanvasSize.Height / 2 - skBitmap.Height / 2);
-
-            var annotation = new ImageAnnotation();
-            annotation.SetImage(skBitmap);
-            annotation.StartPoint = new SKPoint((float)posX, (float)posY);
-            annotation.EndPoint = new SKPoint(
-                (float)posX + skBitmap.Width,
-                (float)posY + skBitmap.Height);
-
-            var avBitmap = BitmapConversionHelpers.ToAvaloniBitmap(skBitmap);
-            var imageControl = new Image
-            {
-                Source = avBitmap,
-                Width = skBitmap.Width,
-                Height = skBitmap.Height,
-                Tag = annotation
-            };
-            Canvas.SetLeft(imageControl, posX);
-            Canvas.SetTop(imageControl, posY);
-
-            canvas.Children.Add(imageControl);
-            _editorCore.AddAnnotation(annotation);
-            vm.HasAnnotations = true;
-            vm.ActiveTool = EditorTool.Select; // Auto-switch to Select tool
-            _selectionController.SetSelectedShape(imageControl);
+            InsertImageAnnotationCore(skBitmap, dropPosition);
         }
 
         private void InsertEmojiAnnotation(string unicodeSequence, string displayName, Point? dropPosition = null)
@@ -1661,14 +1629,6 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             if (droppedItems.Count > 0)
             {
-                // Get drop position relative to the annotation canvas
-                var canvas = this.FindControl<Canvas>("AnnotationCanvas");
-                Point? dropPos = null;
-                if (canvas != null)
-                {
-                    dropPos = e.GetPosition(canvas);
-                }
-
                 foreach (var item in droppedItems)
                 {
                     if (item is IStorageFile file)
@@ -1694,11 +1654,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                                         return;
                                     }
 
-                                    // Otherwise add it as an image annotation on top of the current canvas.
-                                    var centeredPos = dropPos.HasValue
-                                        ? new Point(dropPos.Value.X - skBitmap.Width / 2, dropPos.Value.Y - skBitmap.Height / 2)
-                                        : (Point?)null;
-                                    InsertImageAnnotation(skBitmap, centeredPos);
+                                    await InsertExternalImageAsync(skBitmap, file.Path.LocalPath);
                                 }
                             }
                             catch (Exception ex)

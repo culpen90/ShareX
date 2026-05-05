@@ -235,7 +235,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                                     var skBitmap = SKBitmap.Decode(memStream);
                                     if (skBitmap != null)
                                     {
-                                        InsertImageAnnotation(skBitmap);
+                                        await InsertExternalImageAsync(skBitmap, storageFile.Path.LocalPath);
                                         return;
                                     }
                                 }
@@ -255,7 +255,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     var skBitmap = BitmapConversionHelpers.ToSKBitmap(clipboardBitmap);
                     if (skBitmap != null)
                     {
-                        InsertImageAnnotation(skBitmap);
+                        await InsertExternalImageAsync(skBitmap);
                         return;
                     }
                 }

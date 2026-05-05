@@ -274,15 +274,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             var canvas = this.FindControl<Canvas>("AnnotationCanvas");
             if (canvas == null) return;
 
-            // Dispose old annotations before clearing
-            foreach (var child in canvas.Children)
-            {
-                if (child is Control control)
-                {
-                    (control.Tag as IDisposable)?.Dispose();
-                }
-            }
-
             canvas.Children.Clear();
             _selectionController.ClearSelection();
 
