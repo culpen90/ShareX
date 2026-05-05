@@ -1255,7 +1255,13 @@ namespace ShareX.ImageEditor.Presentation.Views
                     switch (e.Key)
                     {
                         case Key.Z: vm.RedoCommand.Execute(null); e.Handled = true; break;
-                        case Key.C: vm.CopyCommand.Execute(null); e.Handled = true; break;
+                        case Key.C:
+                            if (vm.CopyAnnotationCommand.CanExecute(null))
+                            {
+                                vm.CopyAnnotationCommand.Execute(null);
+                                e.Handled = true;
+                            }
+                            break;
                         case Key.F: vm.FlattenImageCommand.Execute(null); e.Handled = true; break;
                         case Key.S: vm.SaveAsCommand.Execute(null); e.Handled = true; break;
                     }
@@ -1268,11 +1274,11 @@ namespace ShareX.ImageEditor.Presentation.Views
                         case Key.Y: vm.RedoCommand.Execute(null); e.Handled = true; break;
                         case Key.X: vm.CutAnnotationCommand.Execute(null); e.Handled = true; break;
                         case Key.C:
-                            if (vm.CopyAnnotationCommand.CanExecute(null))
-                                vm.CopyAnnotationCommand.Execute(null);
-                            else
+                            if (vm.CopyCommand.CanExecute(null))
+                            {
                                 vm.CopyCommand.Execute(null);
-                            e.Handled = true;
+                                e.Handled = true;
+                            }
                             break;
                         case Key.V: vm.PasteCommand.Execute(null); e.Handled = true; break;
                         case Key.D: DuplicateSelectedAnnotation(); e.Handled = true; break;

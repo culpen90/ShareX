@@ -210,22 +210,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public bool HasHostCopyHandler { get; set; }
         public bool CanCopy() => _copyRequested != null && HasPreviewImage;
 
-        /// <summary>
-        /// Smart copy used by the context menu: copies the selected annotation when one is
-        /// selected, otherwise copies the full canvas to the clipboard (same as Ctrl+C behaviour).
-        /// Enabled whenever the editor has a loaded image.
-        /// </summary>
-        public bool CanCopyContext() => HasPreviewImage;
-
-        [RelayCommand(CanExecute = nameof(CanCopyContext))]
-        private void CopyContext()
-        {
-            if (HasSelectedAnnotation)
-                CopyAnnotationRequested?.Invoke(this, EventArgs.Empty);
-            else
-                _copyRequested?.Invoke();
-        }
-
         private Action? _saveRequested;
         public event Action? SaveRequested
         {
@@ -283,7 +267,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 {
                     ToggleEffectsPanelCommand.NotifyCanExecuteChanged();
                     CopyCommand.NotifyCanExecuteChanged();
-                    CopyContextCommand.NotifyCanExecuteChanged();
                     SaveCommand.NotifyCanExecuteChanged();
                     SaveAsCommand.NotifyCanExecuteChanged();
                     PinToScreenCommand.NotifyCanExecuteChanged();
