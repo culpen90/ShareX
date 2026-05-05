@@ -87,6 +87,7 @@ public class EditorInputController
     public bool IsCropInteractionActive => _isDraggingCropHandle;
 
     private MainViewModel? ViewModel => _view.DataContext as MainViewModel;
+    private bool IsQuickCropEnabled => ViewModel?.Options.QuickCrop == true;
     private static double ToOverlayCoordinate(double value) => value + EditorView.OverlayCanvasBleed;
     private static double FromOverlayCoordinate(double value) => value - EditorView.OverlayCanvasBleed;
     private static Point ToOverlayPoint(Point value) => new(ToOverlayCoordinate(value.X), ToOverlayCoordinate(value.Y));
@@ -257,9 +258,11 @@ public class EditorInputController
 
         if (vm.ActiveTool == EditorTool.Crop)
         {
-            // If crop not yet active, full-image overlay + handles are shown when tool was selected (ActivateCropToFullImage).
-            // This pointer down is then for dragging a handle or moving the crop rect (handled in _cropActive block above).
-            if (!_cropActive)
+            if (IsQuickCropEnabled)
+            {
+                BeginQuickCrop();
+            }
+            else if (!_cropActive)
             {
                 ActivateCropToFullImage();
             }
@@ -612,6 +615,25 @@ public class EditorInputController
             return;
         }
 
+        if (vm.ActiveTool == EditorTool.Crop && _currentShape.Name == "CropOverlay")
+        {
+            var cropLeft = Math.Min(_startPoint.X, currentPoint.X);
+            var cropTop = Math.Min(_startPoint.Y, currentPoint.Y);
+            var cropWidth = Math.Abs(currentPoint.X - _startPoint.X);
+            var cropHeight = Math.Abs(currentPoint.Y - _startPoint.Y);
+
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                cropWidth = Math.Max(cropWidth, cropHeight);
+                cropHeight = cropWidth;
+                if (currentPoint.X < _startPoint.X) cropLeft = _startPoint.X - cropWidth;
+                if (currentPoint.Y < _startPoint.Y) cropTop = _startPoint.Y - cropHeight;
+            }
+
+            UpdateQuickCropPreview(new Rect(cropLeft, cropTop, cropWidth, cropHeight));
+            return;
+        }
+
         // Standard shape resizing
         var left = Math.Min(_startPoint.X, currentPoint.X);
         var top = Math.Min(_startPoint.Y, currentPoint.Y);
@@ -725,19 +747,25 @@ public class EditorInputController
                     var cropOverlay = _view.FindControl<global::Avalonia.Controls.Shapes.Rectangle>("CropOverlay");
                     if (cropOverlay != null && cropOverlay.IsVisible && cropOverlay.Width >= MinShapeSize && cropOverlay.Height >= MinShapeSize)
                     {
-                        var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
-                        if (overlayCanvas != null)
+                        if (IsQuickCropEnabled)
                         {
-                            var cropRect = GetCropOverlayCanvasRect(cropOverlay);
-                            ShowCropHandles(overlayCanvas, cropRect);
-                            _cropActive = true;
+                            HideCropChrome();
+                            PerformCrop();
+                        }
+                        else
+                        {
+                            var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
+                            if (overlayCanvas != null)
+                            {
+                                var cropRect = GetCropOverlayCanvasRect(cropOverlay);
+                                ShowCropHandles(overlayCanvas, cropRect);
+                                _cropActive = true;
+                            }
                         }
                     }
                     else if (cropOverlay != null)
                     {
-                        cropOverlay.IsVisible = false;
-                        cropOverlay.Width = 0;
-                        cropOverlay.Height = 0;
+                        CancelCrop();
                     }
                     _currentShape = null;
                     return;
@@ -834,7 +862,13 @@ public class EditorInputController
         if (_cropActive) CancelCrop();
         if (_currentShape is global::Avalonia.Controls.Shapes.Rectangle rect)
         {
-            if (rect.Name == "CropOverlay") { rect.IsVisible = false; rect.Width = 0; rect.Height = 0; }
+            if (rect.Name == "CropOverlay")
+            {
+                HideCropChrome();
+                rect.IsVisible = false;
+                rect.Width = 0;
+                rect.Height = 0;
+            }
             else if (rect.Name == "CutOutOverlay") { canvas.Children.Remove(rect); }
         }
         _currentShape = null;
@@ -873,14 +907,7 @@ public class EditorInputController
     public bool TryConfirmCrop()
     {
         if (!_cropActive) return false;
-        var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
-        if (overlayCanvas != null)
-        {
-            HideCropHandles(overlayCanvas);
-            HideCropAdorners();
-        }
-        ResetCropDragState();
-        _cropActive = false;
+        HideCropChrome();
         PerformCrop();
         return true;
     }
@@ -890,16 +917,12 @@ public class EditorInputController
     /// </summary>
     public bool CancelCrop()
     {
-        if (!_cropActive) return false;
-        var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
-        if (overlayCanvas != null)
-        {
-            HideCropHandles(overlayCanvas);
-            HideCropAdorners();
-        }
-        ResetCropDragState();
-        _cropActive = false;
         var cropOverlay = _view.FindControl<global::Avalonia.Controls.Shapes.Rectangle>("CropOverlay");
+        bool hasVisibleOverlay = cropOverlay != null && cropOverlay.IsVisible;
+        if (!_cropActive && !hasVisibleOverlay) return false;
+
+        HideCropChrome();
+
         if (cropOverlay != null)
         {
             cropOverlay.IsVisible = false;
@@ -940,6 +963,26 @@ public class EditorInputController
         EnsureCropAdorners(overlayCanvas);
         UpdateCropAdorners(overlayCanvas, cropRect);
         ShowCropHandles(overlayCanvas, cropRect);
+    }
+
+    private void BeginQuickCrop()
+    {
+        var cropOverlay = _view.FindControl<global::Avalonia.Controls.Shapes.Rectangle>("CropOverlay");
+        if (cropOverlay == null) return;
+
+        HideCropChrome();
+
+        cropOverlay.Fill = Brushes.Transparent;
+        cropOverlay.Stroke = Brushes.White;
+        cropOverlay.StrokeThickness = 2;
+        cropOverlay.StrokeDashArray = new global::Avalonia.Collections.AvaloniaList<double> { 4, 2 };
+        cropOverlay.SetValue(Panel.ZIndexProperty, CropOverlayZIndex);
+        cropOverlay.IsVisible = true;
+        Canvas.SetLeft(cropOverlay, ToOverlayCoordinate(_startPoint.X));
+        Canvas.SetTop(cropOverlay, ToOverlayCoordinate(_startPoint.Y));
+        cropOverlay.Width = 0;
+        cropOverlay.Height = 0;
+        _currentShape = cropOverlay;
     }
 
     /// <summary>
@@ -1025,6 +1068,19 @@ public class EditorInputController
             overlay.Children.Remove(handle);
         _cropHandles.Clear();
         HideCropConfirmButton(overlay);
+    }
+
+    private void HideCropChrome()
+    {
+        var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
+        if (overlayCanvas != null)
+        {
+            HideCropHandles(overlayCanvas);
+        }
+
+        HideCropAdorners();
+        ResetCropDragState();
+        _cropActive = false;
     }
 
     private void ResetCropDragState()
@@ -1404,6 +1460,31 @@ public class EditorInputController
         {
             // Recreate handles so the nodes stay aligned with the latest crop bounds.
             ShowCropHandles(overlay, newRect);
+        }
+    }
+
+    private void UpdateQuickCropPreview(Rect newRect)
+    {
+        var cropOverlay = _view.FindControl<global::Avalonia.Controls.Shapes.Rectangle>("CropOverlay");
+        if (cropOverlay == null) return;
+
+        Canvas.SetLeft(cropOverlay, ToOverlayCoordinate(newRect.Left));
+        Canvas.SetTop(cropOverlay, ToOverlayCoordinate(newRect.Top));
+        cropOverlay.Width = newRect.Width;
+        cropOverlay.Height = newRect.Height;
+        cropOverlay.IsVisible = newRect.Width > 0 && newRect.Height > 0;
+
+        var overlayCanvas = _view.FindControl<Canvas>("OverlayCanvas");
+        if (overlayCanvas == null) return;
+
+        if (cropOverlay.IsVisible)
+        {
+            EnsureCropAdorners(overlayCanvas);
+            UpdateCropAdorners(overlayCanvas, newRect);
+        }
+        else
+        {
+            HideCropAdorners();
         }
     }
 

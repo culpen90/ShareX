@@ -58,6 +58,7 @@ namespace ShareX.ImageEditor.Hosting
         public double WindowHeight { get; set; } = 720;
         public bool ShowExitConfirmation { get; set; } = true;
         public bool ZoomToFitOnOpen { get; set; } = false;
+        public bool QuickCrop { get; set; } = true;
         public bool AutoCloseEditorOnTask { get; set; } = false;
         public bool AutoCopyImageToClipboard { get; set; } = false;
         public EditorTool LastUsedAnnotationTool { get; set; } = EditorTool.Rectangle;

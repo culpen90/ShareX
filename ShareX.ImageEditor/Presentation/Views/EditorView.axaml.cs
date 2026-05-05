@@ -872,7 +872,14 @@ namespace ShareX.ImageEditor.Presentation.Views
 
                     if (vm.ActiveTool == EditorTool.Crop)
                     {
-                        _inputController.ActivateCropToFullImage();
+                        if (vm.Options.QuickCrop)
+                        {
+                            _inputController.CancelCrop();
+                        }
+                        else
+                        {
+                            _inputController.ActivateCropToFullImage();
+                        }
                         this.Focus();
                     }
                     else

@@ -62,7 +62,7 @@ namespace ShareX.ImageEditor.App
                     vm.ShowTaskButtons = true;
                     vm.UseContinueWorkflow = false;
                     vm.ShowBottomToolbar = true;
-                    vm.ShowStartScreen = true;
+                    vm.ShowStartScreen = false;
 
                     string? imagePath = GetImagePathFromArgs(desktop.Args);
 
