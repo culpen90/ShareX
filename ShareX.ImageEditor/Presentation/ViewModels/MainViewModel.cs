@@ -454,7 +454,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             if (value != null)
             {
-                SyncImageDimensions(value.Size.Width, value.Size.Height);
+                var pixelSize = value.PixelSize;
+                SyncImageDimensions(pixelSize.Width, pixelSize.Height);
 
                 if (!_isSyncingFromCore && !_isApplyingSmartPadding)
                 {
