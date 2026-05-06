@@ -422,12 +422,21 @@ namespace ShareX.Setup
                 if (File.Exists(manifestPath))
                 {
                     string manifestContent = File.ReadAllText(manifestPath);
-                    manifestContent = manifestContent.Replace("{PLATFORM}", Platform);
+                    manifestContent = manifestContent.
+                        Replace("{PLATFORM}", Platform).
+                        Replace("{VERSION}", GetMicrosoftStoreManifestVersion());
                     File.WriteAllText(manifestPath, manifestContent);
                 }
             }
 
             Console.WriteLine("Folder created: " + destination);
+        }
+
+        private static string GetMicrosoftStoreManifestVersion()
+        {
+            Version version = Version.Parse(AppVersion);
+            int revision = version.Revision > -1 ? version.Revision : 0;
+            return $"{version.Major}.{version.Minor}.{version.Build}.{revision}";
         }
 
         private static void CreateZipFile(string source, string archivePath)

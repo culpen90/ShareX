@@ -23,32 +23,33 @@
 
 #endregion License Information (GPL v3)
 
-using Avalonia;
-using System;
+using ShareX.HelpersLib;
+using System.Windows.Forms;
 
-namespace ShareX.ImageEditor.App
+namespace ShareX
 {
-    internal class Program
+    public partial class ImageEditorSelectorForm : Form
     {
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        [STAThread]
-        public static void Main(string[] args) => BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        public bool UseLegacyImageEditor { get; private set; }
 
-        // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
+        public ImageEditorSelectorForm()
         {
-            AppBuilder builder = AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .WithInterFont();
+            InitializeComponent();
+            ShareXResources.ApplyTheme(this);
+        }
 
-#if DEBUG
-            builder = builder.LogToTrace().WithDeveloperTools();
-#endif
+        private void btnModernImageEditor_Click(object sender, System.EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            UseLegacyImageEditor = false;
+            Close();
+        }
 
-            return builder;
+        private void btnLegacyImageEditor_Click(object sender, System.EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            UseLegacyImageEditor = true;
+            Close();
         }
     }
 }

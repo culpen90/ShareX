@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -23,11 +23,14 @@
 
 #endregion License Information (GPL v3)
 
-namespace ShareX
+using SkiaSharp;
+
+namespace ShareX.ImageEditor.Core.Annotations;
+
+internal interface ICurvedSegmentAnnotation
 {
-    public class BalloonTipAction
-    {
-        public BalloonTipClickAction ClickAction { get; set; }
-        public string Text { get; set; }
-    }
+    SKPoint StartPoint { get; set; }
+    SKPoint EndPoint { get; set; }
+    SKPoint CurvePoint { get; set; }
+    bool CurvePointActivated { get; set; }
 }

@@ -23,6 +23,7 @@
 
 #endregion License Information (GPL v3)
 
+using Avalonia;
 using Avalonia.Media.Imaging;
 using SkiaSharp;
 
@@ -88,16 +89,16 @@ namespace ShareX.ImageEditor.Presentation.Rendering
                     return skBitmap;
                 }
             }
-
-            // Fallback for regular Bitmap (e.g. from file) - unfortunately still streams or saving to temporary,
-            // as Avalonia Bitmap doesn't expose easy pixel access.
-            // However, we can use a temporary WriteableBitmap to draw it, then use the fast path?
-            // Actually, stream is likely safer/easier for generic Bitmap type if we don't want to rely on WriteableBitmap internals.
-            using var memoryStream = new MemoryStream();
-            avaloniaBitmap.Save(memoryStream);
-            memoryStream.Position = 0;
-
-            return SKBitmap.Decode(memoryStream);
+            else
+            {
+                // Fast path for any Avalonia Bitmap: direct pixel copy via CopyPixels (no PNG encode/decode)
+                var pixelSize = avaloniaBitmap.PixelSize;
+                var info = new SKImageInfo(pixelSize.Width, pixelSize.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+                var skBitmap = new SKBitmap(info);
+                var pixels = skBitmap.GetPixels(out IntPtr length);
+                avaloniaBitmap.CopyPixels(new PixelRect(0, 0, pixelSize.Width, pixelSize.Height), pixels, (int)length, info.RowBytes);
+                return skBitmap;
+            }
         }
 
         /// <summary>

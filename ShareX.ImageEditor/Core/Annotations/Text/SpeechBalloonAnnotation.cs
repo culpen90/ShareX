@@ -61,6 +61,11 @@ public partial class SpeechBalloonAnnotation : Annotation
     public float FontSize { get; set; } = 20;
 
     /// <summary>
+    /// Font family for the balloon text
+    /// </summary>
+    public string FontFamily { get; set; } = "Segoe UI";
+
+    /// <summary>
     /// Text body color
     /// </summary>
     public string TextColor { get; set; } = "#FF000000";

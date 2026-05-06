@@ -133,11 +133,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                     new Vector(96, 96));
                 rtb.Render(snapshotTarget);
 
-                // Convert Avalonia RenderTargetBitmap → SKBitmap
-                using var stream = new System.IO.MemoryStream();
-                rtb.Save(stream);
-                stream.Position = 0;
-                var skBitmap = SkiaSharp.SKBitmap.Decode(stream);
+                // Convert Avalonia RenderTargetBitmap → SKBitmap via direct pixel copy (no PNG encode/decode)
+                var skBitmap = BitmapConversionHelpers.ToSKBitmap(rtb);
 
                 return skBitmap;
             }
@@ -277,15 +274,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             var canvas = this.FindControl<Canvas>("AnnotationCanvas");
             if (canvas == null) return;
 
-            // Dispose old annotations before clearing
-            foreach (var child in canvas.Children)
-            {
-                if (child is Control control)
-                {
-                    (control.Tag as IDisposable)?.Dispose();
-                }
-            }
-
             canvas.Children.Clear();
             _selectionController.ClearSelection();
 
@@ -298,16 +286,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     canvas.Children.Add(shape);
 
-                    // XIP0039 Guardrail 4: Rehydrate the arrow endpoint cache so that
-                    // endpoint drag handles work correctly after undo/redo, paste, and duplicate.
-                    // Previously the cache was only populated during the draw flow, causing
-                    // handle and hit-test degradation on restored annotations.
-                    if (annotation is ArrowAnnotation arrow)
-                    {
-                        var start = new Point(arrow.StartPoint.X, arrow.StartPoint.Y);
-                        var end = new Point(arrow.EndPoint.X, arrow.EndPoint.Y);
-                        _selectionController.RegisterArrowEndpoint(shape, start, end);
-                    }
                 }
             }
 

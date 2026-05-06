@@ -30,9 +30,12 @@ namespace ShareX.ImageEditor.Core.Annotations;
 /// <summary>
 /// Line annotation
 /// </summary>
-public partial class LineAnnotation : Annotation
+public partial class LineAnnotation : Annotation, ICurvedSegmentAnnotation
 {
     public override AnnotationCategory Category => AnnotationCategory.Shapes;
+    public SKPoint CurvePoint { get; set; }
+    public bool CurvePointActivated { get; set; }
+
     public LineAnnotation()
     {
         ToolType = EditorTool.Line;
@@ -40,23 +43,11 @@ public partial class LineAnnotation : Annotation
 
     public override bool HitTest(SKPoint point, float tolerance = 5)
     {
-        // Calculate distance from point to line segment
-        var dx = EndPoint.X - StartPoint.X;
-        var dy = EndPoint.Y - StartPoint.Y;
-        var lineLength = (float)Math.Sqrt(dx * dx + dy * dy);
-        if (lineLength < 0.001f) return false;
+        return CurvedSegmentHelper.DistanceToPath(this, point) <= tolerance;
+    }
 
-        var t = Math.Max(0, Math.Min(1,
-            ((point.X - StartPoint.X) * (EndPoint.X - StartPoint.X) +
-             (point.Y - StartPoint.Y) * (EndPoint.Y - StartPoint.Y)) / (lineLength * lineLength)));
-
-        var projection = new SKPoint(
-            StartPoint.X + (float)t * (EndPoint.X - StartPoint.X),
-            StartPoint.Y + (float)t * (EndPoint.Y - StartPoint.Y));
-
-        var pdx = point.X - projection.X;
-        var pdy = point.Y - projection.Y;
-        var distance = (float)Math.Sqrt(pdx * pdx + pdy * pdy);
-        return distance <= tolerance;
+    public override SKRect GetBounds()
+    {
+        return CurvedSegmentHelper.GetBounds(this);
     }
 }

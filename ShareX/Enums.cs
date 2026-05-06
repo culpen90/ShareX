@@ -423,13 +423,6 @@ namespace ShareX
     }
 #endif
 
-    public enum BalloonTipClickAction
-    {
-        None,
-        OpenURL,
-        OpenDebugLog
-    }
-
     public enum TaskViewMode // Localized
     {
         ListView,

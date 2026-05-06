@@ -33,6 +33,7 @@ using ShareX.Properties;
 using ShareX.ScreenCaptureLib;
 using ShareX.UploadersLib;
 using ShareX.UploadersLib.SharingServices;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,6 +41,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1148,11 +1150,32 @@ namespace ShareX
             clipboardViewerForm.Show();
         }
 
+        private static void ShowImageEditorSelector(TaskSettings taskSettings)
+        {
+            if (taskSettings.ToolsSettings.ShowImageEditorSelector)
+            {
+                using (ImageEditorSelectorForm selectorForm = new ImageEditorSelectorForm())
+                {
+                    if (selectorForm.ShowDialog() == DialogResult.OK)
+                    {
+                        taskSettings.ToolsSettingsReference.UseLegacyImageEditor = selectorForm.UseLegacyImageEditor;
+                        taskSettings.ToolsSettingsReference.ShowImageEditorSelector = false;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
         public static void OpenImageEditor(TaskSettings taskSettings = null)
         {
             if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
 
-            if (taskSettings.ToolsSettings.UseLegacyImageEditor)
+            ShowImageEditorSelector(taskSettings);
+
+            if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
             {
                 using (EditorStartupForm editorStartupForm = new EditorStartupForm(taskSettings.CaptureSettingsReference.SurfaceOptions))
                 {
@@ -1206,7 +1229,9 @@ namespace ShareX
 
         public static Bitmap AnnotateImage(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
-            if (taskSettings.ToolsSettings.UseLegacyImageEditor)
+            ShowImageEditorSelector(taskSettings);
+
+            if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
             {
                 return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
             }
@@ -1214,7 +1239,7 @@ namespace ShareX
             return AnnotateImageModern(bmp, filePath, taskSettings, taskMode);
         }
 
-        public static Bitmap AnnotateImageLegacy(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
+        private static Bitmap AnnotateImageLegacy(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
             if (bmp != null)
             {
@@ -1287,7 +1312,7 @@ namespace ShareX
             return null;
         }
 
-        public static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
+        private static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
             Bitmap bmpResult = null;
 
@@ -1295,56 +1320,47 @@ namespace ShareX
             {
                 EditorEvents events = new EditorEvents
                 {
-                    CopyImageRequested = (bytes) =>
+                    CopyImageRequested = (skBitmap) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            MainFormCopyImage(img);
-                        }
+                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
+                        MainFormCopyImage(img);
                     },
-                    SaveImageRequested = (bytes, newFilePath) =>
+                    SaveImageRequested = (skBitmap, newFilePath) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            if (string.IsNullOrEmpty(newFilePath))
-                            {
-                                string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                                string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                                newFilePath = Path.Combine(screenshotsFolder, fileName);
-                            }
+                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
 
-                            ImageHelpers.SaveImage(img, newFilePath);
+                        if (string.IsNullOrEmpty(newFilePath))
+                        {
+                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                            newFilePath = Path.Combine(screenshotsFolder, fileName);
                         }
 
+                        ImageHelpers.SaveImage(img, newFilePath);
                         return newFilePath;
                     },
-                    SaveImageAsRequested = (bytes, newFilePath) =>
+                    SaveImageAsRequested = (skBitmap, newFilePath) =>
                     {
-                        using (MemoryStream ms = new MemoryStream(bytes))
-                        using (Bitmap img = new Bitmap(ms))
-                        {
-                            if (string.IsNullOrEmpty(newFilePath))
-                            {
-                                string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                                string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                                newFilePath = Path.Combine(screenshotsFolder, fileName);
-                            }
+                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
 
-                            newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
+                        if (string.IsNullOrEmpty(newFilePath))
+                        {
+                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                            newFilePath = Path.Combine(screenshotsFolder, fileName);
                         }
 
+                        newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
                         return newFilePath;
                     },
-                    PinImageRequested = (bytes) =>
+                    PinImageRequested = (skBitmap) =>
                     {
-                        Bitmap bmp = ImageHelpers.ByteArrayToBitmap(bytes);
+                        Bitmap bmp = SkBitmapToGdiBitmap(skBitmap);
                         PinToScreen(bmp, taskSettings);
                     },
-                    UploadImageRequested = (bytes) =>
+                    UploadImageRequested = (skBitmap) =>
                     {
-                        Bitmap bmp = ImageHelpers.ByteArrayToBitmap(bytes);
+                        Bitmap bmp = SkBitmapToGdiBitmap(skBitmap);
                         MainFormUploadImage(bmp, taskSettings);
                     }
                 };
@@ -1355,7 +1371,7 @@ namespace ShareX
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
-                        bmp.Save(ms, ImageFormat.Png);
+                        bmp.Save(ms, ImageFormat.Bmp);
                         ms.Position = 0;
 
                         bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, taskSettings.ToolsSettingsReference.ImageEditorOptions,
@@ -1375,6 +1391,42 @@ namespace ShareX
             });
 
             return bmpResult;
+        }
+
+        // Converts SKBitmap → GDI Bitmap.
+        // Uses LockBits to write into a fresh GDI+-owned pixel buffer — guarantees
+        // the result shares no memory with the source SKBitmap or any wrapper.
+        private static Bitmap SkBitmapToGdiBitmap(SKBitmap sk)
+        {
+            var result = new Bitmap(sk.Width, sk.Height, PixelFormat.Format32bppArgb);
+            BitmapData bmpData = result.LockBits(
+                new Rectangle(0, 0, sk.Width, sk.Height),
+                ImageLockMode.WriteOnly,
+                PixelFormat.Format32bppArgb);
+            try
+            {
+                byte[] srcPixels = sk.Bytes;
+                int srcStride = sk.RowBytes;
+                int dstStride = bmpData.Stride;
+                int rowBytes = sk.Width * 4;
+
+                if (srcStride == dstStride)
+                {
+                    Marshal.Copy(srcPixels, 0, bmpData.Scan0, srcPixels.Length);
+                }
+                else
+                {
+                    for (int y = 0; y < sk.Height; y++)
+                    {
+                        Marshal.Copy(srcPixels, y * srcStride, IntPtr.Add(bmpData.Scan0, y * dstStride), rowBytes);
+                    }
+                }
+            }
+            finally
+            {
+                result.UnlockBits(bmpData);
+            }
+            return result;
         }
 
         public static void MainFormCopyImage(Bitmap bmp)
@@ -2467,15 +2519,6 @@ namespace ShareX
         public static bool CheckQRCodeContent(string content)
         {
             return !string.IsNullOrEmpty(content) && Encoding.UTF8.GetByteCount(content) <= 2952;
-        }
-
-        public static void ShowBalloonTip(string text, ToolTipIcon icon, int timeout, string title = "ShareX", BalloonTipAction clickAction = null)
-        {
-            if (Program.MainForm != null && !Program.MainForm.IsDisposed && Program.MainForm.niTray != null && Program.MainForm.niTray.Visible)
-            {
-                Program.MainForm.niTray.Tag = clickAction;
-                Program.MainForm.niTray.ShowBalloonTip(timeout, title, text, icon);
-            }
         }
 
         public static void ShowNotificationTip(string text, string title = "ShareX", int duration = -1)

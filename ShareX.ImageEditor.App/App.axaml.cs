@@ -59,7 +59,7 @@ namespace ShareX.ImageEditor.App
                 if (window.DataContext is MainViewModel vm)
                 {
                     vm.ShowFileMenu = true;
-                    vm.ShowTaskButtons = true;
+                    vm.ShowTaskButtons = false;
                     vm.UseContinueWorkflow = false;
                     vm.ShowBottomToolbar = true;
                     vm.ShowStartScreen = true;
@@ -67,6 +67,8 @@ namespace ShareX.ImageEditor.App
                     string? imagePath = GetImagePathFromArgs(desktop.Args);
 
 #if DEBUG
+                    vm.ShowStartScreen = false;
+
                     if (!vm.ShowStartScreen && string.IsNullOrEmpty(imagePath))
                     {
                         string location = AppDomain.CurrentDomain.BaseDirectory;

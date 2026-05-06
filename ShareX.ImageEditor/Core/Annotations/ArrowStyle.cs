@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -23,32 +23,10 @@
 
 #endregion License Information (GPL v3)
 
-using Avalonia;
-using System;
+namespace ShareX.ImageEditor.Core.Annotations;
 
-namespace ShareX.ImageEditor.App
+public enum ArrowStyle
 {
-    internal class Program
-    {
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        [STAThread]
-        public static void Main(string[] args) => BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
-
-        // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
-        {
-            AppBuilder builder = AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .WithInterFont();
-
-#if DEBUG
-            builder = builder.LogToTrace().WithDeveloperTools();
-#endif
-
-            return builder;
-        }
-    }
+    Classic,
+    Modern
 }
