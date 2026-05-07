@@ -129,13 +129,66 @@ namespace ShareX.ImageEditor.Hosting
         public static byte[]? ShowEditorDialog(ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            return ShowEditorDialog(null, options, events, taskMode, imageFilePath);
+            return ShowEditorDialog((Stream?)null, options, events, taskMode, imageFilePath);
         }
 
         public static byte[]? ShowEditorDialog(Stream? imageStream, ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            byte[]? result = null;
+            return ShowEditorDialogCore(
+                options,
+                window =>
+                {
+                    if (imageStream != null)
+                    {
+                        window.LoadImage(imageStream);
+                    }
+                },
+                events,
+                taskMode,
+                imageFilePath,
+                (window, vm) => vm.TaskResult switch
+                {
+                    MainViewModel.EditorTaskResult.Continue => window.GetResultBytes(),
+                    MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBytes(),
+                    _ => null
+                });
+        }
+
+        public static SKBitmap? ShowEditorDialogBitmap(ImageEditorOptions options, EditorEvents? events = null,
+            bool taskMode = false, string? imageFilePath = null)
+        {
+            return ShowEditorDialogBitmap(null, options, events, taskMode, imageFilePath);
+        }
+
+        public static SKBitmap? ShowEditorDialogBitmap(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
+            bool taskMode = false, string? imageFilePath = null)
+        {
+            return ShowEditorDialogCore(
+                options,
+                window =>
+                {
+                    if (imageBitmap != null)
+                    {
+                        window.LoadImage(imageBitmap);
+                    }
+                },
+                events,
+                taskMode,
+                imageFilePath,
+                (window, vm) => vm.TaskResult switch
+                {
+                    MainViewModel.EditorTaskResult.Continue => window.GetResultBitmap(),
+                    MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBitmap(),
+                    _ => null
+                });
+        }
+
+        private static T? ShowEditorDialogCore<T>(ImageEditorOptions options, Action<EditorWindow>? initializeImage,
+            EditorEvents? events, bool taskMode, string? imageFilePath, Func<EditorWindow, MainViewModel, T?> getResult)
+            where T : class
+        {
+            T? result = null;
             IEditorDiagnosticsSink? previousDiagnosticsSink = null;
             bool restoreScopedDiagnostics = false;
 
@@ -173,10 +226,7 @@ namespace ShareX.ImageEditor.Hosting
             Initialize();
             EditorWindow window = new EditorWindow(options);
 
-            if (imageStream != null)
-            {
-                window.LoadImage(imageStream);
-            }
+            initializeImage?.Invoke(window);
 
             // Set file path from events or parameter
             string? filePath = imageFilePath ?? events?.ImageFilePath;
@@ -199,15 +249,7 @@ namespace ShareX.ImageEditor.Hosting
             {
                 if (window.DataContext is MainViewModel vm)
                 {
-                    switch (vm.TaskResult)
-                    {
-                        case MainViewModel.EditorTaskResult.Continue:
-                            result = window.GetResultBytes();
-                            break;
-                        case MainViewModel.EditorTaskResult.ContinueNoSave:
-                            result = window.GetSourceBytes();
-                            break;
-                    }
+                    result = getResult(window, vm);
                 }
             });
 
