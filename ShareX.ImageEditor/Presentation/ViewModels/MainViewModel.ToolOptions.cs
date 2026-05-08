@@ -853,7 +853,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         private static IReadOnlyList<ArrowStyle> BuildAvailableArrowStyles()
         {
-            return Enum.GetValues<ArrowStyle>();
+            return new[]
+            {
+                ArrowStyle.Classic,
+                ArrowStyle.Double,
+                ArrowStyle.Modern
+            };
         }
 
         private static string NormalizeFontFamily(string? fontFamily)
