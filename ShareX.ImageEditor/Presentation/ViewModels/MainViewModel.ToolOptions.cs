@@ -857,7 +857,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             {
                 ArrowStyle.Classic,
                 ArrowStyle.Double,
-                ArrowStyle.Modern
+                ArrowStyle.Modern,
+                ArrowStyle.Basic
             };
         }
 
