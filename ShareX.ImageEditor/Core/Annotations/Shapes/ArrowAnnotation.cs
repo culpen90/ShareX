@@ -39,10 +39,10 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
     public const double ClassicArrowHeadWidthMultiplier = 2.0;
     public const double ModernArrowHeadWidthMultiplier = 3.0;
     public const double BasicArrowHeadWidthMultiplier = 1.75;
-    public const double LineArrowHeadWidthMultiplier = 1.5;
+    public const double LineArrowHeadWidthMultiplier = 1.75;
     private const double ArrowHeadLengthRatio = 3.0;
     private const double BasicArrowHeadLengthRatio = 3.0;
-    private const double LineArrowHeadLengthRatio = 2.5;
+    private const double LineArrowHeadLengthRatio = 3.0;
     private const double ArrowHeadBackCurveDepthRatio = 0.5;
     private const double ArrowHeadBackCurveControlRatio = 2.0;
     private ArrowStyle _style = ArrowStyle.Classic;
