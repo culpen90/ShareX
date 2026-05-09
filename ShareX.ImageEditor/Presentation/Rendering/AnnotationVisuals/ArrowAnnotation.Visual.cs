@@ -81,6 +81,8 @@ public partial class ArrowAnnotation
         {
             ArrowStyle.Double when CurvedSegmentHelper.HasCurve(this) => CreateCurvedClassicArrowGeometry(start, end, headSize, includeStartCap: true),
             ArrowStyle.Double => CreateClassicArrowGeometry(start, end, headSize, includeStartCap: true),
+            ArrowStyle.Line when CurvedSegmentHelper.HasCurve(this) => CreateCurvedLineArrowGeometry(start, end, headSize),
+            ArrowStyle.Line => CreateLineArrowGeometry(start, end, headSize),
             ArrowStyle.Basic when CurvedSegmentHelper.HasCurve(this) => CreateCurvedBasicArrowGeometry(start, end, headSize),
             ArrowStyle.Basic => CreateBasicArrowGeometry(start, end, headSize),
             ArrowStyle.Modern when CurvedSegmentHelper.HasCurve(this) => CreateCurvedModernArrowGeometry(start, end, headSize),
@@ -200,6 +202,39 @@ public partial class ArrowAnnotation
         return geometry;
     }
 
+    private Geometry CreateLineArrowGeometry(Point start, Point end, double headSize)
+    {
+        var geometry = new StreamGeometry();
+        using (var ctx = geometry.Open())
+        {
+            var head = ComputeLineArrowHeadPoints(
+                (float)start.X,
+                (float)start.Y,
+                (float)end.X,
+                (float)end.Y,
+                headSize);
+
+            if (head is { } points)
+            {
+                ctx.BeginFigure(start, false);
+                ctx.LineTo(end);
+                ctx.EndFigure(false);
+
+                AppendLineArrowHeadFigure(ctx, end, points);
+            }
+            else
+            {
+                var radius = 2.0;
+                ctx.BeginFigure(new Point(start.X - radius, start.Y), true);
+                ctx.ArcTo(new Point(start.X + radius, start.Y), new Size(radius, radius), 0, false, SweepDirection.Clockwise);
+                ctx.ArcTo(new Point(start.X - radius, start.Y), new Size(radius, radius), 0, false, SweepDirection.Clockwise);
+                ctx.EndFigure(true);
+            }
+        }
+
+        return geometry;
+    }
+
     private Geometry CreateCurvedClassicArrowGeometry(Point start, Point end, double headSize, bool includeStartCap = false)
     {
         var geometry = new StreamGeometry();
@@ -272,6 +307,34 @@ public partial class ArrowAnnotation
         return geometry;
     }
 
+    private Geometry CreateCurvedLineArrowGeometry(Point start, Point end, double headSize)
+    {
+        var geometry = new StreamGeometry();
+        var controlPoint = CurvedSegmentHelper.GetQuadraticControlPoint(this);
+        var tangent = CurvedSegmentHelper.GetQuadraticTangentAtEnd(this);
+
+        using (var context = geometry.Open())
+        {
+            context.BeginFigure(start, false);
+            context.QuadraticBezierTo(new Point(controlPoint.X, controlPoint.Y), end);
+            context.EndFigure(false);
+
+            var head = ComputeLineArrowHeadPointsFromTangent(
+                (float)end.X,
+                (float)end.Y,
+                tangent.X,
+                tangent.Y,
+                headSize);
+
+            if (head is { } points)
+            {
+                AppendLineArrowHeadFigure(context, end, points);
+            }
+        }
+
+        return geometry;
+    }
+
     private Geometry CreateCurvedModernArrowGeometry(Point start, Point end, double headSize)
     {
         var geometry = new StreamGeometry();
@@ -321,5 +384,13 @@ public partial class ArrowAnnotation
         context.LineTo(new Point(head.LeftBase.X, head.LeftBase.Y));
         context.LineTo(new Point(head.RightBase.X, head.RightBase.Y));
         context.EndFigure(true);
+    }
+
+    private static void AppendLineArrowHeadFigure(StreamGeometryContext context, Point tip, LineArrowHeadPoints head)
+    {
+        context.BeginFigure(new Point(head.LeftBase.X, head.LeftBase.Y), false);
+        context.LineTo(tip);
+        context.LineTo(new Point(head.RightBase.X, head.RightBase.Y));
+        context.EndFigure(false);
     }
 }

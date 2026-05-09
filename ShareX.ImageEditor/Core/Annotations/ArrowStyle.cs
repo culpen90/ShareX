@@ -30,5 +30,6 @@ public enum ArrowStyle
     Classic = 0,
     Modern = 1,
     Double = 2,
-    Basic = 3
+    Basic = 3,
+    Line = 4
 }

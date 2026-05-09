@@ -39,8 +39,10 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
     public const double ClassicArrowHeadWidthMultiplier = 2.0;
     public const double ModernArrowHeadWidthMultiplier = 3.0;
     public const double BasicArrowHeadWidthMultiplier = 1.75;
+    public const double LineArrowHeadWidthMultiplier = 1.5;
     private const double ArrowHeadLengthRatio = 3.0;
     private const double BasicArrowHeadLengthRatio = 3.0;
+    private const double LineArrowHeadLengthRatio = 2.5;
     private const double ArrowHeadBackCurveDepthRatio = 0.5;
     private const double ArrowHeadBackCurveControlRatio = 2.0;
     private ArrowStyle _style = ArrowStyle.Classic;
@@ -69,6 +71,7 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
     {
         return style switch
         {
+            ArrowStyle.Line => LineArrowHeadWidthMultiplier,
             ArrowStyle.Basic => BasicArrowHeadWidthMultiplier,
             ArrowStyle.Modern => ModernArrowHeadWidthMultiplier,
             _ => ClassicArrowHeadWidthMultiplier
@@ -201,6 +204,52 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
                 (float)(baseY - perpendicularY * headHalfWidth)));
     }
 
+    public static LineArrowHeadPoints? ComputeLineArrowHeadPoints(
+        float startX,
+        float startY,
+        float endX,
+        float endY,
+        double headHalfWidth)
+    {
+        return ComputeLineArrowHeadPointsFromTangent(
+            endX,
+            endY,
+            endX - startX,
+            endY - startY,
+            headHalfWidth);
+    }
+
+    public static LineArrowHeadPoints? ComputeLineArrowHeadPointsFromTangent(
+        float tipX,
+        float tipY,
+        float tangentX,
+        float tangentY,
+        double headHalfWidth)
+    {
+        var tangentLength = Math.Sqrt(tangentX * tangentX + tangentY * tangentY);
+        if (tangentLength <= 0)
+        {
+            return null;
+        }
+
+        var unitX = tangentX / tangentLength;
+        var unitY = tangentY / tangentLength;
+        var perpendicularX = -unitY;
+        var perpendicularY = unitX;
+
+        var headLength = headHalfWidth * LineArrowHeadLengthRatio;
+        var baseX = tipX - headLength * unitX;
+        var baseY = tipY - headLength * unitY;
+
+        return new LineArrowHeadPoints(
+            LeftBase: new SKPoint(
+                (float)(baseX + perpendicularX * headHalfWidth),
+                (float)(baseY + perpendicularY * headHalfWidth)),
+            RightBase: new SKPoint(
+                (float)(baseX - perpendicularX * headHalfWidth),
+                (float)(baseY - perpendicularY * headHalfWidth)));
+    }
+
     /// <summary>
     /// Single source of truth for arrow geometry points.
     /// Both <see cref="Render"/> (SKCanvas) and <c>CreateArrowGeometry</c> (Avalonia)
@@ -257,6 +306,10 @@ public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
         float BackCurveDepth);
 
     public record struct BasicArrowHeadPoints(
+        SKPoint LeftBase,
+        SKPoint RightBase);
+
+    public record struct LineArrowHeadPoints(
         SKPoint LeftBase,
         SKPoint RightBase);
 
