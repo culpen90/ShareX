@@ -60,6 +60,11 @@ public class EditorInputController
     private static bool UsesCrosshairInteractionCapture(EditorTool tool)
         => tool != EditorTool.Image && tool != EditorTool.Text;
 
+    private static Point ClampPointToCanvasBounds(Canvas canvas, Point point)
+        => new(
+            Math.Clamp(point.X, 0, canvas.Bounds.Width),
+            Math.Clamp(point.Y, 0, canvas.Bounds.Height));
+
     // Track cut-out direction (null = not determined yet, true = vertical, false = horizontal)
     private bool? _cutOutDirection;
 
@@ -243,6 +248,11 @@ public class EditorInputController
         // ISSUE-019 fix: Dead code removed - redo stack cleared by EditorCore
 
         var point = e.GetPosition(canvas);
+        if (vm.ActiveTool == EditorTool.Crop || vm.ActiveTool == EditorTool.CutOut)
+        {
+            point = ClampPointToCanvasBounds(canvas, point);
+        }
+
         _startPoint = point;
         _isDrawing = true;
         if (UsesCrosshairInteractionCapture(vm.ActiveTool))
@@ -253,6 +263,8 @@ public class EditorInputController
         {
             e.Pointer.Capture(canvas);
         }
+
+        e.Handled = true;
 
         var brush = new SolidColorBrush(Color.Parse(vm.SelectedColor));
 
@@ -271,11 +283,6 @@ public class EditorInputController
 
         if (vm.ActiveTool == EditorTool.CutOut)
         {
-            // Clamp start point to canvas bounds
-            var clampedX = Math.Max(0, Math.Min(_startPoint.X, canvas.Bounds.Width));
-            var clampedY = Math.Max(0, Math.Min(_startPoint.Y, canvas.Bounds.Height));
-            _startPoint = new Point(clampedX, clampedY);
-
             _cutOutDirection = null;
             var cutOutOverlay = new global::Avalonia.Controls.Shapes.Rectangle
             {

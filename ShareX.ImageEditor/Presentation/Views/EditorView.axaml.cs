@@ -1204,6 +1204,11 @@ namespace ShareX.ImageEditor.Presentation.Views
         private void OnScrollViewerPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             _zoomController.OnScrollViewerPointerPressed(sender, e);
+
+            if (!e.Handled)
+            {
+                _inputController.OnCanvasPointerPressed(sender, e);
+            }
         }
 
         private void OnScrollViewerPointerMoved(object? sender, PointerEventArgs e)

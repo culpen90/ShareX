@@ -381,7 +381,8 @@
                                      HorizontalAlignment="Stretch"
                                      VerticalAlignment="Stretch"
                                      Background="{Binding EffectiveCanvasBackground}"
-                                     Padding="{Binding CanvasPadding}">
+                                     Padding="{Binding CanvasPadding}"
+                                     PointerPressed="OnCanvasPointerPressed">
                                 <!-- Outer Border: User-controlled Shadow effect -->
                                 <Border BoxShadow="{Binding CanvasShadow}"
                                        CornerRadius="{Binding CanvasCornerRadius, Converter={StaticResource DoubleToCornerRadius}}">
@@ -434,7 +435,6 @@
                                                                 HorizontalAlignment="Stretch"
                                                                 VerticalAlignment="Stretch"
                                                                 Cursor="Arrow"
-                                                                PointerPressed="OnCanvasPointerPressed"
                                                                 PointerMoved="OnCanvasPointerMoved"
                                                                 PointerReleased="OnCanvasPointerReleased">
                                                         </Canvas>
