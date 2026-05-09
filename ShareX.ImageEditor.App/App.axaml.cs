@@ -29,6 +29,7 @@ using Avalonia.Markup.Xaml;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
+using SkiaSharp;
 using System;
 using System.IO;
 
@@ -71,8 +72,9 @@ namespace ShareX.ImageEditor.App
 
                     if (!vm.ShowStartScreen && string.IsNullOrEmpty(imagePath))
                     {
-                        string location = AppDomain.CurrentDomain.BaseDirectory;
-                        imagePath = Path.Combine(location, "Assets", "Sample.png");
+                        SKBitmap debugBitmap = new SKBitmap(800, 600);
+                        debugBitmap.Erase(new SKColor(35, 35, 35));
+                        window.LoadImage(debugBitmap);
                     }
 #endif
 
