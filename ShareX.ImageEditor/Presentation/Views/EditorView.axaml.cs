@@ -973,11 +973,24 @@ namespace ShareX.ImageEditor.Presentation.Views
                 }
             }
 
+            var canvasScrollViewer = this.FindControl<ScrollViewer>("CanvasScrollViewer");
+            var previewFrame = this.FindControl<Border>("PreviewFrame");
             var annotationCanvas = this.FindControl<Canvas>("AnnotationCanvas");
             var overlayCanvas = this.FindControl<Canvas>("OverlayCanvas");
-            if (annotationCanvas == null && overlayCanvas == null) return;
+            if (canvasScrollViewer == null && previewFrame == null && annotationCanvas == null && overlayCanvas == null) return;
 
             Cursor cursor = GetCursorForActiveTool();
+            Cursor surfaceCursor = vm.HasPreviewImage ? cursor : ArrowCursor;
+
+            if (canvasScrollViewer != null)
+            {
+                canvasScrollViewer.Cursor = surfaceCursor;
+            }
+
+            if (previewFrame != null)
+            {
+                previewFrame.Cursor = surfaceCursor;
+            }
 
             if (annotationCanvas != null)
             {
