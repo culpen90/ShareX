@@ -438,6 +438,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.CopyRequested += OnCopyImageRequested;
                 vm.SaveRequested += OnSaveRequested;
                 vm.SaveAsRequested += OnSaveAsRequested;
+                vm.OpenOptionsPanelRequested += OnOpenOptionsPanelRequested;
 
                 // Original code subscribed to vm.PropertyChanged
                 vm.PropertyChanged += OnViewModelPropertyChanged;
@@ -500,6 +501,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.LoadRecentFileRequested -= OnLoadRecentFileRequested;
                 vm.SaveRequested -= OnSaveRequested;
                 vm.SaveAsRequested -= OnSaveAsRequested;
+                vm.OpenOptionsPanelRequested -= OnOpenOptionsPanelRequested;
                 vm.EmojiInsertionRequested -= OnEmojiInsertionRequested;
             }
 
@@ -526,10 +528,14 @@ namespace ShareX.ImageEditor.Presentation.Views
                 if (ShouldUseSystemTheme())
                 {
                     UpdateTheme();
-                    return;
                 }
 
-                ApplyTheme(theme);
+                else
+                {
+                    ApplyTheme(theme);
+                }
+
+                QueueAnnotationToolbarAccentRefresh();
             });
         }
 
@@ -550,6 +556,15 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             UpdateTheme(colorValues);
             UpdateAccentColor(colorValues);
+            QueueAnnotationToolbarAccentRefresh();
+        }
+
+        private void QueueAnnotationToolbarAccentRefresh()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.FindControl<AnnotationToolbar>("AnnotationToolbarControl")?.RefreshAccentBrushes();
+            }, DispatcherPriority.Render);
         }
 
         private bool ShouldUseSystemTheme()
@@ -945,7 +960,44 @@ namespace ShareX.ImageEditor.Presentation.Views
                         EnsureEffectBrowserPanel(vm).FocusSearchBox();
                     }
                 }
+                else if (e.PropertyName == nameof(MainViewModel.EditorUseSystemTheme) ||
+                    e.PropertyName == nameof(MainViewModel.EditorTheme) ||
+                    e.PropertyName == nameof(MainViewModel.EditorUseSystemAccentColor) ||
+                    e.PropertyName == nameof(MainViewModel.EditorAccentColor) ||
+                    e.PropertyName == nameof(MainViewModel.EditorAccentColorHex))
+                {
+                    RefreshPlatformColorTracking();
+                }
             }
+        }
+
+        private void OnOpenOptionsPanelRequested(object? sender, EventArgs e)
+        {
+            if (DataContext is not MainViewModel vm)
+            {
+                return;
+            }
+
+            if (vm.IsEffectsPanelOpen && vm.EffectsPanelContent is EditorOptionsPanel)
+            {
+                if (vm.CloseEffectsPanelCommand.CanExecute(null))
+                {
+                    vm.CloseEffectsPanelCommand.Execute(null);
+                }
+
+                return;
+            }
+
+            if (vm.IsEffectsPanelOpen && vm.CloseEffectsPanelCommand.CanExecute(null))
+            {
+                vm.CloseEffectsPanelCommand.Execute(null);
+            }
+
+            vm.EffectsPanelContent = new EditorOptionsPanel
+            {
+                DataContext = vm
+            };
+            vm.IsEffectsPanelOpen = true;
         }
 
         private EffectBrowserPanel EnsureEffectBrowserPanel(MainViewModel vm)

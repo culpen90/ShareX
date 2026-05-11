@@ -695,6 +695,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         // Effects Panel Properties
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsEffectBrowserVisible))]
+        [NotifyPropertyChangedFor(nameof(IsRightEffectsSidebarVisible))]
         private bool _isEffectsPanelOpen;
 
         [ObservableProperty]

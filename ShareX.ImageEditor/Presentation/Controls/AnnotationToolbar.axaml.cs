@@ -168,6 +168,11 @@ public partial class AnnotationToolbar : UserControl
         Dispatcher.UIThread.Post(() => UpdateAccentBrushes());
     }
 
+    public void RefreshAccentBrushes()
+    {
+        UpdateAccentBrushes(_platformSettings?.GetColorValues());
+    }
+
     private void RefreshPlatformColorTracking()
     {
         SetPlatformSettings(ShouldUseSystemAccentColor()
@@ -239,6 +244,16 @@ public partial class AnnotationToolbar : UserControl
         if (DataContext is IAnnotationToolbarAdapter toolbar)
         {
             toolbar.ClearSelection();
+        }
+    }
+
+    private void OnOpenOptionsClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is IAnnotationToolbarAdapter toolbar &&
+            toolbar.OpenOptionsPanelCommand.CanExecute(null))
+        {
+            toolbar.OpenOptionsPanelCommand.Execute(null);
+            e.Handled = true;
         }
     }
 

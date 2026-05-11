@@ -80,7 +80,9 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     ReadOnlyObservableCollection<MenuItem> RecentImageMenuItems { get; }
     ReadOnlyObservableCollection<string> RecentImageFiles { get; }
     bool HasRecentImageFiles { get; }
+    bool IsEffectsButtonActive { get; }
     ICommand OpenRecentImageCommand { get; }
+    ICommand OpenOptionsPanelCommand { get; }
     void SelectTool(EditorTool tool);
     void Undo();
     void Redo();

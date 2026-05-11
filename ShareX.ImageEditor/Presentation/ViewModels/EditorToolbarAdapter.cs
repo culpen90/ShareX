@@ -27,6 +27,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using ShareX.ImageEditor.Core.Abstractions;
 using ShareX.ImageEditor.Core.Annotations;
+using ShareX.ImageEditor.Presentation.Controls;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -220,6 +221,10 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.IsEffectsPanelOpen = value;
     }
 
+    public bool IsEffectsButtonActive =>
+        _viewModel.IsEffectsPanelOpen &&
+        _viewModel.EffectsPanelContent is not EditorOptionsPanel;
+
     public double Zoom
     {
         get => _viewModel.Zoom;
@@ -255,6 +260,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public ICommand SaveCommand => _viewModel.SaveCommand;
 
     public ICommand SaveAsCommand => _viewModel.SaveAsCommand;
+
+    public ICommand OpenOptionsPanelCommand => _viewModel.OpenOptionsPanelCommand;
 
     public ICommand ExitEditorCommand => _viewModel.ExitEditorCommand;
 
@@ -335,6 +342,10 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
                 break;
             case nameof(MainViewModel.IsEffectsPanelOpen):
                 OnPropertyChanged(nameof(IsEffectsPanelOpen));
+                OnPropertyChanged(nameof(IsEffectsButtonActive));
+                break;
+            case nameof(MainViewModel.EffectsPanelContent):
+                OnPropertyChanged(nameof(IsEffectsButtonActive));
                 break;
             case nameof(MainViewModel.IsSettingsPanelOpen):
                 OnPropertyChanged(nameof(IsSettingsPanelOpen));

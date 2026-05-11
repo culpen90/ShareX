@@ -88,6 +88,13 @@
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator/>
+                                                                        <MenuItem Header="Options"
+                                                                                          Click="OnOpenOptionsClick">
+                                        <MenuItem.Icon>
+                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.settings}"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator/>
                                     <MenuItem Header="Exit"
                                               Command="{ReflectionBinding ExitEditorCommand}"
                                               InputGesture="Escape">
@@ -222,7 +229,7 @@
                                 ToolTip.Tip="Background"
                                 FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18" Content="{x:Static theming:EditorIcons.PanelBackground}"/>
                         <Button Classes="editor-button toolbar-button"
-                                Classes.active="{ReflectionBinding IsEffectsPanelOpen}"
+                                Classes.active="{ReflectionBinding IsEffectsButtonActive}"
                                 Command="{ReflectionBinding ToggleEffectsPanelCommand}"
                                 ToolTip.Tip="Image Effects"
                                 FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18" Content="{x:Static theming:EditorIcons.PanelEffects}"/>
