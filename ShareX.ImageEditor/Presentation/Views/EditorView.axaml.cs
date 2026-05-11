@@ -521,7 +521,16 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnThemeChanged(object? sender, ThemeVariant theme)
         {
-            Dispatcher.UIThread.Post(() => ApplyTheme(theme));
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (ShouldUseSystemTheme())
+                {
+                    UpdateTheme();
+                    return;
+                }
+
+                ApplyTheme(theme);
+            });
         }
 
         private void RefreshPlatformColorTracking()
@@ -595,7 +604,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 return;
             }
 
-            ApplyTheme(ThemeManager.GetCurrentTheme());
+            ApplyTheme(MapConfiguredTheme());
         }
 
         private void ApplyTheme(ThemeVariant theme)
@@ -624,6 +633,25 @@ namespace ShareX.ImageEditor.Presentation.Views
                 : ThemeManager.ShareXDark;
         }
 
+        private ThemeVariant MapConfiguredTheme()
+        {
+            if (DataContext is MainViewModel { Options.Theme: var configuredTheme })
+            {
+                if (IsLightTheme(configuredTheme))
+                {
+                    return ThemeManager.ShareXLight;
+                }
+
+                if (!string.IsNullOrWhiteSpace(configuredTheme) &&
+                    configuredTheme.Contains("Dark", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ThemeManager.ShareXDark;
+                }
+            }
+
+            return ThemeManager.GetCurrentTheme();
+        }
+
         private static bool IsLightTheme(string? themeName)
         {
             return !string.IsNullOrWhiteSpace(themeName) &&
@@ -632,21 +660,42 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void UpdateAccentColor(PlatformColorValues? colorValues = null)
         {
-            if (!ShouldUseSystemAccentColor())
+            if (ShouldUseSystemAccentColor())
             {
+                colorValues ??= _platformSettings?.GetColorValues()
+                    ?? this.GetPlatformSettings()?.GetColorValues()
+                    ?? Application.Current?.PlatformSettings?.GetColorValues();
+
+                if (colorValues == null || colorValues.AccentColor1.A == 0)
+                {
+                    return;
+                }
+
+                ApplyAccentColor(colorValues.AccentColor1);
                 return;
             }
 
-            colorValues ??= _platformSettings?.GetColorValues()
-                ?? this.GetPlatformSettings()?.GetColorValues()
-                ?? Application.Current?.PlatformSettings?.GetColorValues();
-
-            if (colorValues == null || colorValues.AccentColor1.A == 0)
+            if (TryGetConfiguredAccentColor(out Color accentColor))
             {
-                return;
+                ApplyAccentColor(accentColor);
+            }
+        }
+
+        private bool TryGetConfiguredAccentColor(out Color accentColor)
+        {
+            if (DataContext is MainViewModel { Options.AccentColorHex: var accentColorHex } &&
+                Color.TryParse(accentColorHex, out accentColor) &&
+                accentColor.A != 0)
+            {
+                return true;
             }
 
-            Color startColor = colorValues.AccentColor1;
+            accentColor = default;
+            return false;
+        }
+
+        private void ApplyAccentColor(Color startColor)
+        {
             Color endColor = DarkenColor(startColor, 0.10);
             Color foregroundColor = GetAccentForegroundColor(startColor, endColor);
 

@@ -50,7 +50,11 @@ namespace ShareX.ImageEditor.Hosting
         private static Color HexToColor(string hex) => Color.Parse(hex);
 
         // Editor
+        public string Theme { get; set; } = "Dark";
         public bool UseSystemTheme { get; set; } = true;
+        public string AccentColorHex { get; set; } = "#3E83F2";
+        [JsonIgnore]
+        public Color AccentColor { get => HexToColor(AccentColorHex); set => AccentColorHex = ColorToHex(value); }
         public bool UseSystemAccentColor { get; set; } = true;
         public bool RememberWindowState { get; set; } = true;
         public bool IsWindowMaximized { get; set; } = true;
