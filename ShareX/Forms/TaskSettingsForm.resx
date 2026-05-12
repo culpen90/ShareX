@@ -6716,10 +6716,10 @@
     <value>Fill</value>
   </data>
   <data name="pTools.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
+    <value>0, 25</value>
   </data>
   <data name="pTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 428</value>
+    <value>563, 434</value>
   </data>
   <data name="pTools.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -6746,13 +6746,13 @@
     <value>NoControl</value>
   </data>
   <data name="cbOverrideToolsSettings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+    <value>0, 0</value>
   </data>
   <data name="cbOverrideToolsSettings.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>8, 8, 8, 0</value>
   </data>
   <data name="cbOverrideToolsSettings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 25</value>
+    <value>563, 25</value>
   </data>
   <data name="cbOverrideToolsSettings.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -6774,9 +6774,6 @@
   </data>
   <data name="tpToolsGeneral.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
-  </data>
-  <data name="tpToolsGeneral.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
   </data>
   <data name="tpToolsGeneral.Size" type="System.Drawing.Size, System.Drawing">
     <value>563, 459</value>
