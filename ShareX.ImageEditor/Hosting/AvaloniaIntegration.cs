@@ -25,13 +25,13 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using SkiaSharp;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
 using ShareX.ImageEditor.Hosting.Diagnostics;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
+using SkiaSharp;
 
 namespace ShareX.ImageEditor.Hosting
 {
@@ -238,7 +238,7 @@ namespace ShareX.ImageEditor.Hosting
                     vm.ImageFilePath = filePath;
                 }
 
-                vm.ShowFileMenu = !taskMode;
+                vm.ShowFileMenu = true;
                 vm.ShowTaskButtons = true;
                 vm.UseContinueWorkflow = taskMode;
                 vm.ShowBottomToolbar = true;
