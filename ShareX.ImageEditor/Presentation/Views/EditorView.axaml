@@ -594,6 +594,7 @@
                 IsHitTestVisible="False"
                 Cursor="Arrow"
                 ZIndex="25"
+                PointerPressed="OnCanvasPointerPressed"
                 PointerMoved="OnCanvasPointerMoved"
                 PointerReleased="OnCanvasPointerReleased"/>
 

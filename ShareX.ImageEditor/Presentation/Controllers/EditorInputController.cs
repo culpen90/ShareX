@@ -513,7 +513,13 @@ public class EditorInputController
 
     public void OnCanvasPointerMoved(object? sender, PointerEventArgs e)
     {
+        bool wasPanning = _zoomController.IsPanning;
         _zoomController.OnScrollViewerPointerMoved(_view.FindControl<ScrollViewer>("CanvasScrollViewer"), e);
+
+        if (wasPanning && !_zoomController.IsPanning)
+        {
+            RestoreInteractionCaptureAfterPanning(e.Pointer);
+        }
 
         var selectionSender = sender ?? _view;
         if (!_isDrawing && _selectionController.OnPointerMoved(selectionSender, e))
@@ -732,7 +738,15 @@ public class EditorInputController
 
     public void OnCanvasPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        bool wasPanning = _zoomController.IsPanning;
         _zoomController.OnScrollViewerPointerReleased(_view.FindControl<ScrollViewer>("CanvasScrollViewer"), e);
+
+        if (wasPanning && !_zoomController.IsPanning)
+        {
+            RestoreInteractionCaptureAfterPanning(e.Pointer);
+            return;
+        }
+
         var selectionSender = sender ?? _view;
         if (_selectionController.OnPointerReleased(selectionSender, e)) return;
 
@@ -896,6 +910,24 @@ public class EditorInputController
         _cutOutDirection = null;
         _isDrawing = false;
         _view.RestoreEditorSurfaceCursorForActiveTool();
+    }
+
+    private void RestoreInteractionCaptureAfterPanning(IPointer pointer)
+    {
+        if (_isDraggingCropHandle)
+        {
+            _view.BeginInteractionCursorCapture(pointer, CursorAssetLoader.GetClosedHandCursor());
+            return;
+        }
+
+        if (_isDrawing)
+        {
+            var vm = ViewModel;
+            if (vm != null && UsesCrosshairInteractionCapture(vm.ActiveTool))
+            {
+                _view.BeginInteractionCursorCapture(pointer, CursorAssetLoader.GetCrosshairCursor());
+            }
+        }
     }
 
     private void UpdateEffectVisual(Control shape, double x, double y, double width, double height)
