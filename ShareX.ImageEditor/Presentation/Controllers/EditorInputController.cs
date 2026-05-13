@@ -96,6 +96,8 @@ public class EditorInputController
     private static double ToOverlayCoordinate(double value) => value + EditorView.OverlayCanvasBleed;
     private static double FromOverlayCoordinate(double value) => value - EditorView.OverlayCanvasBleed;
     private static Point ToOverlayPoint(Point value) => new(ToOverlayCoordinate(value.X), ToOverlayCoordinate(value.Y));
+    private static bool ShouldClearSelectionOnMouseDrawStart(EditorTool tool)
+        => tool != EditorTool.Select && tool != EditorTool.Image && tool != EditorTool.Emoji;
 
     private static Rect GetCropOverlayCanvasRect(global::Avalonia.Controls.Shapes.Rectangle cropOverlay)
         => new(
@@ -245,7 +247,14 @@ public class EditorInputController
             return;
         }
 
-        _selectionController.ClearHoverFeedback();
+        if (ShouldClearSelectionOnMouseDrawStart(vm.ActiveTool))
+        {
+            _selectionController.ClearSelection();
+        }
+        else
+        {
+            _selectionController.ClearHoverFeedback();
+        }
 
         // ISSUE-019 fix: Dead code removed - redo stack cleared by EditorCore
 
