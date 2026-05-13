@@ -245,6 +245,8 @@ public class EditorInputController
             return;
         }
 
+        _selectionController.ClearHoverFeedback();
+
         // ISSUE-019 fix: Dead code removed - redo stack cleared by EditorCore
 
         var point = e.GetPosition(canvas);
@@ -505,7 +507,10 @@ public class EditorInputController
         _zoomController.OnScrollViewerPointerMoved(_view.FindControl<ScrollViewer>("CanvasScrollViewer"), e);
 
         var selectionSender = sender ?? _view;
-        if (_selectionController.OnPointerMoved(selectionSender, e)) return;
+        if (!_isDrawing && _selectionController.OnPointerMoved(selectionSender, e))
+        {
+            return;
+        }
 
         // Handle active crop handle / move drag
         if (_isDraggingCropHandle)

@@ -104,6 +104,11 @@ public class EditorSelectionController
         }
     }
 
+    internal void ClearHoverFeedback()
+    {
+        ClearHoverOutline();
+    }
+
     public void SetSelectedShape(Control shape)
     {
         var wasNull = _selectedShape == null;
