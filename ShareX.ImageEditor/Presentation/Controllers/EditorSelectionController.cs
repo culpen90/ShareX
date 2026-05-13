@@ -1018,13 +1018,29 @@ public class EditorSelectionController
         {
             StartPoint = ToOverlayPoint(topCenter),
             EndPoint = ToOverlayPoint(rotateHandlePoint),
-            Stroke = new SolidColorBrush(Color.FromRgb(30, 144, 255)),
-            StrokeThickness = 1.5,
-            StrokeDashArray = new Avalonia.Collections.AvaloniaList<double> { 4, 4 },
+            Stroke = Brushes.Black,
+            StrokeThickness = 1,
+            StrokeDashArray = new Avalonia.Collections.AvaloniaList<double> { 3, 3 },
             IsHitTestVisible = false
         };
+        _rotationLine.SetValue(Panel.ZIndexProperty, 1);
+
+        var rotationLineWhite = new global::Avalonia.Controls.Shapes.Line
+        {
+            StartPoint = ToOverlayPoint(topCenter),
+            EndPoint = ToOverlayPoint(rotateHandlePoint),
+            Stroke = Brushes.White,
+            StrokeThickness = 1,
+            StrokeDashArray = new Avalonia.Collections.AvaloniaList<double> { 3, 3 },
+            StrokeDashOffset = 3,
+            IsHitTestVisible = false
+        };
+        rotationLineWhite.SetValue(Panel.ZIndexProperty, 1);
+
         overlay.Children.Add(_rotationLine);
+        overlay.Children.Add(rotationLineWhite);
         _selectionHandles.Add(_rotationLine);
+        _selectionHandles.Add(rotationLineWhite);
 
         CreateHandle(rotateHandlePoint.X, rotateHandlePoint.Y, "Rotate");
         UpdateHoverOutline();
@@ -1124,6 +1140,7 @@ public class EditorSelectionController
                 Color = Color.FromArgb(100, 0, 0, 0)
             })
         };
+        handleBorder.SetValue(Panel.ZIndexProperty, 2);
 
         Canvas.SetLeft(handleBorder, ToOverlayCoordinate(x) - handleBorder.Width / 2);
         Canvas.SetTop(handleBorder, ToOverlayCoordinate(y) - handleBorder.Height / 2);
