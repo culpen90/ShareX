@@ -1139,7 +1139,8 @@ public class EditorCore : IDisposable
 
         if (x < 0 || y < 0 || x >= snapshot.Width || y >= snapshot.Height)
         {
-            return null;
+            x = 0;
+            y = 0;
         }
 
         var color = snapshot.GetPixel(x, y);
