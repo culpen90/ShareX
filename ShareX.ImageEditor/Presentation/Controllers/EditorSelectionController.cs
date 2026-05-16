@@ -1057,6 +1057,9 @@ public class EditorSelectionController
             case global::Avalonia.Controls.Image { Tag: EmojiAnnotation emojiAnnotation }:
                 annotation = emojiAnnotation;
                 return true;
+            case global::Avalonia.Controls.Image { Tag: ImageAnnotation imageAnnotation }:
+                annotation = imageAnnotation;
+                return true;
             default:
                 annotation = null;
                 return false;

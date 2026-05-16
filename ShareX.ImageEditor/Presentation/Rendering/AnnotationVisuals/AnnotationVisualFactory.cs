@@ -190,6 +190,7 @@ public static class AnnotationVisualFactory
                 Canvas.SetTop(imageControl, imageBounds.Top);
                 imageControl.Width = Math.Max(1, imageBounds.Width);
                 imageControl.Height = Math.Max(1, imageBounds.Height);
+                ApplyRotationTransform(imageControl, imageAnnotation.RotationAngle);
                 break;
 
             default:
@@ -248,6 +249,7 @@ public static class AnnotationVisualFactory
         var imageBounds = imageAnnotation.GetBounds();
         image.Width = Math.Max(1, imageBounds.Width);
         image.Height = Math.Max(1, imageBounds.Height);
+        ApplyRotationTransform(image, imageAnnotation.RotationAngle);
 
         return image;
     }
