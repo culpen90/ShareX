@@ -25,16 +25,57 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using SkiaSharp;
 using System.ComponentModel;
+using System.IO;
 
 namespace ShareX.ImageEditor.Presentation.Views
 {
     public partial class EditorView : UserControl
     {
+        private async void OnImageInsertionRequested(object? sender, EventArgs e)
+        {
+            if (DataContext is not MainViewModel vm)
+            {
+                return;
+            }
+
+            TopLevel? topLevel = TopLevel.GetTopLevel(this);
+            if (topLevel?.StorageProvider == null)
+            {
+                return;
+            }
+
+            IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Select image",
+                AllowMultiple = false,
+                FileTypeFilter = [FilePickerFileTypes.ImageAll]
+            });
+
+            if (files.Count == 0)
+            {
+                return;
+            }
+
+            using var stream = await files[0].OpenReadAsync();
+            using var memStream = new MemoryStream();
+            await stream.CopyToAsync(memStream);
+            memStream.Position = 0;
+
+            SKBitmap? skBitmap = SKBitmap.Decode(memStream);
+            if (skBitmap == null)
+            {
+                return;
+            }
+
+            await InsertExternalImageAsync(skBitmap, files[0].Path.LocalPath);
+        }
+
         private async Task InsertExternalImageAsync(SKBitmap skBitmap, string? sourceFilePath = null)
         {
             if (DataContext is not MainViewModel vm)

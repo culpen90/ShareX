@@ -426,6 +426,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.DuplicateRequested += OnDuplicateRequested;
                 vm.ZoomToFitRequested += OnZoomToFitRequested;
                 vm.FlattenRequested += OnFlattenRequested;
+                vm.ImageInsertionRequested += OnImageInsertionRequested;
                 vm.EmojiInsertionRequested += OnEmojiInsertionRequested;
 
                 // File menu event handlers (Image Editor Mode)
@@ -502,6 +503,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.SaveRequested -= OnSaveRequested;
                 vm.SaveAsRequested -= OnSaveAsRequested;
                 vm.OpenOptionsPanelRequested -= OnOpenOptionsPanelRequested;
+                vm.ImageInsertionRequested -= OnImageInsertionRequested;
                 vm.EmojiInsertionRequested -= OnEmojiInsertionRequested;
             }
 

@@ -153,6 +153,12 @@
                             ToolTip.Tip="Text (T)"
                             Content="{x:Static theming:EditorIcons.ToolText}"/>
                     <Button Classes="editor-button toolbar-button"
+                            Tag="{x:Static models:EditorTool.Image}"
+                            Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Image}"
+                            Click="OnSelectToolClick"
+                            ToolTip.Tip="Image (I)"
+                            Content="{x:Static theming:EditorIcons.ToolImage}"/>
+                    <Button Classes="editor-button toolbar-button"
                             Tag="{x:Static models:EditorTool.Emoji}"
                             Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Emoji}"
                             Click="OnSelectToolClick"

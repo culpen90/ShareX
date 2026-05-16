@@ -97,6 +97,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public event EventHandler? CopyAnnotationRequested;
         public event EventHandler? ZoomToFitRequested;
         public event EventHandler? CloseRequested;
+        public event EventHandler? ImageInsertionRequested;
         public event EventHandler<EmojiSelectionRequest>? EmojiInsertionRequested;
 
         // File menu events (Image Editor Mode)
@@ -1026,6 +1027,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [RelayCommand]
         private void SelectTool(EditorTool tool)
         {
+            if (tool == EditorTool.Image)
+            {
+                DeselectRequested?.Invoke(this, EventArgs.Empty);
+                RequestImageInsertion();
+                return;
+            }
+
             if (tool == EditorTool.Emoji)
             {
                 DeselectRequested?.Invoke(this, EventArgs.Empty);
@@ -1048,6 +1056,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
 
             ActiveTool = tool;
+        }
+
+        private void RequestImageInsertion()
+        {
+            if (IsModalOpen)
+            {
+                return;
+            }
+
+            ImageInsertionRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void ShowEmojiPickerDialog()
