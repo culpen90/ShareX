@@ -65,6 +65,7 @@ namespace ShareX.ImageEditor.Hosting
         public bool QuickCrop { get; set; } = true;
         public bool AutoCloseEditorOnTask { get; set; } = false;
         public bool AutoCopyImageToClipboard { get; set; } = false;
+        public bool ShowInsertImageDialog { get; set; } = true;
         public EditorTool LastUsedAnnotationTool { get; set; } = EditorTool.Rectangle;
 
         // Shared

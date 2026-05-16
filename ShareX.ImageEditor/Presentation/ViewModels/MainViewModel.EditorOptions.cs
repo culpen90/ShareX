@@ -175,6 +175,21 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
         }
 
+        public bool EditorShowInsertImageDialog
+        {
+            get => Options.ShowInsertImageDialog;
+            set
+            {
+                if (Options.ShowInsertImageDialog == value)
+                {
+                    return;
+                }
+
+                Options.ShowInsertImageDialog = value;
+                OnPropertyChanged(nameof(EditorShowInsertImageDialog));
+            }
+        }
+
         [RelayCommand]
         private void OpenOptionsPanel()
         {

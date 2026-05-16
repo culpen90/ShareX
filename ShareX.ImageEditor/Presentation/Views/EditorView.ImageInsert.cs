@@ -90,7 +90,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                 return;
             }
 
-            InsertImagePlacement? placement = await ShowInsertImageDialogAsync(vm, skBitmap);
+            InsertImagePlacement? placement = vm.Options.ShowInsertImageDialog
+                ? await ShowInsertImageDialogAsync(vm, skBitmap)
+                : InsertImagePlacement.Center;
+
             if (!placement.HasValue)
             {
                 skBitmap.Dispose();

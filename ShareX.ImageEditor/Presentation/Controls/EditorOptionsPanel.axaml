@@ -87,5 +87,9 @@
         <CheckBox Content="Auto copy image to clipboard"
                   IsChecked="{Binding EditorAutoCopyImageToClipboard, Mode=TwoWay}"
                   Margin="0,0,0,8"/>
+
+        <CheckBox Content="Show insert image dialog"
+                  IsChecked="{Binding EditorShowInsertImageDialog, Mode=TwoWay}"
+                  Margin="0,0,0,8"/>
     </StackPanel>
 </UserControl>
