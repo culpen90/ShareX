@@ -26,7 +26,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using SkiaSharp;
@@ -87,12 +86,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             base.OnClosed(e);
         }
 
-        protected override void OnOpened(EventArgs e)
-        {
-            base.OnOpened(e);
-            ApplySavedWindowSize(GetWindowScreen());
-        }
-
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
@@ -105,7 +98,11 @@ namespace ShareX.ImageEditor.Presentation.Views
                 return;
             }
 
-            ApplySavedWindowSize(Screens?.Primary);
+            if (_options.WindowWidth > 0 && _options.WindowHeight > 0)
+            {
+                Width = _options.WindowWidth;
+                Height = _options.WindowHeight;
+            }
 
             WindowState = _options.IsWindowMaximized ? WindowState.Maximized : WindowState.Normal;
         }
@@ -135,72 +132,10 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             Size windowSize = Bounds.Size;
 
-            SaveSafeWindowSize(windowSize.Width, windowSize.Height, GetWindowScreen());
-        }
-
-        private void ApplySavedWindowSize(Screen? screen)
-        {
-            if (_options is not { WindowWidth: > 0, WindowHeight: > 0 } options)
+            if (windowSize.Width > 0 && windowSize.Height > 0)
             {
-                return;
-            }
-
-            Size safeWindowSize = GetSafeWindowSize(options.WindowWidth, options.WindowHeight, screen);
-
-            options.WindowWidth = safeWindowSize.Width;
-            options.WindowHeight = safeWindowSize.Height;
-
-            Width = safeWindowSize.Width;
-            Height = safeWindowSize.Height;
-        }
-
-        private void SaveSafeWindowSize(double width, double height, Screen? screen)
-        {
-            if (_options == null || width <= 0 || height <= 0)
-            {
-                return;
-            }
-
-            Size safeWindowSize = GetSafeWindowSize(width, height, screen);
-            _options.WindowWidth = safeWindowSize.Width;
-            _options.WindowHeight = safeWindowSize.Height;
-        }
-
-        private Size GetSafeWindowSize(double width, double height, Screen? screen)
-        {
-            if (width <= 0 || height <= 0)
-            {
-                return default;
-            }
-
-            if (screen == null)
-            {
-                return new Size(width, height);
-            }
-
-            double scaling = screen.Scaling > 0 ? screen.Scaling : 1.0;
-            double maxWidth = Math.Floor(screen.WorkingArea.Width / scaling);
-            double maxHeight = Math.Floor(screen.WorkingArea.Height / scaling);
-
-            if (maxWidth <= 0 || maxHeight <= 0)
-            {
-                return new Size(width, height);
-            }
-
-            return new Size(
-                Math.Min(width, maxWidth),
-                Math.Min(height, maxHeight));
-        }
-
-        private Screen? GetWindowScreen()
-        {
-            try
-            {
-                return Screens?.ScreenFromWindow(this) ?? Screens?.ScreenFromPoint(Position) ?? Screens?.Primary;
-            }
-            catch (ObjectDisposedException)
-            {
-                return Screens?.Primary;
+                _options.WindowWidth = windowSize.Width;
+                _options.WindowHeight = windowSize.Height;
             }
         }
 
