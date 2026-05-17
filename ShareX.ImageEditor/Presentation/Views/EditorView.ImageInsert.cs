@@ -27,6 +27,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using SkiaSharp;
@@ -198,8 +199,23 @@ namespace ShareX.ImageEditor.Presentation.Views
                 return;
             }
 
-            double posX = position?.X ?? (_editorCore.CanvasSize.Width / 2 - skBitmap.Width / 2.0);
-            double posY = position?.Y ?? (_editorCore.CanvasSize.Height / 2 - skBitmap.Height / 2.0);
+            double posX;
+            double posY;
+
+            if (position.HasValue)
+            {
+                posX = position.Value.X;
+                posY = position.Value.Y;
+            }
+            else
+            {
+                Point visibleCanvasCenter = GetVisibleCanvasCenter(canvas) ?? new Point(
+                    _editorCore.CanvasSize.Width / 2,
+                    _editorCore.CanvasSize.Height / 2);
+
+                posX = visibleCanvasCenter.X - skBitmap.Width / 2.0;
+                posY = visibleCanvasCenter.Y - skBitmap.Height / 2.0;
+            }
 
             var annotation = new ImageAnnotation();
             annotation.SetImage(skBitmap);
@@ -217,6 +233,33 @@ namespace ShareX.ImageEditor.Presentation.Views
             vm.HasAnnotations = true;
             vm.ActiveTool = EditorTool.Select;
             _selectionController.SetSelectedShape(control);
+        }
+
+        private Point? GetVisibleCanvasCenter(Canvas canvas)
+        {
+            var canvasScrollViewer = this.FindControl<ScrollViewer>("CanvasScrollViewer");
+            if (canvasScrollViewer == null)
+            {
+                return null;
+            }
+
+            Size viewport = canvasScrollViewer.Viewport;
+            if (viewport.Width <= 0 || viewport.Height <= 0)
+            {
+                return null;
+            }
+
+            Point viewportCenter = new(viewport.Width / 2, viewport.Height / 2);
+            Point? visibleCanvasCenter = canvasScrollViewer.TranslatePoint(viewportCenter, canvas);
+
+            if (!visibleCanvasCenter.HasValue)
+            {
+                return null;
+            }
+
+            return new Point(
+                Math.Clamp(visibleCanvasCenter.Value.X, 0, _editorCore.CanvasSize.Width),
+                Math.Clamp(visibleCanvasCenter.Value.Y, 0, _editorCore.CanvasSize.Height));
         }
     }
 }
