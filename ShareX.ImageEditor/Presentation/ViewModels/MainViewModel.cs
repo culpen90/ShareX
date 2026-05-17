@@ -669,7 +669,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [RelayCommand]
         private void ResetNumberCounter()
         {
-            NumberCounter = 1;
+            NumberCounter = StepStartNumber;
         }
 
         public void RecalculateNumberCounter(IEnumerable<Annotation> annotations)
@@ -685,7 +685,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     }
                 }
             }
-            NumberCounter = max + 1;
+            NumberCounter = Math.Max(max + 1, StepStartNumber);
         }
 
         [RelayCommand]

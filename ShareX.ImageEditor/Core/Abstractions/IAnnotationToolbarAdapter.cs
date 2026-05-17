@@ -46,12 +46,14 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     ArrowStyle SelectedArrowStyle { get; set; }
     IReadOnlyList<string> AvailableFontFamilies { get; }
     IReadOnlyList<ArrowStyle> AvailableArrowStyles { get; }
+    IReadOnlyList<int> AvailableStepStartNumbers { get; }
     IBrush SelectedColorBrush { get; set; }
     IBrush FillColorBrush { get; set; }
     IBrush TextColorBrush { get; set; }
     int StrokeWidth { get; set; }
     int CornerRadius { get; set; }
     float FontSize { get; set; }
+    int StepStartNumber { get; set; }
     float EffectStrength { get; set; }
     float EffectStrengthMaximum { get; }
     bool ShadowEnabled { get; set; }
@@ -69,6 +71,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowTextColor { get; }
     bool ShowThickness { get; }
     bool ShowFontSize { get; }
+    bool ShowStepStartNumber { get; }
     bool ShowFontFamily { get; }
     bool ShowArrowStyle { get; }
     bool ShowCornerRadius { get; }

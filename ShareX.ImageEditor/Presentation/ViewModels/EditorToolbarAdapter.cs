@@ -102,6 +102,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _viewModel.AvailableArrowStyles;
 
+    public IReadOnlyList<int> AvailableStepStartNumbers => _viewModel.AvailableStepStartNumbers;
+
     public int StrokeWidth
     {
         get => _viewModel.StrokeWidth;
@@ -118,6 +120,12 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     {
         get => _viewModel.FontSize;
         set => _viewModel.FontSize = value;
+    }
+
+    public int StepStartNumber
+    {
+        get => _viewModel.StepStartNumber;
+        set => _viewModel.StepStartNumber = value;
     }
 
     public float EffectStrength
@@ -169,6 +177,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowThickness => _viewModel.ShowThickness;
 
     public bool ShowFontSize => _viewModel.ShowFontSize;
+
+    public bool ShowStepStartNumber => _viewModel.ShowStepStartNumber;
 
     public bool ShowFontFamily => _viewModel.ShowFontFamily;
 

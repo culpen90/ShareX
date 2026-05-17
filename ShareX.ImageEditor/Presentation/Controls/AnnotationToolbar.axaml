@@ -355,6 +355,13 @@
                                                      IsVisible="{Binding ShowFontSize}"
                                                      ToolTip.Tip="Font size"/>
 
+                    <controls:NumberPickerDropdown x:Name="StepStartPicker"
+                                                   NumberOptions="{Binding AvailableStepStartNumbers}"
+                                                   SelectedNumber="{Binding StepStartNumber, Mode=TwoWay}"
+                                                   Height="40"
+                                                   IsVisible="{Binding ShowStepStartNumber}"
+                                                   ToolTip.Tip="Start from"/>
+
                     <controls:StrengthSlider x:Name="EffectStrengthSlider"
                                              SelectedStrength="{Binding EffectStrength, Mode=TwoWay}"
                                              Maximum="{Binding EffectStrengthMaximum}"

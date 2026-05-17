@@ -962,6 +962,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                         EnsureEffectBrowserPanel(vm).FocusSearchBox();
                     }
                 }
+                else if (e.PropertyName == nameof(MainViewModel.StepStartNumber))
+                {
+                    vm.RecalculateNumberCounter(_editorCore.Annotations);
+                }
                 else if (e.PropertyName == nameof(MainViewModel.EditorUseSystemTheme) ||
                     e.PropertyName == nameof(MainViewModel.EditorTheme) ||
                     e.PropertyName == nameof(MainViewModel.EditorUseSystemAccentColor) ||
