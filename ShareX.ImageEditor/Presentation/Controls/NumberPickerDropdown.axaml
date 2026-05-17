@@ -14,12 +14,20 @@
                 MinWidth="60"
                 HorizontalContentAlignment="Stretch">
             <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Grid.Column="0"
-                           Text="{Binding SelectedNumber, ElementName=NumberPickerDropdownRoot}"
-                           Foreground="{DynamicResource ShareX.Brush.Text}"
-                           FontSize="12"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
+                    Spacing="4"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                <TextBlock Text="{Binding SelectedNumber, ElementName=NumberPickerDropdownRoot}"
+                       Foreground="{DynamicResource ShareX.Brush.Text}"
+                       FontSize="12"
+                       VerticalAlignment="Center"/>
+                <TextBlock Text="..."
+                       Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
+                       FontSize="12"
+                       VerticalAlignment="Center"/>
+            </StackPanel>
 
                 <TextBlock Grid.Column="1"
                            Classes="dropdown-chevron"

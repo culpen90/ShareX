@@ -360,7 +360,7 @@
                                                    SelectedNumber="{Binding StepStartNumber, Mode=TwoWay}"
                                                    Height="40"
                                                    IsVisible="{Binding ShowStepStartNumber}"
-                                                   ToolTip.Tip="Start from"/>
+                                                   ToolTip.Tip="Starting number"/>
 
                     <controls:StrengthSlider x:Name="EffectStrengthSlider"
                                              SelectedStrength="{Binding EffectStrength, Mode=TwoWay}"
