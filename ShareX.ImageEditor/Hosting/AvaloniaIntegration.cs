@@ -59,6 +59,7 @@ namespace ShareX.ImageEditor.Hosting
         public Action<SKBitmap>? CopyImageRequested { get; set; }
         public Func<SKBitmap, string?, string?>? SaveImageRequested { get; set; }
         public Func<SKBitmap, string?, string?>? SaveImageAsRequested { get; set; }
+        public Action<SKBitmap>? PrintImageRequested { get; set; }
         public Action<SKBitmap>? PinImageRequested { get; set; }
         public Action<SKBitmap>? UploadImageRequested { get; set; }
         public Action<EditorDiagnosticEvent>? DiagnosticReported { get; set; }
@@ -322,6 +323,18 @@ namespace ShareX.ImageEditor.Hosting
                             vm.ImageFilePath = savedPath;
                             vm.IsDirty = false;
                         }
+                    }
+                };
+            }
+
+            if (events.PrintImageRequested != null)
+            {
+                vm.PrintRequested += () =>
+                {
+                    using var skBitmap = window.GetResultBitmap();
+                    if (skBitmap != null)
+                    {
+                        InvokeHostCallback(skBitmap, events.PrintImageRequested, nameof(EditorEvents.PrintImageRequested));
                     }
                 };
             }

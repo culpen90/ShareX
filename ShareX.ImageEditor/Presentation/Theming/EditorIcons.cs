@@ -62,6 +62,7 @@ namespace ShareX.ImageEditor.Presentation.Theming
         public const string ActionSendToBack = LucideIcons.send_to_back;
         public const string ActionSave = LucideIcons.save;
         public const string ActionSaveAs = LucideIcons.save_all;
+        public const string ActionPrint = LucideIcons.printer;
         public const string ActionDownload = LucideIcons.download;
         public const string ActionPinToScreen = LucideIcons.pin;
         public const string ActionUpload = LucideIcons.cloud_upload;

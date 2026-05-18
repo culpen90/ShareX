@@ -1395,6 +1395,13 @@ namespace ShareX.ImageEditor.Presentation.Views
                             }
                             break;
                         case Key.F: vm.FlattenImageCommand.Execute(null); e.Handled = true; break;
+                        case Key.P:
+                            if (vm.PrintCommand.CanExecute(null))
+                            {
+                                vm.PrintCommand.Execute(null);
+                                e.Handled = true;
+                            }
+                            break;
                         case Key.S: vm.SaveAsCommand.Execute(null); e.Handled = true; break;
                     }
                 }

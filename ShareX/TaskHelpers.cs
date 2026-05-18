@@ -1353,6 +1353,11 @@ namespace ShareX
                         newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
                         return newFilePath;
                     },
+                    PrintImageRequested = (skBitmap) =>
+                    {
+                        Bitmap bmp = skBitmap.ToBitmap();
+                        MainFormPrintImage(bmp);
+                    },
                     PinImageRequested = (skBitmap) =>
                     {
                         Bitmap bmp = skBitmap.ToBitmap();

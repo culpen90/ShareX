@@ -229,6 +229,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public bool HasHostSaveAsHandler { get; set; }
         public bool CanSaveAs() => _saveAsRequested != null && HasPreviewImage;
 
+        private Action? _printRequested;
+        public event Action? PrintRequested
+        {
+            add { _printRequested += value; PrintCommand.NotifyCanExecuteChanged(); }
+            remove { _printRequested -= value; PrintCommand.NotifyCanExecuteChanged(); }
+        }
+        public bool CanPrint() => _printRequested != null && HasPreviewImage;
+
         private Action? _pinRequested;
         public event Action? PinRequested
         {
@@ -270,6 +278,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     CopyCommand.NotifyCanExecuteChanged();
                     SaveCommand.NotifyCanExecuteChanged();
                     SaveAsCommand.NotifyCanExecuteChanged();
+                    PrintCommand.NotifyCanExecuteChanged();
                     PinToScreenCommand.NotifyCanExecuteChanged();
                     UploadCommand.NotifyCanExecuteChanged();
                     ZoomInCommand.NotifyCanExecuteChanged();
@@ -1200,6 +1209,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private void SaveAs()
         {
             _saveAsRequested?.Invoke();
+            CloseAfterTaskActionIfEnabled();
+        }
+
+        [RelayCommand(CanExecute = nameof(CanPrint))]
+        private void Print()
+        {
+            _printRequested?.Invoke();
             CloseAfterTaskActionIfEnabled();
         }
 
