@@ -648,6 +648,113 @@
         </Style>
     </Style>
 
+    <Style Selector="ToggleSwitch">
+        <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text.Secondary}"/>
+        </Style>
+    </Style>
+
+    <Style Selector="ToggleSwitch.side-panel-toggle-proxy">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Margin" Value="0,0,-12,0"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style Selector="^:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style Selector="^:checked:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Border#OuterBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOffPointerOver}"/>
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOffPointerOver}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Ellipse#SwitchKnobOff">
+        <Setter Property="Fill" Value="{DynamicResource ToggleSwitchKnobFillOffPointerOver}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Ellipse#SwitchKnobOn">
+        <Setter Property="Fill" Value="{DynamicResource ToggleSwitchKnobFillOnPointerOver}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Border#SwitchKnobBounds">
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOnPointerOver}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOnPointerOver}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Grid#SwitchAreaGrid">
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerBackgroundPointerOver}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Border#OuterBorder">
+        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOffPressed}"/>
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOffPressed}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Ellipse#SwitchKnobOff">
+        <Setter Property="Fill" Value="{DynamicResource ToggleSwitchKnobFillOffPressed}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Ellipse#SwitchKnobOn">
+        <Setter Property="Fill" Value="{DynamicResource ToggleSwitchKnobFillOnPressed}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Border#SwitchKnobBounds">
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOnPressed}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOnPressed}"/>
+    </Style>
+
+    <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Grid#SwitchAreaGrid">
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerBackgroundPressed}"/>
+    </Style>
+
     <Style Selector="Separator">
         <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Separator}"/>
         <Setter Property="Margin" Value="0"/>

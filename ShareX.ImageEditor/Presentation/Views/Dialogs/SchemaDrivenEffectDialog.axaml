@@ -40,9 +40,23 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type effects:CheckboxParameterState}" x:DataType="effects:CheckboxParameterState">
-                    <CheckBox Content="{Binding Label}"
-                              IsChecked="{Binding Value, Mode=TwoWay}"
-                              Margin="0,0,0,10"/>
+                    <ToggleButton Classes="side-panel-toggle-row"
+                                  IsChecked="{Binding Value, Mode=TwoWay}"
+                                  Margin="0,0,0,10">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <TextBlock Text="{Binding Label}"
+                                       VerticalAlignment="Center"/>
+                            <ToggleSwitch Grid.Column="1"
+                                          Classes="side-panel-toggle-proxy"
+                                          IsHitTestVisible="False"
+                                          Focusable="False"
+                                          OnContent=""
+                                          OffContent=""
+                                          IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                                          IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                                          VerticalAlignment="Center"/>
+                        </Grid>
+                    </ToggleButton>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type effects:EnumParameterState}" x:DataType="effects:EnumParameterState">

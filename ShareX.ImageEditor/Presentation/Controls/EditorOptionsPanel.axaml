@@ -41,9 +41,23 @@
             </Button>
         </Grid>
 
-        <CheckBox Content="Follow system theme"
-                  IsChecked="{Binding EditorUseSystemTheme, Mode=TwoWay}"
-                  Margin="0,0,0,10"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorUseSystemTheme, Mode=TwoWay}"
+                      Margin="0,0,0,10">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Follow system theme"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
         <StackPanel Spacing="4" Margin="0,0,0,12"
                     IsVisible="{Binding CanEditEditorTheme}">
@@ -53,9 +67,23 @@
                       HorizontalAlignment="Stretch"/>
         </StackPanel>
 
-        <CheckBox Content="Follow system accent color"
-                  IsChecked="{Binding EditorUseSystemAccentColor, Mode=TwoWay}"
-                  Margin="0,0,0,10"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorUseSystemAccentColor, Mode=TwoWay}"
+                      Margin="0,0,0,10">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Follow system accent color"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
         <StackPanel Spacing="4" Margin="0,0,0,18"
                     IsVisible="{Binding CanEditEditorAccentColor}">
@@ -64,32 +92,130 @@
                                           HorizontalAlignment="Stretch"/>
         </StackPanel>
 
-        <CheckBox Content="Remember window state"
-                  IsChecked="{Binding EditorRememberWindowState, Mode=TwoWay}"
-                  Margin="0,0,0,8"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorRememberWindowState, Mode=TwoWay}"
+                      Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Remember window state"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
-        <CheckBox Content="Show exit confirmation"
-                  IsChecked="{Binding EditorShowExitConfirmation, Mode=TwoWay}"
-                  Margin="0,0,0,8"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorShowExitConfirmation, Mode=TwoWay}"
+                      Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Show exit confirmation"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
-        <CheckBox Content="Zoom to fit on open"
-                  IsChecked="{Binding EditorZoomToFitOnOpen, Mode=TwoWay}"
-                  Margin="0,0,0,8"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorZoomToFitOnOpen, Mode=TwoWay}"
+                      Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Zoom to fit on open"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
-        <CheckBox Content="Quick crop"
-                  IsChecked="{Binding EditorQuickCrop, Mode=TwoWay}"
-                  Margin="0,0,0,8"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorQuickCrop, Mode=TwoWay}"
+                      Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Quick crop"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
-        <CheckBox Content="Auto close editor on task"
-                  IsChecked="{Binding EditorAutoCloseEditorOnTask, Mode=TwoWay}"
-                  Margin="0,0,0,8"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorAutoCloseEditorOnTask, Mode=TwoWay}"
+                      Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Auto close editor on task"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
-        <CheckBox Content="Auto copy image to clipboard"
-                  IsChecked="{Binding EditorAutoCopyImageToClipboard, Mode=TwoWay}"
-                  Margin="0,0,0,8"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorAutoCopyImageToClipboard, Mode=TwoWay}"
+                      Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Auto copy image to clipboard"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
 
-        <CheckBox Content="Show insert image dialog"
-                  IsChecked="{Binding EditorShowInsertImageDialog, Mode=TwoWay}"
-                  Margin="0,0,0,8"/>
+        <ToggleButton Classes="side-panel-toggle-row"
+                      IsChecked="{Binding EditorShowInsertImageDialog, Mode=TwoWay}"
+                      Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <TextBlock Text="Show insert image dialog"
+                           VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                              Classes="side-panel-toggle-proxy"
+                              IsHitTestVisible="False"
+                              Focusable="False"
+                              OnContent=""
+                              OffContent=""
+                              IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
+                              IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
+                              VerticalAlignment="Center"/>
+            </Grid>
+        </ToggleButton>
     </StackPanel>
 </UserControl>
