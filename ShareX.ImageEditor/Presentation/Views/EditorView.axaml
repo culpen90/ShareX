@@ -363,95 +363,89 @@
                               PointerPressed="OnScrollViewerPointerPressed"
                               PointerMoved="OnScrollViewerPointerMoved"
                               PointerReleased="OnScrollViewerPointerReleased">
-                    <Grid Name="CanvasPanHost"
-                          HorizontalAlignment="Left"
-                          VerticalAlignment="Top">
-                        <LayoutTransformControl x:Name="CanvasTransformHost"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center">
-                            <LayoutTransformControl.LayoutTransform>
-                                <ScaleTransform ScaleX="{Binding EffectiveZoom}" ScaleY="{Binding EffectiveZoom}" />
-                            </LayoutTransformControl.LayoutTransform>
-                            <!-- Main Canvas Container with Checkered Background and Shadow -->
-                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <!-- Checkered Background -->
-                                <Border BorderThickness="1"
-                                        BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                                        Background="{DynamicResource ShareX.Brush.Checkered}"/>
+                    <LayoutTransformControl HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <LayoutTransformControl.LayoutTransform>
+                            <ScaleTransform ScaleX="{Binding EffectiveZoom}" ScaleY="{Binding EffectiveZoom}" />
+                        </LayoutTransformControl.LayoutTransform>
+                        <!-- Main Canvas Container with Checkered Background and Shadow -->
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <!-- Checkered Background -->
+                            <Border BorderThickness="1"
+                                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                                    Background="{DynamicResource ShareX.Brush.Checkered}"/>
 
-                                <!-- Actual Content -->
-                                <Border x:Name="PreviewFrame"
-                                        IsVisible="{Binding HasPreviewImage}"
-                                         HorizontalAlignment="Stretch"
-                                         VerticalAlignment="Stretch"
-                                         Background="{Binding EffectiveCanvasBackground}"
-                                         Padding="{Binding CanvasPadding}"
-                                         PointerPressed="OnCanvasPointerPressed">
-                                    <!-- Outer Border: User-controlled Shadow effect -->
-                                    <Border BoxShadow="{Binding CanvasShadow}"
-                                           CornerRadius="{Binding CanvasCornerRadius, Converter={StaticResource DoubleToCornerRadius}}">
-                                        <!-- Padding Border: Uses top-left pixel color -->
-                                        <Border Background="{Binding SmartPaddingColor}"
-                                                Padding="{Binding SmartPaddingThickness}"
-                                                CornerRadius="{Binding CanvasCornerRadius, Converter={StaticResource DoubleToCornerRadius}}"
-                                                ClipToBounds="True">
-                                            <Canvas Background="Transparent"
+                            <!-- Actual Content -->
+                            <Border x:Name="PreviewFrame"
+                                    IsVisible="{Binding HasPreviewImage}"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Stretch"
+                                     Background="{Binding EffectiveCanvasBackground}"
+                                     Padding="{Binding CanvasPadding}"
+                                     PointerPressed="OnCanvasPointerPressed">
+                                <!-- Outer Border: User-controlled Shadow effect -->
+                                <Border BoxShadow="{Binding CanvasShadow}"
+                                       CornerRadius="{Binding CanvasCornerRadius, Converter={StaticResource DoubleToCornerRadius}}">
+                                    <!-- Padding Border: Uses top-left pixel color -->
+                                    <Border Background="{Binding SmartPaddingColor}"
+                                            Padding="{Binding SmartPaddingThickness}"
+                                            CornerRadius="{Binding CanvasCornerRadius, Converter={StaticResource DoubleToCornerRadius}}"
+                                            ClipToBounds="True">
+                                        <Canvas Background="Transparent"
+                                                Width="{Binding SmartPaddingViewportWidth}"
+                                                Height="{Binding SmartPaddingViewportHeight}"
+                                                ClipToBounds="False">
+                                            <!-- Inner Border: Smart padding crops by clipping the viewport,
+                                                 while the source image/canvas stay at full size. -->
+                                            <Border Background="Transparent"
                                                     Width="{Binding SmartPaddingViewportWidth}"
                                                     Height="{Binding SmartPaddingViewportHeight}"
-                                                    ClipToBounds="False">
-                                                <!-- Inner Border: Smart padding crops by clipping the viewport,
-                                                     while the source image/canvas stay at full size. -->
-                                                <Border Background="Transparent"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    ClipToBounds="True"
+                                                    Canvas.Left="0"
+                                                    Canvas.Top="0">
+                                                <Canvas Background="Transparent"
                                                         Width="{Binding SmartPaddingViewportWidth}"
                                                         Height="{Binding SmartPaddingViewportHeight}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Top"
-                                                        ClipToBounds="True"
-                                                        Canvas.Left="0"
-                                                        Canvas.Top="0">
-                                                    <Canvas Background="Transparent"
-                                                            Width="{Binding SmartPaddingViewportWidth}"
-                                                            Height="{Binding SmartPaddingViewportHeight}"
-                                                            ClipToBounds="True">
-                                                        <Grid Name="CanvasContainer"
-                                                              Background="Transparent"
-                                                              Width="{Binding ImageWidth}"
-                                                              Height="{Binding ImageHeight}"
-                                                              Canvas.Left="{Binding SmartPaddingOffsetX}"
-                                                              Canvas.Top="{Binding SmartPaddingOffsetY}">
+                                                        ClipToBounds="True">
+                                                    <Grid Name="CanvasContainer"
+                                                          Background="Transparent"
+                                                          Width="{Binding ImageWidth}"
+                                                          Height="{Binding ImageHeight}"
+                                                          Canvas.Left="{Binding SmartPaddingOffsetX}"
+                                                          Canvas.Top="{Binding SmartPaddingOffsetY}">
 
-                                                            <!-- Image layer (Hybrid Rendering: using SkiaSharp) -->
-                                                            <controls:SKCanvasControl Name="CanvasControl"
-                                                                                      HorizontalAlignment="Stretch"
-                                                                                      VerticalAlignment="Stretch"/>
+                                                        <!-- Image layer (Hybrid Rendering: using SkiaSharp) -->
+                                                        <controls:SKCanvasControl Name="CanvasControl"
+                                                                                  HorizontalAlignment="Stretch"
+                                                                                  VerticalAlignment="Stretch"/>
 
-                                                            <!-- Shared spotlight overlay rendered once for all spotlight annotations -->
-                                                            <controls:SpotlightOverlayControl Name="SpotlightOverlayControl"
-                                                                             HorizontalAlignment="Stretch"
-                                                                             VerticalAlignment="Stretch"
-                                                                             IsHitTestVisible="False"
-                                                                             IsVisible="False"/>
+                                                        <!-- Shared spotlight overlay rendered once for all spotlight annotations -->
+                                                        <controls:SpotlightOverlayControl Name="SpotlightOverlayControl"
+                                                                         HorizontalAlignment="Stretch"
+                                                                         VerticalAlignment="Stretch"
+                                                                         IsHitTestVisible="False"
+                                                                         IsVisible="False"/>
 
-                                                            <!-- Annotation Layer (Saved content) -->
-                                                            <Canvas Name="AnnotationCanvas"
-                                                                    Background="Transparent"
-                                                                    IsVisible="{Binding HasPreviewImage}"
-                                                                    HorizontalAlignment="Stretch"
-                                                                    VerticalAlignment="Stretch"
-                                                                    Cursor="Arrow"
-                                                                    PointerMoved="OnCanvasPointerMoved"
-                                                                    PointerReleased="OnCanvasPointerReleased">
-                                                            </Canvas>
-                                                        </Grid>
-                                                    </Canvas>
-                                                </Border>
-                                            </Canvas>
-                                        </Border>
+                                                        <!-- Annotation Layer (Saved content) -->
+                                                        <Canvas Name="AnnotationCanvas"
+                                                                Background="Transparent"
+                                                                IsVisible="{Binding HasPreviewImage}"
+                                                                HorizontalAlignment="Stretch"
+                                                                VerticalAlignment="Stretch"
+                                                                Cursor="Arrow"
+                                                                PointerMoved="OnCanvasPointerMoved"
+                                                                PointerReleased="OnCanvasPointerReleased">
+                                                        </Canvas>
+                                                    </Grid>
+                                                </Canvas>
+                                            </Border>
+                                        </Canvas>
                                     </Border>
                                 </Border>
-                            </Grid>
-                        </LayoutTransformControl>
-                    </Grid>
+                            </Border>
+                        </Grid>
+                    </LayoutTransformControl>
                 </ScrollViewer>
 
                 <Canvas Name="OverlayHost"
