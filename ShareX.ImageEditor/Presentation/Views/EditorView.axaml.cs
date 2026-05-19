@@ -71,6 +71,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private int _pendingZoomToFitRetryCount;
         private int _pendingAutoCopyImageVersion;
         private bool _overlayCanvasLayoutUpdatePending;
+        private bool _isAdjustingCanvasScrollOffset;
         private Rect? _lastOverlayCanvasRect;
         private double _lastOverlayCanvasZoom = -1;
         private double _lastRenderScaling = 1.0;
@@ -180,6 +181,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private void OnLayoutUpdated(object? sender, EventArgs e)
         {
             UpdateDpiScaleFromTopLevel();
+            UpdateCanvasPanHostLayout();
             RequestOverlayCanvasLayoutUpdate();
         }
 
@@ -208,8 +210,175 @@ namespace ShareX.ImageEditor.Presentation.Views
             RequestOverlayCanvasLayoutUpdate();
         }
 
+        internal Vector GetDefaultCanvasScrollOffset(ScrollViewer scrollViewer)
+        {
+            return new Vector(
+                Math.Max(0, (scrollViewer.Extent.Width - scrollViewer.Viewport.Width) / 2),
+                Math.Max(0, (scrollViewer.Extent.Height - scrollViewer.Viewport.Height) / 2));
+        }
+
+        internal Vector ClampCanvasScrollOffset(ScrollViewer scrollViewer, Vector offset)
+        {
+            Vector minOffset = GetMinimumCanvasScrollOffset(scrollViewer);
+            Vector maxOffset = GetMaximumCanvasScrollOffset(scrollViewer);
+
+            return new Vector(
+                Math.Clamp(offset.X, minOffset.X, maxOffset.X),
+                Math.Clamp(offset.Y, minOffset.Y, maxOffset.Y));
+        }
+
+        internal void SetCanvasScrollOffset(ScrollViewer scrollViewer, Vector offset)
+        {
+            Vector clampedOffset = ClampCanvasScrollOffset(scrollViewer, offset);
+
+            if (Math.Abs(scrollViewer.Offset.X - clampedOffset.X) <= 0.5 && Math.Abs(scrollViewer.Offset.Y - clampedOffset.Y) <= 0.5)
+            {
+                return;
+            }
+
+            _isAdjustingCanvasScrollOffset = true;
+
+            try
+            {
+                scrollViewer.Offset = clampedOffset;
+            }
+            finally
+            {
+                _isAdjustingCanvasScrollOffset = false;
+            }
+        }
+
+        private Size GetCanvasContentSize()
+        {
+            var transformHost = this.FindControl<LayoutTransformControl>("CanvasTransformHost");
+            return transformHost?.Bounds.Size ?? default;
+        }
+
+        internal Vector GetCanvasContentOrigin(ScrollViewer scrollViewer)
+        {
+            var transformHost = this.FindControl<LayoutTransformControl>("CanvasTransformHost");
+            Point? contentOrigin = transformHost?.TranslatePoint(default, scrollViewer);
+
+            if (!contentOrigin.HasValue)
+            {
+                return default;
+            }
+
+            return new Vector(
+                contentOrigin.Value.X + scrollViewer.Offset.X,
+                contentOrigin.Value.Y + scrollViewer.Offset.Y);
+        }
+
+        private Vector GetMinimumCanvasScrollOffset(ScrollViewer scrollViewer)
+        {
+            return new Vector(
+                Math.Max(0, (scrollViewer.Extent.Width / 2) - scrollViewer.Viewport.Width),
+                Math.Max(0, (scrollViewer.Extent.Height / 2) - scrollViewer.Viewport.Height));
+        }
+
+        private Vector GetMaximumCanvasScrollOffset(ScrollViewer scrollViewer)
+        {
+            Vector maxScrollableOffset = new(
+                Math.Max(0, scrollViewer.Extent.Width - scrollViewer.Viewport.Width),
+                Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height));
+
+            return new Vector(
+                Math.Min(maxScrollableOffset.X, scrollViewer.Extent.Width / 2),
+                Math.Min(maxScrollableOffset.Y, scrollViewer.Extent.Height / 2));
+        }
+
+        private void UpdateCanvasPanHostLayout()
+        {
+            var scrollViewer = this.FindControl<ScrollViewer>("CanvasScrollViewer");
+            var panHost = this.FindControl<Grid>("CanvasPanHost");
+
+            if (scrollViewer == null || panHost == null)
+            {
+                return;
+            }
+
+            Size viewport = scrollViewer.Viewport;
+            if (viewport.Width <= 0 || viewport.Height <= 0)
+            {
+                return;
+            }
+
+            Size contentSize = GetCanvasContentSize();
+            if (contentSize.Width <= 0 || contentSize.Height <= 0)
+            {
+                SetOptionalLength(panHost, double.NaN, setWidth: true);
+                SetOptionalLength(panHost, double.NaN, setWidth: false);
+                scrollViewer.HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto;
+                scrollViewer.VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto;
+                return;
+            }
+
+            Vector offsetDelta = scrollViewer.Offset - GetDefaultCanvasScrollOffset(scrollViewer);
+
+            bool showHorizontalScrollBar = contentSize.Width > viewport.Width + 0.5;
+            bool showVerticalScrollBar = contentSize.Height > viewport.Height + 0.5;
+
+            bool widthChanged = SetOptionalLength(panHost, Math.Max(contentSize.Width, viewport.Width * 2), setWidth: true);
+            bool heightChanged = SetOptionalLength(panHost, Math.Max(contentSize.Height, viewport.Height * 2), setWidth: false);
+
+            scrollViewer.HorizontalScrollBarVisibility = showHorizontalScrollBar
+                ? Avalonia.Controls.Primitives.ScrollBarVisibility.Auto
+                : Avalonia.Controls.Primitives.ScrollBarVisibility.Hidden;
+            scrollViewer.VerticalScrollBarVisibility = showVerticalScrollBar
+                ? Avalonia.Controls.Primitives.ScrollBarVisibility.Auto
+                : Avalonia.Controls.Primitives.ScrollBarVisibility.Hidden;
+
+            if (!widthChanged && !heightChanged)
+            {
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                Vector targetOffset = ClampCanvasScrollOffset(scrollViewer, GetDefaultCanvasScrollOffset(scrollViewer) + offsetDelta);
+
+                if (Math.Abs(targetOffset.X - scrollViewer.Offset.X) > 0.5 || Math.Abs(targetOffset.Y - scrollViewer.Offset.Y) > 0.5)
+                {
+                    SetCanvasScrollOffset(scrollViewer, targetOffset);
+                }
+            }, DispatcherPriority.Render);
+        }
+
+        private static bool SetOptionalLength(Control control, double desiredValue, bool setWidth)
+        {
+            double currentValue = setWidth ? control.Width : control.Height;
+            bool valuesMatch = double.IsNaN(currentValue) == double.IsNaN(desiredValue) &&
+                               (double.IsNaN(currentValue) || Math.Abs(currentValue - desiredValue) <= 0.5);
+
+            if (valuesMatch)
+            {
+                return false;
+            }
+
+            if (setWidth)
+            {
+                control.Width = desiredValue;
+            }
+            else
+            {
+                control.Height = desiredValue;
+            }
+
+            return true;
+        }
+
         private void OnCanvasScrollChanged(object? sender, ScrollChangedEventArgs e)
         {
+            if (sender is ScrollViewer scrollViewer && !_isAdjustingCanvasScrollOffset)
+            {
+                Vector clampedOffset = ClampCanvasScrollOffset(scrollViewer, scrollViewer.Offset);
+
+                if (Math.Abs(clampedOffset.X - scrollViewer.Offset.X) > 0.5 || Math.Abs(clampedOffset.Y - scrollViewer.Offset.Y) > 0.5)
+                {
+                    SetCanvasScrollOffset(scrollViewer, clampedOffset);
+                }
+            }
+
             RequestOverlayCanvasLayoutUpdate();
         }
 

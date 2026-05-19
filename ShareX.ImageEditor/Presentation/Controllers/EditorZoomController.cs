@@ -110,13 +110,10 @@ public class EditorZoomController
         {
             var pointerPosition = e.GetPosition(scrollViewer);
             var offsetBefore = scrollViewer.Offset;
-            if (scrollViewer.Extent.Width <= scrollViewer.Viewport.Width)
-                offsetBefore = offsetBefore.WithX(0);
-            if (scrollViewer.Extent.Height <= scrollViewer.Viewport.Height)
-                offsetBefore = offsetBefore.WithY(0);
+            var contentOriginBefore = _view.GetCanvasContentOrigin(scrollViewer);
             var logicalPoint = new Vector(
-               (offsetBefore.X + pointerPosition.X) / oldZoom,
-               (offsetBefore.Y + pointerPosition.Y) / oldZoom);
+               (offsetBefore.X + pointerPosition.X - contentOriginBefore.X) / oldZoom,
+               (offsetBefore.Y + pointerPosition.Y - contentOriginBefore.Y) / oldZoom);
 
             _isPointerZooming = true;
             _lastZoom = oldZoom;
@@ -124,21 +121,12 @@ public class EditorZoomController
 
             Dispatcher.UIThread.Post(() =>
             {
+                var contentOriginAfter = _view.GetCanvasContentOrigin(scrollViewer);
                 var targetOffset = new Vector(
-                    logicalPoint.X * newZoom - pointerPosition.X,
-                    logicalPoint.Y * newZoom - pointerPosition.Y);
+                    contentOriginAfter.X + logicalPoint.X * newZoom - pointerPosition.X,
+                    contentOriginAfter.Y + logicalPoint.Y * newZoom - pointerPosition.Y);
 
-                var maxX = Math.Max(0, scrollViewer.Extent.Width - scrollViewer.Viewport.Width);
-                var maxY = Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
-
-                if (scrollViewer.Extent.Width <= scrollViewer.Viewport.Width)
-                    targetOffset = targetOffset.WithX(0);
-                if (scrollViewer.Extent.Height <= scrollViewer.Viewport.Height)
-                    targetOffset = targetOffset.WithY(0);
-
-                scrollViewer.Offset = new Vector(
-                    Math.Clamp(targetOffset.X, 0, maxX),
-                    Math.Clamp(targetOffset.Y, 0, maxY));
+                scrollViewer.Offset = _view.ClampCanvasScrollOffset(scrollViewer, targetOffset);
             }, DispatcherPriority.Render);
         }
         else
@@ -177,31 +165,19 @@ public class EditorZoomController
         if (scrollViewer == null || oldZoom <= 0) return;
 
         var offsetBefore = scrollViewer.Offset;
-        if (scrollViewer.Extent.Width <= scrollViewer.Viewport.Width)
-            offsetBefore = offsetBefore.WithX(0);
-        if (scrollViewer.Extent.Height <= scrollViewer.Viewport.Height)
-            offsetBefore = offsetBefore.WithY(0);
+        var contentOriginBefore = _view.GetCanvasContentOrigin(scrollViewer);
         var logicalPoint = new Vector(
-            (offsetBefore.X + anchor.X) / oldZoom,
-            (offsetBefore.Y + anchor.Y) / oldZoom);
+            (offsetBefore.X + anchor.X - contentOriginBefore.X) / oldZoom,
+            (offsetBefore.Y + anchor.Y - contentOriginBefore.Y) / oldZoom);
 
         Dispatcher.UIThread.Post(() =>
         {
+            var contentOriginAfter = _view.GetCanvasContentOrigin(scrollViewer);
             var targetOffset = new Vector(
-                logicalPoint.X * newZoom - anchor.X,
-                logicalPoint.Y * newZoom - anchor.Y);
+                contentOriginAfter.X + logicalPoint.X * newZoom - anchor.X,
+                contentOriginAfter.Y + logicalPoint.Y * newZoom - anchor.Y);
 
-            var maxX = Math.Max(0, scrollViewer.Extent.Width - scrollViewer.Viewport.Width);
-            var maxY = Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
-
-            if (scrollViewer.Extent.Width <= scrollViewer.Viewport.Width)
-                targetOffset = targetOffset.WithX(0);
-            if (scrollViewer.Extent.Height <= scrollViewer.Viewport.Height)
-                targetOffset = targetOffset.WithY(0);
-
-            scrollViewer.Offset = new Vector(
-                Math.Clamp(targetOffset.X, 0, maxX),
-                Math.Clamp(targetOffset.Y, 0, maxY));
+            scrollViewer.Offset = _view.ClampCanvasScrollOffset(scrollViewer, targetOffset);
         }, DispatcherPriority.Render);
     }
 
@@ -212,13 +188,7 @@ public class EditorZoomController
 
         Dispatcher.UIThread.Post(() =>
         {
-            var extent = scrollViewer.Extent;
-            var viewport = scrollViewer.Viewport;
-            var targetOffset = new Vector(
-                Math.Max(0, (extent.Width - viewport.Width) / 2),
-                Math.Max(0, (extent.Height - viewport.Height) / 2));
-
-            scrollViewer.Offset = targetOffset;
+            _view.SetCanvasScrollOffset(scrollViewer, _view.GetDefaultCanvasScrollOffset(scrollViewer));
         }, DispatcherPriority.Render);
     }
 
@@ -272,12 +242,7 @@ public class EditorZoomController
             _panOrigin.X - delta.X,
             _panOrigin.Y - delta.Y);
 
-        var maxX = Math.Max(0, scrollViewer.Extent.Width - scrollViewer.Viewport.Width);
-        var maxY = Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
-
-        scrollViewer.Offset = new Vector(
-            Math.Clamp(target.X, 0, maxX),
-            Math.Clamp(target.Y, 0, maxY));
+        scrollViewer.Offset = _view.ClampCanvasScrollOffset(scrollViewer, target);
 
         e.Handled = true;
     }
@@ -339,7 +304,10 @@ public class EditorZoomController
         var scrollViewer = _view.FindControl<ScrollViewer>("CanvasScrollViewer");
         if (scrollViewer == null) return;
 
-        Dispatcher.UIThread.Post(() => scrollViewer.Offset = new Vector(0, 0), DispatcherPriority.Render);
+        Dispatcher.UIThread.Post(() =>
+        {
+            _view.SetCanvasScrollOffset(scrollViewer, _view.GetDefaultCanvasScrollOffset(scrollViewer));
+        }, DispatcherPriority.Render);
     }
 
     public void HandleZoomPropertyChanged(MainViewModel vm)
