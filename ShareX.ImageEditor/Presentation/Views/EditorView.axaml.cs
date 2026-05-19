@@ -72,7 +72,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private int _pendingAutoCopyImageVersion;
         private bool _overlayCanvasLayoutUpdatePending;
         private bool _isAdjustingCanvasScrollOffset;
-        private int _pendingCanvasRecenteringPasses;
+        private bool _pendingCanvasRecentering;
         private Rect? _lastOverlayCanvasRect;
         private double _lastOverlayCanvasZoom = -1;
         private double _lastRenderScaling = 1.0;
@@ -324,7 +324,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         internal void QueueCanvasRecentering()
         {
-            _pendingCanvasRecenteringPasses = 4;
+            _pendingCanvasRecentering = true;
         }
 
         private void UpdateCanvasPanHostLayout()
@@ -368,16 +368,14 @@ namespace ShareX.ImageEditor.Presentation.Views
                 ? Avalonia.Controls.Primitives.ScrollBarVisibility.Auto
                 : Avalonia.Controls.Primitives.ScrollBarVisibility.Hidden;
 
-            bool hasPendingCanvasRecentering = _pendingCanvasRecenteringPasses > 0;
-
             if (!widthChanged && !heightChanged)
             {
-                if (hasPendingCanvasRecentering)
+                if (_pendingCanvasRecentering)
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
                         SetCanvasScrollOffset(scrollViewer, GetDefaultCanvasScrollOffset(scrollViewer));
-                        _pendingCanvasRecenteringPasses--;
+                        _pendingCanvasRecentering = false;
                     }, DispatcherPriority.Render);
                 }
 
@@ -386,7 +384,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             Dispatcher.UIThread.Post(() =>
             {
-                Vector targetOffset = hasPendingCanvasRecentering
+                Vector targetOffset = _pendingCanvasRecentering
                     ? GetDefaultCanvasScrollOffset(scrollViewer)
                     : ClampCanvasScrollOffset(scrollViewer, GetDefaultCanvasScrollOffset(scrollViewer) + offsetDelta);
 
@@ -395,10 +393,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     SetCanvasScrollOffset(scrollViewer, targetOffset);
                 }
 
-                if (hasPendingCanvasRecentering)
-                {
-                    _pendingCanvasRecenteringPasses--;
-                }
+                _pendingCanvasRecentering = false;
             }, DispatcherPriority.Render);
         }
 
@@ -683,7 +678,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                 if (vm.PreviewImage != null)
                 {
                     bool isInitialImageLoad = _editorCore.SourceImage == null;
-                    _zoomController.ResetScrollViewerOffset();
                     LoadImageFromViewModel(vm);
                     if (isInitialImageLoad)
                     {
