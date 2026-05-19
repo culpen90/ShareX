@@ -656,6 +656,33 @@
         <Style Selector="^:disabled">
             <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text.Secondary}"/>
         </Style>
+
+        <Style Selector="^:checked:not(:disabled) /template/ Border#SwitchKnobBounds">
+            <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Accent}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Accent}"/>
+        </Style>
+
+        <Style Selector="^:checked:not(:disabled) /template/ Ellipse#SwitchKnobOn">
+            <Setter Property="Fill" Value="{DynamicResource ShareX.Brush.Accent.Foreground}"/>
+        </Style>
+
+        <Style Selector="^:checked:not(:disabled):pointerover /template/ Border#SwitchKnobBounds">
+            <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Accent}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Accent}"/>
+        </Style>
+
+        <Style Selector="^:checked:not(:disabled):pointerover /template/ Ellipse#SwitchKnobOn">
+            <Setter Property="Fill" Value="{DynamicResource ShareX.Brush.Accent.Foreground}"/>
+        </Style>
+
+        <Style Selector="^:checked:not(:disabled):pressed /template/ Border#SwitchKnobBounds">
+            <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Accent}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Accent}"/>
+        </Style>
+
+        <Style Selector="^:checked:not(:disabled):pressed /template/ Ellipse#SwitchKnobOn">
+            <Setter Property="Fill" Value="{DynamicResource ShareX.Brush.Accent.Foreground}"/>
+        </Style>
     </Style>
 
     <Style Selector="ToggleSwitch.side-panel-toggle-proxy">
@@ -725,12 +752,12 @@
     </Style>
 
     <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Ellipse#SwitchKnobOn">
-        <Setter Property="Fill" Value="{DynamicResource ToggleSwitchKnobFillOnPointerOver}"/>
+        <Setter Property="Fill" Value="{DynamicResource ShareX.Brush.Accent.Foreground}"/>
     </Style>
 
     <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Border#SwitchKnobBounds">
-        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOnPointerOver}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOnPointerOver}"/>
+        <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Accent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Accent}"/>
     </Style>
 
     <Style Selector="ToggleButton.side-panel-toggle-row:pointerover ToggleSwitch.side-panel-toggle-proxy /template/ Grid#SwitchAreaGrid">
@@ -747,12 +774,12 @@
     </Style>
 
     <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Ellipse#SwitchKnobOn">
-        <Setter Property="Fill" Value="{DynamicResource ToggleSwitchKnobFillOnPressed}"/>
+        <Setter Property="Fill" Value="{DynamicResource ShareX.Brush.Accent.Foreground}"/>
     </Style>
 
     <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Border#SwitchKnobBounds">
-        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOnPressed}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOnPressed}"/>
+        <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Accent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Accent}"/>
     </Style>
 
     <Style Selector="ToggleButton.side-panel-toggle-row:pressed ToggleSwitch.side-panel-toggle-proxy /template/ Grid#SwitchAreaGrid">
