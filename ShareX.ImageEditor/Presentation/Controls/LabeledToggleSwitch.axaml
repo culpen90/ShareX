@@ -23,7 +23,7 @@
                           OffContent=""
                           IsChecked="{Binding IsChecked, ElementName=LabeledToggleSwitchRoot, Mode=OneWay}"
                           IsEnabled="{Binding IsEnabled, ElementName=LabeledToggleSwitchRoot}"
-                          Foreground="{Binding ToggleForeground, ElementName=LabeledToggleSwitchRoot, TargetNullValue={DynamicResource ShareX.Brush.Text}}"
+                          Foreground="{Binding ToggleForeground, ElementName=LabeledToggleSwitchRoot}"
                           VerticalAlignment="Center"/>
         </Grid>
     </ToggleButton>
