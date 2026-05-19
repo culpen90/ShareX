@@ -25,6 +25,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 
@@ -39,7 +40,8 @@ namespace ShareX.ImageEditor.Presentation.Controls
 
         public static readonly StyledProperty<bool> IsCheckedProperty =
             AvaloniaProperty.Register<LabeledToggleSwitch, bool>(
-                nameof(IsChecked));
+                nameof(IsChecked),
+                defaultBindingMode: BindingMode.TwoWay);
 
         public static readonly StyledProperty<IBrush?> ToggleForegroundProperty =
             AvaloniaProperty.Register<LabeledToggleSwitch, IBrush?>(
