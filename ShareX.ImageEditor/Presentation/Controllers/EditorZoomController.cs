@@ -304,6 +304,8 @@ public class EditorZoomController
         var scrollViewer = _view.FindControl<ScrollViewer>("CanvasScrollViewer");
         if (scrollViewer == null) return;
 
+        _view.QueueCanvasRecentering();
+
         Dispatcher.UIThread.Post(() =>
         {
             _view.SetCanvasScrollOffset(scrollViewer, _view.GetDefaultCanvasScrollOffset(scrollViewer));
