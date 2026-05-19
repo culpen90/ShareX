@@ -185,27 +185,11 @@
                                     Maximum="200"
                                     Value="{Binding BackgroundPadding}"
                                     Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
-                            <ToggleButton Classes="side-panel-toggle-row"
-                                          IsChecked="{Binding BackgroundSmartPadding}"
-                                          IsEnabled="{Binding CanUseBackgroundSmartPadding}"
-                                          Margin="0,0,0,8">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                    <TextBlock Text="Smart padding"
-                                               Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
-                                               VerticalAlignment="Center"/>
-                                    <ToggleSwitch x:Name="BackgroundSmartPaddingToggleSwitch"
-                                                  Grid.Column="1"
-                                                  Classes="side-panel-toggle-proxy"
-                                                  IsHitTestVisible="False"
-                                                  Focusable="False"
-                                                  IsChecked="{Binding $parent[ToggleButton].IsChecked, Mode=OneWay, TargetNullValue=False}"
-                                                  IsEnabled="{Binding $parent[ToggleButton].IsEnabled}"
-                                                  Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
-                                                  OnContent=""
-                                                  OffContent=""
-                                                  VerticalAlignment="Center"/>
-                                </Grid>
-                            </ToggleButton>
+                            <controls:LabeledToggleSwitch Label="Smart padding"
+                                                          IsChecked="{Binding BackgroundSmartPadding}"
+                                                          IsEnabled="{Binding CanUseBackgroundSmartPadding}"
+                                                          ToggleForeground="{DynamicResource ShareX.Brush.Text.Secondary}"
+                                                          Margin="0,0,0,8"/>
                         </StackPanel>
 
                         <!-- Background Rounded Corner -->
