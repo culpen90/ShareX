@@ -207,7 +207,19 @@ public class EditorZoomController
 
     public void CenterCanvasOnZoomChange()
     {
-        QueueCenterPreviewFrame(retryCount: 1);
+        var scrollViewer = _view.FindControl<ScrollViewer>("CanvasScrollViewer");
+        if (scrollViewer == null) return;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            var extent = scrollViewer.Extent;
+            var viewport = scrollViewer.Viewport;
+            var targetOffset = new Vector(
+                Math.Max(0, (extent.Width - viewport.Width) / 2),
+                Math.Max(0, (extent.Height - viewport.Height) / 2));
+
+            scrollViewer.Offset = targetOffset;
+        }, DispatcherPriority.Render);
     }
 
     public void OnScrollViewerPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -324,62 +336,10 @@ public class EditorZoomController
 
     public void ResetScrollViewerOffset()
     {
-        QueueCenterPreviewFrame(retryCount: 4);
-    }
-
-    private void QueueCenterPreviewFrame(int retryCount)
-    {
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (TryCenterPreviewFrame())
-            {
-                return;
-            }
-
-            if (retryCount > 0)
-            {
-                QueueCenterPreviewFrame(retryCount - 1);
-            }
-        }, DispatcherPriority.Render);
-    }
-
-    private bool TryCenterPreviewFrame()
-    {
         var scrollViewer = _view.FindControl<ScrollViewer>("CanvasScrollViewer");
-        var previewFrame = _view.FindControl<Border>("PreviewFrame");
+        if (scrollViewer == null) return;
 
-        if (scrollViewer == null || previewFrame == null || !previewFrame.IsVisible)
-        {
-            return false;
-        }
-
-        if (scrollViewer.Viewport.Width <= 0 || scrollViewer.Viewport.Height <= 0)
-        {
-            return false;
-        }
-
-        Point? topLeft = previewFrame.TranslatePoint(default, scrollViewer);
-        Point? bottomRight = previewFrame.TranslatePoint(new Point(previewFrame.Bounds.Width, previewFrame.Bounds.Height), scrollViewer);
-
-        if (!topLeft.HasValue || !bottomRight.HasValue)
-        {
-            return false;
-        }
-
-        Point previewCenter = new(
-            (topLeft.Value.X + bottomRight.Value.X) / 2,
-            (topLeft.Value.Y + bottomRight.Value.Y) / 2);
-        Point viewportCenter = new(scrollViewer.Viewport.Width / 2, scrollViewer.Viewport.Height / 2);
-        Vector delta = previewCenter - viewportCenter;
-
-        double maxX = Math.Max(0, scrollViewer.Extent.Width - scrollViewer.Viewport.Width);
-        double maxY = Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
-        Vector targetOffset = new(
-            Math.Clamp(scrollViewer.Offset.X + delta.X, 0, maxX),
-            Math.Clamp(scrollViewer.Offset.Y + delta.Y, 0, maxY));
-
-        scrollViewer.Offset = targetOffset;
-        return true;
+        Dispatcher.UIThread.Post(() => scrollViewer.Offset = new Vector(0, 0), DispatcherPriority.Render);
     }
 
     public void HandleZoomPropertyChanged(MainViewModel vm)

@@ -39,7 +39,6 @@ namespace ShareX.ImageEditor.Presentation.Views
         private readonly ImageEditorOptions? _options;
         private readonly MainViewModel _viewModel;
         private string? _pendingFilePath;
-        private SKBitmap? _pendingBitmap;
         private bool _allowClose;
 
         public EditorWindow() : this(null)
@@ -83,12 +82,6 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         protected override void OnClosed(EventArgs e)
         {
-            if (_pendingBitmap != null)
-            {
-                _pendingBitmap.Dispose();
-                _pendingBitmap = null;
-            }
-
             SaveWindowState();
             base.OnClosed(e);
         }
@@ -148,7 +141,12 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnWindowLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            LoadPendingImage();
+            // Now that EditorView is loaded and subscribed to ViewModel, load the image
+            if (!string.IsNullOrEmpty(_pendingFilePath))
+            {
+                LoadImageInternal(_pendingFilePath);
+                _pendingFilePath = null;
+            }
         }
 
         /// <summary>
@@ -168,7 +166,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             // If window not loaded yet, defer image loading
             if (!IsLoaded)
             {
-                ClearPendingBitmap();
                 _pendingFilePath = filePath;
                 return;
             }
@@ -216,13 +213,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                     throw new InvalidOperationException("SkiaSharp returned no bitmap.");
                 }
 
-                if (!IsLoaded)
-                {
-                    QueuePendingBitmap(bitmap);
-                    return;
-                }
-
-                LoadImageInternal(bitmap, imageFilePath: null);
+                _viewModel.UpdatePreview(bitmap);
+                _viewModel.IsDirty = false;
             }
             catch (Exception ex)
             {
@@ -240,63 +232,13 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             try
             {
-                if (!IsLoaded)
-                {
-                    QueuePendingBitmap(bitmap);
-                    return;
-                }
-
-                LoadImageInternal(bitmap, imageFilePath: null);
+                _viewModel.UpdatePreview(bitmap);
+                _viewModel.IsDirty = false;
             }
             catch (Exception ex)
             {
                 EditorServices.ReportError(nameof(EditorWindow), "Failed to load image from bitmap.", ex);
             }
-        }
-
-        private void LoadPendingImage()
-        {
-            if (!string.IsNullOrEmpty(_pendingFilePath))
-            {
-                string filePath = _pendingFilePath;
-                _pendingFilePath = null;
-                LoadImageInternal(filePath);
-                return;
-            }
-
-            if (_pendingBitmap != null)
-            {
-                SKBitmap bitmap = _pendingBitmap;
-                _pendingBitmap = null;
-                LoadImageInternal(bitmap, imageFilePath: null);
-            }
-        }
-
-        private void QueuePendingBitmap(SKBitmap bitmap)
-        {
-            if (_pendingBitmap != null && !ReferenceEquals(_pendingBitmap, bitmap))
-            {
-                _pendingBitmap.Dispose();
-            }
-
-            _pendingBitmap = bitmap;
-            _pendingFilePath = null;
-        }
-
-        private void ClearPendingBitmap()
-        {
-            if (_pendingBitmap != null)
-            {
-                _pendingBitmap.Dispose();
-                _pendingBitmap = null;
-            }
-        }
-
-        private void LoadImageInternal(SKBitmap bitmap, string? imageFilePath)
-        {
-            _viewModel.UpdatePreview(bitmap);
-            _viewModel.ImageFilePath = imageFilePath;
-            _viewModel.IsDirty = false;
         }
 
         private static string GetWindowTitle(string? dimensions)

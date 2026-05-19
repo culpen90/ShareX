@@ -180,42 +180,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private void OnLayoutUpdated(object? sender, EventArgs e)
         {
             UpdateDpiScaleFromTopLevel();
-            UpdateCanvasPanHostLayout();
             RequestOverlayCanvasLayoutUpdate();
-        }
-
-        private void UpdateCanvasPanHostLayout()
-        {
-            var canvasPanHost = this.FindControl<Border>("CanvasPanHost");
-            var scrollViewer = this.FindControl<ScrollViewer>("CanvasScrollViewer");
-
-            if (canvasPanHost == null || scrollViewer == null)
-            {
-                return;
-            }
-
-            bool hasPreviewImage = DataContext is MainViewModel { HasPreviewImage: true };
-            double horizontalPadding = hasPreviewImage ? Math.Max(0, scrollViewer.Viewport.Width / 2) : 0;
-            double verticalPadding = hasPreviewImage ? Math.Max(0, scrollViewer.Viewport.Height / 2) : 0;
-
-            Thickness currentPadding = canvasPanHost.Padding;
-            if (Math.Abs(currentPadding.Left - horizontalPadding) >= 0.0001 ||
-                Math.Abs(currentPadding.Right - horizontalPadding) >= 0.0001 ||
-                Math.Abs(currentPadding.Top - verticalPadding) >= 0.0001 ||
-                Math.Abs(currentPadding.Bottom - verticalPadding) >= 0.0001)
-            {
-                canvasPanHost.Padding = new Thickness(horizontalPadding, verticalPadding);
-            }
-
-            if (Math.Abs(canvasPanHost.MinWidth) >= 0.0001)
-            {
-                canvasPanHost.MinWidth = 0;
-            }
-
-            if (Math.Abs(canvasPanHost.MinHeight) >= 0.0001)
-            {
-                canvasPanHost.MinHeight = 0;
-            }
         }
 
         /// <summary>
@@ -492,7 +457,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     bool isInitialImageLoad = _editorCore.SourceImage == null;
                     LoadImageFromViewModel(vm);
-                    _zoomController.ResetScrollViewerOffset();
                     if (isInitialImageLoad)
                     {
                         QueueAutoCopyImageToClipboard(vm);
