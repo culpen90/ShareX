@@ -240,6 +240,7 @@ namespace ShareX.ImageEditor.Hosting
                 }
 
                 vm.ShowFileMenu = true;
+                vm.ShowOptionsButton = true;
                 vm.ShowTaskButtons = true;
                 vm.UseContinueWorkflow = taskMode;
                 vm.ShowBottomToolbar = true;

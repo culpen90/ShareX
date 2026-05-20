@@ -89,12 +89,13 @@
                                     </MenuItem>
                                     <Separator/>
                                                                         <MenuItem Header="Options"
+                                                                                          IsVisible="{ReflectionBinding ShowOptionsButton}"
                                                                                           Click="OnOpenOptionsClick">
                                         <MenuItem.Icon>
                                             <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.settings}"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <Separator/>
+                                    <Separator IsVisible="{ReflectionBinding ShowOptionsButton}"/>
                                     <MenuItem Header="Exit"
                                               Command="{ReflectionBinding ExitEditorCommand}"
                                               InputGesture="Escape">

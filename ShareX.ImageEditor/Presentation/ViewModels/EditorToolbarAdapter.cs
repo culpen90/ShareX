@@ -257,6 +257,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public bool ShowFileMenu => _viewModel.ShowFileMenu;
 
+    public bool ShowOptionsButton => _viewModel.ShowOptionsButton;
+
     public ReadOnlyObservableCollection<string> RecentImageFiles => _viewModel.RecentImageFiles;
 
     public bool HasRecentImageFiles => _viewModel.HasRecentImageFiles;
@@ -362,6 +364,9 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
                 break;
             case nameof(MainViewModel.ShowFileMenu):
                 OnPropertyChanged(nameof(ShowFileMenu));
+                break;
+            case nameof(MainViewModel.ShowOptionsButton):
+                OnPropertyChanged(nameof(ShowOptionsButton));
                 break;
             case nameof(MainViewModel.HasRecentImageFiles):
                 OnPropertyChanged(nameof(HasRecentImageFiles));

@@ -80,6 +80,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowShadow { get; }
     bool ShowToolOptions { get; }
     bool ShowToolOptionsSeparator { get; }
+    bool ShowOptionsButton { get; }
     ReadOnlyObservableCollection<MenuItem> RecentImageMenuItems { get; }
     ReadOnlyObservableCollection<string> RecentImageFiles { get; }
     bool HasRecentImageFiles { get; }
