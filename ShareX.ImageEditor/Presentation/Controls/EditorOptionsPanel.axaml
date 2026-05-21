@@ -59,7 +59,7 @@
                           IsChecked="{Binding EditorUseSystemAccentColor, Mode=TwoWay}"
                           Margin="0,0,0,10"/>
 
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,0,0,18"
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,0,0,12"
               IsVisible="{Binding CanEditEditorAccentColor}">
             <TextBlock Text="Accent color"
                    VerticalAlignment="Center"/>
