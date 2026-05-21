@@ -483,7 +483,6 @@
             <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text}"/>
             <Setter Property="Padding" Value="0"/>
         </Style>
-
     </Style>
 
     <Style Selector="ComboBoxItem">

@@ -45,24 +45,28 @@
                           IsChecked="{Binding EditorUseSystemTheme, Mode=TwoWay}"
                           Margin="0,0,0,10"/>
 
-        <StackPanel Spacing="4" Margin="0,0,0,12"
-                    IsVisible="{Binding CanEditEditorTheme}">
-            <TextBlock Text="Theme"/>
-            <ComboBox ItemsSource="{Binding EditorThemeOptions}"
-                      SelectedItem="{Binding EditorTheme, Mode=TwoWay}"
-                      HorizontalAlignment="Stretch"/>
-        </StackPanel>
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,0,0,12"
+              IsVisible="{Binding CanEditEditorTheme}">
+            <TextBlock Text="Theme"
+                   VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="1"
+                  ItemsSource="{Binding EditorThemeOptions}"
+                  SelectedItem="{Binding EditorTheme, Mode=TwoWay}"
+                  VerticalAlignment="Center"/>
+        </Grid>
 
         <controls:LabeledToggleSwitch Label="Follow system accent color"
                           IsChecked="{Binding EditorUseSystemAccentColor, Mode=TwoWay}"
                           Margin="0,0,0,10"/>
 
-        <StackPanel Spacing="4" Margin="0,0,0,18"
-                    IsVisible="{Binding CanEditEditorAccentColor}">
-            <TextBlock Text="Accent color"/>
-            <controls:ColorPickerDropdown SelectedColorValue="{Binding EditorAccentColor, Mode=TwoWay}"
-                                          HorizontalAlignment="Stretch"/>
-        </StackPanel>
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,0,0,18"
+              IsVisible="{Binding CanEditEditorAccentColor}">
+            <TextBlock Text="Accent color"
+                   VerticalAlignment="Center"/>
+            <controls:ColorPickerDropdown Grid.Column="1"
+                          SelectedColorValue="{Binding EditorAccentColor, Mode=TwoWay}"
+                          VerticalAlignment="Center"/>
+        </Grid>
 
         <controls:LabeledToggleSwitch Label="Remember window state"
                                       IsChecked="{Binding EditorRememberWindowState, Mode=TwoWay}"
