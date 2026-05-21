@@ -293,7 +293,7 @@
                                    FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
                                    FontSize="18"
                                    FontWeight="Normal"
-                                   Foreground="{DynamicResource ShareX.Brush.Separator}"
+                                   Foreground="{DynamicResource ShareX.Brush.Accent}"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Center"
                                    TextAlignment="Center"
