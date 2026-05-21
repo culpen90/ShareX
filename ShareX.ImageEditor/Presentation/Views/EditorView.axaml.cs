@@ -67,6 +67,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private bool _isSyncingFromVM;
         private bool _isSyncingToVM;
         private bool _skipNextCoreImageChanged;
+        private bool _suppressNextHistoryDirtyMark;
         private bool _pendingZoomToFitOnOpen;
         private int _pendingZoomToFitRetryCount;
         private int _pendingAutoCopyImageVersion;
@@ -153,18 +154,28 @@ namespace ShareX.ImageEditor.Presentation.Views
             };
             _editorCore.AnnotationsRestored += () => Avalonia.Threading.Dispatcher.UIThread.Post(OnAnnotationsRestored);
             _editorCore.AnnotationOrderChanged += () => Avalonia.Threading.Dispatcher.UIThread.Post(OnAnnotationOrderChanged);
-            _editorCore.HistoryChanged += () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            _editorCore.HistoryChanged += () =>
             {
-                if (DataContext is MainViewModel vm)
-                {
-                    UpdateViewModelHistoryState(vm);
-                    vm.RecalculateNumberCounter(_editorCore.Annotations);
+                bool suppressDirtyMark = _suppressNextHistoryDirtyMark;
+                _suppressNextHistoryDirtyMark = false;
 
-                    // Mark as dirty when history changes (annotations added/interactions/undo/redo)
-                    vm.IsDirty = true;
-                    QueueAutoCopyImageToClipboard(vm);
-                }
-            });
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (DataContext is MainViewModel vm)
+                    {
+                        UpdateViewModelHistoryState(vm);
+                        vm.RecalculateNumberCounter(_editorCore.Annotations);
+
+                        if (!suppressDirtyMark)
+                        {
+                            // Mark as dirty when history changes due to a user edit.
+                            vm.IsDirty = true;
+                        }
+
+                        QueueAutoCopyImageToClipboard(vm);
+                    }
+                });
+            };
 
             // Capture wheel events in tunneling phase so ScrollViewer doesn't scroll when using Ctrl+wheel zoom.
             AddHandler(PointerWheelChangedEvent, OnPreviewPointerWheelChanged, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
@@ -1865,6 +1876,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
                     // Load fresh image into core (clears history and annotations)
                     _skipNextCoreImageChanged = true;
+                    _suppressNextHistoryDirtyMark = true;
                     _editorCore.LoadImage(skBitmap);
 
                     // Initialize canvas control
@@ -2187,6 +2199,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             // Load fresh image into core (clears history and annotations)
             _skipNextCoreImageChanged = true;
+            _suppressNextHistoryDirtyMark = true;
             _editorCore.LoadImage(skBitmap);
 
             // Initialize canvas control
