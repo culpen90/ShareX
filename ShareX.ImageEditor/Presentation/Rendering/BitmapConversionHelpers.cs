@@ -51,9 +51,10 @@ namespace ShareX.ImageEditor.Presentation.Rendering
             {
                 using (var locked = writeableBitmap.Lock())
                 {
+                    var pixelSize = writeableBitmap.PixelSize;
                     var info = new SKImageInfo(
-                        (int)avaloniaBitmap.Size.Width,
-                        (int)avaloniaBitmap.Size.Height,
+                        pixelSize.Width,
+                        pixelSize.Height,
                         SKColorType.Bgra8888, // Avalonia usually uses BGRA
                         SKAlphaType.Premul);
 
@@ -65,7 +66,6 @@ namespace ShareX.ImageEditor.Presentation.Rendering
 
                         // Copy row by row to handle stride differences if any
                         var height = info.Height;
-                        var width = info.Width;
                         var srcStride = locked.RowBytes;
                         var dstStride = skBitmap.RowBytes;
                         var bytesPerRow = Math.Min(srcStride, dstStride); // Safe copy width

@@ -109,27 +109,46 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 snapshotTarget.Measure(Size.Infinity);
 
-                double width = snapshotTarget.DesiredSize.Width;
-                double height = snapshotTarget.DesiredSize.Height;
+                int pixelWidth = 0;
+                int pixelHeight = 0;
 
-                if (width <= 0 || height <= 0)
+                if (DataContext is MainViewModel vm)
                 {
-                    width = snapshotTarget.Bounds.Width;
-                    height = snapshotTarget.Bounds.Height;
+                    double width = vm.SmartPaddingViewportWidth + vm.SmartPaddingThickness.Left + vm.SmartPaddingThickness.Right + vm.CanvasPadding.Left + vm.CanvasPadding.Right;
+                    double height = vm.SmartPaddingViewportHeight + vm.SmartPaddingThickness.Top + vm.SmartPaddingThickness.Bottom + vm.CanvasPadding.Top + vm.CanvasPadding.Bottom;
+
+                    pixelWidth = Math.Max(1, (int)Math.Round(width, MidpointRounding.AwayFromZero));
+                    pixelHeight = Math.Max(1, (int)Math.Round(height, MidpointRounding.AwayFromZero));
                 }
 
-                if (width <= 0 || height <= 0)
+                if (pixelWidth <= 0 || pixelHeight <= 0)
                 {
-                    width = _editorCore.SourceImage.Width;
-                    height = _editorCore.SourceImage.Height;
+                    double width = snapshotTarget.Bounds.Width;
+                    double height = snapshotTarget.Bounds.Height;
+
+                    if (width <= 0 || height <= 0)
+                    {
+                        width = snapshotTarget.DesiredSize.Width;
+                        height = snapshotTarget.DesiredSize.Height;
+                    }
+
+                    if (width <= 0 || height <= 0)
+                    {
+                        width = _editorCore.SourceImage.Width;
+                        height = _editorCore.SourceImage.Height;
+                    }
+
+                    // Fallback to live bounds only when the view-model export size is unavailable.
+                    pixelWidth = Math.Max(1, (int)Math.Round(width, MidpointRounding.AwayFromZero));
+                    pixelHeight = Math.Max(1, (int)Math.Round(height, MidpointRounding.AwayFromZero));
                 }
 
                 // Force layout at native resolution (un-zoomed)
-                snapshotTarget.Arrange(new Rect(0, 0, width, height));
+                snapshotTarget.Arrange(new Rect(0, 0, pixelWidth, pixelHeight));
 
                 // Render Avalonia visual tree to bitmap
                 using var rtb = new RenderTargetBitmap(
-                    new PixelSize(Math.Max(1, (int)Math.Ceiling(width)), Math.Max(1, (int)Math.Ceiling(height))),
+                        new PixelSize(pixelWidth, pixelHeight),
                     new Vector(96, 96));
                 rtb.Render(snapshotTarget);
 

@@ -39,9 +39,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             // Optimization: If we have the source SKBitmap (which we usually do for the main image),
             // use it directly instead of round-tripping.
+            var pixelSize = bitmap.PixelSize;
             if (_currentSourceImage != null &&
-                _currentSourceImage.Width == bitmap.Size.Width &&
-                _currentSourceImage.Height == bitmap.Size.Height)
+                _currentSourceImage.Width == pixelSize.Width &&
+                _currentSourceImage.Height == pixelSize.Height)
             {
                 if (x < 0 || y < 0 || x >= _currentSourceImage.Width || y >= _currentSourceImage.Height)
                     return Colors.Transparent;

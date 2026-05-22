@@ -34,6 +34,7 @@ using ShareX.ScreenCaptureLib;
 using ShareX.UploadersLib;
 using ShareX.UploadersLib.SharingServices;
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,7 +42,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1322,12 +1322,12 @@ namespace ShareX
                 {
                     CopyImageRequested = (skBitmap) =>
                     {
-                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
+                        using Bitmap img = skBitmap.ToBitmap();
                         MainFormCopyImage(img);
                     },
                     SaveImageRequested = (skBitmap, newFilePath) =>
                     {
-                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
+                        using Bitmap img = skBitmap.ToBitmap();
 
                         if (string.IsNullOrEmpty(newFilePath))
                         {
@@ -1341,7 +1341,7 @@ namespace ShareX
                     },
                     SaveImageAsRequested = (skBitmap, newFilePath) =>
                     {
-                        using Bitmap img = SkBitmapToGdiBitmap(skBitmap);
+                        using Bitmap img = skBitmap.ToBitmap();
 
                         if (string.IsNullOrEmpty(newFilePath))
                         {
@@ -1353,80 +1353,47 @@ namespace ShareX
                         newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
                         return newFilePath;
                     },
+                    PrintImageRequested = (skBitmap) =>
+                    {
+                        Bitmap bmp = skBitmap.ToBitmap();
+                        MainFormPrintImage(bmp);
+                    },
                     PinImageRequested = (skBitmap) =>
                     {
-                        Bitmap bmp = SkBitmapToGdiBitmap(skBitmap);
+                        Bitmap bmp = skBitmap.ToBitmap();
                         PinToScreen(bmp, taskSettings);
                     },
                     UploadImageRequested = (skBitmap) =>
                     {
-                        Bitmap bmp = SkBitmapToGdiBitmap(skBitmap);
+                        Bitmap bmp = skBitmap.ToBitmap();
                         MainFormUploadImage(bmp, taskSettings);
                     }
                 };
 
-                byte[] bytesResult = null;
+                SKBitmap skBitmapResult = null;
 
                 if (bmp != null)
                 {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        bmp.Save(ms, ImageFormat.Bmp);
-                        ms.Position = 0;
-
-                        bytesResult = AvaloniaIntegration.ShowEditorDialog(ms, taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                            events, taskMode, filePath);
-                    }
+                    using SKBitmap skBitmap = bmp.ToSKBitmap();
+                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                        events, taskMode, filePath);
                 }
                 else
                 {
-                    bytesResult = AvaloniaIntegration.ShowEditorDialog(taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(taskSettings.ToolsSettingsReference.ImageEditorOptions,
                         events, taskMode, filePath);
                 }
 
-                if (bytesResult != null)
+                if (skBitmapResult != null)
                 {
-                    bmpResult = ImageHelpers.ByteArrayToBitmap(bytesResult);
+                    using (skBitmapResult)
+                    {
+                        bmpResult = skBitmapResult.ToBitmap();
+                    }
                 }
             });
 
             return bmpResult;
-        }
-
-        // Converts SKBitmap → GDI Bitmap.
-        // Uses LockBits to write into a fresh GDI+-owned pixel buffer — guarantees
-        // the result shares no memory with the source SKBitmap or any wrapper.
-        private static Bitmap SkBitmapToGdiBitmap(SKBitmap sk)
-        {
-            var result = new Bitmap(sk.Width, sk.Height, PixelFormat.Format32bppArgb);
-            BitmapData bmpData = result.LockBits(
-                new Rectangle(0, 0, sk.Width, sk.Height),
-                ImageLockMode.WriteOnly,
-                PixelFormat.Format32bppArgb);
-            try
-            {
-                byte[] srcPixels = sk.Bytes;
-                int srcStride = sk.RowBytes;
-                int dstStride = bmpData.Stride;
-                int rowBytes = sk.Width * 4;
-
-                if (srcStride == dstStride)
-                {
-                    Marshal.Copy(srcPixels, 0, bmpData.Scan0, srcPixels.Length);
-                }
-                else
-                {
-                    for (int y = 0; y < sk.Height; y++)
-                    {
-                        Marshal.Copy(srcPixels, y * srcStride, IntPtr.Add(bmpData.Scan0, y * dstStride), rowBytes);
-                    }
-                }
-            }
-            finally
-            {
-                result.UnlockBits(bmpData);
-            }
-            return result;
         }
 
         public static void MainFormCopyImage(Bitmap bmp)

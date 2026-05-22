@@ -6532,8 +6532,35 @@
   <data name="&gt;&gt;tpUpload.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="cbImageEditorUseLegacyImageEditor.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="cbImageEditorUseLegacyImageEditor.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 8</value>
+  </data>
+  <data name="cbImageEditorUseLegacyImageEditor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>139, 17</value>
+  </data>
+  <data name="cbImageEditorUseLegacyImageEditor.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="cbImageEditorUseLegacyImageEditor.Text" xml:space="preserve">
+    <value>Use legacy image editor</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.Name" xml:space="preserve">
+    <value>cbImageEditorUseLegacyImageEditor</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.Parent" xml:space="preserve">
+    <value>pTools</value>
+  </data>
+  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="txtToolsScreenColorPickerFormatCtrl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 71</value>
+    <value>8, 95</value>
   </data>
   <data name="txtToolsScreenColorPickerFormatCtrl.Size" type="System.Drawing.Size, System.Drawing">
     <value>288, 20</value>
@@ -6551,7 +6578,7 @@
     <value>pTools</value>
   </data>
   <data name="&gt;&gt;txtToolsScreenColorPickerFormatCtrl.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="lblToolsScreenColorPickerFormatCtrl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -6560,7 +6587,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblToolsScreenColorPickerFormatCtrl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 55</value>
+    <value>5, 79</value>
   </data>
   <data name="lblToolsScreenColorPickerFormatCtrl.Size" type="System.Drawing.Size, System.Drawing">
     <value>192, 13</value>
@@ -6581,10 +6608,10 @@
     <value>pTools</value>
   </data>
   <data name="&gt;&gt;lblToolsScreenColorPickerFormatCtrl.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="txtToolsScreenColorPickerInfoText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 118</value>
+    <value>8, 142</value>
   </data>
   <data name="txtToolsScreenColorPickerInfoText.Size" type="System.Drawing.Size, System.Drawing">
     <value>288, 20</value>
@@ -6602,7 +6629,7 @@
     <value>pTools</value>
   </data>
   <data name="&gt;&gt;txtToolsScreenColorPickerInfoText.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="lblToolsScreenColorPickerInfoText.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -6611,7 +6638,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblToolsScreenColorPickerInfoText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 102</value>
+    <value>5, 126</value>
   </data>
   <data name="lblToolsScreenColorPickerInfoText.Size" type="System.Drawing.Size, System.Drawing">
     <value>142, 13</value>
@@ -6632,10 +6659,10 @@
     <value>pTools</value>
   </data>
   <data name="&gt;&gt;lblToolsScreenColorPickerInfoText.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="txtToolsScreenColorPickerFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 24</value>
+    <value>8, 48</value>
   </data>
   <data name="txtToolsScreenColorPickerFormat.Size" type="System.Drawing.Size, System.Drawing">
     <value>288, 20</value>
@@ -6653,7 +6680,7 @@
     <value>pTools</value>
   </data>
   <data name="&gt;&gt;txtToolsScreenColorPickerFormat.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="lblToolsScreenColorPickerFormat.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -6662,7 +6689,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblToolsScreenColorPickerFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 8</value>
+    <value>5, 32</value>
   </data>
   <data name="lblToolsScreenColorPickerFormat.Size" type="System.Drawing.Size, System.Drawing">
     <value>134, 13</value>
@@ -6683,16 +6710,16 @@
     <value>pTools</value>
   </data>
   <data name="&gt;&gt;lblToolsScreenColorPickerFormat.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="pTools.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
   <data name="pTools.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 28</value>
+    <value>0, 25</value>
   </data>
   <data name="pTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 428</value>
+    <value>563, 434</value>
   </data>
   <data name="pTools.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -6719,13 +6746,13 @@
     <value>NoControl</value>
   </data>
   <data name="cbOverrideToolsSettings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
+    <value>0, 0</value>
   </data>
   <data name="cbOverrideToolsSettings.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>8, 8, 8, 0</value>
   </data>
   <data name="cbOverrideToolsSettings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>557, 25</value>
+    <value>563, 25</value>
   </data>
   <data name="cbOverrideToolsSettings.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -6748,9 +6775,6 @@
   <data name="tpToolsGeneral.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
   </data>
-  <data name="tpToolsGeneral.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
   <data name="tpToolsGeneral.Size" type="System.Drawing.Size, System.Drawing">
     <value>563, 459</value>
   </data>
@@ -6768,276 +6792,6 @@
   </data>
   <data name="&gt;&gt;tpToolsGeneral.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="cbImageEditorQuickCrop.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorQuickCrop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 200</value>
-  </data>
-  <data name="cbImageEditorQuickCrop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 17</value>
-  </data>
-  <data name="cbImageEditorQuickCrop.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="cbImageEditorQuickCrop.Text" xml:space="preserve">
-    <value>Quick crop</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorQuickCrop.Name" xml:space="preserve">
-    <value>cbImageEditorQuickCrop</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorQuickCrop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorQuickCrop.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorQuickCrop.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="cbImageEditorRememberWindowState.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorRememberWindowState.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 80</value>
-  </data>
-  <data name="cbImageEditorRememberWindowState.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 17</value>
-  </data>
-  <data name="cbImageEditorRememberWindowState.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="cbImageEditorRememberWindowState.Text" xml:space="preserve">
-    <value>Remember window state</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorRememberWindowState.Name" xml:space="preserve">
-    <value>cbImageEditorRememberWindowState</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorRememberWindowState.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorRememberWindowState.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorRememberWindowState.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="cbImageEditorUseSystemAccentColor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorUseSystemAccentColor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 56</value>
-  </data>
-  <data name="cbImageEditorUseSystemAccentColor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 17</value>
-  </data>
-  <data name="cbImageEditorUseSystemAccentColor.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="cbImageEditorUseSystemAccentColor.Text" xml:space="preserve">
-    <value>Use system accent color</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemAccentColor.Name" xml:space="preserve">
-    <value>cbImageEditorUseSystemAccentColor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemAccentColor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemAccentColor.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemAccentColor.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="cbImageEditorUseSystemTheme.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorUseSystemTheme.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 32</value>
-  </data>
-  <data name="cbImageEditorUseSystemTheme.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 17</value>
-  </data>
-  <data name="cbImageEditorUseSystemTheme.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="cbImageEditorUseSystemTheme.Text" xml:space="preserve">
-    <value>Use system theme</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemTheme.Name" xml:space="preserve">
-    <value>cbImageEditorUseSystemTheme</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemTheme.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemTheme.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseSystemTheme.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="cbImageEditorAutoCopyImageToClipboard.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorAutoCopyImageToClipboard.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 176</value>
-  </data>
-  <data name="cbImageEditorAutoCopyImageToClipboard.Size" type="System.Drawing.Size, System.Drawing">
-    <value>163, 17</value>
-  </data>
-  <data name="cbImageEditorAutoCopyImageToClipboard.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="cbImageEditorAutoCopyImageToClipboard.Text" xml:space="preserve">
-    <value>Auto copy image to clipboard</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.Name" xml:space="preserve">
-    <value>cbImageEditorAutoCopyImageToClipboard</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCopyImageToClipboard.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="cbImageEditorAutoCloseEditorOnTask.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorAutoCloseEditorOnTask.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 152</value>
-  </data>
-  <data name="cbImageEditorAutoCloseEditorOnTask.Size" type="System.Drawing.Size, System.Drawing">
-    <value>143, 17</value>
-  </data>
-  <data name="cbImageEditorAutoCloseEditorOnTask.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="cbImageEditorAutoCloseEditorOnTask.Text" xml:space="preserve">
-    <value>Auto close editor on task</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.Name" xml:space="preserve">
-    <value>cbImageEditorAutoCloseEditorOnTask</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorAutoCloseEditorOnTask.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="cbImageEditorZoomToFitOnOpen.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorZoomToFitOnOpen.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 128</value>
-  </data>
-  <data name="cbImageEditorZoomToFitOnOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 17</value>
-  </data>
-  <data name="cbImageEditorZoomToFitOnOpen.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="cbImageEditorZoomToFitOnOpen.Text" xml:space="preserve">
-    <value>Zoom to fit on open</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorZoomToFitOnOpen.Name" xml:space="preserve">
-    <value>cbImageEditorZoomToFitOnOpen</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorZoomToFitOnOpen.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorZoomToFitOnOpen.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorZoomToFitOnOpen.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="cbImageEditorExitConfirmation.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorExitConfirmation.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 104</value>
-  </data>
-  <data name="cbImageEditorExitConfirmation.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 17</value>
-  </data>
-  <data name="cbImageEditorExitConfirmation.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="cbImageEditorExitConfirmation.Text" xml:space="preserve">
-    <value>Show exit confirmation</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorExitConfirmation.Name" xml:space="preserve">
-    <value>cbImageEditorExitConfirmation</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorExitConfirmation.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorExitConfirmation.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorExitConfirmation.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="cbImageEditorUseLegacyImageEditor.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cbImageEditorUseLegacyImageEditor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 8</value>
-  </data>
-  <data name="cbImageEditorUseLegacyImageEditor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 17</value>
-  </data>
-  <data name="cbImageEditorUseLegacyImageEditor.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="cbImageEditorUseLegacyImageEditor.Text" xml:space="preserve">
-    <value>Use legacy image editor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.Name" xml:space="preserve">
-    <value>cbImageEditorUseLegacyImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.Parent" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;cbImageEditorUseLegacyImageEditor.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="tpToolsImageEditor.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tpToolsImageEditor.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tpToolsImageEditor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>563, 459</value>
-  </data>
-  <data name="tpToolsImageEditor.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tpToolsImageEditor.Text" xml:space="preserve">
-    <value>Image editor</value>
-  </data>
-  <data name="&gt;&gt;tpToolsImageEditor.Name" xml:space="preserve">
-    <value>tpToolsImageEditor</value>
-  </data>
-  <data name="&gt;&gt;tpToolsImageEditor.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tpToolsImageEditor.Parent" xml:space="preserve">
-    <value>tcTools</value>
-  </data>
-  <data name="&gt;&gt;tpToolsImageEditor.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="tcTools.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
