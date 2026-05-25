@@ -166,12 +166,6 @@
                             ToolTip.Tip="Step (N)"
                             Content="{x:Static theming:EditorIcons.ToolStep}"/>
                     <Button Classes="editor-button toolbar-button"
-                            Tag="{x:Static models:EditorTool.Cursor}"
-                            Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Cursor}"
-                            Click="OnSelectToolClick"
-                            ToolTip.Tip="Cursor (K)"
-                            Content="{x:Static theming:EditorIcons.ToolCursor}"/>
-                    <Button Classes="editor-button toolbar-button"
                             Tag="{x:Static models:EditorTool.Image}"
                             Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Image}"
                             Click="OnSelectToolClick"
@@ -183,6 +177,12 @@
                             Click="OnSelectToolClick"
                             ToolTip.Tip="Emoji (J)"
                             Content="{x:Static theming:EditorIcons.ToolEmoji}"/>
+                    <Button Classes="editor-button toolbar-button"
+                            Tag="{x:Static models:EditorTool.Cursor}"
+                            Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Cursor}"
+                            Click="OnSelectToolClick"
+                            ToolTip.Tip="Cursor (K)"
+                            Content="{x:Static theming:EditorIcons.ToolCursor}"/>
                     <Button Classes="editor-button toolbar-button"
                             Tag="{x:Static models:EditorTool.Highlight}"
                             Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Highlight}"
