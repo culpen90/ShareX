@@ -98,9 +98,17 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.SelectedArrowStyle = value;
     }
 
+    public CursorType SelectedCursorType
+    {
+        get => _viewModel.SelectedCursorType;
+        set => _viewModel.SelectedCursorType = value;
+    }
+
     public IReadOnlyList<string> AvailableFontFamilies => _viewModel.AvailableFontFamilies;
 
     public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _viewModel.AvailableArrowStyles;
+
+    public IReadOnlyList<CursorType> AvailableCursorTypes => _viewModel.AvailableCursorTypes;
 
     public IReadOnlyList<int> AvailableStepStartNumbers => _viewModel.AvailableStepStartNumbers;
 
@@ -183,6 +191,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowFontFamily => _viewModel.ShowFontFamily;
 
     public bool ShowArrowStyle => _viewModel.ShowArrowStyle;
+
+    public bool ShowCursorType => _viewModel.ShowCursorType;
 
     public bool ShowCornerRadius => _viewModel.ShowCornerRadius;
 

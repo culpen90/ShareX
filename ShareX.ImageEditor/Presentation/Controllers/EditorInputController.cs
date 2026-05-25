@@ -340,6 +340,34 @@ public class EditorInputController
                 _currentShape = arrowAnnotation.CreateVisual();
                 _currentShape.IsHitTestVisible = false;
                 break;
+            case EditorTool.Cursor:
+                var cursorAnnotation = new CursorAnnotation { CursorType = vm.SelectedCursorType };
+                var cursorBitmap = WindowsCursorBitmapRenderer.CreateAnnotationBitmap(vm.SelectedCursorType);
+
+                if (cursorBitmap == null)
+                {
+                    _isDrawing = false;
+                    return;
+                }
+
+                cursorAnnotation.SetImage(cursorBitmap);
+                cursorAnnotation.StartPoint = ToSKPoint(_startPoint);
+                cursorAnnotation.EndPoint = new SKPoint((float)(_startPoint.X + cursorBitmap.Width), (float)(_startPoint.Y + cursorBitmap.Height));
+
+                _currentShape = AnnotationVisualFactory.CreateVisualControl(cursorAnnotation, AnnotationVisualMode.Persisted);
+                if (_currentShape == null)
+                {
+                    _isDrawing = false;
+                    return;
+                }
+
+                AnnotationVisualFactory.UpdateVisualControl(
+                    _currentShape,
+                    cursorAnnotation,
+                    AnnotationVisualMode.Persisted,
+                    canvas.Bounds.Width,
+                    canvas.Bounds.Height);
+                break;
             case EditorTool.Text:
                 HandleTextTool(canvas, brush, vm.StrokeWidth);
                 return;
@@ -726,6 +754,17 @@ public class EditorInputController
             }
             balloon.InvalidateVisual();
         }
+        else if (_currentShape is Image imageControl && _currentShape.Tag is CursorAnnotation cursorAnnotation)
+        {
+            double cursorWidth = Math.Max(1, imageControl.Width);
+            double cursorHeight = Math.Max(1, imageControl.Height);
+
+            Canvas.SetLeft(imageControl, currentPoint.X);
+            Canvas.SetTop(imageControl, currentPoint.Y);
+
+            cursorAnnotation.StartPoint = ToSKPoint(currentPoint);
+            cursorAnnotation.EndPoint = ToSKPoint(new Point(currentPoint.X + cursorWidth, currentPoint.Y + cursorHeight));
+        }
         else if (_currentShape is StepControl && _currentShape.Tag is NumberAnnotation numberAnn)
         {
             // Allow dragging the step shape immediately after inserting it
@@ -816,7 +855,8 @@ public class EditorInputController
                     // Skip check for Number (single-click), Pen, and Text.
                     bool isSizeBased = vm.ActiveTool != EditorTool.Step
                                     && vm.ActiveTool != EditorTool.Freehand
-                                    && vm.ActiveTool != EditorTool.Text;
+                                    && vm.ActiveTool != EditorTool.Text
+                                    && vm.ActiveTool != EditorTool.Cursor;
 
                     if (isSizeBased)
                     {

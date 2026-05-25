@@ -166,6 +166,12 @@
                             ToolTip.Tip="Step (N)"
                             Content="{x:Static theming:EditorIcons.ToolStep}"/>
                     <Button Classes="editor-button toolbar-button"
+                            Tag="{x:Static models:EditorTool.Cursor}"
+                            Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Cursor}"
+                            Click="OnSelectToolClick"
+                            ToolTip.Tip="Cursor (K)"
+                            Content="{x:Static theming:EditorIcons.ToolCursor}"/>
+                    <Button Classes="editor-button toolbar-button"
                             Tag="{x:Static models:EditorTool.Image}"
                             Classes.active="{Binding ActiveTool, Converter={StaticResource EqualsConverter}, ConverterParameter=Image}"
                             Click="OnSelectToolClick"
@@ -349,6 +355,15 @@
                                                        Height="40"
                                                        IsVisible="{Binding ShowArrowStyle}"
                                                        ToolTip.Tip="Arrow style"/>
+
+                    <controls:CursorTypePickerDropdown x:Name="CursorTypePicker"
+                                                       CursorTypeOptions="{Binding AvailableCursorTypes}"
+                                                       SelectedCursorType="{Binding SelectedCursorType, Mode=TwoWay}"
+                                                       MinWidth="90"
+                                                       MaxWidth="180"
+                                                       Height="40"
+                                                       IsVisible="{Binding ShowCursorType}"
+                                                       ToolTip.Tip="Cursor type"/>
 
                     <controls:FontSizePickerDropdown x:Name="FontSizePicker"
                                                      SelectedFontSize="{Binding FontSize, Mode=TwoWay}"

@@ -39,6 +39,7 @@ namespace ShareX.ImageEditor.Presentation.Theming
         public const string ToolText = LucideIcons.type;
         public const string ToolSpeechBalloon = LucideIcons.message_square;
         public const string ToolStep = LucideIcons.hash;
+        public const string ToolCursor = LucideIcons.mouse_pointer;
         public const string ToolBlur = LucideIcons.droplet;
         public const string ToolPixelate = LucideIcons.grid_2x2;
         public const string ToolMagnify = LucideIcons.search;
@@ -100,6 +101,7 @@ namespace ShareX.ImageEditor.Presentation.Theming
             EditorTool.Text => ToolText,
             EditorTool.SpeechBalloon => ToolSpeechBalloon,
             EditorTool.Step => ToolStep,
+            EditorTool.Cursor => ToolCursor,
             EditorTool.Blur => ToolBlur,
             EditorTool.Pixelate => ToolPixelate,
             EditorTool.Magnify => ToolMagnify,

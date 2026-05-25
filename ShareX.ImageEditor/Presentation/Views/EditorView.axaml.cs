@@ -377,6 +377,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.FillColor = rect.FillColor;
                         vm.CornerRadius = rect.CornerRadius;
                     }
+                    else if (vm.SelectedAnnotation is CursorAnnotation cursor)
+                    {
+                        vm.SelectedCursorType = cursor.CursorType;
+                    }
                     else if (vm.SelectedAnnotation is ArrowAnnotation arrow)
                     {
                         vm.SelectedArrowStyle = arrow.Style;
@@ -1482,6 +1486,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                             case Key.J: vm.SelectToolCommand.Execute(EditorTool.Emoji); e.Handled = true; break;
                             case Key.O: vm.SelectToolCommand.Execute(EditorTool.SpeechBalloon); e.Handled = true; break;
                             case Key.N: vm.SelectToolCommand.Execute(EditorTool.Step); e.Handled = true; break;
+                            case Key.K: vm.SelectToolCommand.Execute(EditorTool.Cursor); e.Handled = true; break;
                             case Key.W: vm.SelectToolCommand.Execute(EditorTool.SmartEraser); e.Handled = true; break;
                             case Key.S: vm.SelectToolCommand.Execute(EditorTool.Spotlight); e.Handled = true; break;
                             case Key.B: vm.SelectToolCommand.Execute(EditorTool.Blur); e.Handled = true; break;

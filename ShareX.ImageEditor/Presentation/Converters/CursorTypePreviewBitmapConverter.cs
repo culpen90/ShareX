@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -23,31 +23,24 @@
 
 #endregion License Information (GPL v3)
 
-namespace ShareX.ImageEditor.Core.Annotations;
+using Avalonia.Data.Converters;
+using ShareX.ImageEditor.Core.Annotations;
+using ShareX.ImageEditor.Presentation.Rendering;
+using System.Globalization;
 
-/// <summary>
-/// Annotation/editing tool types
-/// </summary>
-public enum EditorTool
+namespace ShareX.ImageEditor.Presentation.Converters
 {
-    Select,
-    Rectangle,
-    Ellipse,
-    Line,
-    Arrow,
-    Freehand,
-    Text,
-    SpeechBalloon,
-    Step,
-    Cursor,
-    Image,
-    Emoji,
-    Highlight,
-    SmartEraser,
-    Blur,
-    Pixelate,
-    Magnify,
-    Spotlight,
-    Crop,
-    CutOut
+    public class CursorTypePreviewBitmapConverter : IValueConverter
+    {
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            CursorType cursorType = value is CursorType typedCursor ? typedCursor : CursorType.Default;
+            return WindowsCursorBitmapRenderer.GetPreviewBitmap(cursorType);
+        }
+
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            return CursorType.Default;
+        }
+    }
 }

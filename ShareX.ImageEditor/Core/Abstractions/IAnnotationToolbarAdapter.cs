@@ -44,8 +44,10 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     string TextColor { get; set; }
     string SelectedFontFamily { get; set; }
     ArrowStyle SelectedArrowStyle { get; set; }
+    CursorType SelectedCursorType { get; set; }
     IReadOnlyList<string> AvailableFontFamilies { get; }
     IReadOnlyList<ArrowStyle> AvailableArrowStyles { get; }
+    IReadOnlyList<CursorType> AvailableCursorTypes { get; }
     IReadOnlyList<int> AvailableStepStartNumbers { get; }
     IBrush SelectedColorBrush { get; set; }
     IBrush FillColorBrush { get; set; }
@@ -74,6 +76,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowStepStartNumber { get; }
     bool ShowFontFamily { get; }
     bool ShowArrowStyle { get; }
+    bool ShowCursorType { get; }
     bool ShowCornerRadius { get; }
     bool ShowStrength { get; }
     bool ShowTextStyle { get; }

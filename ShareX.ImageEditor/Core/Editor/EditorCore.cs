@@ -1505,6 +1505,7 @@ public class EditorCore : IDisposable
             EditorTool.Freehand => new FreehandAnnotation(),
             EditorTool.SmartEraser => new SmartEraserAnnotation(),
             EditorTool.Step => new NumberAnnotation(),
+            EditorTool.Cursor => new CursorAnnotation(),
             EditorTool.Blur => new BlurAnnotation(),
             EditorTool.Pixelate => new PixelateAnnotation(),
             EditorTool.Highlight => new HighlightAnnotation(),

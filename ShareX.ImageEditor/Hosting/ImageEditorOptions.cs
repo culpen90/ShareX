@@ -81,6 +81,7 @@ namespace ShareX.ImageEditor.Hosting
         public int CornerRadius { get; set; } = 4;
         public bool Shadow { get; set; } = false;
         public ArrowStyle ArrowStyle { get; set; } = ArrowStyle.Classic;
+        public CursorType CursorType { get; set; } = CursorType.Default;
 
         // Text
         public string TextBorderColorHex { get; set; } = ColorToHex(PrimaryColor);

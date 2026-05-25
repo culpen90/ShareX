@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -26,28 +26,36 @@
 namespace ShareX.ImageEditor.Core.Annotations;
 
 /// <summary>
-/// Annotation/editing tool types
+/// Available cursor images for cursor annotations.
 /// </summary>
-public enum EditorTool
+public enum CursorType
 {
-    Select,
-    Rectangle,
-    Ellipse,
-    Line,
+    AppStarting,
     Arrow,
-    Freehand,
-    Text,
-    SpeechBalloon,
-    Step,
-    Cursor,
-    Image,
-    Emoji,
-    Highlight,
-    SmartEraser,
-    Blur,
-    Pixelate,
-    Magnify,
-    Spotlight,
-    Crop,
-    CutOut
+    Cross,
+    Default,
+    Hand,
+    Help,
+    HSplit,
+    IBeam,
+    No,
+    NoMove2D,
+    NoMoveHoriz,
+    NoMoveVert,
+    PanEast,
+    PanNE,
+    PanNorth,
+    PanNW,
+    PanSE,
+    PanSouth,
+    PanSW,
+    PanWest,
+    SizeAll,
+    SizeNESW,
+    SizeNS,
+    SizeNWSE,
+    SizeWE,
+    UpArrow,
+    VSplit,
+    WaitCursor
 }
