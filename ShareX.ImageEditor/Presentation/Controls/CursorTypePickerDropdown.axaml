@@ -59,7 +59,8 @@
                VerticalOffset="4">
             <Border Classes="popup-border popup-surface"
                     Classes.open="{Binding #CursorTypePopup.IsOpen}">
-                <ItemsControl ItemsSource="{Binding CursorTypeOptions, ElementName=CursorTypePickerDropdownRoot}">
+                <ItemsControl ItemsSource="{Binding CursorTypeOptions, ElementName=CursorTypePickerDropdownRoot}"
+                              HorizontalAlignment="Stretch">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Vertical"/>
@@ -73,6 +74,7 @@
                                     Classes="picker-button"
                                     Click="OnCursorTypeSelected"
                                     CommandParameter="{Binding .}"
+                                    HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Center"
                                     ToolTip.Tip="{Binding ., Converter={StaticResource CursorTypeDisplayName}}">
