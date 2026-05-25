@@ -995,6 +995,12 @@ public class EditorSelectionController
             return;
         }
 
+        if (_selectedShape is global::Avalonia.Controls.Image { Tag: CursorAnnotation })
+        {
+            UpdateHoverOutline();
+            return;
+        }
+
         if (_selectedShape is Polyline
             || _selectedShape is global::Avalonia.Controls.Shapes.Path { Tag: FreehandAnnotation })
         {
@@ -1157,6 +1163,9 @@ public class EditorSelectionController
             case global::Avalonia.Controls.Image { Tag: EmojiAnnotation emojiAnnotation }:
                 annotation = emojiAnnotation;
                 return true;
+            case global::Avalonia.Controls.Image { Tag: CursorAnnotation }:
+                annotation = null;
+                return false;
             case global::Avalonia.Controls.Image { Tag: ImageAnnotation imageAnnotation }:
                 annotation = imageAnnotation;
                 return true;

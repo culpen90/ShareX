@@ -1431,7 +1431,7 @@ public class EditorCore : IDisposable
 
     private IEnumerable<(HandleType Type, SKPoint Position)> GetAnnotationHandles(Annotation annotation)
     {
-        if (annotation is FreehandAnnotation)
+        if (annotation is FreehandAnnotation or CursorAnnotation)
         {
             yield break;
         }
