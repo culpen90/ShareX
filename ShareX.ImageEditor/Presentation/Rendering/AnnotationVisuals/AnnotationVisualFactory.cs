@@ -27,10 +27,13 @@ using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.Controls;
 using ShareX.ImageEditor.Presentation.Emoji;
 using SkiaSharp;
+using System.Runtime.CompilerServices;
 
 namespace ShareX.ImageEditor.Presentation.Rendering;
 
@@ -48,6 +51,9 @@ public enum AnnotationVisualMode
 /// </summary>
 public static class AnnotationVisualFactory
 {
+    private static readonly ConditionalWeakTable<Image, EmojiInteractiveRenderState> EmojiInteractiveRenderStates = new();
+    private static readonly SemaphoreSlim EmojiInteractiveRenderThrottle = new(2, 2);
+
     /// <summary>
     /// Creates the visual control for the provided annotation.
     /// </summary>
@@ -300,11 +306,28 @@ public static class AnnotationVisualFactory
         int targetBitmapSize = useInteractiveRender
             ? WindowsEmojiBitmapRenderer.GetInteractiveStickerSize(renderSize)
             : renderSize;
+        bool hasUnicode = !string.IsNullOrWhiteSpace(emojiAnnotation.UnicodeSequence);
+        bool hasTargetBitmap = emojiAnnotation.ImageBitmap != null
+            && emojiAnnotation.ImageBitmap.Width == targetBitmapSize
+            && emojiAnnotation.ImageBitmap.Height == targetBitmapSize;
 
-        bool needsBitmapRefresh = !string.IsNullOrWhiteSpace(emojiAnnotation.UnicodeSequence)
+        if (useInteractiveRender)
+        {
+            if (hasUnicode && !hasTargetBitmap)
+            {
+                QueueInteractiveEmojiRefresh(emojiAnnotation, imageControl, renderSize, targetBitmapSize);
+            }
+        }
+        else
+        {
+            CancelInteractiveEmojiRefresh(imageControl);
+        }
+
+        bool needsBitmapRefresh = hasUnicode
             && (emojiAnnotation.ImageBitmap == null
-                || emojiAnnotation.ImageBitmap.Width != targetBitmapSize
-                || emojiAnnotation.ImageBitmap.Height != targetBitmapSize);
+                || (!useInteractiveRender
+                    && (emojiAnnotation.ImageBitmap.Width != targetBitmapSize
+                        || emojiAnnotation.ImageBitmap.Height != targetBitmapSize)));
 
         if (needsBitmapRefresh)
         {
@@ -320,12 +343,7 @@ public static class AnnotationVisualFactory
 
         if (emojiAnnotation.ImageBitmap != null && (needsBitmapRefresh || imageControl.Source == null))
         {
-            if (imageControl.Source is IDisposable previousSource)
-            {
-                previousSource.Dispose();
-            }
-
-            imageControl.Source = BitmapConversionHelpers.ToAvaloniBitmap(emojiAnnotation.ImageBitmap);
+            ReplaceImageSource(imageControl, BitmapConversionHelpers.ToAvaloniBitmap(emojiAnnotation.ImageBitmap));
         }
 
         Canvas.SetLeft(imageControl, imageBounds.Left);
@@ -333,6 +351,228 @@ public static class AnnotationVisualFactory
         imageControl.Width = Math.Max(1, imageBounds.Width);
         imageControl.Height = Math.Max(1, imageBounds.Height);
         ApplyRotationTransform(imageControl, emojiAnnotation.RotationAngle);
+    }
+
+    private static void QueueInteractiveEmojiRefresh(EmojiAnnotation emojiAnnotation, Image imageControl, int renderSize, int targetBitmapSize)
+    {
+        string unicodeSequence = emojiAnnotation.UnicodeSequence;
+        if (string.IsNullOrWhiteSpace(unicodeSequence))
+        {
+            return;
+        }
+
+        EmojiInteractiveRenderState state = EmojiInteractiveRenderStates.GetOrCreateValue(imageControl);
+        string requestKey = $"{unicodeSequence}:{targetBitmapSize}";
+        bool shouldStartWorker = false;
+
+        lock (state.SyncRoot)
+        {
+            if ((string.Equals(state.PendingRequestKey, requestKey, StringComparison.Ordinal) && ReferenceEquals(state.PendingAnnotation, emojiAnnotation))
+                || (string.Equals(state.InFlightRequestKey, requestKey, StringComparison.Ordinal) && ReferenceEquals(state.InFlightAnnotation, emojiAnnotation)))
+            {
+                return;
+            }
+
+            state.UpdateVersion++;
+            state.PendingRequestKey = requestKey;
+            state.PendingUnicodeSequence = unicodeSequence;
+            state.PendingRenderSize = renderSize;
+            state.PendingAnnotation = emojiAnnotation;
+
+            if (!state.IsWorkerRunning)
+            {
+                state.IsWorkerRunning = true;
+                shouldStartWorker = true;
+            }
+        }
+
+        if (shouldStartWorker)
+        {
+            _ = UpdateInteractiveEmojiImageAsync(imageControl, state);
+        }
+    }
+
+    private static void CancelInteractiveEmojiRefresh(Image imageControl)
+    {
+        EmojiInteractiveRenderState state = EmojiInteractiveRenderStates.GetOrCreateValue(imageControl);
+        lock (state.SyncRoot)
+        {
+            state.UpdateVersion++;
+            state.PendingRequestKey = null;
+            state.PendingUnicodeSequence = null;
+            state.PendingRenderSize = 0;
+            state.PendingAnnotation = null;
+        }
+    }
+
+    private static async Task UpdateInteractiveEmojiImageAsync(Image imageControl, EmojiInteractiveRenderState state)
+    {
+        try
+        {
+            while (true)
+            {
+                string? requestKey;
+                string? unicodeSequence;
+                int renderSize;
+                int version;
+                EmojiAnnotation? emojiAnnotation;
+
+                lock (state.SyncRoot)
+                {
+                    requestKey = state.PendingRequestKey;
+                    unicodeSequence = state.PendingUnicodeSequence;
+                    renderSize = state.PendingRenderSize;
+                    version = state.UpdateVersion;
+                    emojiAnnotation = state.PendingAnnotation;
+
+                    state.PendingRequestKey = null;
+                    state.PendingUnicodeSequence = null;
+                    state.PendingRenderSize = 0;
+                    state.PendingAnnotation = null;
+                    state.InFlightRequestKey = requestKey;
+                    state.InFlightAnnotation = emojiAnnotation;
+                }
+
+                if (string.IsNullOrWhiteSpace(requestKey) || string.IsNullOrWhiteSpace(unicodeSequence) || renderSize <= 0 || emojiAnnotation == null)
+                {
+                    lock (state.SyncRoot)
+                    {
+                        state.InFlightRequestKey = null;
+                        state.InFlightAnnotation = null;
+
+                        if (state.PendingRequestKey == null)
+                        {
+                            state.IsWorkerRunning = false;
+                            return;
+                        }
+                    }
+
+                    continue;
+                }
+
+                await EmojiInteractiveRenderThrottle.WaitAsync();
+
+                try
+                {
+                    bool skipRender;
+
+                    lock (state.SyncRoot)
+                    {
+                        skipRender = version != state.UpdateVersion
+                            || !string.Equals(state.InFlightRequestKey, requestKey, StringComparison.Ordinal)
+                            || !ReferenceEquals(state.InFlightAnnotation, emojiAnnotation);
+                    }
+
+                    if (skipRender)
+                    {
+                        continue;
+                    }
+
+                    SKBitmap? renderedBitmap = null;
+                    Bitmap? bitmapSource = null;
+
+                    try
+                    {
+                        renderedBitmap = await Task.Run(() => WindowsEmojiBitmapRenderer.RenderInteractiveStickerBitmap(unicodeSequence, renderSize));
+                        if (renderedBitmap == null)
+                        {
+                            continue;
+                        }
+
+                        bitmapSource = BitmapConversionHelpers.ToAvaloniBitmap(renderedBitmap);
+                    }
+                    catch
+                    {
+                        renderedBitmap?.Dispose();
+                        bitmapSource?.Dispose();
+                        continue;
+                    }
+
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        bool isCurrentRequest;
+
+                        lock (state.SyncRoot)
+                        {
+                            isCurrentRequest = version == state.UpdateVersion
+                                && string.Equals(state.InFlightRequestKey, requestKey, StringComparison.Ordinal)
+                                && ReferenceEquals(state.InFlightAnnotation, emojiAnnotation)
+                                && ReferenceEquals(imageControl.Tag, emojiAnnotation);
+                        }
+
+                        if (!isCurrentRequest)
+                        {
+                            bitmapSource.Dispose();
+                            renderedBitmap.Dispose();
+                            return;
+                        }
+
+                        emojiAnnotation.SetImage(renderedBitmap);
+                        ReplaceImageSource(imageControl, bitmapSource);
+                    }, DispatcherPriority.Background);
+                }
+                finally
+                {
+                    EmojiInteractiveRenderThrottle.Release();
+                }
+
+                lock (state.SyncRoot)
+                {
+                    if (string.Equals(state.InFlightRequestKey, requestKey, StringComparison.Ordinal)
+                        && ReferenceEquals(state.InFlightAnnotation, emojiAnnotation))
+                    {
+                        state.InFlightRequestKey = null;
+                        state.InFlightAnnotation = null;
+                    }
+
+                    if (state.PendingRequestKey == null)
+                    {
+                        state.IsWorkerRunning = false;
+                        return;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            bool shouldRestartWorker;
+
+            lock (state.SyncRoot)
+            {
+                state.InFlightRequestKey = null;
+                state.InFlightAnnotation = null;
+                shouldRestartWorker = state.PendingRequestKey != null;
+                state.IsWorkerRunning = shouldRestartWorker;
+            }
+
+            if (shouldRestartWorker)
+            {
+                _ = UpdateInteractiveEmojiImageAsync(imageControl, state);
+            }
+        }
+    }
+
+    private static void ReplaceImageSource(Image imageControl, Bitmap bitmapSource)
+    {
+        if (imageControl.Source is IDisposable previousSource)
+        {
+            previousSource.Dispose();
+        }
+
+        imageControl.Source = bitmapSource;
+    }
+
+    private sealed class EmojiInteractiveRenderState
+    {
+        public object SyncRoot { get; } = new();
+        public bool IsWorkerRunning;
+        public string? PendingRequestKey;
+        public string? PendingUnicodeSequence;
+        public int PendingRenderSize;
+        public EmojiAnnotation? PendingAnnotation;
+        public string? InFlightRequestKey;
+        public EmojiAnnotation? InFlightAnnotation;
+        public int UpdateVersion;
     }
 
     private static Control CreateTextPreviewPlaceholder(TextAnnotation annotation)
