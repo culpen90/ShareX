@@ -311,23 +311,22 @@ public static class AnnotationVisualFactory
             && emojiAnnotation.ImageBitmap.Width == targetBitmapSize
             && emojiAnnotation.ImageBitmap.Height == targetBitmapSize;
 
-        if (useInteractiveRender)
+        bool shouldQueueAsyncRefresh = hasUnicode
+            && !hasTargetBitmap
+            && imageControl.Source != null;
+
+        if (shouldQueueAsyncRefresh)
         {
-            if (hasUnicode && !hasTargetBitmap)
-            {
-                QueueInteractiveEmojiRefresh(emojiAnnotation, imageControl, renderSize, targetBitmapSize);
-            }
+            QueueEmojiRefresh(emojiAnnotation, imageControl, renderSize, targetBitmapSize, useInteractiveRender);
         }
         else
         {
-            CancelInteractiveEmojiRefresh(imageControl);
+            CancelQueuedEmojiRefresh(imageControl);
         }
 
         bool needsBitmapRefresh = hasUnicode
-            && (emojiAnnotation.ImageBitmap == null
-                || (!useInteractiveRender
-                    && (emojiAnnotation.ImageBitmap.Width != targetBitmapSize
-                        || emojiAnnotation.ImageBitmap.Height != targetBitmapSize)));
+            && !hasTargetBitmap
+            && !shouldQueueAsyncRefresh;
 
         if (needsBitmapRefresh)
         {
@@ -353,7 +352,7 @@ public static class AnnotationVisualFactory
         ApplyRotationTransform(imageControl, emojiAnnotation.RotationAngle);
     }
 
-    private static void QueueInteractiveEmojiRefresh(EmojiAnnotation emojiAnnotation, Image imageControl, int renderSize, int targetBitmapSize)
+    private static void QueueEmojiRefresh(EmojiAnnotation emojiAnnotation, Image imageControl, int renderSize, int targetBitmapSize, bool useInteractiveRender)
     {
         string unicodeSequence = emojiAnnotation.UnicodeSequence;
         if (string.IsNullOrWhiteSpace(unicodeSequence))
@@ -362,7 +361,7 @@ public static class AnnotationVisualFactory
         }
 
         EmojiInteractiveRenderState state = EmojiInteractiveRenderStates.GetOrCreateValue(imageControl);
-        string requestKey = $"{unicodeSequence}:{targetBitmapSize}";
+        string requestKey = $"{unicodeSequence}:{(useInteractiveRender ? "interactive" : "exact")}:{targetBitmapSize}";
         bool shouldStartWorker = false;
 
         lock (state.SyncRoot)
@@ -378,6 +377,7 @@ public static class AnnotationVisualFactory
             state.PendingUnicodeSequence = unicodeSequence;
             state.PendingRenderSize = renderSize;
             state.PendingAnnotation = emojiAnnotation;
+            state.PendingUseInteractiveRender = useInteractiveRender;
 
             if (!state.IsWorkerRunning)
             {
@@ -388,11 +388,11 @@ public static class AnnotationVisualFactory
 
         if (shouldStartWorker)
         {
-            _ = UpdateInteractiveEmojiImageAsync(imageControl, state);
+            _ = UpdateQueuedEmojiImageAsync(imageControl, state);
         }
     }
 
-    private static void CancelInteractiveEmojiRefresh(Image imageControl)
+    private static void CancelQueuedEmojiRefresh(Image imageControl)
     {
         EmojiInteractiveRenderState state = EmojiInteractiveRenderStates.GetOrCreateValue(imageControl);
         lock (state.SyncRoot)
@@ -402,10 +402,11 @@ public static class AnnotationVisualFactory
             state.PendingUnicodeSequence = null;
             state.PendingRenderSize = 0;
             state.PendingAnnotation = null;
+            state.PendingUseInteractiveRender = false;
         }
     }
 
-    private static async Task UpdateInteractiveEmojiImageAsync(Image imageControl, EmojiInteractiveRenderState state)
+    private static async Task UpdateQueuedEmojiImageAsync(Image imageControl, EmojiInteractiveRenderState state)
     {
         try
         {
@@ -416,6 +417,7 @@ public static class AnnotationVisualFactory
                 int renderSize;
                 int version;
                 EmojiAnnotation? emojiAnnotation;
+                bool useInteractiveRender;
 
                 lock (state.SyncRoot)
                 {
@@ -424,11 +426,13 @@ public static class AnnotationVisualFactory
                     renderSize = state.PendingRenderSize;
                     version = state.UpdateVersion;
                     emojiAnnotation = state.PendingAnnotation;
+                    useInteractiveRender = state.PendingUseInteractiveRender;
 
                     state.PendingRequestKey = null;
                     state.PendingUnicodeSequence = null;
                     state.PendingRenderSize = 0;
                     state.PendingAnnotation = null;
+                    state.PendingUseInteractiveRender = false;
                     state.InFlightRequestKey = requestKey;
                     state.InFlightAnnotation = emojiAnnotation;
                 }
@@ -473,7 +477,9 @@ public static class AnnotationVisualFactory
 
                     try
                     {
-                        renderedBitmap = await Task.Run(() => WindowsEmojiBitmapRenderer.RenderInteractiveStickerBitmap(unicodeSequence, renderSize));
+                        renderedBitmap = await Task.Run(() => useInteractiveRender
+                            ? WindowsEmojiBitmapRenderer.RenderInteractiveStickerBitmap(unicodeSequence, renderSize)
+                            : WindowsEmojiBitmapRenderer.RenderStickerBitmap(unicodeSequence, renderSize));
                         if (renderedBitmap == null)
                         {
                             continue;
@@ -547,7 +553,7 @@ public static class AnnotationVisualFactory
 
             if (shouldRestartWorker)
             {
-                _ = UpdateInteractiveEmojiImageAsync(imageControl, state);
+                _ = UpdateQueuedEmojiImageAsync(imageControl, state);
             }
         }
     }
@@ -570,6 +576,7 @@ public static class AnnotationVisualFactory
         public string? PendingUnicodeSequence;
         public int PendingRenderSize;
         public EmojiAnnotation? PendingAnnotation;
+        public bool PendingUseInteractiveRender;
         public string? InFlightRequestKey;
         public EmojiAnnotation? InFlightAnnotation;
         public int UpdateVersion;
