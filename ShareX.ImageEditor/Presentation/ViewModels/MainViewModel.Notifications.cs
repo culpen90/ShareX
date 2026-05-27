@@ -133,12 +133,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public void ShowImageRotatedClockwiseNotification()
         {
-            ShowNotification("Image rotated clockwise.", EditorIcons.ActionRotateRight);
+            ShowNotification("Image rotated 90 degrees clockwise.", EditorIcons.ActionRotateRight);
         }
 
         public void ShowImageRotatedCounterClockwiseNotification()
         {
-            ShowNotification("Image rotated counterclockwise.", EditorIcons.ActionRotateLeft);
+            ShowNotification("Image rotated 90 degrees counterclockwise.", EditorIcons.ActionRotateLeft);
         }
 
         public void ShowImageRotated180Notification()
