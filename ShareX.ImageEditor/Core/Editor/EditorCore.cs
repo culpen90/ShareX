@@ -1552,6 +1552,11 @@ public class EditorCore : IDisposable
 
         if (width <= 0 || height <= 0) return false;
 
+        if (x == 0 && y == 0 && width == SourceImage.Width && height == SourceImage.Height)
+        {
+            return false;
+        }
+
         // Create canvas memento before destructive crop operation
         _history.CreateCanvasMemento();
 
