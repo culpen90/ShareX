@@ -109,14 +109,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ShowNotification(BuildFilePathNotification("Image opened.", filePath), EditorIcons.FileOpen);
         }
 
-        public void ShowImageCroppedNotification()
+        public void ShowImageCroppedNotification(int width = 0, int height = 0)
         {
-            ShowNotification("Image cropped.", EditorIcons.ToolCrop);
+            ShowNotification(BuildImageSizeNotification("Image cropped.", width, height), EditorIcons.ToolCrop);
         }
 
-        public void ShowImageCutOutNotification()
+        public void ShowImageCutOutNotification(int width = 0, int height = 0)
         {
-            ShowNotification("Image cut out.", EditorIcons.ToolCutOut);
+            ShowNotification(BuildImageSizeNotification("Image cut out.", width, height), EditorIcons.ToolCutOut);
         }
 
         public void ShowImageInsertedNotification()
@@ -198,6 +198,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static string BuildFilePathNotification(string headline, string filePath)
         {
             return $"{headline}\nFile path: {filePath}";
+        }
+
+        private static string BuildImageSizeNotification(string headline, int width, int height)
+        {
+            return width > 0 && height > 0
+                ? $"{headline}\nNew size: {width}x{height}"
+                : headline;
         }
 
         private static async Task InvokeRequestedHandlersAsync(Func<Task>? handlers)

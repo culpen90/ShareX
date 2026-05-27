@@ -1709,8 +1709,6 @@ public class EditorInputController
                     int endY = (int)Math.Round(top + h);
                     vm.CutOutImage(startY, endY, false);
                 }
-
-                vm.ShowImageCutOutNotification();
             }
             canvas.Children.Remove(cutOverlay);
             _currentShape = null;
