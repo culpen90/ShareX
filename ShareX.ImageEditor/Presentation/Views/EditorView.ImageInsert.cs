@@ -233,6 +233,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             vm.HasAnnotations = true;
             vm.ActiveTool = EditorTool.Select;
             _selectionController.SetSelectedShape(control);
+            vm.ShowImageInsertedNotification();
         }
 
         private Point? GetVisibleCanvasCenter(Canvas canvas)

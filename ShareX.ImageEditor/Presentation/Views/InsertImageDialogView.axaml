@@ -13,7 +13,7 @@
             BorderThickness="1"
             CornerRadius="4"
             Padding="0"
-            Width="370"
+            Width="380"
             BoxShadow="0 8 24 0 #50000000">
         <Grid RowDefinitions="Auto,*" Background="{DynamicResource ShareX.Brush.Background.Panel}">
             <Border Grid.Row="0"

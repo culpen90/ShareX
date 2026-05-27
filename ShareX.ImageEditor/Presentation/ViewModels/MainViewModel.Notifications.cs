@@ -110,6 +110,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ShowNotification("Image cut out.", EditorIcons.ToolCutOut);
         }
 
+        public void ShowImageInsertedNotification()
+        {
+            ShowNotification("Image inserted.", EditorIcons.ToolImage);
+        }
+
         private void ShowSaveNotification(string? savedPath, string icon)
         {
             if (string.IsNullOrWhiteSpace(savedPath))
