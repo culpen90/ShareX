@@ -1372,6 +1372,15 @@ namespace ShareX.ImageEditor.Presentation.Views
             _inputController.OnCanvasPointerReleased(sender, e);
         }
 
+        private void OnNotificationPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.DismissNotification();
+                e.Handled = true;
+            }
+        }
+
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
             // Skip shortcuts when the user is typing in a text field

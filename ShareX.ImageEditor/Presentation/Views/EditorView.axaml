@@ -600,7 +600,8 @@
                 Margin="16,0,16,68"
                 MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 IsVisible="{Binding IsNotificationVisible}"
-                IsHitTestVisible="False"
+            Cursor="Hand"
+                PointerPressed="OnNotificationPointerPressed"
                 ZIndex="28">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                 <TextBlock Grid.Column="0"

@@ -75,6 +75,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             IsNotificationVisible = false;
         }
 
+        public void DismissNotification()
+        {
+            HideNotification();
+        }
+
         private void ShowTaskActionNotification(string message, string icon)
         {
             if (Options.AutoCloseEditorOnTask)
