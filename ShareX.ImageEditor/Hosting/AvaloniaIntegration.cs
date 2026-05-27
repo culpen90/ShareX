@@ -289,6 +289,8 @@ namespace ShareX.ImageEditor.Hosting
                     {
                         InvokeHostCallback(skBitmap, events.CopyImageRequested, nameof(EditorEvents.CopyImageRequested));
                     }
+
+                    return Task.CompletedTask;
                 };
             }
 
@@ -297,16 +299,20 @@ namespace ShareX.ImageEditor.Hosting
                 vm.HasHostSaveHandler = true;
                 vm.SaveRequested += () =>
                 {
+                    string? savedPath = null;
+
                     using var skBitmap = window.GetResultBitmap();
                     if (skBitmap != null)
                     {
-                        string? savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageRequested, nameof(EditorEvents.SaveImageRequested));
+                        savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageRequested, nameof(EditorEvents.SaveImageRequested));
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
                             vm.IsDirty = false;
                         }
                     }
+
+                    return Task.FromResult(savedPath);
                 };
             }
 
@@ -315,16 +321,20 @@ namespace ShareX.ImageEditor.Hosting
                 vm.HasHostSaveAsHandler = true;
                 vm.SaveAsRequested += () =>
                 {
+                    string? savedPath = null;
+
                     using var skBitmap = window.GetResultBitmap();
                     if (skBitmap != null)
                     {
-                        string? savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageAsRequested, nameof(EditorEvents.SaveImageAsRequested));
+                        savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageAsRequested, nameof(EditorEvents.SaveImageAsRequested));
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
                             vm.IsDirty = false;
                         }
                     }
+
+                    return Task.FromResult(savedPath);
                 };
             }
 

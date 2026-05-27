@@ -515,6 +515,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.LoadFromClipboardRequested -= OnLoadFromClipboardRequested;
                 vm.LoadFromUrlRequested -= OnLoadFromUrlRequested;
                 vm.LoadRecentFileRequested -= OnLoadRecentFileRequested;
+                vm.CopyRequested -= OnCopyImageRequested;
                 vm.SaveRequested -= OnSaveRequested;
                 vm.SaveAsRequested -= OnSaveAsRequested;
                 vm.OpenOptionsPanelRequested -= OnOpenOptionsPanelRequested;
@@ -1312,7 +1313,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             }, DispatcherPriority.Background);
         }
 
-        private void AutoCopyImageToClipboard(MainViewModel vm)
+        private async void AutoCopyImageToClipboard(MainViewModel vm)
         {
             if (!vm.Options.AutoCopyImageToClipboard || !vm.HasPreviewImage)
             {
@@ -1321,7 +1322,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             try
             {
-                vm.RequestCopyToClipboard();
+                await vm.RequestCopyToClipboardAsync();
             }
             catch (Exception ex)
             {
@@ -2245,7 +2246,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
-        private async void OnCopyImageRequested()
+        private async Task OnCopyImageRequested()
         {
             if (DataContext is not MainViewModel vm) return;
             if (vm.HasHostCopyHandler) return;
@@ -2270,32 +2271,35 @@ namespace ShareX.ImageEditor.Presentation.Views
             await clipboard.SetDataAsync(data);
         }
 
-        private void OnSaveRequested()
+        private Task<string?> OnSaveRequested()
         {
-            if (DataContext is not MainViewModel vm) return;
-            if (vm.HasHostSaveHandler) return;
+            if (DataContext is not MainViewModel vm) return Task.FromResult<string?>(null);
+            if (vm.HasHostSaveHandler) return Task.FromResult<string?>(null);
 
             if (!string.IsNullOrEmpty(vm.ImageFilePath))
             {
                 SaveSnapshotToFile(vm.ImageFilePath!);
                 vm.IsDirty = false;
+                return Task.FromResult<string?>(vm.ImageFilePath);
             }
+
+            return Task.FromResult<string?>(null);
         }
 
-        private async void OnSaveAsRequested()
+        private async Task<string?> OnSaveAsRequested()
         {
-            if (DataContext is not MainViewModel vm) return;
-            if (vm.HasHostSaveAsHandler) return;
+            if (DataContext is not MainViewModel vm) return null;
+            if (vm.HasHostSaveAsHandler) return null;
 
-            await SaveAsAsync();
+            return await SaveAsAsync();
         }
 
-        private async Task SaveAsAsync()
+        private async Task<string?> SaveAsAsync()
         {
-            if (DataContext is not MainViewModel vm) return;
+            if (DataContext is not MainViewModel vm) return null;
 
             TopLevel? topLevel = TopLevel.GetTopLevel(this);
-            if (topLevel?.StorageProvider == null) return;
+            if (topLevel?.StorageProvider == null) return null;
 
             IStorageFile? file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
             {
@@ -2317,7 +2321,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                 SaveSnapshotToFile(path);
                 vm.ImageFilePath = path;
                 vm.IsDirty = false;
+                return path;
             }
+
+            return null;
         }
 
         private void SaveSnapshotToFile(string path)

@@ -33,6 +33,7 @@ using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Core.Editor;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Emoji;
+using ShareX.ImageEditor.Presentation.Theming;
 using System.Collections.ObjectModel;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
@@ -172,7 +173,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public void RequestCopyToClipboard()
         {
-            _copyRequested?.Invoke();
+            _ = RequestCopyToClipboardAsync();
+        }
+
+        public Task RequestCopyToClipboardAsync()
+        {
+            return InvokeRequestedHandlersAsync(_copyRequested);
         }
 
         private void ShowConfirmationDialog()
@@ -183,12 +189,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
 
             var dialog = new ConfirmationDialogViewModel(
-                onYes: () =>
-                {
-                    Save();
-                    CloseModal();
-                    CloseRequested?.Invoke(this, EventArgs.Empty);
-                },
+                onYes: () => _ = SaveAndCloseAfterConfirmationAsync(),
                 onNo: () =>
                 {
                     CloseModal();
@@ -204,9 +205,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             IsModalOpen = true;
         }
 
+        private async Task SaveAndCloseAfterConfirmationAsync()
+        {
+            await RequestSaveAsync();
+            CloseModal();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
+        }
+
         // Export events
-        private Action? _copyRequested;
-        public event Action? CopyRequested
+        private Func<Task>? _copyRequested;
+        public event Func<Task>? CopyRequested
         {
             add { _copyRequested += value; CopyCommand.NotifyCanExecuteChanged(); }
             remove { _copyRequested -= value; CopyCommand.NotifyCanExecuteChanged(); }
@@ -214,8 +222,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public bool HasHostCopyHandler { get; set; }
         public bool CanCopy() => _copyRequested != null && HasPreviewImage;
 
-        private Action? _saveRequested;
-        public event Action? SaveRequested
+        private Func<Task<string?>>? _saveRequested;
+        public event Func<Task<string?>>? SaveRequested
         {
             add { _saveRequested += value; SaveCommand.NotifyCanExecuteChanged(); }
             remove { _saveRequested -= value; SaveCommand.NotifyCanExecuteChanged(); }
@@ -223,8 +231,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public bool HasHostSaveHandler { get; set; }
         public bool CanSave() => _saveRequested != null && HasPreviewImage;
 
-        private Action? _saveAsRequested;
-        public event Action? SaveAsRequested
+        private Func<Task<string?>>? _saveAsRequested;
+        public event Func<Task<string?>>? SaveAsRequested
         {
             add { _saveAsRequested += value; SaveAsCommand.NotifyCanExecuteChanged(); }
             remove { _saveAsRequested -= value; SaveAsCommand.NotifyCanExecuteChanged(); }
@@ -1194,24 +1202,37 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ClearAnnotationsRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        [RelayCommand(CanExecute = nameof(CanCopy))]
-        private void Copy()
+        private Task<string?> RequestSaveAsync()
         {
-            RequestCopyToClipboard();
+            return InvokeRequestedHandlersAsync(_saveRequested);
+        }
+
+        private Task<string?> RequestSaveAsAsync()
+        {
+            return InvokeRequestedHandlersAsync(_saveAsRequested);
+        }
+
+        [RelayCommand(CanExecute = nameof(CanCopy))]
+        private async Task Copy()
+        {
+            await RequestCopyToClipboardAsync();
+            ShowTaskActionNotification("Image copied to clipboard.", EditorIcons.ActionCopy);
             CloseAfterTaskActionIfEnabled();
         }
 
         [RelayCommand(CanExecute = nameof(CanSave))]
-        private void Save()
+        private async Task Save()
         {
-            _saveRequested?.Invoke();
+            string? savedPath = await RequestSaveAsync();
+            ShowSaveNotification(savedPath, EditorIcons.ActionSave);
             CloseAfterTaskActionIfEnabled();
         }
 
         [RelayCommand(CanExecute = nameof(CanSaveAs))]
-        private void SaveAs()
+        private async Task SaveAs()
         {
-            _saveAsRequested?.Invoke();
+            string? savedPath = await RequestSaveAsAsync();
+            ShowSaveNotification(savedPath, EditorIcons.ActionSaveAs);
             CloseAfterTaskActionIfEnabled();
         }
 
@@ -1219,6 +1240,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private void Print()
         {
             _printRequested?.Invoke();
+            ShowTaskActionNotification("Image printed.", EditorIcons.ActionPrint);
             CloseAfterTaskActionIfEnabled();
         }
 
@@ -1226,6 +1248,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private void PinToScreen()
         {
             _pinRequested?.Invoke();
+            ShowTaskActionNotification("Image pinned to screen.", EditorIcons.ActionPinToScreen);
             CloseAfterTaskActionIfEnabled();
         }
 
@@ -1233,6 +1256,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private async Task Upload()
         {
             _uploadRequested?.Invoke();
+            ShowTaskActionNotification("Image is uploading.", EditorIcons.ActionUpload);
             CloseAfterTaskActionIfEnabled();
         }
 

@@ -592,6 +592,32 @@
             </StackPanel>
         </Border>
 
+        <Border Classes="popup-surface zoom-upward editor-toast"
+                Classes.open="{Binding IsNotificationOpen}"
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="16,0,16,68"
+                MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                IsVisible="{Binding IsNotificationVisible}"
+                IsHitTestVisible="False"
+                ZIndex="28">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding NotificationIcon}"
+                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                           FontWeight="Normal"
+                           FontSize="18"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding HasNotificationIcon}"/>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding NotificationMessage}"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource ShareX.Brush.Text}"/>
+            </Grid>
+        </Border>
+
         <Border x:Name="InteractionCaptureLayer"
                 Grid.Row="0"
                 Background="Transparent"
