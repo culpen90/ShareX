@@ -1675,6 +1675,7 @@ public class EditorInputController
         var cropH = (int)Math.Round(h);
 
         vm.CropImage(cropX, cropY, cropW, cropH);
+        vm.ShowImageCroppedNotification();
 
         cropOverlay.IsVisible = false;
         _currentShape = null; // Ensure we clear current shape
@@ -1709,6 +1710,8 @@ public class EditorInputController
                     int endY = (int)Math.Round(top + h);
                     vm.CutOutImage(startY, endY, false);
                 }
+
+                vm.ShowImageCutOutNotification();
             }
             canvas.Children.Remove(cutOverlay);
             _currentShape = null;

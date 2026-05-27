@@ -95,6 +95,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ShowNotification(BuildFilePathNotification("Image opened.", filePath), EditorIcons.FileOpen);
         }
 
+        public void ShowImageCroppedNotification()
+        {
+            ShowNotification("Image cropped.", EditorIcons.ToolCrop);
+        }
+
+        public void ShowImageCutOutNotification()
+        {
+            ShowNotification("Image cut out.", EditorIcons.ToolCutOut);
+        }
+
         private void ShowSaveNotification(string? savedPath, string icon)
         {
             if (string.IsNullOrWhiteSpace(savedPath))
