@@ -95,5 +95,9 @@
         <controls:LabeledToggleSwitch Label="Show insert image dialog"
                                       IsChecked="{Binding EditorShowInsertImageDialog, Mode=TwoWay}"
                                       Margin="0,0,0,8"/>
+
+        <controls:LabeledToggleSwitch Label="Show notifications"
+                                      IsChecked="{Binding EditorShowNotifications, Mode=TwoWay}"
+                                      Margin="0,0,0,8"/>
     </StackPanel>
 </UserControl>

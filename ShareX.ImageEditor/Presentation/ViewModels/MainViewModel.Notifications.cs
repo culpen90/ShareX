@@ -58,12 +58,21 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public void ShowNotification(string message, string? icon = null, TimeSpan? duration = null)
         {
-            if (string.IsNullOrWhiteSpace(message))
+            if (!Options.ShowNotifications || string.IsNullOrWhiteSpace(message))
             {
                 return;
             }
 
             _ = ShowNotificationAsync(message, icon, duration ?? DefaultNotificationDuration);
+        }
+
+        private void HideNotification()
+        {
+            Interlocked.Increment(ref _notificationVersion);
+            NotificationMessage = string.Empty;
+            NotificationIcon = string.Empty;
+            IsNotificationOpen = false;
+            IsNotificationVisible = false;
         }
 
         private void ShowTaskActionNotification(string message, string icon)
