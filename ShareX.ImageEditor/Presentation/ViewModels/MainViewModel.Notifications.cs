@@ -34,7 +34,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static readonly TimeSpan DefaultNotificationDuration = TimeSpan.FromSeconds(2.4);
         private static readonly TimeSpan NotificationHideDuration = TimeSpan.FromMilliseconds(220);
 
-        private CancellationTokenSource? _notificationCancellationTokenSource;
+        private int _notificationVersion;
 
         [ObservableProperty]
         private bool _isNotificationVisible;
@@ -127,15 +127,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         private async Task ShowNotificationAsync(string message, string? icon, TimeSpan duration)
         {
-            CancellationTokenSource cancellationTokenSource = new();
-            CancellationTokenSource? previousCancellationTokenSource = Interlocked.Exchange(
-                ref _notificationCancellationTokenSource,
-                cancellationTokenSource);
-
-            previousCancellationTokenSource?.Cancel();
-            previousCancellationTokenSource?.Dispose();
-
-            CancellationToken cancellationToken = cancellationTokenSource.Token;
+            int notificationVersion = Interlocked.Increment(ref _notificationVersion);
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -145,44 +137,37 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 IsNotificationOpen = true;
             });
 
-            try
+            await Task.Delay(duration);
+
+            if (notificationVersion != Volatile.Read(ref _notificationVersion))
             {
-                await Task.Delay(duration, cancellationToken);
+                return;
+            }
 
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                await Dispatcher.UIThread.InvokeAsync(() =>
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (notificationVersion == Volatile.Read(ref _notificationVersion))
                 {
                     IsNotificationOpen = false;
-                });
-
-                await Task.Delay(NotificationHideDuration, cancellationToken);
-
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
                 }
+            });
 
-                await Dispatcher.UIThread.InvokeAsync(() =>
+            await Task.Delay(NotificationHideDuration);
+
+            if (notificationVersion != Volatile.Read(ref _notificationVersion))
+            {
+                return;
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (notificationVersion == Volatile.Read(ref _notificationVersion))
                 {
                     NotificationMessage = string.Empty;
                     NotificationIcon = string.Empty;
                     IsNotificationVisible = false;
-                });
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            finally
-            {
-                if (Interlocked.CompareExchange(ref _notificationCancellationTokenSource, null, cancellationTokenSource) == cancellationTokenSource)
-                {
-                    cancellationTokenSource.Dispose();
                 }
-            }
+            });
         }
     }
 }
