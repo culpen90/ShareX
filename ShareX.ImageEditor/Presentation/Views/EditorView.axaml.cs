@@ -1928,6 +1928,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         _isSyncingToVM = false;
                     }
+
+                    vm.ShowNewImageNotification(skBitmap.Width, skBitmap.Height);
                 },
                 onCancel: () =>
                 {

@@ -109,6 +109,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ShowNotification(BuildFilePathNotification("Image opened.", filePath), EditorIcons.FileOpen);
         }
 
+        public void ShowNewImageNotification(int width = 0, int height = 0)
+        {
+            ShowNotification(BuildImageSizeNotification("New image created.", width, height), EditorIcons.FileNew);
+        }
+
         public void ShowImageCroppedNotification(int width = 0, int height = 0)
         {
             ShowNotification(BuildImageSizeNotification("Image cropped.", width, height), EditorIcons.ToolCrop);
@@ -203,7 +208,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static string BuildImageSizeNotification(string headline, int width, int height)
         {
             return width > 0 && height > 0
-                ? $"{headline}\nNew size: {width}x{height}"
+                ? $"{headline}\nSize: {width}x{height}"
                 : headline;
         }
 
