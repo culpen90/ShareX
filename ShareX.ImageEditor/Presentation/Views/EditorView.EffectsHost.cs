@@ -369,7 +369,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                         _editorCore.RotateCustomAngle(angle, autoResize);
                         break;
                     default:
-                        vm.ApplyEffect(e.EffectOperation, $"Applied {operation.SchemaDefinition!.Name}");
+                        if (vm.ApplyEffect(e.EffectOperation, e.StatusMessage))
+                        {
+                            vm.ShowEffectAppliedNotification(e.StatusMessage);
+                        }
                         break;
                 }
 
@@ -399,7 +402,10 @@ namespace ShareX.ImageEditor.Presentation.Views
             effectDialog.PreviewRequested += (s, e) => vm.PreviewEffect(e.EffectOperation);
             effectDialog.ApplyRequested += (s, e) =>
             {
-                vm.ApplyEffect(e.EffectOperation, e.StatusMessage);
+                if (vm.ApplyEffect(e.EffectOperation, e.StatusMessage))
+                {
+                    vm.ShowEffectAppliedNotification(e.StatusMessage);
+                }
                 vm.CloseEffectsPanelCommand.Execute(null);
             };
             effectDialog.CancelRequested += (s, e) =>

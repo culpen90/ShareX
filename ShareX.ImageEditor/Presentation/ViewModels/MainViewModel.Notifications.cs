@@ -115,6 +115,21 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ShowNotification("Image inserted.", EditorIcons.ToolImage);
         }
 
+        public void ShowEffectAppliedNotification(string? statusMessage)
+        {
+            if (string.IsNullOrWhiteSpace(statusMessage))
+            {
+                ShowNotification("Image effect applied.", EditorIcons.PanelEffects);
+                return;
+            }
+
+            string message = statusMessage.EndsWith('.') || statusMessage.EndsWith('!') || statusMessage.EndsWith('?')
+                ? statusMessage
+                : $"{statusMessage}.";
+
+            ShowNotification(message, EditorIcons.PanelEffects);
+        }
+
         private void ShowSaveNotification(string? savedPath, string icon)
         {
             if (string.IsNullOrWhiteSpace(savedPath))

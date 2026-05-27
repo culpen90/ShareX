@@ -245,7 +245,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         /// <summary>
         /// ISSUE-028 fix: Common logic for committing effects and cleaning up preview state.
         /// </summary>
-        private void CommitEffectAndCleanup(SkiaSharp.SKBitmap result, string statusMessage)
+        private bool CommitEffectAndCleanup(SkiaSharp.SKBitmap result, string statusMessage)
         {
             SkiaSharp.SKBitmap? preEffectImage = _preEffectImage;
             SkiaSharp.SKBitmap? latestPreviewImage = _latestEffectPreviewImage;
@@ -323,15 +323,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(AreBackgroundEffectsActive));
             OnPropertyChanged(nameof(EffectiveCanvasBackground));
             RefreshSmartPaddingState(ensureCache: AreBackgroundEffectsActive);
+
+            return applied;
         }
 
         /// <summary>
         /// Commits the effect to the undo stack and updates the source image.
         /// </summary>
-        public void ApplyEffect(SkiaSharp.SKBitmap result, string statusMessage)
+        public bool ApplyEffect(SkiaSharp.SKBitmap result, string statusMessage)
         {
-            if (_preEffectImage == null) return; // Should have been started
-            CommitEffectAndCleanup(result, statusMessage);
+            if (_preEffectImage == null) return false; // Should have been started
+            return CommitEffectAndCleanup(result, statusMessage);
         }
 
         /// <summary>
@@ -472,12 +474,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         /// <summary>
         /// Applies the effect to the source image and commits to undo stack.
         /// </summary>
-        public void ApplyEffect(Func<SkiaSharp.SKBitmap, SkiaSharp.SKBitmap> effect, string statusMessage)
+        public bool ApplyEffect(Func<SkiaSharp.SKBitmap, SkiaSharp.SKBitmap> effect, string statusMessage)
         {
             if (_preEffectImage == null)
             {
                 EditorServices.ReportDebug(nameof(MainViewModel), $"ApplyEffect(Func): skipped (_preEffectImage null) status={statusMessage}");
-                return;
+                return false;
             }
 
             if (IsBitmapAlive(_latestEffectPreviewImage))
@@ -487,8 +489,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     nameof(MainViewModel),
                     $"ApplyEffect(Func): committing latest preview bitmap {previewResult.Width}x{previewResult.Height} status={statusMessage}");
                 _latestEffectPreviewImage = null;
-                CommitEffectAndCleanup(previewResult, statusMessage);
-                return;
+                return CommitEffectAndCleanup(previewResult, statusMessage);
             }
 
             _latestEffectPreviewImage?.Dispose();
@@ -500,10 +501,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             {
                 EditorServices.ReportDebug(nameof(MainViewModel), "ApplyEffect(Func): effect returned null or dead bitmap.");
                 result?.Dispose();
-                return;
+                return false;
             }
 
-            CommitEffectAndCleanup(result!, statusMessage);
+            return CommitEffectAndCleanup(result!, statusMessage);
         }
 
         // --- Rotate Custom Angle Feature ---
