@@ -25,6 +25,7 @@
 
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ShareX.ImageEditor.Presentation.Theming;
 using System.Threading;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
@@ -75,6 +76,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ShowNotification(message, icon);
         }
 
+        public void ShowOpenImageNotification(string? filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return;
+            }
+
+            ShowNotification(BuildFilePathNotification("Image opened.", filePath), EditorIcons.FileOpen);
+        }
+
         private void ShowSaveNotification(string? savedPath, string icon)
         {
             if (string.IsNullOrWhiteSpace(savedPath))
@@ -82,7 +93,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 return;
             }
 
-            ShowTaskActionNotification($"Image saved to: {savedPath}", icon);
+            ShowTaskActionNotification(BuildFilePathNotification("Image saved to file.", savedPath), icon);
+        }
+
+        private static string BuildFilePathNotification(string headline, string filePath)
+        {
+            return $"{headline}\nFile path: {filePath}";
         }
 
         private static async Task InvokeRequestedHandlersAsync(Func<Task>? handlers)

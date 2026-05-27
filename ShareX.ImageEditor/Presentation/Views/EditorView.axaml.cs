@@ -1936,6 +1936,8 @@ namespace ShareX.ImageEditor.Presentation.Views
 
             if (files.Count > 0)
             {
+                string filePath = files[0].Path.LocalPath;
+
                 using var stream = await files[0].OpenReadAsync();
                 using var memStream = new MemoryStream();
                 await stream.CopyToAsync(memStream);
@@ -1944,7 +1946,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                 var skBitmap = SKBitmap.Decode(memStream);
                 if (skBitmap == null) return;
 
-                LoadBitmapIntoEditor(vm, skBitmap, files[0].Path.LocalPath);
+                LoadBitmapIntoEditor(vm, skBitmap, filePath);
+                vm.ShowOpenImageNotification(filePath);
             }
         }
 
@@ -2187,6 +2190,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
                 vm.CloseModalCommand.Execute(null);
                 LoadBitmapIntoEditor(vm, skBitmap, filePath);
+                vm.ShowOpenImageNotification(filePath);
             }
             catch (Exception ex)
             {
