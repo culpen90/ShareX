@@ -600,7 +600,9 @@
                 Margin="16,0,16,68"
                 MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 IsVisible="{Binding IsNotificationVisible}"
-            Cursor="Hand"
+                Cursor="Hand"
+                PointerEntered="OnNotificationPointerEntered"
+                PointerExited="OnNotificationPointerExited"
                 PointerPressed="OnNotificationPointerPressed"
                 ZIndex="28">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">

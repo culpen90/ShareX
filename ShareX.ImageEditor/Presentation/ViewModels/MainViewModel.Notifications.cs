@@ -35,8 +35,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
     {
         private static readonly TimeSpan DefaultNotificationDuration = TimeSpan.FromSeconds(2.4);
         private static readonly TimeSpan NotificationHideDuration = TimeSpan.FromMilliseconds(220);
+        private static readonly TimeSpan NotificationHoverPollInterval = TimeSpan.FromMilliseconds(50);
 
         private int _notificationVersion;
+        private bool _isNotificationHovered;
 
         [ObservableProperty]
         private bool _isNotificationVisible;
@@ -70,6 +72,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private void HideNotification()
         {
             Interlocked.Increment(ref _notificationVersion);
+            Volatile.Write(ref _isNotificationHovered, false);
             NotificationMessage = string.Empty;
             NotificationIcon = string.Empty;
             IsNotificationOpen = false;
@@ -79,6 +82,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public void DismissNotification()
         {
             HideNotification();
+        }
+
+        internal void SetNotificationHoverState(bool isHovered)
+        {
+            Volatile.Write(ref _isNotificationHovered, isHovered);
         }
 
         private void ShowTaskActionNotification(string message, string icon)
@@ -246,6 +254,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
             await Task.Delay(duration);
 
+            await WaitForNotificationHoverExitAsync(notificationVersion);
+
             if (notificationVersion != Volatile.Read(ref _notificationVersion))
             {
                 return;
@@ -273,8 +283,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     NotificationMessage = string.Empty;
                     NotificationIcon = string.Empty;
                     IsNotificationVisible = false;
+                    Volatile.Write(ref _isNotificationHovered, false);
                 }
             });
+        }
+
+        private async Task WaitForNotificationHoverExitAsync(int notificationVersion)
+        {
+            while (notificationVersion == Volatile.Read(ref _notificationVersion) && Volatile.Read(ref _isNotificationHovered))
+            {
+                await Task.Delay(NotificationHoverPollInterval);
+            }
         }
     }
 }

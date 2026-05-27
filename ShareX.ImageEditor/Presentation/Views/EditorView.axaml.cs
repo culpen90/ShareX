@@ -1381,6 +1381,22 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
+        private void OnNotificationPointerEntered(object? sender, PointerEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.SetNotificationHoverState(true);
+            }
+        }
+
+        private void OnNotificationPointerExited(object? sender, PointerEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.SetNotificationHoverState(false);
+            }
+        }
+
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
             // Skip shortcuts when the user is typing in a text field
