@@ -151,7 +151,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 return;
             }
 
-            _editorCore.ApplyImageEffect(effect);
+            if (_editorCore.ApplyImageEffect(effect))
+            {
+                ShowEffectAppliedNotification(statusMessage);
+            }
         }
 
         // --- Effect Live Preview Logic ---

@@ -200,9 +200,15 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
 
             vm.StartEffectPreview();
-            vm.ApplyEffect(
+            string statusMessage = $"Applied {definition.Name}";
+
+            if (vm.ApplyEffect(
                 definition.CreateConfiguredEffect(Array.Empty<EffectParameterState>()).Apply,
-                $"Applied {definition.Name}");
+                statusMessage))
+            {
+                vm.ShowEffectAppliedNotification(statusMessage);
+            }
+
             vm.CloseEffectsPanelCommand.Execute(null);
             return true;
         }
