@@ -1541,16 +1541,16 @@ public class EditorCore : IDisposable
     /// <summary>
     /// Perform crop operation with specific bounds
     /// </summary>
-    public void Crop(SKRect bounds)
+    public bool Crop(SKRect bounds)
     {
-        if (SourceImage == null) return;
+        if (SourceImage == null) return false;
 
         int x = (int)Math.Max(0, bounds.Left);
         int y = (int)Math.Max(0, bounds.Top);
         int width = (int)Math.Min(SourceImage.Width - x, bounds.Width);
         int height = (int)Math.Min(SourceImage.Height - y, bounds.Height);
 
-        if (width <= 0 || height <= 0) return;
+        if (width <= 0 || height <= 0) return false;
 
         // Create canvas memento before destructive crop operation
         _history.CreateCanvasMemento();
@@ -1638,6 +1638,7 @@ public class EditorCore : IDisposable
         ImageChanged?.Invoke();
         HistoryChanged?.Invoke();
         InvalidateRequested?.Invoke();
+        return true;
     }
 
     /// <summary>

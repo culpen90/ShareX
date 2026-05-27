@@ -1675,7 +1675,6 @@ public class EditorInputController
         var cropH = (int)Math.Round(h);
 
         vm.CropImage(cropX, cropY, cropW, cropH);
-        vm.ShowImageCroppedNotification();
 
         cropOverlay.IsVisible = false;
         _currentShape = null; // Ensure we clear current shape

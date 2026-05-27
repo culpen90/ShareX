@@ -40,37 +40,60 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [RelayCommand]
         private void Rotate90Clockwise()
         {
-            _editorCore?.Rotate90Clockwise();
+            if (_editorCore?.Rotate90Clockwise() == true)
+            {
+                ShowImageRotatedClockwiseNotification();
+            }
         }
 
         [RelayCommand]
         private void Rotate90CounterClockwise()
         {
-            _editorCore?.Rotate90CounterClockwise();
+            if (_editorCore?.Rotate90CounterClockwise() == true)
+            {
+                ShowImageRotatedCounterClockwiseNotification();
+            }
         }
 
         [RelayCommand]
         private void Rotate180()
         {
-            _editorCore?.Rotate180();
+            if (_editorCore?.Rotate180() == true)
+            {
+                ShowImageRotated180Notification();
+            }
         }
 
         [RelayCommand]
         private void FlipHorizontal()
         {
-            _editorCore?.FlipHorizontal();
+            if (_editorCore?.FlipHorizontal() == true)
+            {
+                ShowImageFlippedHorizontallyNotification();
+            }
         }
 
         [RelayCommand]
         private void FlipVertical()
         {
-            _editorCore?.FlipVertical();
+            if (_editorCore?.FlipVertical() == true)
+            {
+                ShowImageFlippedVerticallyNotification();
+            }
         }
 
         [RelayCommand]
         private void AutoCropImage()
         {
-            _editorCore?.AutoCrop(10);
+            AutoCrop(10);
+        }
+
+        public void AutoCrop(int tolerance)
+        {
+            if (_editorCore?.AutoCrop(tolerance) == true)
+            {
+                ShowImageAutoCroppedNotification();
+            }
         }
 
         /// <summary>
@@ -83,7 +106,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 return;
             }
 
-            _editorCore?.ResizeImage(newWidth, newHeight, sampling);
+            if (_editorCore?.ResizeImage(newWidth, newHeight, sampling) == true)
+            {
+                ShowImageResizedNotification();
+            }
         }
 
         /// <summary>
@@ -91,7 +117,18 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         /// </summary>
         public void ResizeCanvas(int top, int right, int bottom, int left, SkiaSharp.SKColor backgroundColor)
         {
-            _editorCore?.ResizeCanvas(top, right, bottom, left, backgroundColor);
+            if (_editorCore?.ResizeCanvas(top, right, bottom, left, backgroundColor) == true)
+            {
+                ShowCanvasResizedNotification();
+            }
+        }
+
+        public void RotateCustomAngle(float angle, bool autoResize = true)
+        {
+            if (_editorCore?.RotateCustomAngle(angle, autoResize) == true)
+            {
+                ShowImageRotatedCustomAngleNotification(angle);
+            }
         }
 
         // --- Effects Menu Commands ---
@@ -590,7 +627,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 _editorCore.UpdateSourceImage(cleanState);
             }
 
-            _editorCore.RotateCustomAngle(angle, RotateAutoResize);
+            RotateCustomAngle(angle, RotateAutoResize);
 
             IsRotateCustomAngleDialogOpen = false;
             IsModalOpen = false;

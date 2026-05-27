@@ -152,7 +152,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 return;
             }
 
-            _editorCore.Crop(new SkiaSharp.SKRect(x, y, x + width, y + height));
+            if (_editorCore.Crop(new SkiaSharp.SKRect(x, y, x + width, y + height)))
+            {
+                ShowImageCroppedNotification();
+            }
         }
 
         public void CutOutImage(int startPos, int endPos, bool isVertical)

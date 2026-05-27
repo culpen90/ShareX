@@ -302,7 +302,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                             }
                         }
 
-                        _editorCore.AutoCrop(tolerance);
+                        vm.AutoCrop(tolerance);
                         break;
                     case EditorOperationKind.CropImage:
                         int x = 0, y = 0, w = 0, h = 0;
@@ -320,7 +320,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                             }
                         }
 
-                        _editorCore.Crop(new SKRect(x, y, x + w, y + h));
+                        vm.CropImage(x, y, w, h);
                         break;
                     case EditorOperationKind.ResizeImage:
                         if (_editorCore.SourceImage != null &&
@@ -328,7 +328,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                         {
                             SKSizeI targetSize = resizeImageEffect.GetTargetSize(_editorCore.SourceImage);
 
-                            _editorCore.ResizeImage(targetSize.Width, targetSize.Height);
+                            vm.ResizeImage(targetSize.Width, targetSize.Height);
                         }
                         break;
                     case EditorOperationKind.ResizeCanvas:
@@ -353,7 +353,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                             }
                         }
 
-                        _editorCore.ResizeCanvas(top, right, bottom, left, bgColor);
+                        vm.ResizeCanvas(top, right, bottom, left, bgColor);
                         break;
                     case EditorOperationKind.RotateCustomAngle:
                         float angle = 0;
@@ -372,7 +372,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                             }
                         }
 
-                        _editorCore.RotateCustomAngle(angle, autoResize);
+                        vm.RotateCustomAngle(angle, autoResize);
                         break;
                     default:
                         if (vm.ApplyEffect(e.EffectOperation, e.StatusMessage))

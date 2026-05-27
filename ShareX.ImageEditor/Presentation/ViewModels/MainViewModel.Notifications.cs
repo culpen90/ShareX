@@ -26,6 +26,7 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ShareX.ImageEditor.Presentation.Theming;
+using System.Globalization;
 using System.Threading;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
@@ -113,6 +114,52 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         public void ShowImageInsertedNotification()
         {
             ShowNotification("Image inserted.", EditorIcons.ToolImage);
+        }
+
+        public void ShowImageAutoCroppedNotification()
+        {
+            ShowNotification("Image auto-cropped.", EditorIcons.ToolCrop);
+        }
+
+        public void ShowImageResizedNotification()
+        {
+            ShowNotification("Image resized.", EditorIcons.ToolImage);
+        }
+
+        public void ShowCanvasResizedNotification()
+        {
+            ShowNotification("Canvas resized.", EditorIcons.PanelBackground);
+        }
+
+        public void ShowImageRotatedClockwiseNotification()
+        {
+            ShowNotification("Image rotated clockwise.", EditorIcons.ActionRotateRight);
+        }
+
+        public void ShowImageRotatedCounterClockwiseNotification()
+        {
+            ShowNotification("Image rotated counterclockwise.", EditorIcons.ActionRotateLeft);
+        }
+
+        public void ShowImageRotated180Notification()
+        {
+            ShowNotification("Image rotated 180 degrees.", EditorIcons.ActionRotateRight);
+        }
+
+        public void ShowImageRotatedCustomAngleNotification(float angle)
+        {
+            string formattedAngle = Math.Round(angle, 2).ToString("0.##", CultureInfo.InvariantCulture);
+            ShowNotification($"Image rotated by {formattedAngle} degrees.", EditorIcons.ActionRotateRight);
+        }
+
+        public void ShowImageFlippedHorizontallyNotification()
+        {
+            ShowNotification("Image flipped horizontally.", EditorIcons.PanelEffects);
+        }
+
+        public void ShowImageFlippedVerticallyNotification()
+        {
+            ShowNotification("Image flipped vertically.", EditorIcons.PanelEffects);
         }
 
         public void ShowEffectAppliedNotification(string? statusMessage)
