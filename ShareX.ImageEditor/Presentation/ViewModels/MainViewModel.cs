@@ -1088,7 +1088,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             ImageInsertionRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ShowEmojiPickerDialog()
+        internal void ShowEmojiPickerDialog(Action<EmojiCatalogEntry>? onSelect = null)
         {
             if (IsModalOpen)
             {
@@ -1099,7 +1099,15 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 onSelect: entry =>
                 {
                     CloseModal();
-                    EmojiInsertionRequested?.Invoke(this, new EmojiSelectionRequest(entry.Unicode, entry.Name));
+
+                    if (onSelect != null)
+                    {
+                        onSelect(entry);
+                    }
+                    else
+                    {
+                        EmojiInsertionRequested?.Invoke(this, new EmojiSelectionRequest(entry.Unicode, entry.Name));
+                    }
                 },
                 onCancel: CloseModal);
 

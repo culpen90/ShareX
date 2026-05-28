@@ -220,16 +220,8 @@ public class EditorSelectionController
 
                 if (hitTarget != null && GetControlToolType(hitTarget) == vm.ActiveTool)
                 {
-                    if (hitTarget is OutlinedTextControl otc && e.ClickCount == 2)
+                    if (e.ClickCount == 2 && TryHandleDoubleClickEdit(hitTarget, canvas))
                     {
-                        ShowTextEditor(otc, canvas);
-                        e.Handled = true;
-                        return true;
-                    }
-
-                    if (hitTarget is SpeechBalloonControl balloon && e.ClickCount == 2)
-                    {
-                        ShowSpeechBalloonTextEditor(balloon, canvas);
                         e.Handled = true;
                         return true;
                     }
@@ -282,16 +274,8 @@ public class EditorSelectionController
 
                 if (hitTarget != null)
                 {
-                    if (hitTarget is OutlinedTextControl otc && e.ClickCount == 2)
+                    if (e.ClickCount == 2 && TryHandleDoubleClickEdit(hitTarget, canvas))
                     {
-                        ShowTextEditor(otc, canvas);
-                        e.Handled = true;
-                        return true;
-                    }
-
-                    if (hitTarget is SpeechBalloonControl balloon && e.ClickCount == 2)
-                    {
-                        ShowSpeechBalloonTextEditor(balloon, canvas);
                         e.Handled = true;
                         return true;
                     }
@@ -310,16 +294,8 @@ public class EditorSelectionController
                 {
                     if (manualHit != null)
                     {
-                        if (manualHit is OutlinedTextControl otc && e.ClickCount == 2)
+                        if (e.ClickCount == 2 && TryHandleDoubleClickEdit(manualHit, canvas))
                         {
-                            ShowTextEditor(otc, canvas);
-                            e.Handled = true;
-                            return true;
-                        }
-
-                        if (manualHit is SpeechBalloonControl balloon && e.ClickCount == 2)
-                        {
-                            ShowSpeechBalloonTextEditor(balloon, canvas);
                             e.Handled = true;
                             return true;
                         }
@@ -343,6 +319,53 @@ public class EditorSelectionController
         }
 
         return false;
+    }
+
+    private bool TryHandleDoubleClickEdit(Control hitTarget, Canvas canvas)
+    {
+        switch (hitTarget)
+        {
+            case OutlinedTextControl otc:
+                ShowTextEditor(otc, canvas);
+                return true;
+            case SpeechBalloonControl balloon:
+                ShowSpeechBalloonTextEditor(balloon, canvas);
+                return true;
+            case global::Avalonia.Controls.Image emojiControl when emojiControl.Tag is EmojiAnnotation emojiAnnotation:
+                ShowEmojiPickerForReplacement(emojiControl, emojiAnnotation);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void ShowEmojiPickerForReplacement(global::Avalonia.Controls.Image emojiControl, EmojiAnnotation emojiAnnotation)
+    {
+        if (_view.DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        _selectedShape = emojiControl;
+        UpdateBoundsObserver();
+        UpdateSelectionHandles();
+        SelectionChanged?.Invoke(true);
+
+        vm.ShowEmojiPickerDialog(entry =>
+        {
+            emojiAnnotation.UnicodeSequence = entry.Unicode;
+            emojiAnnotation.DisplayName = entry.Name;
+            emojiAnnotation.ClearImage();
+
+            AnnotationVisualFactory.UpdateVisualControl(emojiControl, emojiAnnotation);
+            UpdateSelectionHandles();
+
+            if (_view.DataContext is MainViewModel activeVm)
+            {
+                activeVm.HasAnnotations = true;
+                activeVm.IsDirty = true;
+            }
+        });
     }
 
     public bool OnPointerMoved(object sender, PointerEventArgs e)
