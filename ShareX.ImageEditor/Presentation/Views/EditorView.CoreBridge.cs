@@ -70,7 +70,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             int canvasWidth = Math.Max(1, (int)Math.Ceiling(_editorCore.CanvasSize.Width));
             int canvasHeight = Math.Max(1, (int)Math.Ceiling(_editorCore.CanvasSize.Height));
 
-            spotlightOverlay.UpdateSpotlights(spotlights, canvasWidth, canvasHeight);
+            spotlightOverlay.UpdateSpotlights(spotlights, _editorCore.SourceImage, canvasWidth, canvasHeight);
         }
 
         private void RenderCore()

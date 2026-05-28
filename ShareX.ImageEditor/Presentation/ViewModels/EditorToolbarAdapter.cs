@@ -144,6 +144,14 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public float EffectStrengthMaximum => _viewModel.EffectStrengthMaximum;
 
+    public float SpotlightBlur
+    {
+        get => _viewModel.SpotlightBlur;
+        set => _viewModel.SpotlightBlur = value;
+    }
+
+    public float SpotlightBlurMaximum => _viewModel.SpotlightBlurMaximum;
+
     public bool ShadowEnabled
     {
         get => _viewModel.ShadowEnabled;
@@ -203,6 +211,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowCornerRadius => _viewModel.ShowCornerRadius;
 
     public bool ShowStrength => _viewModel.ShowStrength;
+
+    public bool ShowSpotlightBlur => _viewModel.ShowSpotlightBlur;
 
     public bool ShowTextStyle => _viewModel.ShowTextStyle;
 

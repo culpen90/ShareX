@@ -144,6 +144,7 @@ namespace ShareX.ImageEditor.Hosting
         public float PixelateStrength { get; set; } = 20;
         public float MagnifierStrength { get; set; } = 2;
         public float SpotlightStrength { get; set; } = 30;
+        public float SpotlightBlur { get; set; } = 0;
 
         // Background
         public double BackgroundMargin { get; set; } = 80;

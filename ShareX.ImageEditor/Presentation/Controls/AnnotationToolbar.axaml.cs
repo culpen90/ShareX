@@ -63,6 +63,7 @@ public partial class AnnotationToolbar : UserControl
     public event EventHandler<ArrowStyle>? ArrowStyleChanged;
     public event EventHandler<CursorType>? CursorTypeChanged;
     public event EventHandler<float>? StrengthChanged;
+    public event EventHandler<float>? SpotlightBlurChanged;
     public event EventHandler<bool>? TextBoldChanged;
     public event EventHandler<bool>? TextItalicChanged;
     public event EventHandler<bool>? TextUnderlineChanged;
@@ -147,6 +148,11 @@ public partial class AnnotationToolbar : UserControl
         if (this.FindControl<StrengthSlider>("EffectStrengthSlider") is StrengthSlider strengthSlider)
         {
             strengthSlider.StrengthChanged += (_, strength) => StrengthChanged?.Invoke(this, strength);
+        }
+
+        if (this.FindControl<StrengthSlider>("SpotlightBlurSlider") is StrengthSlider spotlightBlurSlider)
+        {
+            spotlightBlurSlider.StrengthChanged += (_, blurAmount) => SpotlightBlurChanged?.Invoke(this, blurAmount);
         }
     }
 

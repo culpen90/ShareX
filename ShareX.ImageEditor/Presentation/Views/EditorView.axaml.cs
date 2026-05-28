@@ -390,6 +390,13 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         vm.FillColor = ellipse.FillColor;
                     }
+                    else if (vm.SelectedAnnotation is SpotlightAnnotation spotlight)
+                    {
+                        vm.EffectStrength = (int)Math.Round(
+                            spotlight.DarkenOpacity / 255f * MainViewModel.GetMaxEffectStrength(EditorTool.Spotlight),
+                            MidpointRounding.AwayFromZero);
+                        vm.SpotlightBlur = spotlight.BlurAmount;
+                    }
                     else if (vm.SelectedAnnotation is BaseEffectAnnotation effect)
                     {
                         vm.EffectStrength = (int)effect.Amount;

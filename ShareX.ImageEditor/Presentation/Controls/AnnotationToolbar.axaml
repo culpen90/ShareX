@@ -384,6 +384,13 @@
                                              IsVisible="{Binding ShowStrength}"
                                              ToolTip.Tip="Effect strength"/>
 
+                    <controls:StrengthSlider x:Name="SpotlightBlurSlider"
+                                             SelectedStrength="{Binding SpotlightBlur, Mode=TwoWay}"
+                                             Minimum="0"
+                                             Maximum="{Binding SpotlightBlurMaximum}"
+                                             IsVisible="{Binding ShowSpotlightBlur}"
+                                             ToolTip.Tip="Blur amount"/>
+
                     <Button Classes="editor-button toolbar-button"
                             Classes.active="{Binding TextBold}"
                             Click="OnTextBoldClick"

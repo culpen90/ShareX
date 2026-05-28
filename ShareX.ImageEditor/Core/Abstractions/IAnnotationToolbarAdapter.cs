@@ -58,6 +58,8 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     int StepStartNumber { get; set; }
     float EffectStrength { get; set; }
     float EffectStrengthMaximum { get; }
+    float SpotlightBlur { get; set; }
+    float SpotlightBlurMaximum { get; }
     bool ShadowEnabled { get; set; }
     bool SpeechBalloonTail { get; set; }
     bool TextBold { get; set; }
@@ -80,6 +82,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowCursorType { get; }
     bool ShowCornerRadius { get; }
     bool ShowStrength { get; }
+    bool ShowSpotlightBlur { get; }
     bool ShowTextStyle { get; }
     bool ShowShadow { get; }
     bool ShowSpeechBalloonTail { get; }

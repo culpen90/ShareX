@@ -53,6 +53,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.ArrowStyleChanged += OnArrowStyleChanged;
             toolbar.CursorTypeChanged += OnCursorTypeChanged;
             toolbar.StrengthChanged += OnStrengthChanged;
+            toolbar.SpotlightBlurChanged += OnSpotlightBlurChanged;
             toolbar.TextBoldChanged += OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged += OnToolbarTextItalicChanged;
             toolbar.TextUnderlineChanged += OnToolbarTextUnderlineChanged;
@@ -78,6 +79,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.ArrowStyleChanged -= OnArrowStyleChanged;
             toolbar.CursorTypeChanged -= OnCursorTypeChanged;
             toolbar.StrengthChanged -= OnStrengthChanged;
+            toolbar.SpotlightBlurChanged -= OnSpotlightBlurChanged;
             toolbar.TextBoldChanged -= OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged -= OnToolbarTextItalicChanged;
             toolbar.TextUnderlineChanged -= OnToolbarTextUnderlineChanged;
@@ -154,6 +156,15 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 vm.EffectStrength = strength;
                 ApplySelectedEffectStrength(strength);
+            }
+        }
+
+        private void OnSpotlightBlurChanged(object? sender, float blurAmount)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.SpotlightBlur = blurAmount;
+                ApplySelectedSpotlightBlur(blurAmount);
             }
         }
 
@@ -569,6 +580,15 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     RefreshSpotlightOverlay();
                 }
+            }
+        }
+
+        private void ApplySelectedSpotlightBlur(float blurAmount)
+        {
+            if (_selectionController.SelectedShape?.Tag is SpotlightAnnotation spotlightAnnotation)
+            {
+                spotlightAnnotation.BlurAmount = blurAmount;
+                RefreshSpotlightOverlay();
             }
         }
 

@@ -1353,9 +1353,9 @@ public class EditorSelectionController
             );
 
             // Fix Tail Point if it was at 0,0 or default
-                if (annotation.TailEnabled &&
-                    (!annotation.HasTailPoint ||
-                    (Math.Abs(annotation.TailPoint.X - annotation.StartPoint.X) < 1 && Math.Abs(annotation.TailPoint.Y - annotation.StartPoint.Y) < 1)))
+            if (annotation.TailEnabled &&
+                (!annotation.HasTailPoint ||
+                (Math.Abs(annotation.TailPoint.X - annotation.StartPoint.X) < 1 && Math.Abs(annotation.TailPoint.Y - annotation.StartPoint.Y) < 1)))
             {
                 annotation.SetTailPoint(annotation.GetDefaultTailPoint());
             }

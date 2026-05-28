@@ -379,7 +379,8 @@ public class EditorInputController
                     StartPoint = ToSKPoint(_startPoint),
                     EndPoint = ToSKPoint(_startPoint),
                     CanvasSize = ToSKSize(canvas.Bounds.Size),
-                    DarkenOpacity = opacity
+                    DarkenOpacity = opacity,
+                    BlurAmount = vm.SpotlightBlur
                 };
                 var spotlightControl = spotlightAnnotation.CreateVisual();
                 spotlightControl.Width = canvas.Bounds.Width;

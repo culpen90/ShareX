@@ -26,10 +26,12 @@
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ShareX.ImageEditor.Core.Annotations;
+using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Theming;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
 {
@@ -37,10 +39,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
     {
         private static EditorTool? _sessionLastUsedAnnotationTool;
         private const string DefaultAnnotationFontFamily = "Segoe UI";
+        private const string SpotlightBlurOptionPropertyName = "SpotlightBlur";
         private static readonly IReadOnlyList<string> _availableFontFamilies = BuildAvailableFontFamilies();
         private static readonly IReadOnlyList<ArrowStyle> _availableArrowStyles = BuildAvailableArrowStyles();
         private static readonly IReadOnlyList<CursorType> _availableCursorTypes = BuildAvailableCursorTypes();
         private static readonly IReadOnlyList<int> _availableStepStartNumbers = Enumerable.Range(1, 10).ToArray();
+        private static readonly PropertyInfo? _spotlightBlurOptionProperty = typeof(ImageEditorOptions).GetProperty(SpotlightBlurOptionPropertyName);
 
         public IReadOnlyList<string> AvailableFontFamilies => _availableFontFamilies;
         public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _availableArrowStyles;
@@ -444,6 +448,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public float EffectStrengthMaximum => GetMaxEffectStrength(GetEffectiveStrengthTool());
 
+        public float SpotlightBlurMaximum => MaxBlurStrength;
+
         partial void OnEffectStrengthChanged(float value)
         {
             var clamped = Math.Clamp(value, MinEffectStrength, EffectStrengthMaximum);
@@ -474,6 +480,70 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 case EditorTool.Spotlight:
                     Options.SpotlightStrength = value;
                     break;
+            }
+        }
+
+        [ObservableProperty]
+        private float _spotlightBlur;
+
+        partial void OnSpotlightBlurChanged(float value)
+        {
+            float clamped = Math.Clamp(value, 0, SpotlightBlurMaximum);
+            if (Math.Abs(clamped - value) > float.Epsilon)
+            {
+                SpotlightBlur = clamped;
+                return;
+            }
+
+            if (_isLoadingOptions)
+            {
+                return;
+            }
+
+            bool isSpotlight = ActiveTool == EditorTool.Spotlight;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation is SpotlightAnnotation)
+            {
+                isSpotlight = true;
+            }
+
+            if (isSpotlight)
+            {
+                SetSpotlightBlurOption(value);
+            }
+        }
+
+        private float GetSpotlightBlurOption()
+        {
+            object? value = _spotlightBlurOptionProperty?.GetValue(Options);
+
+            return value switch
+            {
+                float floatValue => floatValue,
+                double doubleValue => (float)doubleValue,
+                int intValue => intValue,
+                _ => 0
+            };
+        }
+
+        private void SetSpotlightBlurOption(float value)
+        {
+            if (_spotlightBlurOptionProperty == null || !_spotlightBlurOptionProperty.CanWrite)
+            {
+                return;
+            }
+
+            if (_spotlightBlurOptionProperty.PropertyType == typeof(float))
+            {
+                _spotlightBlurOptionProperty.SetValue(Options, value);
+            }
+            else if (_spotlightBlurOptionProperty.PropertyType == typeof(double))
+            {
+                _spotlightBlurOptionProperty.SetValue(Options, (double)value);
+            }
+            else if (_spotlightBlurOptionProperty.PropertyType == typeof(int))
+            {
+                _spotlightBlurOptionProperty.SetValue(Options, (int)MathF.Round(value));
             }
         }
 
@@ -634,6 +704,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _ => false
         };
 
+        public bool ShowSpotlightBlur => ActiveTool switch
+        {
+            EditorTool.Spotlight => true,
+            EditorTool.Select => SelectedAnnotation is SpotlightAnnotation,
+            _ => false
+        };
+
         public bool ShowShadow => ActiveTool switch
         {
             EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Arrow
@@ -746,6 +823,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowCursorType));
             OnPropertyChanged(nameof(ShowCornerRadius));
             OnPropertyChanged(nameof(ShowStrength));
+            OnPropertyChanged(nameof(ShowSpotlightBlur));
             OnPropertyChanged(nameof(ShowTextStyle));
             OnPropertyChanged(nameof(ShowShadow));
             OnPropertyChanged(nameof(ShowSpeechBalloonTail));
@@ -755,7 +833,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowToolOptionsSeparator));
         }
 
-        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
+        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowSpotlightBlur || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
 
         [ObservableProperty]
         private EditorTool _activeTool = EditorTool.Rectangle;
@@ -911,6 +989,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     break;
                 case EditorTool.Spotlight:
                     EffectStrength = Options.SpotlightStrength;
+                    SpotlightBlur = GetSpotlightBlurOption();
                     break;
             }
         }

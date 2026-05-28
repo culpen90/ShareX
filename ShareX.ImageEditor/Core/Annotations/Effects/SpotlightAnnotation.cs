@@ -40,6 +40,12 @@ public partial class SpotlightAnnotation : Annotation
     public byte DarkenOpacity { get; set; } = 180;
 
     /// <summary>
+    /// Blur amount applied to the background outside the spotlight bounds.
+    /// A value of 0 disables the blur pass.
+    /// </summary>
+    public float BlurAmount { get; set; }
+
+    /// <summary>
     /// Size of the canvas (needed for full overlay)
     /// </summary>
     public SKSize CanvasSize { get; set; }
