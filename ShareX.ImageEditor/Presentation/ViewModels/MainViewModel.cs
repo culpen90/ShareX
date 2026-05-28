@@ -85,7 +85,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private bool _showBottomToolbar = true;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(AreToolbarsHidden))]
+        [NotifyPropertyChangedFor(nameof(ToggleToolbarsMenuHeader))]
+        private bool _showToolbars = true;
+
+        [ObservableProperty]
         private bool _showStartScreen = true;
+
+        public bool AreToolbarsHidden => !ShowToolbars;
+
+        public string ToggleToolbarsMenuHeader => ShowToolbars ? "Hide toolbars" : "Show toolbars";
 
         // Events to signal View to perform canvas operations
         public event EventHandler? UndoRequested;
@@ -136,6 +145,12 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private void Cancel()
         {
             RequestClose();
+        }
+
+        [RelayCommand]
+        private void ToggleToolbars()
+        {
+            ShowToolbars = !ShowToolbars;
         }
 
         public void RequestClose(bool ignoreModal = false)

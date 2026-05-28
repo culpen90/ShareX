@@ -127,6 +127,14 @@
                     <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionSendToBack}"/>
                 </MenuItem.Icon>
             </MenuItem>
+
+            <Separator/>
+
+            <MenuItem Header="{Binding ToggleToolbarsMenuHeader}" Command="{Binding ToggleToolbarsCommand}">
+                <MenuItem.Icon>
+                    <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionToggleToolbars}"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
     </UserControl.Resources>
 
@@ -495,18 +503,28 @@
         </Grid>
 
         <!-- Row 0: Shared Annotation Toolbar - OVERLAY -->
-        <StackPanel Grid.Row="0" Orientation="Vertical" Spacing="0" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <Border Grid.Row="0"
+            Classes="editor-toolbar-host top"
+            Classes.hidden="{Binding AreToolbarsHidden}"
+            Margin="0,0,0,0"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            IsHitTestVisible="{Binding ShowToolbars}">
             <controls:AnnotationToolbar x:Name="AnnotationToolbarControl"
                                         DataContext="{Binding ToolbarAdapter}"
                                         ShowEditingActions="False"
                                         MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
-        </StackPanel>
+        </Border>
 
         <!-- Row 0: Export Actions Toolbar (Bottom Centered, Floating) -->
-        <Border Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,0"
+        <Border Grid.Row="0"
+            Classes="editor-toolbar-host bottom"
+            Classes.hidden="{Binding AreToolbarsHidden}"
+            VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,0"
                 Padding="4" Background="{DynamicResource ShareX.Brush.Background.Toolbar}" BorderBrush="{DynamicResource ShareX.Brush.Border}" BorderThickness="1" CornerRadius="4,4,0,0"
                 MaxWidth="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                ClipToBounds="False">
+            ClipToBounds="False"
+            IsHitTestVisible="{Binding ShowToolbars}">
             <StackPanel Orientation="Horizontal" Spacing="4" ClipToBounds="False">
                 <!-- Zoom Picker -->
                 <controls:ZoomPickerDropdown

@@ -334,6 +334,35 @@
         </Style>
     </Style>
 
+    <Style Selector="Border.editor-toolbar-host">
+        <Setter Property="Opacity" Value="1"/>
+        <Setter Property="RenderTransform" Value="translateY(0px)"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+
+        <Style Selector="^.top">
+            <Setter Property="RenderTransformOrigin" Value="50%,0%"/>
+        </Style>
+
+        <Style Selector="^.bottom">
+            <Setter Property="RenderTransformOrigin" Value="50%,100%"/>
+        </Style>
+
+        <Style Selector="^.top.hidden">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="RenderTransform" Value="translateY(-28px)"/>
+        </Style>
+
+        <Style Selector="^.bottom.hidden">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="RenderTransform" Value="translateY(28px)"/>
+        </Style>
+    </Style>
+
     <Style Selector="Grid.overlay-scrim">
         <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Overlay.Soft}"/>
         <Setter Property="Opacity" Value="0"/>
