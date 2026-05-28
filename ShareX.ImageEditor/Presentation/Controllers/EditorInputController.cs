@@ -58,7 +58,7 @@ public class EditorInputController
     private bool _isCreatingEffect;
 
     private static bool UsesCrosshairInteractionCapture(EditorTool tool)
-        => tool != EditorTool.Image && tool != EditorTool.Text;
+        => tool != EditorTool.Select && tool != EditorTool.Image && tool != EditorTool.Text;
 
     private static Point ClampPointToCanvasBounds(Canvas canvas, Point point)
         => new(
