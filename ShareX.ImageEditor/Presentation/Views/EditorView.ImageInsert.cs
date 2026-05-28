@@ -29,6 +29,8 @@ using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ShareX.ImageEditor.Core.Annotations;
+using ShareX.ImageEditor.Hosting;
+using ShareX.ImageEditor.Presentation.Rendering;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using SkiaSharp;
 using System.ComponentModel;
@@ -40,27 +42,67 @@ namespace ShareX.ImageEditor.Presentation.Views
     {
         private async void OnImageInsertionRequested(object? sender, EventArgs e)
         {
-            if (DataContext is not MainViewModel vm)
+            if (DataContext is not MainViewModel)
             {
                 return;
             }
 
+            var pickedImage = await PickImageBitmapAsync("Select image");
+            if (!pickedImage.HasValue)
+            {
+                return;
+            }
+
+            await InsertExternalImageAsync(pickedImage.Value.Bitmap, pickedImage.Value.SourceFilePath);
+        }
+
+        internal async Task<bool> ReplaceImageAnnotationFromFilePickerAsync(ImageAnnotation annotation, Image imageControl)
+        {
+            try
+            {
+                var pickedImage = await PickImageBitmapAsync("Select image");
+                if (!pickedImage.HasValue)
+                {
+                    return false;
+                }
+
+                annotation.ImagePath = pickedImage.Value.SourceFilePath ?? string.Empty;
+                annotation.SetImage(pickedImage.Value.Bitmap);
+                AnnotationVisualFactory.UpdateVisualControl(imageControl, annotation);
+
+                if (DataContext is MainViewModel vm)
+                {
+                    vm.HasAnnotations = true;
+                    vm.IsDirty = true;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                EditorServices.ReportWarning(nameof(EditorView), "Failed to replace image annotation.", ex);
+                return false;
+            }
+        }
+
+        private async Task<(SKBitmap Bitmap, string? SourceFilePath)?> PickImageBitmapAsync(string dialogTitle)
+        {
             TopLevel? topLevel = TopLevel.GetTopLevel(this);
             if (topLevel?.StorageProvider == null)
             {
-                return;
+                return null;
             }
 
             IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
-                Title = "Select image",
+                Title = dialogTitle,
                 AllowMultiple = false,
                 FileTypeFilter = [FilePickerFileTypes.ImageAll]
             });
 
             if (files.Count == 0)
             {
-                return;
+                return null;
             }
 
             using var stream = await files[0].OpenReadAsync();
@@ -69,12 +111,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             memStream.Position = 0;
 
             SKBitmap? skBitmap = SKBitmap.Decode(memStream);
-            if (skBitmap == null)
-            {
-                return;
-            }
-
-            await InsertExternalImageAsync(skBitmap, files[0].Path.LocalPath);
+            return skBitmap == null ? null : (skBitmap, files[0].Path.LocalPath);
         }
 
         private async Task InsertExternalImageAsync(SKBitmap skBitmap, string? sourceFilePath = null)

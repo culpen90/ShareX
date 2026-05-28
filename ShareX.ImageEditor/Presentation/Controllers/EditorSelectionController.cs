@@ -334,6 +334,9 @@ public class EditorSelectionController
             case global::Avalonia.Controls.Image emojiControl when emojiControl.Tag is EmojiAnnotation emojiAnnotation:
                 ShowEmojiPickerForReplacement(emojiControl, emojiAnnotation);
                 return true;
+            case global::Avalonia.Controls.Image imageControl when imageControl.Tag is ImageAnnotation imageAnnotation && imageAnnotation is not EmojiAnnotation && imageAnnotation is not CursorAnnotation:
+                ShowImagePickerForReplacement(imageControl, imageAnnotation);
+                return true;
             default:
                 return false;
         }
@@ -366,6 +369,20 @@ public class EditorSelectionController
                 activeVm.IsDirty = true;
             }
         });
+    }
+
+    private async void ShowImagePickerForReplacement(global::Avalonia.Controls.Image imageControl, ImageAnnotation imageAnnotation)
+    {
+        _selectedShape = imageControl;
+        UpdateBoundsObserver();
+        UpdateSelectionHandles();
+        SelectionChanged?.Invoke(true);
+
+        bool wasReplaced = await _view.ReplaceImageAnnotationFromFilePickerAsync(imageAnnotation, imageControl);
+        if (wasReplaced)
+        {
+            UpdateSelectionHandles();
+        }
     }
 
     public bool OnPointerMoved(object sender, PointerEventArgs e)
