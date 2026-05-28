@@ -66,6 +66,14 @@ namespace ShareX.ImageEditor.Presentation.Views
                     return false;
                 }
 
+                SKRect existingBounds = annotation.GetBounds();
+                float centerX = existingBounds.MidX;
+                float centerY = existingBounds.MidY;
+                float newWidth = pickedImage.Value.Bitmap.Width;
+                float newHeight = pickedImage.Value.Bitmap.Height;
+
+                annotation.StartPoint = new SKPoint(centerX - newWidth / 2f, centerY - newHeight / 2f);
+                annotation.EndPoint = new SKPoint(centerX + newWidth / 2f, centerY + newHeight / 2f);
                 annotation.ImagePath = pickedImage.Value.SourceFilePath ?? string.Empty;
                 annotation.SetImage(pickedImage.Value.Bitmap);
                 AnnotationVisualFactory.UpdateVisualControl(imageControl, annotation);
