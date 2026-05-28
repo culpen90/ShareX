@@ -67,6 +67,7 @@ public partial class AnnotationToolbar : UserControl
     public event EventHandler<bool>? TextItalicChanged;
     public event EventHandler<bool>? TextUnderlineChanged;
     public event EventHandler<bool>? ShadowChanged;
+    public event EventHandler<bool>? SpeechBalloonTailChanged;
 
     public AnnotationToolbar()
     {
@@ -296,6 +297,15 @@ public partial class AnnotationToolbar : UserControl
         {
             toolbar.ShadowEnabled = !toolbar.ShadowEnabled;
             ShadowChanged?.Invoke(this, toolbar.ShadowEnabled);
+        }
+    }
+
+    private void OnSpeechBalloonTailClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is IAnnotationToolbarAdapter toolbar)
+        {
+            toolbar.SpeechBalloonTail = !toolbar.SpeechBalloonTail;
+            SpeechBalloonTailChanged?.Invoke(this, toolbar.SpeechBalloonTail);
         }
     }
 

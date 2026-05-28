@@ -461,7 +461,7 @@ public class EditorSelectionController
         }
 
         // Special handling for SpeechBalloonControl tail dragging
-        if (_selectedShape is SpeechBalloonControl balloonControl && balloonControl.Annotation is SpeechBalloonAnnotation balloon && handleTag == "BalloonTail")
+        if (_selectedShape is SpeechBalloonControl balloonControl && balloonControl.Annotation is SpeechBalloonAnnotation balloon && balloon.TailEnabled && handleTag == "BalloonTail")
         {
             balloon.SetTailPoint(new SKPoint((float)currentPoint.X, (float)currentPoint.Y));
             balloonControl.InvalidateVisual();
@@ -973,16 +973,20 @@ public class EditorSelectionController
             CreateHandle(balloonLeft, balloonTop + balloonHeight, "BottomLeft");
             CreateHandle(balloonLeft, balloonTop + balloonHeight / 2, "LeftCenter");
 
-            if (!balloon.HasTailPoint)
+            if (balloon.TailEnabled)
             {
-                balloon.EnsureTailPointInitialized();
-                balloonControl.InvalidateVisual();
+                if (!balloon.HasTailPoint)
+                {
+                    balloon.EnsureTailPointInitialized();
+                    balloonControl.InvalidateVisual();
+                }
+
+                var tailPoint = balloon.GetEffectiveTailPoint();
+                var tailX = (double)tailPoint.X;
+                var tailY = (double)tailPoint.Y;
+                CreateHandle(tailX, tailY, "BalloonTail");
             }
 
-            var tailPoint = balloon.GetEffectiveTailPoint();
-            var tailX = (double)tailPoint.X;
-            var tailY = (double)tailPoint.Y;
-            CreateHandle(tailX, tailY, "BalloonTail");
             UpdateHoverOutline();
             return;
         }
@@ -1349,8 +1353,9 @@ public class EditorSelectionController
             );
 
             // Fix Tail Point if it was at 0,0 or default
-            if (!annotation.HasTailPoint ||
-               (Math.Abs(annotation.TailPoint.X - annotation.StartPoint.X) < 1 && Math.Abs(annotation.TailPoint.Y - annotation.StartPoint.Y) < 1))
+                if (annotation.TailEnabled &&
+                    (!annotation.HasTailPoint ||
+                    (Math.Abs(annotation.TailPoint.X - annotation.StartPoint.X) < 1 && Math.Abs(annotation.TailPoint.Y - annotation.StartPoint.Y) < 1)))
             {
                 annotation.SetTailPoint(annotation.GetDefaultTailPoint());
             }

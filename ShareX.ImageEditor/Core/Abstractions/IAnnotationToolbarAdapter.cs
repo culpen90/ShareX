@@ -59,6 +59,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     float EffectStrength { get; set; }
     float EffectStrengthMaximum { get; }
     bool ShadowEnabled { get; set; }
+    bool SpeechBalloonTail { get; set; }
     bool TextBold { get; set; }
     bool TextItalic { get; set; }
     bool TextUnderline { get; set; }
@@ -81,6 +82,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowStrength { get; }
     bool ShowTextStyle { get; }
     bool ShowShadow { get; }
+    bool ShowSpeechBalloonTail { get; }
     bool ShowToolOptions { get; }
     bool ShowToolOptionsSeparator { get; }
     bool ShowOptionsButton { get; }

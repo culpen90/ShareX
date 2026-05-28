@@ -51,6 +51,11 @@ public partial class SpeechBalloonAnnotation : Annotation
     public bool TailPointInitialized { get; set; }
 
     /// <summary>
+    /// Controls whether the tail geometry and handle are shown.
+    /// </summary>
+    public bool TailEnabled { get; set; } = true;
+
+    /// <summary>
     /// Optional text content inside the balloon
     /// </summary>
     public string Text { get; set; } = "";
@@ -117,6 +122,11 @@ public partial class SpeechBalloonAnnotation : Annotation
 
     public bool IsTailVisible()
     {
+        if (!TailEnabled)
+        {
+            return false;
+        }
+
         var bounds = GetBounds();
         var tailPoint = GetEffectiveTailPoint();
         return !bounds.Contains(tailPoint.X, tailPoint.Y);
@@ -149,6 +159,11 @@ public partial class SpeechBalloonAnnotation : Annotation
         tailBaseStart = default;
         tailTip = default;
         tailBaseEnd = default;
+
+        if (!TailEnabled)
+        {
+            return false;
+        }
 
         var bounds = GetBounds();
         if (bounds.Width <= 0 || bounds.Height <= 0)

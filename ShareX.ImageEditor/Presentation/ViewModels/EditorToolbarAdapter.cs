@@ -150,6 +150,12 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.ShadowEnabled = value;
     }
 
+    public bool SpeechBalloonTail
+    {
+        get => _viewModel.SpeechBalloonTail;
+        set => _viewModel.SpeechBalloonTail = value;
+    }
+
     public bool TextBold
     {
         get => _viewModel.TextBold;
@@ -201,6 +207,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowTextStyle => _viewModel.ShowTextStyle;
 
     public bool ShowShadow => _viewModel.ShowShadow;
+
+    public bool ShowSpeechBalloonTail => _viewModel.ShowSpeechBalloonTail;
 
     public bool ShowToolOptions => _viewModel.ShowToolOptionsSeparator;
 

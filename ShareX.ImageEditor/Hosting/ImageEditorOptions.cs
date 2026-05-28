@@ -116,6 +116,7 @@ namespace ShareX.ImageEditor.Hosting
         public int SpeechBalloonThickness { get; set; } = 4;
         public float SpeechBalloonFontSize { get; set; } = 48;
         public string SpeechBalloonFontFamily { get; set; } = "Segoe UI";
+        public bool SpeechBalloonTail { get; set; } = true;
 
         // Step
         public string StepBorderColorHex { get; set; } = ColorToHex(Colors.Transparent);

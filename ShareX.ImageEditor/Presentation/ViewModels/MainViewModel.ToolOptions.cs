@@ -486,6 +486,24 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         }
 
         [ObservableProperty]
+        private bool _speechBalloonTail = true;
+
+        partial void OnSpeechBalloonTailChanged(bool value)
+        {
+            bool appliesToSpeechBalloon = ActiveTool == EditorTool.SpeechBalloon;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation is SpeechBalloonAnnotation)
+            {
+                appliesToSpeechBalloon = true;
+            }
+
+            if (appliesToSpeechBalloon)
+            {
+                Options.SpeechBalloonTail = value;
+            }
+        }
+
+        [ObservableProperty]
         private bool _textBold = true;
 
         partial void OnTextBoldChanged(bool value)
@@ -629,6 +647,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _ => false
         };
 
+        public bool ShowSpeechBalloonTail => ActiveTool switch
+        {
+            EditorTool.SpeechBalloon => true,
+            EditorTool.Select => SelectedAnnotation is SpeechBalloonAnnotation,
+            _ => false
+        };
+
         public bool ShowTextStyle => ActiveTool switch
         {
             EditorTool.Text => true,
@@ -723,13 +748,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowStrength));
             OnPropertyChanged(nameof(ShowTextStyle));
             OnPropertyChanged(nameof(ShowShadow));
+            OnPropertyChanged(nameof(ShowSpeechBalloonTail));
             OnPropertyChanged(nameof(ActiveToolIcon));
             OnPropertyChanged(nameof(ActiveToolName));
             OnPropertyChanged(nameof(EffectStrengthMaximum));
             OnPropertyChanged(nameof(ShowToolOptionsSeparator));
         }
 
-        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowTextStyle || ShowShadow;
+        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
 
         [ObservableProperty]
         private EditorTool _activeTool = EditorTool.Rectangle;
@@ -853,6 +879,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     StrokeWidth = Options.SpeechBalloonThickness;
                     CornerRadius = Options.CornerRadius;
                     ShadowEnabled = Options.Shadow;
+                    SpeechBalloonTail = Options.SpeechBalloonTail;
                     FontSize = Options.SpeechBalloonFontSize;
                     SelectedFontFamily = NormalizeFontFamily(Options.SpeechBalloonFontFamily);
                     TextBold = Options.TextBold;

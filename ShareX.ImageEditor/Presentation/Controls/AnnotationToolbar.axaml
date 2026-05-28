@@ -402,6 +402,12 @@
                             IsVisible="{Binding ShowTextStyle}"
                             ToolTip.Tip="Toggle underline"
                             Content="{x:Static theming:EditorIcons.FormatUnderline}"/>
+                    <Button Classes="editor-button toolbar-button"
+                            Classes.active="{Binding SpeechBalloonTail}"
+                            Click="OnSpeechBalloonTailClick"
+                            IsVisible="{Binding ShowSpeechBalloonTail}"
+                            ToolTip.Tip="Toggle tail"
+                            Content="{x:Static theming:EditorIcons.ToggleSpeechBalloonTail}"/>
                     <Button x:Name="ShadowToggleButton"
                             Classes="editor-button toolbar-button"
                             Classes.active="{Binding ShadowEnabled}"

@@ -369,6 +369,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.SelectedFontFamily = balloon.FontFamily;
                         vm.FillColor = balloon.FillColor;
                         vm.CornerRadius = balloon.CornerRadius;
+                        vm.SpeechBalloonTail = balloon.TailEnabled;
                         if (!string.IsNullOrEmpty(balloon.TextColor))
                             vm.TextColorValue = Avalonia.Media.Color.Parse(balloon.TextColor);
                     }

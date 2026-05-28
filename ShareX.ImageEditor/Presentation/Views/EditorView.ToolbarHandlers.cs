@@ -57,6 +57,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.TextItalicChanged += OnToolbarTextItalicChanged;
             toolbar.TextUnderlineChanged += OnToolbarTextUnderlineChanged;
             toolbar.ShadowChanged += OnToolbarShadowChanged;
+            toolbar.SpeechBalloonTailChanged += OnToolbarSpeechBalloonTailChanged;
         }
 
         private void UnhookAnnotationToolbarEvents()
@@ -81,6 +82,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.TextItalicChanged -= OnToolbarTextItalicChanged;
             toolbar.TextUnderlineChanged -= OnToolbarTextUnderlineChanged;
             toolbar.ShadowChanged -= OnToolbarShadowChanged;
+            toolbar.SpeechBalloonTailChanged -= OnToolbarSpeechBalloonTailChanged;
         }
 
         private void OnColorChanged(object? sender, IBrush color)
@@ -208,6 +210,11 @@ namespace ShareX.ImageEditor.Presentation.Views
         private void OnToolbarShadowChanged(object? sender, bool isEnabled)
         {
             ApplySelectedShadowState(isEnabled);
+        }
+
+        private void OnToolbarSpeechBalloonTailChanged(object? sender, bool isEnabled)
+        {
+            ApplySelectedSpeechBalloonTail(isEnabled);
         }
 
         private void OnWidthChanged(object? sender, int width)
@@ -592,6 +599,19 @@ namespace ShareX.ImageEditor.Presentation.Views
                     control.Effect = null;
                 }
             }
+        }
+
+        private void ApplySelectedSpeechBalloonTail(bool isEnabled)
+        {
+            if (_selectionController.SelectedShape is not SpeechBalloonControl balloonControl ||
+                balloonControl.Annotation is not SpeechBalloonAnnotation balloonAnnotation)
+            {
+                return;
+            }
+
+            balloonAnnotation.TailEnabled = isEnabled;
+            balloonControl.InvalidateVisual();
+            _selectionController.UpdateSelectionHandles();
         }
 
         private void ApplySelectedTextBold(bool isBold)
