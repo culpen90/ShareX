@@ -130,7 +130,7 @@
 
             <Separator/>
 
-            <MenuItem Header="{Binding ToggleToolbarsMenuHeader}" Command="{Binding ToggleToolbarsCommand}">
+            <MenuItem Header="{Binding ToggleToolbarsMenuHeader}" Command="{Binding ToggleToolbarsCommand}" InputGesture="Ctrl+H">
                 <MenuItem.Icon>
                     <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionToggleToolbars}"/>
                 </MenuItem.Icon>

@@ -1460,6 +1460,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         case Key.Z: vm.UndoCommand.Execute(null); e.Handled = true; break;
                         case Key.Y: vm.RedoCommand.Execute(null); e.Handled = true; break;
+                        case Key.H: vm.ToggleToolbarsCommand.Execute(null); e.Handled = true; break;
                         case Key.X: vm.CutAnnotationCommand.Execute(null); e.Handled = true; break;
                         case Key.C:
                             if (vm.CopyCommand.CanExecute(null))
