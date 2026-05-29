@@ -43,7 +43,7 @@ public partial class LineAnnotation
             Stroke = brush,
             StrokeThickness = StrokeWidth,
             StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
-            StrokeLineCap = PenLineCap.Round,
+            StrokeLineCap = PenLineCap.Flat,
             StrokeJoin = PenLineJoin.Round,
             Fill = Brushes.Transparent,
             Data = CreateLineGeometry(),

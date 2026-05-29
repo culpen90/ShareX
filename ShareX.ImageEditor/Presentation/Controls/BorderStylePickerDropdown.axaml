@@ -40,7 +40,7 @@
                       Stroke="{DynamicResource ShareX.Brush.Text.Secondary}"
                       StrokeThickness="1.75"
                       StrokeDashArray="{Binding SelectedBorderStyle, ElementName=BorderStylePickerDropdownRoot, Converter={StaticResource BorderStylePreviewDashArray}}"
-                      StrokeLineCap="Round"
+                      StrokeLineCap="Flat"
                       Stretch="None"
                       VerticalAlignment="Center"/>
 
@@ -95,7 +95,7 @@
                                           Stroke="{DynamicResource ShareX.Brush.Text}"
                                           StrokeThickness="1.75"
                                           StrokeDashArray="{Binding ., Converter={StaticResource BorderStylePreviewDashArray}}"
-                                          StrokeLineCap="Round"
+                                          StrokeLineCap="Flat"
                                           Stretch="None"
                                           VerticalAlignment="Center"/>
                                 </Grid>

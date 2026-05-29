@@ -34,10 +34,10 @@ public static class BorderStyleDashHelper
     {
         return borderStyle switch
         {
-            BorderStyle.Dash => new AvaloniaList<double> { 2, 2 },
-            BorderStyle.Dot => new AvaloniaList<double> { 0, 2 },
-            BorderStyle.DashDot => new AvaloniaList<double> { 2, 2, 0, 2 },
-            BorderStyle.DashDotDot => new AvaloniaList<double> { 2, 2, 0, 2, 0, 2 },
+            BorderStyle.Dash => new AvaloniaList<double> { 3, 1 },
+            BorderStyle.Dot => new AvaloniaList<double> { 1, 1 },
+            BorderStyle.DashDot => new AvaloniaList<double> { 3, 1, 1, 1 },
+            BorderStyle.DashDotDot => new AvaloniaList<double> { 3, 1, 1, 1, 1, 1 },
             _ => new AvaloniaList<double>()
         };
     }

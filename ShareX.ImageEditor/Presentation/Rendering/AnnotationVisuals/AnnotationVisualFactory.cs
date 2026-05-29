@@ -100,7 +100,7 @@ public static class AnnotationVisualFactory
         {
             case RectangleAnnotation rectangle when control is Rectangle rectangleControl:
                 rectangleControl.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(rectangle.BorderStyle);
-                rectangleControl.StrokeLineCap = PenLineCap.Round;
+                rectangleControl.StrokeLineCap = PenLineCap.Flat;
                 ApplyBoundsControl(rectangleControl, rectangle.GetBounds(), ensureMinimumSize);
                 rectangleControl.RadiusX = Math.Max(0, rectangle.CornerRadius);
                 rectangleControl.RadiusY = Math.Max(0, rectangle.CornerRadius);
@@ -108,12 +108,13 @@ public static class AnnotationVisualFactory
 
             case EllipseAnnotation ellipseAnnotation when control is Ellipse ellipseControl:
                 ellipseControl.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(ellipseAnnotation.BorderStyle);
-                ellipseControl.StrokeLineCap = PenLineCap.Round;
+                ellipseControl.StrokeLineCap = PenLineCap.Flat;
                 ApplyBoundsControl(ellipseControl, ellipseAnnotation.GetBounds(), ensureMinimumSize);
                 break;
 
             case LineAnnotation lineAnnotation when control is Avalonia.Controls.Shapes.Path linePath:
                 linePath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(lineAnnotation.BorderStyle);
+                linePath.StrokeLineCap = PenLineCap.Flat;
                 linePath.Data = lineAnnotation.CreateLineGeometry();
                 break;
 
