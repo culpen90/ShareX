@@ -378,8 +378,13 @@ namespace ShareX.ImageEditor.Presentation.Views
                     }
                     else if (vm.SelectedAnnotation is RectangleAnnotation rect && vm.SelectedAnnotation is not SmartEraserAnnotation)
                     {
+                        vm.SelectedBorderStyle = rect.BorderStyle;
                         vm.FillColor = rect.FillColor;
                         vm.CornerRadius = rect.CornerRadius;
+                    }
+                    else if (vm.SelectedAnnotation is LineAnnotation line)
+                    {
+                        vm.SelectedBorderStyle = line.BorderStyle;
                     }
                     else if (vm.SelectedAnnotation is CursorAnnotation cursor)
                     {
@@ -387,10 +392,12 @@ namespace ShareX.ImageEditor.Presentation.Views
                     }
                     else if (vm.SelectedAnnotation is ArrowAnnotation arrow)
                     {
+                        vm.SelectedBorderStyle = arrow.BorderStyle;
                         vm.SelectedArrowStyle = arrow.Style;
                     }
                     else if (vm.SelectedAnnotation is EllipseAnnotation ellipse)
                     {
+                        vm.SelectedBorderStyle = ellipse.BorderStyle;
                         vm.FillColor = ellipse.FillColor;
                     }
                     else if (vm.SelectedAnnotation is SpotlightAnnotation spotlight)

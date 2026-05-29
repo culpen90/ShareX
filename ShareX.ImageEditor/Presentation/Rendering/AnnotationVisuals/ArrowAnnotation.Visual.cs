@@ -26,6 +26,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using ShareX.ImageEditor.Presentation.Helpers;
 
 namespace ShareX.ImageEditor.Core.Annotations;
 
@@ -41,6 +42,7 @@ public partial class ArrowAnnotation
         {
             Stroke = brush,
             StrokeThickness = StrokeWidth,
+            StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
             StrokeLineCap = PenLineCap.Round,
             StrokeJoin = PenLineJoin.Round,
             Fill = brush,

@@ -324,20 +324,20 @@ public class EditorInputController
         switch (vm.ActiveTool)
         {
             case EditorTool.Rectangle:
-                var rectAnnotation = new RectangleAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = vm.FillColor, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var rectAnnotation = new RectangleAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, FillColor = vm.FillColor, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = rectAnnotation.CreateVisual();
                 break;
             case EditorTool.Ellipse:
-                var ellipseAnnotation = new EllipseAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = vm.FillColor, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var ellipseAnnotation = new EllipseAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, FillColor = vm.FillColor, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = ellipseAnnotation.CreateVisual();
                 break;
             case EditorTool.Line:
-                var lineAnnotation = new LineAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var lineAnnotation = new LineAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = lineAnnotation.CreateVisual();
                 _currentShape.IsHitTestVisible = false;
                 break;
             case EditorTool.Arrow:
-                var arrowAnnotation = new ArrowAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, ShadowEnabled = vm.ShadowEnabled, Style = vm.SelectedArrowStyle, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var arrowAnnotation = new ArrowAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, ShadowEnabled = vm.ShadowEnabled, Style = vm.SelectedArrowStyle, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = arrowAnnotation.CreateVisual();
                 _currentShape.IsHitTestVisible = false;
                 break;

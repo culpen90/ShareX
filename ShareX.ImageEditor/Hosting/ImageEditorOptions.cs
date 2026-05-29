@@ -81,6 +81,7 @@ namespace ShareX.ImageEditor.Hosting
         public int Thickness { get; set; } = 4;
         public int CornerRadius { get; set; } = 4;
         public bool Shadow { get; set; } = true;
+        public BorderStyle BorderStyle { get; set; } = BorderStyle.Solid;
         public ArrowStyle ArrowStyle { get; set; } = ArrowStyle.Classic;
         public CursorType CursorType { get; set; } = CursorType.Default;
 

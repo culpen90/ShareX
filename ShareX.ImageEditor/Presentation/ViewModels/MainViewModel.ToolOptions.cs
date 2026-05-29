@@ -42,6 +42,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private const string SpotlightBlurOptionPropertyName = "SpotlightBlur";
         private static readonly IReadOnlyList<string> _availableFontFamilies = BuildAvailableFontFamilies();
         private static readonly IReadOnlyList<TextHorizontalAlignment> _availableTextHorizontalAlignments = BuildAvailableTextHorizontalAlignments();
+        private static readonly IReadOnlyList<BorderStyle> _availableBorderStyles = BuildAvailableBorderStyles();
         private static readonly IReadOnlyList<ArrowStyle> _availableArrowStyles = BuildAvailableArrowStyles();
         private static readonly IReadOnlyList<CursorType> _availableCursorTypes = BuildAvailableCursorTypes();
         private static readonly IReadOnlyList<int> _availableStepStartNumbers = Enumerable.Range(1, 10).ToArray();
@@ -50,6 +51,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public IReadOnlyList<string> AvailableFontFamilies => _availableFontFamilies;
         public IReadOnlyList<TextHorizontalAlignment> AvailableTextHorizontalAlignments => _availableTextHorizontalAlignments;
+        public IReadOnlyList<BorderStyle> AvailableBorderStyles => _availableBorderStyles;
         public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _availableArrowStyles;
         public IReadOnlyList<CursorType> AvailableCursorTypes => _availableCursorTypes;
         public IReadOnlyList<int> AvailableStepStartNumbers => _availableStepStartNumbers;
@@ -389,6 +391,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private string _selectedFontFamily = DefaultAnnotationFontFamily;
 
         [ObservableProperty]
+        private BorderStyle _selectedBorderStyle = BorderStyle.Solid;
+
+        [ObservableProperty]
         private ArrowStyle _selectedArrowStyle = ArrowStyle.Classic;
 
         [ObservableProperty]
@@ -419,6 +424,28 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             else if (isSpeechBalloon)
             {
                 Options.SpeechBalloonFontFamily = normalizedFontFamily;
+            }
+        }
+
+        partial void OnSelectedBorderStyleChanged(BorderStyle value)
+        {
+            BorderStyle normalizedBorderStyle = NormalizeBorderStyle(value);
+            if (normalizedBorderStyle != value)
+            {
+                SelectedBorderStyle = normalizedBorderStyle;
+                return;
+            }
+
+            bool supportsBorderStyle = ActiveTool is EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Arrow;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
+            {
+                supportsBorderStyle = SelectedAnnotation.ToolType is EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Arrow;
+            }
+
+            if (supportsBorderStyle)
+            {
+                Options.BorderStyle = normalizedBorderStyle;
             }
         }
 
@@ -755,6 +782,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _ => false
         };
 
+        public bool ShowBorderStyle => ActiveTool switch
+        {
+            EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Arrow => true,
+            EditorTool.Select => _selectedAnnotation != null && _selectedAnnotation.ToolType switch
+            {
+                EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Arrow => true,
+                _ => false
+            },
+            _ => false
+        };
+
         public bool ShowArrowStyle => ActiveTool switch
         {
             EditorTool.Arrow => true,
@@ -908,6 +946,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowStepType));
             OnPropertyChanged(nameof(ShowTextHorizontalAlignment));
             OnPropertyChanged(nameof(ShowFontFamily));
+            OnPropertyChanged(nameof(ShowBorderStyle));
             OnPropertyChanged(nameof(ShowArrowStyle));
             OnPropertyChanged(nameof(ShowCursorType));
             OnPropertyChanged(nameof(ShowCornerRadius));
@@ -922,7 +961,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowToolOptionsSeparator));
         }
 
-        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowStepType || ShowTextHorizontalAlignment || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowSpotlightBlur || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
+        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowStepType || ShowTextHorizontalAlignment || ShowFontFamily || ShowBorderStyle || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowSpotlightBlur || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
 
         [ObservableProperty]
         private EditorTool _activeTool = EditorTool.Rectangle;
@@ -1008,6 +1047,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 case EditorTool.Rectangle:
                 case EditorTool.Ellipse:
                 case EditorTool.Line:
+                    SelectedColorValue = Options.BorderColor;
+                    FillColorValue = Options.FillColor;
+                    StrokeWidth = Options.Thickness;
+                    CornerRadius = Options.CornerRadius;
+                    ShadowEnabled = Options.Shadow;
+                    SelectedBorderStyle = NormalizeBorderStyle(Options.BorderStyle);
+                    FontSize = Options.TextFontSize;
+                    break;
                 case EditorTool.Freehand:
                     SelectedColorValue = Options.BorderColor;
                     FillColorValue = Options.FillColor;
@@ -1023,6 +1070,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     CornerRadius = Options.CornerRadius;
                     ShadowEnabled = Options.Shadow;
                     FontSize = Options.TextFontSize;
+                    SelectedBorderStyle = NormalizeBorderStyle(Options.BorderStyle);
                     SelectedArrowStyle = NormalizeArrowStyle(Options.ArrowStyle);
                     break;
                 case EditorTool.Cursor:
@@ -1118,6 +1166,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             };
         }
 
+        private static IReadOnlyList<BorderStyle> BuildAvailableBorderStyles()
+        {
+            return new[]
+            {
+                BorderStyle.Solid,
+                BorderStyle.Dash,
+                BorderStyle.Dot,
+                BorderStyle.DashDot
+            };
+        }
+
         private static IReadOnlyList<TextHorizontalAlignment> BuildAvailableTextHorizontalAlignments()
         {
             return new[]
@@ -1183,6 +1242,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static ArrowStyle NormalizeArrowStyle(ArrowStyle arrowStyle)
         {
             return Enum.IsDefined(arrowStyle) ? arrowStyle : ArrowStyle.Classic;
+        }
+
+        private static BorderStyle NormalizeBorderStyle(BorderStyle borderStyle)
+        {
+            return Enum.IsDefined(borderStyle) ? borderStyle : BorderStyle.Solid;
         }
 
         private static CursorType NormalizeCursorType(CursorType cursorType)

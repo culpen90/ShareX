@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -23,30 +23,21 @@
 
 #endregion License Information (GPL v3)
 
-using SkiaSharp;
+using Avalonia.Collections;
+using ShareX.ImageEditor.Core.Annotations;
 
-namespace ShareX.ImageEditor.Core.Annotations;
+namespace ShareX.ImageEditor.Presentation.Helpers;
 
-/// <summary>
-/// Rectangle annotation
-/// </summary>
-public partial class RectangleAnnotation : Annotation
+public static class BorderStyleDashHelper
 {
-    public override AnnotationCategory Category => AnnotationCategory.Shapes;
-
-    public BorderStyle BorderStyle { get; set; } = BorderStyle.Solid;
-
-    public int CornerRadius { get; set; }
-
-    public RectangleAnnotation()
+    public static AvaloniaList<double> CreateStrokeDashArray(BorderStyle borderStyle)
     {
-        ToolType = EditorTool.Rectangle;
-    }
-
-    public override bool HitTest(SKPoint point, float tolerance = 5)
-    {
-        var rect = GetBounds();
-        var expanded = SKRect.Inflate(rect, tolerance, tolerance);
-        return expanded.Contains(point);
+        return borderStyle switch
+        {
+            BorderStyle.Dash => new AvaloniaList<double> { 3.5, 1.5 },
+            BorderStyle.Dot => new AvaloniaList<double> { 1, 1.5 },
+            BorderStyle.DashDot => new AvaloniaList<double> { 3.5, 1.5, 1, 1.5 },
+            _ => new AvaloniaList<double>()
+        };
     }
 }

@@ -25,6 +25,7 @@
 
 using Avalonia.Controls;
 using Avalonia.Media;
+using ShareX.ImageEditor.Presentation.Helpers;
 
 namespace ShareX.ImageEditor.Core.Annotations;
 
@@ -43,6 +44,7 @@ public partial class RectangleAnnotation
         {
             Stroke = strokeBrush,
             StrokeThickness = StrokeWidth,
+            StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
             Fill = fillBrush,
             RadiusX = Math.Max(0, CornerRadius),
             RadiusY = Math.Max(0, CornerRadius),

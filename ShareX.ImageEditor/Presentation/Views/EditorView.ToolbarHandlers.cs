@@ -49,6 +49,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.FillColorChanged += OnFillColorChanged;
             toolbar.TextColorChanged += OnTextColorChanged;
             toolbar.WidthChanged += OnWidthChanged;
+            toolbar.BorderStyleChanged += OnBorderStyleChanged;
             toolbar.CornerRadiusChanged += OnCornerRadiusChanged;
             toolbar.FontSizeChanged += OnFontSizeChanged;
             toolbar.FontFamilyChanged += OnFontFamilyChanged;
@@ -74,6 +75,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.FillColorChanged -= OnFillColorChanged;
             toolbar.TextColorChanged -= OnTextColorChanged;
             toolbar.WidthChanged -= OnWidthChanged;
+            toolbar.BorderStyleChanged -= OnBorderStyleChanged;
             toolbar.CornerRadiusChanged -= OnCornerRadiusChanged;
             toolbar.FontSizeChanged -= OnFontSizeChanged;
             toolbar.FontFamilyChanged -= OnFontFamilyChanged;
@@ -129,6 +131,15 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 vm.SelectedFontFamily = fontFamily;
                 ApplySelectedFontFamily(fontFamily);
+            }
+        }
+
+        private void OnBorderStyleChanged(object? sender, BorderStyle borderStyle)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.SelectedBorderStyle = borderStyle;
+                ApplySelectedBorderStyle(borderStyle);
             }
         }
 
@@ -597,6 +608,31 @@ namespace ShareX.ImageEditor.Presentation.Views
                 arrowAnnotation.Style = arrowStyle;
                 AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnnotation);
                 _selectionController.UpdateSelectionHandles();
+            }
+        }
+
+        private void ApplySelectedBorderStyle(BorderStyle borderStyle)
+        {
+            var selected = _selectionController.SelectedShape;
+
+            switch (selected?.Tag)
+            {
+                case RectangleAnnotation rectangleAnnotation when selected is global::Avalonia.Controls.Shapes.Rectangle rectangle:
+                    rectangleAnnotation.BorderStyle = borderStyle;
+                    rectangle.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
+                    break;
+                case EllipseAnnotation ellipseAnnotation when selected is global::Avalonia.Controls.Shapes.Ellipse ellipse:
+                    ellipseAnnotation.BorderStyle = borderStyle;
+                    ellipse.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
+                    break;
+                case LineAnnotation lineAnnotation when selected is global::Avalonia.Controls.Shapes.Path linePath:
+                    lineAnnotation.BorderStyle = borderStyle;
+                    linePath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
+                    break;
+                case ArrowAnnotation arrowAnnotation when selected is global::Avalonia.Controls.Shapes.Path arrowPath:
+                    arrowAnnotation.BorderStyle = borderStyle;
+                    arrowPath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
+                    break;
             }
         }
 

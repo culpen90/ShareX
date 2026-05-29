@@ -98,6 +98,12 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.SelectedTextHorizontalAlignment = value;
     }
 
+    public BorderStyle SelectedBorderStyle
+    {
+        get => _viewModel.SelectedBorderStyle;
+        set => _viewModel.SelectedBorderStyle = value;
+    }
+
     public ArrowStyle SelectedArrowStyle
     {
         get => _viewModel.SelectedArrowStyle;
@@ -119,6 +125,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public IReadOnlyList<string> AvailableFontFamilies => _viewModel.AvailableFontFamilies;
 
     public IReadOnlyList<TextHorizontalAlignment> AvailableTextHorizontalAlignments => _viewModel.AvailableTextHorizontalAlignments;
+
+    public IReadOnlyList<BorderStyle> AvailableBorderStyles => _viewModel.AvailableBorderStyles;
 
     public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _viewModel.AvailableArrowStyles;
 
@@ -217,6 +225,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowTextHorizontalAlignment => _viewModel.ShowTextHorizontalAlignment;
 
     public bool ShowFontFamily => _viewModel.ShowFontFamily;
+
+    public bool ShowBorderStyle => _viewModel.ShowBorderStyle;
 
     public bool ShowArrowStyle => _viewModel.ShowArrowStyle;
 

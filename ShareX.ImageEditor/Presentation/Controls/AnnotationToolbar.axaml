@@ -332,6 +332,15 @@
                                                   IsVisible="{Binding ShowThickness}"
                                                   ToolTip.Tip="Thickness"/>
 
+                    <controls:BorderStylePickerDropdown x:Name="BorderStylePicker"
+                                                        BorderStyleOptions="{Binding AvailableBorderStyles}"
+                                                        SelectedBorderStyle="{Binding SelectedBorderStyle, Mode=TwoWay}"
+                                                        MinWidth="92"
+                                                        MaxWidth="168"
+                                                        Height="40"
+                                                        IsVisible="{Binding ShowBorderStyle}"
+                                                        ToolTip.Tip="Border style"/>
+
                     <controls:CornerRadiusPickerDropdown x:Name="CornerRadiusPicker"
                                                          SelectedCornerRadius="{Binding CornerRadius, Mode=TwoWay}"
                                                          Height="40"

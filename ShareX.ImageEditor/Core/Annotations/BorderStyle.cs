@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -23,30 +23,12 @@
 
 #endregion License Information (GPL v3)
 
-using SkiaSharp;
-
 namespace ShareX.ImageEditor.Core.Annotations;
 
-/// <summary>
-/// Rectangle annotation
-/// </summary>
-public partial class RectangleAnnotation : Annotation
+public enum BorderStyle
 {
-    public override AnnotationCategory Category => AnnotationCategory.Shapes;
-
-    public BorderStyle BorderStyle { get; set; } = BorderStyle.Solid;
-
-    public int CornerRadius { get; set; }
-
-    public RectangleAnnotation()
-    {
-        ToolType = EditorTool.Rectangle;
-    }
-
-    public override bool HitTest(SKPoint point, float tolerance = 5)
-    {
-        var rect = GetBounds();
-        var expanded = SKRect.Inflate(rect, tolerance, tolerance);
-        return expanded.Contains(point);
-    }
+    Solid = 0,
+    Dash = 1,
+    Dot = 2,
+    DashDot = 3
 }

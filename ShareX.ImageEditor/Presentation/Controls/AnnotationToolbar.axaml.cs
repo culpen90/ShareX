@@ -57,6 +57,7 @@ public partial class AnnotationToolbar : UserControl
     public event EventHandler<IBrush>? FillColorChanged;
     public event EventHandler<IBrush>? TextColorChanged;
     public event EventHandler<int>? WidthChanged;
+    public event EventHandler<BorderStyle>? BorderStyleChanged;
     public event EventHandler<int>? CornerRadiusChanged;
     public event EventHandler<float>? FontSizeChanged;
     public event EventHandler<string>? FontFamilyChanged;
@@ -117,6 +118,11 @@ public partial class AnnotationToolbar : UserControl
         if (this.FindControl<WidthPickerDropdown>("StrokeWidthPicker") is WidthPickerDropdown widthPicker)
         {
             widthPicker.WidthChanged += (_, width) => WidthChanged?.Invoke(this, width);
+        }
+
+        if (this.FindControl<BorderStylePickerDropdown>("BorderStylePicker") is BorderStylePickerDropdown borderStylePicker)
+        {
+            borderStylePicker.BorderStyleChanged += (_, borderStyle) => BorderStyleChanged?.Invoke(this, borderStyle);
         }
 
         if (this.FindControl<CornerRadiusPickerDropdown>("CornerRadiusPicker") is CornerRadiusPickerDropdown cornerRadiusPicker)

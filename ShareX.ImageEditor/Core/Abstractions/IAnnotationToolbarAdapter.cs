@@ -44,11 +44,13 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     string TextColor { get; set; }
     string SelectedFontFamily { get; set; }
     TextHorizontalAlignment SelectedTextHorizontalAlignment { get; set; }
+    BorderStyle SelectedBorderStyle { get; set; }
     ArrowStyle SelectedArrowStyle { get; set; }
     CursorType SelectedCursorType { get; set; }
     StepType SelectedStepType { get; set; }
     IReadOnlyList<string> AvailableFontFamilies { get; }
     IReadOnlyList<TextHorizontalAlignment> AvailableTextHorizontalAlignments { get; }
+    IReadOnlyList<BorderStyle> AvailableBorderStyles { get; }
     IReadOnlyList<ArrowStyle> AvailableArrowStyles { get; }
     IReadOnlyList<CursorType> AvailableCursorTypes { get; }
     IReadOnlyList<int> AvailableStepStartNumbers { get; }
@@ -83,6 +85,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowStepType { get; }
     bool ShowTextHorizontalAlignment { get; }
     bool ShowFontFamily { get; }
+    bool ShowBorderStyle { get; }
     bool ShowArrowStyle { get; }
     bool ShowCursorType { get; }
     bool ShowCornerRadius { get; }

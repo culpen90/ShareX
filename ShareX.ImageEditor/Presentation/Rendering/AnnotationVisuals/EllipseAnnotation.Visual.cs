@@ -25,6 +25,7 @@
 
 using Avalonia.Controls;
 using Avalonia.Media;
+using ShareX.ImageEditor.Presentation.Helpers;
 
 namespace ShareX.ImageEditor.Core.Annotations;
 
@@ -43,6 +44,7 @@ public partial class EllipseAnnotation
         {
             Stroke = strokeBrush,
             StrokeThickness = StrokeWidth,
+            StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
             Fill = fillBrush,
             Tag = this,
             Width = 0,

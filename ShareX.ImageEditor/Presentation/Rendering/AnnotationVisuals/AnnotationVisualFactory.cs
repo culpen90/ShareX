@@ -32,6 +32,7 @@ using Avalonia.Threading;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.Controls;
 using ShareX.ImageEditor.Presentation.Emoji;
+using ShareX.ImageEditor.Presentation.Helpers;
 using SkiaSharp;
 using System.Runtime.CompilerServices;
 
@@ -98,12 +99,19 @@ public static class AnnotationVisualFactory
         switch (annotation)
         {
             case RectangleAnnotation rectangle when control is Rectangle rectangleControl:
+                rectangleControl.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(rectangle.BorderStyle);
                 ApplyBoundsControl(rectangleControl, rectangle.GetBounds(), ensureMinimumSize);
                 rectangleControl.RadiusX = Math.Max(0, rectangle.CornerRadius);
                 rectangleControl.RadiusY = Math.Max(0, rectangle.CornerRadius);
                 break;
 
+            case EllipseAnnotation ellipseAnnotation when control is Ellipse ellipseControl:
+                ellipseControl.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(ellipseAnnotation.BorderStyle);
+                ApplyBoundsControl(ellipseControl, ellipseAnnotation.GetBounds(), ensureMinimumSize);
+                break;
+
             case LineAnnotation lineAnnotation when control is Avalonia.Controls.Shapes.Path linePath:
+                linePath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(lineAnnotation.BorderStyle);
                 linePath.Data = lineAnnotation.CreateLineGeometry();
                 break;
 
@@ -112,6 +120,7 @@ public static class AnnotationVisualFactory
                 arrowPath.Stroke = brush;
                 arrowPath.Fill = brush;
                 arrowPath.StrokeThickness = arrow.StrokeWidth;
+                arrowPath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(arrow.BorderStyle);
                 arrowPath.StrokeLineCap = PenLineCap.Round;
                 arrowPath.StrokeJoin = PenLineJoin.Round;
                 arrowPath.Data = arrow.CreateArrowGeometry();
