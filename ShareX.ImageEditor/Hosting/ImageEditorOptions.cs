@@ -96,6 +96,7 @@ namespace ShareX.ImageEditor.Hosting
         public int TextThickness { get; set; } = 8;
         public float TextFontSize { get; set; } = 48;
         public string TextFontFamily { get; set; } = "Segoe UI";
+        public TextHorizontalAlignment TextHorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;
         public bool TextBold { get; set; } = true;
         public bool TextItalic { get; set; } = false;
         public bool TextUnderline { get; set; } = false;
@@ -116,6 +117,7 @@ namespace ShareX.ImageEditor.Hosting
         public int SpeechBalloonThickness { get; set; } = 4;
         public float SpeechBalloonFontSize { get; set; } = 48;
         public string SpeechBalloonFontFamily { get; set; } = "Segoe UI";
+        public TextHorizontalAlignment SpeechBalloonTextHorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;
         public bool SpeechBalloonTail { get; set; } = true;
 
         // Step

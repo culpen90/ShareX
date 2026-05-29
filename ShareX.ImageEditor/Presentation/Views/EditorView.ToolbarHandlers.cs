@@ -28,8 +28,10 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.Controls;
+using ShareX.ImageEditor.Presentation.Helpers;
 using ShareX.ImageEditor.Presentation.Rendering;
 using ShareX.ImageEditor.Presentation.ViewModels;
+using System.Linq;
 
 namespace ShareX.ImageEditor.Presentation.Views
 {
@@ -498,6 +500,39 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
+        private void ApplySelectedTextHorizontalAlignment(TextHorizontalAlignment alignment)
+        {
+            var selected = _selectionController.SelectedShape;
+            if (selected?.Tag is TextAnnotation textAnnotation)
+            {
+                textAnnotation.HorizontalAlignment = alignment;
+
+                if (selected is OutlinedTextControl outlinedText)
+                {
+                    outlinedText.InvalidateVisual();
+                }
+
+                if (FindActiveTextEditor(textAnnotation) is TextBox textEditor)
+                {
+                    ApplyTextHorizontalAlignment(textEditor, alignment);
+                }
+            }
+            else if (selected?.Tag is SpeechBalloonAnnotation balloonAnnotation)
+            {
+                balloonAnnotation.HorizontalAlignment = alignment;
+
+                if (selected is SpeechBalloonControl balloonControl)
+                {
+                    balloonControl.InvalidateVisual();
+                }
+
+                if (FindActiveTextEditor(balloonAnnotation) is TextBox textEditor)
+                {
+                    ApplyTextHorizontalAlignment(textEditor, alignment);
+                }
+            }
+        }
+
         private void ApplyStepTypeToAnnotations(StepType stepType)
         {
             bool hasSteps = false;
@@ -715,6 +750,18 @@ namespace ShareX.ImageEditor.Presentation.Views
         private static Color ApplyHighlightAlpha(Color baseColor)
         {
             return Color.FromArgb(0x55, baseColor.R, baseColor.G, baseColor.B);
+        }
+
+        private TextBox? FindActiveTextEditor(Annotation annotation)
+        {
+            var overlay = this.FindControl<Canvas>("OverlayCanvas");
+            return overlay?.Children.OfType<TextBox>().FirstOrDefault(textBox => ReferenceEquals(textBox.Tag, annotation));
+        }
+
+        private static void ApplyTextHorizontalAlignment(TextBox textBox, TextHorizontalAlignment alignment)
+        {
+            textBox.TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(alignment);
+            textBox.HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(alignment);
         }
 
     }

@@ -41,6 +41,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private const string DefaultAnnotationFontFamily = "Segoe UI";
         private const string SpotlightBlurOptionPropertyName = "SpotlightBlur";
         private static readonly IReadOnlyList<string> _availableFontFamilies = BuildAvailableFontFamilies();
+        private static readonly IReadOnlyList<TextHorizontalAlignment> _availableTextHorizontalAlignments = BuildAvailableTextHorizontalAlignments();
         private static readonly IReadOnlyList<ArrowStyle> _availableArrowStyles = BuildAvailableArrowStyles();
         private static readonly IReadOnlyList<CursorType> _availableCursorTypes = BuildAvailableCursorTypes();
         private static readonly IReadOnlyList<int> _availableStepStartNumbers = Enumerable.Range(1, 10).ToArray();
@@ -48,6 +49,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static readonly PropertyInfo? _spotlightBlurOptionProperty = typeof(ImageEditorOptions).GetProperty(SpotlightBlurOptionPropertyName);
 
         public IReadOnlyList<string> AvailableFontFamilies => _availableFontFamilies;
+        public IReadOnlyList<TextHorizontalAlignment> AvailableTextHorizontalAlignments => _availableTextHorizontalAlignments;
         public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _availableArrowStyles;
         public IReadOnlyList<CursorType> AvailableCursorTypes => _availableCursorTypes;
         public IReadOnlyList<int> AvailableStepStartNumbers => _availableStepStartNumbers;
@@ -303,6 +305,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [ObservableProperty]
         private StepType _selectedStepType = StepType.Numeric;
 
+        [ObservableProperty]
+        private TextHorizontalAlignment _selectedTextHorizontalAlignment = TextHorizontalAlignment.Center;
+
         partial void OnStepStartNumberChanged(int value)
         {
             int clamped = Math.Clamp(value, 1, 10);
@@ -325,6 +330,34 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
 
             Options.StepType = normalizedStepType;
+        }
+
+        partial void OnSelectedTextHorizontalAlignmentChanged(TextHorizontalAlignment value)
+        {
+            TextHorizontalAlignment normalizedAlignment = NormalizeTextHorizontalAlignment(value);
+            if (normalizedAlignment != value)
+            {
+                SelectedTextHorizontalAlignment = normalizedAlignment;
+                return;
+            }
+
+            bool isText = ActiveTool == EditorTool.Text;
+            bool isSpeechBalloon = ActiveTool == EditorTool.SpeechBalloon;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
+            {
+                isText = SelectedAnnotation is TextAnnotation;
+                isSpeechBalloon = SelectedAnnotation is SpeechBalloonAnnotation;
+            }
+
+            if (isText)
+            {
+                Options.TextHorizontalAlignment = normalizedAlignment;
+            }
+            else if (isSpeechBalloon)
+            {
+                Options.SpeechBalloonTextHorizontalAlignment = normalizedAlignment;
+            }
         }
 
         partial void OnFontSizeChanged(float value)
@@ -676,6 +709,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public bool ShowStepType => ActiveTool == EditorTool.Step;
 
+        public bool ShowTextHorizontalAlignment => ActiveTool switch
+        {
+            EditorTool.Text or EditorTool.SpeechBalloon => true,
+            EditorTool.Select => _selectedAnnotation != null && _selectedAnnotation.ToolType switch
+            {
+                EditorTool.Text or EditorTool.SpeechBalloon => true,
+                _ => false
+            },
+            _ => false
+        };
+
         public bool ShowFontFamily => ActiveTool switch
         {
             EditorTool.Text or EditorTool.SpeechBalloon => true,
@@ -838,6 +882,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowFontSize));
             OnPropertyChanged(nameof(ShowStepStartNumber));
             OnPropertyChanged(nameof(ShowStepType));
+            OnPropertyChanged(nameof(ShowTextHorizontalAlignment));
             OnPropertyChanged(nameof(ShowFontFamily));
             OnPropertyChanged(nameof(ShowArrowStyle));
             OnPropertyChanged(nameof(ShowCursorType));
@@ -853,7 +898,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowToolOptionsSeparator));
         }
 
-        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowStepType || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowSpotlightBlur || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
+        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowStepType || ShowTextHorizontalAlignment || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowSpotlightBlur || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
 
         [ObservableProperty]
         private EditorTool _activeTool = EditorTool.Rectangle;
@@ -966,6 +1011,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     ShadowEnabled = Options.Shadow;
                     FontSize = Options.TextFontSize;
                     SelectedFontFamily = NormalizeFontFamily(Options.TextFontFamily);
+                    SelectedTextHorizontalAlignment = NormalizeTextHorizontalAlignment(Options.TextHorizontalAlignment);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
                     TextUnderline = Options.TextUnderline;
@@ -980,6 +1026,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     SpeechBalloonTail = Options.SpeechBalloonTail;
                     FontSize = Options.SpeechBalloonFontSize;
                     SelectedFontFamily = NormalizeFontFamily(Options.SpeechBalloonFontFamily);
+                    SelectedTextHorizontalAlignment = NormalizeTextHorizontalAlignment(Options.SpeechBalloonTextHorizontalAlignment);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
                     TextUnderline = Options.TextUnderline;
@@ -1050,6 +1097,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             };
         }
 
+        private static IReadOnlyList<TextHorizontalAlignment> BuildAvailableTextHorizontalAlignments()
+        {
+            return new[]
+            {
+                TextHorizontalAlignment.Left,
+                TextHorizontalAlignment.Center,
+                TextHorizontalAlignment.Right
+            };
+        }
+
         private static IReadOnlyList<CursorType> BuildAvailableCursorTypes()
         {
             return new[]
@@ -1110,6 +1167,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static CursorType NormalizeCursorType(CursorType cursorType)
         {
             return Enum.IsDefined(cursorType) ? cursorType : CursorType.Default;
+        }
+
+        private static TextHorizontalAlignment NormalizeTextHorizontalAlignment(TextHorizontalAlignment alignment)
+        {
+            return Enum.IsDefined(alignment) ? alignment : TextHorizontalAlignment.Center;
         }
 
         private static StepType NormalizeStepType(StepType stepType)

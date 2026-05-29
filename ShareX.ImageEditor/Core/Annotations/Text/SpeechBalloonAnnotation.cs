@@ -76,6 +76,11 @@ public partial class SpeechBalloonAnnotation : Annotation
     public string TextColor { get; set; } = "#FF000000";
 
     /// <summary>
+    /// Horizontal alignment for text within the balloon body.
+    /// </summary>
+    public TextHorizontalAlignment HorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;
+
+    /// <summary>
     /// Corner radius for the balloon body.
     /// </summary>
     public int CornerRadius { get; set; } = 10;

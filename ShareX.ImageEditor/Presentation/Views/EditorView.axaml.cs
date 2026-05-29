@@ -357,6 +357,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         vm.FontSize = text.FontSize;
                         vm.SelectedFontFamily = text.FontFamily;
+                        vm.SelectedTextHorizontalAlignment = text.HorizontalAlignment;
                         vm.TextBold = text.IsBold;
                         vm.TextItalic = text.IsItalic;
                         vm.TextUnderline = text.IsUnderline;
@@ -367,6 +368,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         vm.FontSize = balloon.FontSize;
                         vm.SelectedFontFamily = balloon.FontFamily;
+                        vm.SelectedTextHorizontalAlignment = balloon.HorizontalAlignment;
                         vm.FillColor = balloon.FillColor;
                         vm.CornerRadius = balloon.CornerRadius;
                         vm.SpeechBalloonTail = balloon.TailEnabled;
@@ -989,6 +991,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                 else if (e.PropertyName == nameof(MainViewModel.StepStartNumber))
                 {
                     vm.RecalculateNumberCounter(_editorCore.Annotations);
+                }
+                else if (e.PropertyName == nameof(MainViewModel.SelectedTextHorizontalAlignment))
+                {
+                    ApplySelectedTextHorizontalAlignment(vm.SelectedTextHorizontalAlignment);
                 }
                 else if (e.PropertyName == nameof(MainViewModel.SelectedStepType))
                 {

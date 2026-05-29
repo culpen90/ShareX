@@ -27,6 +27,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using ShareX.ImageEditor.Core.Annotations;
+using ShareX.ImageEditor.Presentation.Helpers;
 
 namespace ShareX.ImageEditor.Presentation.Controls
 {
@@ -106,11 +107,11 @@ namespace ShareX.ImageEditor.Presentation.Controls
                 // Allow wrapping
                 var maxTextWidth = Math.Max(0, width - (padding * 2));
                 formattedText.MaxTextWidth = maxTextWidth;
-                var textX = Math.Max(padding, (width - formattedText.Width) / 2);
+                formattedText.TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(Annotation.HorizontalAlignment);
+                var textX = padding;
                 var textY = Math.Max(padding, (height - formattedText.Height) / 2);
 
                 // Ensure text stays within bounds
-                textX = Math.Min(textX, width - formattedText.Width - padding);
                 textY = Math.Min(textY, height - formattedText.Height - padding);
 
                 context.DrawText(formattedText, new Point(textX, textY));

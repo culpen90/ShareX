@@ -92,6 +92,12 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.SelectedFontFamily = value;
     }
 
+    public TextHorizontalAlignment SelectedTextHorizontalAlignment
+    {
+        get => _viewModel.SelectedTextHorizontalAlignment;
+        set => _viewModel.SelectedTextHorizontalAlignment = value;
+    }
+
     public ArrowStyle SelectedArrowStyle
     {
         get => _viewModel.SelectedArrowStyle;
@@ -111,6 +117,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     }
 
     public IReadOnlyList<string> AvailableFontFamilies => _viewModel.AvailableFontFamilies;
+
+    public IReadOnlyList<TextHorizontalAlignment> AvailableTextHorizontalAlignments => _viewModel.AvailableTextHorizontalAlignments;
 
     public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _viewModel.AvailableArrowStyles;
 
@@ -211,6 +219,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowStepStartNumber => _viewModel.ShowStepStartNumber;
 
     public bool ShowStepType => _viewModel.ShowStepType;
+
+    public bool ShowTextHorizontalAlignment => _viewModel.ShowTextHorizontalAlignment;
 
     public bool ShowFontFamily => _viewModel.ShowFontFamily;
 

@@ -36,6 +36,7 @@ using Avalonia.VisualTree;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Core.ImageEffects.Helpers;
 using ShareX.ImageEditor.Presentation.Controls;
+using ShareX.ImageEditor.Presentation.Helpers;
 using ShareX.ImageEditor.Presentation.Rendering;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
@@ -412,7 +413,7 @@ public class EditorInputController
                 {
                     fillColor = IsColorLight(vm.SelectedColor) ? "#FF000000" : "#FFFFFFFF";
                 }
-                var balloonAnnotation = new SpeechBalloonAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = fillColor, TextColor = vm.TextColor, FontSize = vm.FontSize, FontFamily = vm.SelectedFontFamily, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, TailEnabled = vm.SpeechBalloonTail, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var balloonAnnotation = new SpeechBalloonAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = fillColor, TextColor = vm.TextColor, FontSize = vm.FontSize, FontFamily = vm.SelectedFontFamily, HorizontalAlignment = vm.SelectedTextHorizontalAlignment, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, TailEnabled = vm.SpeechBalloonTail, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 var balloonControl = balloonAnnotation.CreateVisual();
                 balloonControl.Width = 0;
                 balloonControl.Height = 0;
@@ -1783,6 +1784,7 @@ public class EditorInputController
             StrokeWidth = (float)strokeWidth,
             FontSize = vm.FontSize,
             FontFamily = vm.SelectedFontFamily,
+            HorizontalAlignment = vm.SelectedTextHorizontalAlignment,
             IsBold = vm.TextBold,
             IsItalic = vm.TextItalic,
             IsUnderline = vm.TextUnderline,
@@ -1802,8 +1804,8 @@ public class EditorInputController
             FontFamily = new Avalonia.Media.FontFamily(textAnnotation.FontFamily),
             FontWeight = vm.TextBold ? Avalonia.Media.FontWeight.Bold : Avalonia.Media.FontWeight.Normal,
             FontStyle = vm.TextItalic ? Avalonia.Media.FontStyle.Italic : Avalonia.Media.FontStyle.Normal,
-            TextAlignment = Avalonia.Media.TextAlignment.Center,
-            HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(textAnnotation.HorizontalAlignment),
+            HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(textAnnotation.HorizontalAlignment),
             VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Center,
             Text = string.Empty,
             Padding = new Thickness(4),

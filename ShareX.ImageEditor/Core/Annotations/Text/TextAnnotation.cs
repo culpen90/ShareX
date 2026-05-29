@@ -68,6 +68,11 @@ public partial class TextAnnotation : Annotation
     /// </summary>
     public bool IsUnderline { get; set; }
 
+    /// <summary>
+    /// Horizontal alignment for text within the annotation bounds.
+    /// </summary>
+    public TextHorizontalAlignment HorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;
+
     public TextAnnotation()
     {
         ToolType = EditorTool.Text;

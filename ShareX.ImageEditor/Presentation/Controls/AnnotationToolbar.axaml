@@ -347,6 +347,13 @@
                                                        IsVisible="{Binding ShowFontFamily}"
                                                        ToolTip.Tip="Font family"/>
 
+                    <controls:TextHorizontalAlignmentPickerDropdown x:Name="TextHorizontalAlignmentPicker"
+                                                                    TextHorizontalAlignmentOptions="{Binding AvailableTextHorizontalAlignments}"
+                                                                    SelectedTextHorizontalAlignment="{Binding SelectedTextHorizontalAlignment, Mode=TwoWay}"
+                                                                    Height="40"
+                                                                    IsVisible="{Binding ShowTextHorizontalAlignment}"
+                                                                    ToolTip.Tip="Horizontal alignment"/>
+
                     <controls:ArrowStylePickerDropdown x:Name="ArrowStylePicker"
                                                        ArrowStyleOptions="{Binding AvailableArrowStyles}"
                                                        SelectedArrowStyle="{Binding SelectedArrowStyle, Mode=TwoWay}"

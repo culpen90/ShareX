@@ -32,6 +32,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.Controls;
+using ShareX.ImageEditor.Presentation.Helpers;
 using ShareX.ImageEditor.Presentation.Rendering;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
@@ -1461,10 +1462,12 @@ public class EditorSelectionController
             FontSize = annotation.FontSize,
             FontFamily = new Avalonia.Media.FontFamily(string.IsNullOrWhiteSpace(annotation.FontFamily) ? "Segoe UI" : annotation.FontFamily),
             Padding = new Thickness(12),
-            TextAlignment = TextAlignment.Center,
+            TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(annotation.HorizontalAlignment),
+            HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(annotation.HorizontalAlignment),
             VerticalContentAlignment = global::Avalonia.Layout.VerticalAlignment.Center,
             AcceptsReturn = false,
-            TextWrapping = TextWrapping.Wrap
+            TextWrapping = TextWrapping.Wrap,
+            Tag = annotation
         };
 
         // ISSUE-FIX: Override theme resources to ensure Focus state doesn't revert to White background
@@ -2052,6 +2055,8 @@ public class EditorSelectionController
         // Update Font Size
         _balloonTextEditor.FontSize = annotation.FontSize;
         _balloonTextEditor.FontFamily = new Avalonia.Media.FontFamily(string.IsNullOrWhiteSpace(annotation.FontFamily) ? "Segoe UI" : annotation.FontFamily);
+        _balloonTextEditor.TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(annotation.HorizontalAlignment);
+        _balloonTextEditor.HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(annotation.HorizontalAlignment);
 
         // Re-execute color logic (matching ShowSpeechBalloonTextEditor logic)
         IBrush foregroundBrush = new SolidColorBrush(Avalonia.Media.Color.Parse(annotation.StrokeColor));
@@ -2147,11 +2152,12 @@ public class EditorSelectionController
             FontStyle = annotation.IsItalic ? FontStyle.Italic : FontStyle.Normal,
             Padding = new Thickness(4),
             AcceptsReturn = false,
-            TextAlignment = TextAlignment.Center,
-            HorizontalContentAlignment = global::Avalonia.Layout.HorizontalAlignment.Center,
+            TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(annotation.HorizontalAlignment),
+            HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(annotation.HorizontalAlignment),
             VerticalContentAlignment = global::Avalonia.Layout.VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
-            MinWidth = 20
+            MinWidth = 20,
+            Tag = annotation
         };
 
         // Force Avalonia's internal text box states to be transparent
