@@ -120,7 +120,6 @@ public static class AnnotationVisualFactory
                 arrowPath.Stroke = brush;
                 arrowPath.Fill = brush;
                 arrowPath.StrokeThickness = arrow.StrokeWidth;
-                arrowPath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(arrow.BorderStyle);
                 arrowPath.StrokeLineCap = PenLineCap.Round;
                 arrowPath.StrokeJoin = PenLineJoin.Round;
                 arrowPath.Data = arrow.CreateArrowGeometry();

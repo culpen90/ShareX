@@ -33,8 +33,6 @@ namespace ShareX.ImageEditor.Core.Annotations;
 public partial class ArrowAnnotation : Annotation, ICurvedSegmentAnnotation
 {
     public override AnnotationCategory Category => AnnotationCategory.Shapes;
-    public BorderStyle BorderStyle { get; set; } = BorderStyle.Solid;
-
     /// <summary>
     /// Half-width of the classic ShareX arrow cap, proportional to stroke width.
     /// </summary>

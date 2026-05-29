@@ -392,7 +392,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                     }
                     else if (vm.SelectedAnnotation is ArrowAnnotation arrow)
                     {
-                        vm.SelectedBorderStyle = arrow.BorderStyle;
                         vm.SelectedArrowStyle = arrow.Style;
                     }
                     else if (vm.SelectedAnnotation is EllipseAnnotation ellipse)

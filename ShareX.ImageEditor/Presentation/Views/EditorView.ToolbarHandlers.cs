@@ -629,10 +629,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                     lineAnnotation.BorderStyle = borderStyle;
                     linePath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
                     break;
-                case ArrowAnnotation arrowAnnotation when selected is global::Avalonia.Controls.Shapes.Path arrowPath:
-                    arrowAnnotation.BorderStyle = borderStyle;
-                    arrowPath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
-                    break;
             }
         }
 
