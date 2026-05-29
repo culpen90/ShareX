@@ -368,6 +368,8 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.FontSize = balloon.FontSize;
                         vm.SelectedFontFamily = balloon.FontFamily;
                         vm.SelectedTextHorizontalAlignment = balloon.HorizontalAlignment;
+                        vm.TextBold = balloon.IsBold;
+                        vm.TextItalic = balloon.IsItalic;
                         vm.FillColor = balloon.FillColor;
                         vm.CornerRadius = balloon.CornerRadius;
                         vm.SpeechBalloonTail = balloon.TailEnabled;

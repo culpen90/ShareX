@@ -76,6 +76,16 @@ public partial class SpeechBalloonAnnotation : Annotation
     public string TextColor { get; set; } = "#FF000000";
 
     /// <summary>
+    /// Bold style for balloon text.
+    /// </summary>
+    public bool IsBold { get; set; }
+
+    /// <summary>
+    /// Italic style for balloon text.
+    /// </summary>
+    public bool IsItalic { get; set; }
+
+    /// <summary>
     /// Horizontal alignment for text within the balloon body.
     /// </summary>
     public TextHorizontalAlignment HorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;

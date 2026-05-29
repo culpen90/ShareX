@@ -788,10 +788,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public bool ShowTextStyle => ActiveTool switch
         {
-            EditorTool.Text => true,
+            EditorTool.Text or EditorTool.SpeechBalloon => true,
             EditorTool.Select => _selectedAnnotation != null && _selectedAnnotation.ToolType switch
             {
-                EditorTool.Text => true,
+                EditorTool.Text or EditorTool.SpeechBalloon => true,
                 _ => false
             },
             _ => false

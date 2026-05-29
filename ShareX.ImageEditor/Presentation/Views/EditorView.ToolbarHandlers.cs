@@ -702,6 +702,25 @@ namespace ShareX.ImageEditor.Presentation.Views
                     outlinedText.InvalidateMeasure();
                     outlinedText.InvalidateVisual();
                 }
+
+                if (FindActiveTextEditor(textAnn) is TextBox textEditor)
+                {
+                    ApplyTextFontStyle(textEditor, textAnn.IsBold, textAnn.IsItalic);
+                }
+            }
+            else if (_selectionController.SelectedShape?.Tag is SpeechBalloonAnnotation balloonAnnotation)
+            {
+                balloonAnnotation.IsBold = isBold;
+
+                if (_selectionController.SelectedShape is SpeechBalloonControl balloonControl)
+                {
+                    balloonControl.InvalidateVisual();
+                }
+
+                if (FindActiveTextEditor(balloonAnnotation) is TextBox textEditor)
+                {
+                    ApplyTextFontStyle(textEditor, balloonAnnotation.IsBold, balloonAnnotation.IsItalic);
+                }
             }
         }
 
@@ -714,6 +733,25 @@ namespace ShareX.ImageEditor.Presentation.Views
                 {
                     outlinedText.InvalidateMeasure();
                     outlinedText.InvalidateVisual();
+                }
+
+                if (FindActiveTextEditor(textAnn) is TextBox textEditor)
+                {
+                    ApplyTextFontStyle(textEditor, textAnn.IsBold, textAnn.IsItalic);
+                }
+            }
+            else if (_selectionController.SelectedShape?.Tag is SpeechBalloonAnnotation balloonAnnotation)
+            {
+                balloonAnnotation.IsItalic = isItalic;
+
+                if (_selectionController.SelectedShape is SpeechBalloonControl balloonControl)
+                {
+                    balloonControl.InvalidateVisual();
+                }
+
+                if (FindActiveTextEditor(balloonAnnotation) is TextBox textEditor)
+                {
+                    ApplyTextFontStyle(textEditor, balloonAnnotation.IsBold, balloonAnnotation.IsItalic);
                 }
             }
         }
@@ -733,6 +771,12 @@ namespace ShareX.ImageEditor.Presentation.Views
         {
             textBox.TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(alignment);
             textBox.HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(alignment);
+        }
+
+        private static void ApplyTextFontStyle(TextBox textBox, bool isBold, bool isItalic)
+        {
+            textBox.FontWeight = isBold ? FontWeight.Bold : FontWeight.Normal;
+            textBox.FontStyle = isItalic ? FontStyle.Italic : FontStyle.Normal;
         }
 
     }

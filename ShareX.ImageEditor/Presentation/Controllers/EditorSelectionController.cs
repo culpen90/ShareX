@@ -1461,6 +1461,8 @@ public class EditorSelectionController
             CaretBrush = foregroundBrush,
             FontSize = annotation.FontSize,
             FontFamily = new Avalonia.Media.FontFamily(string.IsNullOrWhiteSpace(annotation.FontFamily) ? "Segoe UI" : annotation.FontFamily),
+            FontWeight = annotation.IsBold ? FontWeight.Bold : FontWeight.Normal,
+            FontStyle = annotation.IsItalic ? FontStyle.Italic : FontStyle.Normal,
             Padding = new Thickness(12),
             TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(annotation.HorizontalAlignment),
             HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(annotation.HorizontalAlignment),
@@ -2055,6 +2057,8 @@ public class EditorSelectionController
         // Update Font Size
         _balloonTextEditor.FontSize = annotation.FontSize;
         _balloonTextEditor.FontFamily = new Avalonia.Media.FontFamily(string.IsNullOrWhiteSpace(annotation.FontFamily) ? "Segoe UI" : annotation.FontFamily);
+        _balloonTextEditor.FontWeight = annotation.IsBold ? FontWeight.Bold : FontWeight.Normal;
+        _balloonTextEditor.FontStyle = annotation.IsItalic ? FontStyle.Italic : FontStyle.Normal;
         _balloonTextEditor.TextAlignment = TextHorizontalAlignmentHelper.ToAvaloniaTextAlignment(annotation.HorizontalAlignment);
         _balloonTextEditor.HorizontalContentAlignment = TextHorizontalAlignmentHelper.ToHorizontalContentAlignment(annotation.HorizontalAlignment);
 
