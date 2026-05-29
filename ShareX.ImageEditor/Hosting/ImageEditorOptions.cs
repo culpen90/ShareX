@@ -117,6 +117,8 @@ namespace ShareX.ImageEditor.Hosting
         public float SpeechBalloonFontSize { get; set; } = 48;
         public string SpeechBalloonFontFamily { get; set; } = "Segoe UI";
         public TextHorizontalAlignment SpeechBalloonTextHorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;
+        public bool SpeechBalloonTextBold { get; set; } = true;
+        public bool SpeechBalloonTextItalic { get; set; } = false;
         public bool SpeechBalloonTail { get; set; } = true;
 
         // Step

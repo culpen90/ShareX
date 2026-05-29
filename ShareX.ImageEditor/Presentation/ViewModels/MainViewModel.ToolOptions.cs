@@ -628,7 +628,23 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         partial void OnTextBoldChanged(bool value)
         {
-            Options.TextBold = value;
+            bool isText = ActiveTool == EditorTool.Text;
+            bool isSpeechBalloon = ActiveTool == EditorTool.SpeechBalloon;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
+            {
+                isText = SelectedAnnotation is TextAnnotation;
+                isSpeechBalloon = SelectedAnnotation is SpeechBalloonAnnotation;
+            }
+
+            if (isText)
+            {
+                Options.TextBold = value;
+            }
+            else if (isSpeechBalloon)
+            {
+                Options.SpeechBalloonTextBold = value;
+            }
         }
 
         [ObservableProperty]
@@ -636,7 +652,23 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         partial void OnTextItalicChanged(bool value)
         {
-            Options.TextItalic = value;
+            bool isText = ActiveTool == EditorTool.Text;
+            bool isSpeechBalloon = ActiveTool == EditorTool.SpeechBalloon;
+
+            if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
+            {
+                isText = SelectedAnnotation is TextAnnotation;
+                isSpeechBalloon = SelectedAnnotation is SpeechBalloonAnnotation;
+            }
+
+            if (isText)
+            {
+                Options.TextItalic = value;
+            }
+            else if (isSpeechBalloon)
+            {
+                Options.SpeechBalloonTextItalic = value;
+            }
         }
 
         // Visibility computed properties based on ActiveTool
@@ -1018,8 +1050,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     FontSize = Options.SpeechBalloonFontSize;
                     SelectedFontFamily = NormalizeFontFamily(Options.SpeechBalloonFontFamily);
                     SelectedTextHorizontalAlignment = NormalizeTextHorizontalAlignment(Options.SpeechBalloonTextHorizontalAlignment);
-                    TextBold = Options.TextBold;
-                    TextItalic = Options.TextItalic;
+                    TextBold = Options.SpeechBalloonTextBold;
+                    TextItalic = Options.SpeechBalloonTextItalic;
                     break;
                 case EditorTool.Step:
                     SelectedColorValue = Options.StepBorderColor;
