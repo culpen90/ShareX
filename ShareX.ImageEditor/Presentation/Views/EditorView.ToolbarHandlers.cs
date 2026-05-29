@@ -620,10 +620,12 @@ namespace ShareX.ImageEditor.Presentation.Views
                 case RectangleAnnotation rectangleAnnotation when selected is global::Avalonia.Controls.Shapes.Rectangle rectangle:
                     rectangleAnnotation.BorderStyle = borderStyle;
                     rectangle.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
+                    rectangle.StrokeLineCap = PenLineCap.Round;
                     break;
                 case EllipseAnnotation ellipseAnnotation when selected is global::Avalonia.Controls.Shapes.Ellipse ellipse:
                     ellipseAnnotation.BorderStyle = borderStyle;
                     ellipse.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
+                    ellipse.StrokeLineCap = PenLineCap.Round;
                     break;
                 case LineAnnotation lineAnnotation when selected is global::Avalonia.Controls.Shapes.Path linePath:
                     lineAnnotation.BorderStyle = borderStyle;

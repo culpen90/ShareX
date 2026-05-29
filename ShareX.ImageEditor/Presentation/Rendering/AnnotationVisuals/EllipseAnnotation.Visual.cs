@@ -45,6 +45,7 @@ public partial class EllipseAnnotation
             Stroke = strokeBrush,
             StrokeThickness = StrokeWidth,
             StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
+            StrokeLineCap = PenLineCap.Round,
             Fill = fillBrush,
             Tag = this,
             Width = 0,

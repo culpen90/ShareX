@@ -100,6 +100,7 @@ public static class AnnotationVisualFactory
         {
             case RectangleAnnotation rectangle when control is Rectangle rectangleControl:
                 rectangleControl.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(rectangle.BorderStyle);
+                rectangleControl.StrokeLineCap = PenLineCap.Round;
                 ApplyBoundsControl(rectangleControl, rectangle.GetBounds(), ensureMinimumSize);
                 rectangleControl.RadiusX = Math.Max(0, rectangle.CornerRadius);
                 rectangleControl.RadiusY = Math.Max(0, rectangle.CornerRadius);
@@ -107,6 +108,7 @@ public static class AnnotationVisualFactory
 
             case EllipseAnnotation ellipseAnnotation when control is Ellipse ellipseControl:
                 ellipseControl.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(ellipseAnnotation.BorderStyle);
+                ellipseControl.StrokeLineCap = PenLineCap.Round;
                 ApplyBoundsControl(ellipseControl, ellipseAnnotation.GetBounds(), ensureMinimumSize);
                 break;
 
