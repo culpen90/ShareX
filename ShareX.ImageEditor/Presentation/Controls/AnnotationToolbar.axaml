@@ -371,6 +371,13 @@
                                                      IsVisible="{Binding ShowFontSize}"
                                                      ToolTip.Tip="Font size"/>
 
+                    <controls:StepTypePickerDropdown x:Name="StepTypePicker"
+                                                     StepTypeOptions="{Binding AvailableStepTypes}"
+                                                     SelectedStepType="{Binding SelectedStepType, Mode=TwoWay}"
+                                                     Height="40"
+                                                     IsVisible="{Binding ShowStepType}"
+                                                     ToolTip.Tip="Step type"/>
+
                     <controls:NumberPickerDropdown x:Name="StepStartPicker"
                                                    NumberOptions="{Binding AvailableStepStartNumbers}"
                                                    SelectedNumber="{Binding StepStartNumber, Mode=TwoWay}"

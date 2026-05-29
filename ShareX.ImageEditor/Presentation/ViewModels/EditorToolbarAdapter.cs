@@ -104,6 +104,12 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.SelectedCursorType = value;
     }
 
+    public StepType SelectedStepType
+    {
+        get => _viewModel.SelectedStepType;
+        set => _viewModel.SelectedStepType = value;
+    }
+
     public IReadOnlyList<string> AvailableFontFamilies => _viewModel.AvailableFontFamilies;
 
     public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _viewModel.AvailableArrowStyles;
@@ -111,6 +117,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public IReadOnlyList<CursorType> AvailableCursorTypes => _viewModel.AvailableCursorTypes;
 
     public IReadOnlyList<int> AvailableStepStartNumbers => _viewModel.AvailableStepStartNumbers;
+
+    public IReadOnlyList<StepType> AvailableStepTypes => _viewModel.AvailableStepTypes;
 
     public int StrokeWidth
     {
@@ -201,6 +209,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
     public bool ShowFontSize => _viewModel.ShowFontSize;
 
     public bool ShowStepStartNumber => _viewModel.ShowStepStartNumber;
+
+    public bool ShowStepType => _viewModel.ShowStepType;
 
     public bool ShowFontFamily => _viewModel.ShowFontFamily;
 

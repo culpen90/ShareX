@@ -133,6 +133,7 @@ namespace ShareX.ImageEditor.Hosting
 
         public int StepThickness { get; set; } = 4;
         public float StepFontSize { get; set; } = 30;
+        public StepType StepType { get; set; } = StepType.Numeric;
 
         // Highlight
         public string HighlightFillColorHex { get; set; } = ColorToHex(Colors.Yellow);

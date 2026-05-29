@@ -428,6 +428,7 @@ public class EditorInputController
                     FillColor = vm.FillColor,
                     TextColor = vm.TextColor,
                     FontSize = vm.FontSize,
+                    StepType = vm.SelectedStepType,
                     ShadowEnabled = vm.ShadowEnabled,
                     StartPoint = ToSKPoint(_startPoint),
                     Number = vm.NumberCounter

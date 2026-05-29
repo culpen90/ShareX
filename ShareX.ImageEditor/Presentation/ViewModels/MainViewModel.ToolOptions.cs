@@ -44,12 +44,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static readonly IReadOnlyList<ArrowStyle> _availableArrowStyles = BuildAvailableArrowStyles();
         private static readonly IReadOnlyList<CursorType> _availableCursorTypes = BuildAvailableCursorTypes();
         private static readonly IReadOnlyList<int> _availableStepStartNumbers = Enumerable.Range(1, 10).ToArray();
+        private static readonly IReadOnlyList<StepType> _availableStepTypes = BuildAvailableStepTypes();
         private static readonly PropertyInfo? _spotlightBlurOptionProperty = typeof(ImageEditorOptions).GetProperty(SpotlightBlurOptionPropertyName);
 
         public IReadOnlyList<string> AvailableFontFamilies => _availableFontFamilies;
         public IReadOnlyList<ArrowStyle> AvailableArrowStyles => _availableArrowStyles;
         public IReadOnlyList<CursorType> AvailableCursorTypes => _availableCursorTypes;
         public IReadOnlyList<int> AvailableStepStartNumbers => _availableStepStartNumbers;
+        public IReadOnlyList<StepType> AvailableStepTypes => _availableStepTypes;
 
         [ObservableProperty]
         private string _selectedColor = "#EF4444";
@@ -298,6 +300,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         [ObservableProperty]
         private int _stepStartNumber = 1;
 
+        [ObservableProperty]
+        private StepType _selectedStepType = StepType.Numeric;
+
         partial void OnStepStartNumberChanged(int value)
         {
             int clamped = Math.Clamp(value, 1, 10);
@@ -308,6 +313,18 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
 
             NumberCounter = clamped;
+        }
+
+        partial void OnSelectedStepTypeChanged(StepType value)
+        {
+            StepType normalizedStepType = NormalizeStepType(value);
+            if (normalizedStepType != value)
+            {
+                SelectedStepType = normalizedStepType;
+                return;
+            }
+
+            Options.StepType = normalizedStepType;
         }
 
         partial void OnFontSizeChanged(float value)
@@ -657,6 +674,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public bool ShowStepStartNumber => ActiveTool == EditorTool.Step;
 
+        public bool ShowStepType => ActiveTool == EditorTool.Step;
+
         public bool ShowFontFamily => ActiveTool switch
         {
             EditorTool.Text or EditorTool.SpeechBalloon => true,
@@ -818,6 +837,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowThickness));
             OnPropertyChanged(nameof(ShowFontSize));
             OnPropertyChanged(nameof(ShowStepStartNumber));
+            OnPropertyChanged(nameof(ShowStepType));
             OnPropertyChanged(nameof(ShowFontFamily));
             OnPropertyChanged(nameof(ShowArrowStyle));
             OnPropertyChanged(nameof(ShowCursorType));
@@ -833,7 +853,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowToolOptionsSeparator));
         }
 
-        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowSpotlightBlur || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
+        public bool ShowToolOptionsSeparator => ShowBorderColor || ShowFillColor || ShowTextColor || ShowThickness || ShowFontSize || ShowStepStartNumber || ShowStepType || ShowFontFamily || ShowArrowStyle || ShowCursorType || ShowCornerRadius || ShowStrength || ShowSpotlightBlur || ShowTextStyle || ShowShadow || ShowSpeechBalloonTail;
 
         [ObservableProperty]
         private EditorTool _activeTool = EditorTool.Rectangle;
@@ -971,6 +991,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     StrokeWidth = Options.StepThickness;
                     ShadowEnabled = Options.Shadow;
                     FontSize = Options.StepFontSize;
+                    SelectedStepType = NormalizeStepType(Options.StepType);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
                     TextUnderline = Options.TextUnderline;
@@ -1064,6 +1085,18 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             };
         }
 
+        private static IReadOnlyList<StepType> BuildAvailableStepTypes()
+        {
+            return new[]
+            {
+                StepType.Numeric,
+                StepType.UppercaseLetter,
+                StepType.LowercaseLetter,
+                StepType.UppercaseRoman,
+                StepType.LowercaseRoman
+            };
+        }
+
         private static string NormalizeFontFamily(string? fontFamily)
         {
             return string.IsNullOrWhiteSpace(fontFamily) ? DefaultAnnotationFontFamily : fontFamily;
@@ -1077,6 +1110,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         private static CursorType NormalizeCursorType(CursorType cursorType)
         {
             return Enum.IsDefined(cursorType) ? cursorType : CursorType.Default;
+        }
+
+        private static StepType NormalizeStepType(StepType stepType)
+        {
+            return Enum.IsDefined(stepType) ? stepType : StepType.Numeric;
         }
 
     }

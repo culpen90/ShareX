@@ -498,6 +498,45 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
+        private void ApplyStepTypeToAnnotations(StepType stepType)
+        {
+            bool hasSteps = false;
+
+            foreach (var annotation in _editorCore.Annotations)
+            {
+                if (annotation is NumberAnnotation numberAnnotation)
+                {
+                    numberAnnotation.StepType = stepType;
+                    hasSteps = true;
+                }
+            }
+
+            if (!hasSteps)
+            {
+                return;
+            }
+
+            var canvas = this.FindControl<Canvas>("AnnotationCanvas");
+            if (canvas == null)
+            {
+                return;
+            }
+
+            foreach (var child in canvas.Children)
+            {
+                if (child is StepControl stepControl && stepControl.Annotation != null)
+                {
+                    stepControl.Annotation.StepType = stepType;
+                    AnnotationVisualFactory.UpdateVisualControl(stepControl, stepControl.Annotation);
+                }
+            }
+
+            if (_selectionController.SelectedShape is StepControl)
+            {
+                _selectionController.UpdateSelectionHandles();
+            }
+        }
+
         private void ApplySelectedFontFamily(string fontFamily)
         {
             if (string.IsNullOrWhiteSpace(fontFamily))

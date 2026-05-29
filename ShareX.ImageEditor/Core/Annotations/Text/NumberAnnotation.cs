@@ -35,12 +35,18 @@ public partial class NumberAnnotation : Annotation
 {
     private const float GeometryEpsilon = 0.001f;
     private const float TailWidthMultiplier = 1.5f;
+    private const float TextPaddingMultiplier = 0.35f;
 
     public override AnnotationCategory Category => AnnotationCategory.Text;
     /// <summary>
     /// Number to display (typically auto-incremented)
     /// </summary>
     public int Number { get; set; } = 1;
+
+    /// <summary>
+    /// Display style for the step label.
+    /// </summary>
+    public StepType StepType { get; set; } = StepType.Numeric;
 
     /// <summary>
     /// Font size for the number
@@ -76,9 +82,21 @@ public partial class NumberAnnotation : Annotation
     /// </summary>
     private float CalculateRadius()
     {
-        // Radius should be about 70% of FontSize to properly contain the number
-        // with some padding around it
-        return Math.Max(12, FontSize * 0.7f);
+        float baseRadius = Math.Max(12, FontSize * 0.7f);
+        string displayText = GetDisplayText();
+
+        using var font = new SKFont(SKTypeface.Default, Math.Max(1, FontSize * 0.6f))
+        {
+            Embolden = true
+        };
+
+        float textWidth = font.MeasureText(displayText);
+        SKFontMetrics metrics = font.Metrics;
+        float textHeight = metrics.Descent - metrics.Ascent;
+        float padding = Math.Max(6, FontSize * TextPaddingMultiplier);
+        float measuredRadius = Math.Max(textWidth, textHeight) * 0.5f + padding;
+
+        return Math.Max(baseRadius, measuredRadius);
     }
 
     public NumberAnnotation()
@@ -88,6 +106,11 @@ public partial class NumberAnnotation : Annotation
 
     [JsonIgnore]
     public bool HasTailPoint => TailPointInitialized;
+
+    [JsonIgnore]
+    public string DisplayText => GetDisplayText();
+
+    public string GetDisplayText() => StepTypeFormatter.Format(Number, StepType);
 
     public SKPoint GetDefaultTailHandlePoint()
     {
