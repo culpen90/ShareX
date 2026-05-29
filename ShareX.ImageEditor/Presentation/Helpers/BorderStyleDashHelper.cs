@@ -34,9 +34,9 @@ public static class BorderStyleDashHelper
     {
         return borderStyle switch
         {
-            BorderStyle.Dash => new AvaloniaList<double> { 3.5, 1.5 },
-            BorderStyle.Dot => new AvaloniaList<double> { 1, 1.5 },
-            BorderStyle.DashDot => new AvaloniaList<double> { 3.5, 1.5, 1, 1.5 },
+            BorderStyle.Dash => new AvaloniaList<double> { 2, 2 },
+            BorderStyle.Dot => new AvaloniaList<double> { 0, 2 },
+            BorderStyle.DashDot => new AvaloniaList<double> { 2, 2, 0, 2 },
             _ => new AvaloniaList<double>()
         };
     }
