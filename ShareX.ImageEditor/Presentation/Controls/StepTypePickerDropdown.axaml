@@ -18,7 +18,7 @@
                 Classes="editor-button"
                 Click="OnDropdownButtonClick"
                 Height="40"
-                MinWidth="112"
+                MinWidth="90"
                 HorizontalContentAlignment="Stretch">
             <Grid ColumnDefinitions="*,Auto">
                 <TextBlock Grid.Column="0"
