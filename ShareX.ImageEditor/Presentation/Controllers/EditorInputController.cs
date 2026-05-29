@@ -1787,7 +1787,6 @@ public class EditorInputController
             HorizontalAlignment = vm.SelectedTextHorizontalAlignment,
             IsBold = vm.TextBold,
             IsItalic = vm.TextItalic,
-            IsUnderline = vm.TextUnderline,
             ShadowEnabled = vm.ShadowEnabled,
             StartPoint = ToSKPoint(_startPoint),
             EndPoint = ToSKPoint(_startPoint) // Will be updated when text is finalized

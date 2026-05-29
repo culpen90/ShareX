@@ -360,7 +360,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.SelectedTextHorizontalAlignment = text.HorizontalAlignment;
                         vm.TextBold = text.IsBold;
                         vm.TextItalic = text.IsItalic;
-                        vm.TextUnderline = text.IsUnderline;
                         if (!string.IsNullOrEmpty(text.TextColor))
                             vm.TextColorValue = Avalonia.Media.Color.Parse(text.TextColor);
                     }

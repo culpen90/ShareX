@@ -68,7 +68,6 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool SpeechBalloonTail { get; set; }
     bool TextBold { get; set; }
     bool TextItalic { get; set; }
-    bool TextUnderline { get; set; }
     string ActiveToolIcon { get; }
     string ActiveToolName { get; }
     bool CanUndo { get; }

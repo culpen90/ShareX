@@ -58,7 +58,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.SpotlightBlurChanged += OnSpotlightBlurChanged;
             toolbar.TextBoldChanged += OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged += OnToolbarTextItalicChanged;
-            toolbar.TextUnderlineChanged += OnToolbarTextUnderlineChanged;
             toolbar.ShadowChanged += OnToolbarShadowChanged;
             toolbar.SpeechBalloonTailChanged += OnToolbarSpeechBalloonTailChanged;
         }
@@ -84,7 +83,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.SpotlightBlurChanged -= OnSpotlightBlurChanged;
             toolbar.TextBoldChanged -= OnToolbarTextBoldChanged;
             toolbar.TextItalicChanged -= OnToolbarTextItalicChanged;
-            toolbar.TextUnderlineChanged -= OnToolbarTextUnderlineChanged;
             toolbar.ShadowChanged -= OnToolbarShadowChanged;
             toolbar.SpeechBalloonTailChanged -= OnToolbarSpeechBalloonTailChanged;
         }
@@ -196,15 +194,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
-        private void OnUnderlineButtonClick(object? sender, global::Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            if (DataContext is MainViewModel vm)
-            {
-                vm.TextUnderline = !vm.TextUnderline;
-                ApplySelectedTextUnderline(vm.TextUnderline);
-            }
-        }
-
         private void OnToolbarTextBoldChanged(object? sender, bool isBold)
         {
             ApplySelectedTextBold(isBold);
@@ -213,11 +202,6 @@ namespace ShareX.ImageEditor.Presentation.Views
         private void OnToolbarTextItalicChanged(object? sender, bool isItalic)
         {
             ApplySelectedTextItalic(isItalic);
-        }
-
-        private void OnToolbarTextUnderlineChanged(object? sender, bool isUnderline)
-        {
-            ApplySelectedTextUnderline(isUnderline);
         }
 
         private void OnToolbarShadowChanged(object? sender, bool isEnabled)
@@ -726,19 +710,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             if (_selectionController.SelectedShape?.Tag is TextAnnotation textAnn)
             {
                 textAnn.IsItalic = isItalic;
-                if (_selectionController.SelectedShape is OutlinedTextControl outlinedText)
-                {
-                    outlinedText.InvalidateMeasure();
-                    outlinedText.InvalidateVisual();
-                }
-            }
-        }
-
-        private void ApplySelectedTextUnderline(bool isUnderline)
-        {
-            if (_selectionController.SelectedShape?.Tag is TextAnnotation textAnn)
-            {
-                textAnn.IsUnderline = isUnderline;
                 if (_selectionController.SelectedShape is OutlinedTextControl outlinedText)
                 {
                     outlinedText.InvalidateMeasure();

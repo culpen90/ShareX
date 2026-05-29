@@ -64,11 +64,6 @@ public partial class TextAnnotation : Annotation
     public bool IsItalic { get; set; }
 
     /// <summary>
-    /// Underline style
-    /// </summary>
-    public bool IsUnderline { get; set; }
-
-    /// <summary>
     /// Horizontal alignment for text within the annotation bounds.
     /// </summary>
     public TextHorizontalAlignment HorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;

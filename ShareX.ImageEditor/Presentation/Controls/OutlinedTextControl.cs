@@ -167,26 +167,6 @@ namespace ShareX.ImageEditor.Presentation.Controls
             {
                 context.DrawGeometry(fillBrush, null, textGeometry);
             }
-
-            // Draw underline if enabled
-            if (Annotation.IsUnderline)
-            {
-                var underlineBrush = fillBrush ?? (strokePen?.Brush) ?? Brushes.Black;
-                var underlineThickness = Math.Max(1.0, Annotation.FontSize / 14.0);
-                var underlineY = originY + textHeight * 0.95;
-                var underlineWidth = Math.Min(textWidth, Math.Max(0, Bounds.Width - (horizontalPadding * 2)));
-                double underlineX = Annotation.HorizontalAlignment switch
-                {
-                    TextHorizontalAlignment.Left => horizontalPadding,
-                    TextHorizontalAlignment.Center => Math.Max(horizontalPadding, (Bounds.Width - underlineWidth) / 2.0),
-                    TextHorizontalAlignment.Right => Math.Max(horizontalPadding, Bounds.Width - underlineWidth - horizontalPadding),
-                    _ => horizontalPadding
-                };
-                var underlinePen = new Pen(underlineBrush, underlineThickness);
-                context.DrawLine(underlinePen,
-                    new Point(underlineX, underlineY),
-                    new Point(underlineX + underlineWidth, underlineY));
-            }
         }
 
         protected override Size MeasureOverride(Size availableSize)

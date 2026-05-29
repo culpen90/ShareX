@@ -853,7 +853,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _shadowEnabled = _options.Shadow;
             _textBold = _options.TextBold;
             _textItalic = _options.TextItalic;
-            _textUnderline = _options.TextUnderline;
 
             // Get version from assembly
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;

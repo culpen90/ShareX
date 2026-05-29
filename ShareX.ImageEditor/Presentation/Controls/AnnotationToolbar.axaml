@@ -436,12 +436,6 @@
                             ToolTip.Tip="Toggle italic"
                             Content="{x:Static theming:EditorIcons.FormatItalic}"/>
                     <Button Classes="editor-button toolbar-button"
-                            Classes.active="{Binding TextUnderline}"
-                            Click="OnTextUnderlineClick"
-                            IsVisible="{Binding ShowTextStyle}"
-                            ToolTip.Tip="Toggle underline"
-                            Content="{x:Static theming:EditorIcons.FormatUnderline}"/>
-                    <Button Classes="editor-button toolbar-button"
                             Classes.active="{Binding SpeechBalloonTail}"
                             Click="OnSpeechBalloonTailClick"
                             IsVisible="{Binding ShowSpeechBalloonTail}"

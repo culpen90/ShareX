@@ -76,7 +76,6 @@ namespace ShareX.ImageEditor.Presentation.Theming
 
         public const string FormatBold = LucideIcons.bold;
         public const string FormatItalic = LucideIcons.italic;
-        public const string FormatUnderline = LucideIcons.underline;
         public const string MenuTheme = LucideIcons.moon_star;
         public const string ToggleSpeechBalloonTail = LucideIcons.message_square_check;
         public const string PanelBackground = LucideIcons.wallpaper;

@@ -192,12 +192,6 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.TextItalic = value;
     }
 
-    public bool TextUnderline
-    {
-        get => _viewModel.TextUnderline;
-        set => _viewModel.TextUnderline = value;
-    }
-
     public bool CanUndo => _viewModel.CanUndo;
 
     public bool CanRedo => _viewModel.CanRedo;

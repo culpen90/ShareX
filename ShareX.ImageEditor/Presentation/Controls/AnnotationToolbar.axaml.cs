@@ -66,7 +66,6 @@ public partial class AnnotationToolbar : UserControl
     public event EventHandler<float>? SpotlightBlurChanged;
     public event EventHandler<bool>? TextBoldChanged;
     public event EventHandler<bool>? TextItalicChanged;
-    public event EventHandler<bool>? TextUnderlineChanged;
     public event EventHandler<bool>? ShadowChanged;
     public event EventHandler<bool>? SpeechBalloonTailChanged;
 
@@ -285,15 +284,6 @@ public partial class AnnotationToolbar : UserControl
         {
             toolbar.TextItalic = !toolbar.TextItalic;
             TextItalicChanged?.Invoke(this, toolbar.TextItalic);
-        }
-    }
-
-    private void OnTextUnderlineClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is IAnnotationToolbarAdapter toolbar)
-        {
-            toolbar.TextUnderline = !toolbar.TextUnderline;
-            TextUnderlineChanged?.Invoke(this, toolbar.TextUnderline);
         }
     }
 

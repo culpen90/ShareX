@@ -99,7 +99,6 @@ namespace ShareX.ImageEditor.Hosting
         public TextHorizontalAlignment TextHorizontalAlignment { get; set; } = TextHorizontalAlignment.Center;
         public bool TextBold { get; set; } = true;
         public bool TextItalic { get; set; } = false;
-        public bool TextUnderline { get; set; } = false;
 
         // Speech Balloon
         public string SpeechBalloonBorderColorHex { get; set; } = ColorToHex(Colors.Transparent);

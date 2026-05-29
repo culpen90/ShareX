@@ -639,14 +639,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             Options.TextItalic = value;
         }
 
-        [ObservableProperty]
-        private bool _textUnderline;
-
-        partial void OnTextUnderlineChanged(bool value)
-        {
-            Options.TextUnderline = value;
-        }
-
         // Visibility computed properties based on ActiveTool
         public bool ShowBorderColor => ActiveTool switch
         {
@@ -1014,7 +1006,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     SelectedTextHorizontalAlignment = NormalizeTextHorizontalAlignment(Options.TextHorizontalAlignment);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
-                    TextUnderline = Options.TextUnderline;
                     break;
                 case EditorTool.SpeechBalloon:
                     SelectedColorValue = Options.SpeechBalloonBorderColor;
@@ -1029,7 +1020,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     SelectedTextHorizontalAlignment = NormalizeTextHorizontalAlignment(Options.SpeechBalloonTextHorizontalAlignment);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
-                    TextUnderline = Options.TextUnderline;
                     break;
                 case EditorTool.Step:
                     SelectedColorValue = Options.StepBorderColor;
@@ -1041,7 +1031,6 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     SelectedStepType = NormalizeStepType(Options.StepType);
                     TextBold = Options.TextBold;
                     TextItalic = Options.TextItalic;
-                    TextUnderline = Options.TextUnderline;
                     break;
                 case EditorTool.Highlight:
                     FillColorValue = Options.HighlightFillColor;
