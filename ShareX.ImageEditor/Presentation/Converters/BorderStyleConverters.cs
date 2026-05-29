@@ -39,6 +39,7 @@ namespace ShareX.ImageEditor.Presentation.Converters
             return borderStyle switch
             {
                 BorderStyle.DashDot => "Dash Dot",
+                BorderStyle.DashDotDot => "Dash Dot Dot",
                 _ => borderStyle.ToString()
             };
         }

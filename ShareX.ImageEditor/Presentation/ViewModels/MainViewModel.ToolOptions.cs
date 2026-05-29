@@ -1172,7 +1172,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 BorderStyle.Solid,
                 BorderStyle.Dash,
                 BorderStyle.Dot,
-                BorderStyle.DashDot
+                BorderStyle.DashDot,
+                BorderStyle.DashDotDot
             };
         }
 

@@ -30,5 +30,6 @@ public enum BorderStyle
     Solid = 0,
     Dash = 1,
     Dot = 2,
-    DashDot = 3
+    DashDot = 3,
+    DashDotDot = 4
 }
