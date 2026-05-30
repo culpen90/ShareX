@@ -24,6 +24,7 @@
 #endregion License Information (GPL v3)
 
 using Avalonia.Collections;
+using Avalonia.Media;
 using ShareX.ImageEditor.Core.Annotations;
 
 namespace ShareX.ImageEditor.Presentation.Helpers;
@@ -40,5 +41,10 @@ public static class BorderStyleDashHelper
             BorderStyle.DashDotDot => new AvaloniaList<double> { 3, 1, 1, 1, 1, 1 },
             _ => new AvaloniaList<double>()
         };
+    }
+
+    public static PenLineCap CreateStrokeLineCap(BorderStyle borderStyle)
+    {
+        return borderStyle == BorderStyle.Solid ? PenLineCap.Round : PenLineCap.Flat;
     }
 }

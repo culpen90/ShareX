@@ -465,7 +465,7 @@ public class EditorInputController
                     Stroke = brush,
                     StrokeThickness = vm.StrokeWidth,
                     StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(vm.SelectedBorderStyle),
-                    StrokeLineCap = PenLineCap.Flat,
+                    StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(vm.SelectedBorderStyle),
                     StrokeJoin = PenLineJoin.Round,
                     UseLayoutRounding = false,
                     IsHitTestVisible = false

@@ -620,22 +620,22 @@ namespace ShareX.ImageEditor.Presentation.Views
                 case RectangleAnnotation rectangleAnnotation when selected is global::Avalonia.Controls.Shapes.Rectangle rectangle:
                     rectangleAnnotation.BorderStyle = borderStyle;
                     rectangle.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
-                    rectangle.StrokeLineCap = PenLineCap.Flat;
+                    rectangle.StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(borderStyle);
                     break;
                 case EllipseAnnotation ellipseAnnotation when selected is global::Avalonia.Controls.Shapes.Ellipse ellipse:
                     ellipseAnnotation.BorderStyle = borderStyle;
                     ellipse.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
-                    ellipse.StrokeLineCap = PenLineCap.Flat;
+                    ellipse.StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(borderStyle);
                     break;
                 case LineAnnotation lineAnnotation when selected is global::Avalonia.Controls.Shapes.Path linePath:
                     lineAnnotation.BorderStyle = borderStyle;
                     linePath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
-                    linePath.StrokeLineCap = PenLineCap.Flat;
+                    linePath.StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(borderStyle);
                     break;
                 case FreehandAnnotation freehandAnnotation when selected is global::Avalonia.Controls.Shapes.Path freehandPath:
                     freehandAnnotation.BorderStyle = borderStyle;
                     freehandPath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
-                    freehandPath.StrokeLineCap = PenLineCap.Flat;
+                    freehandPath.StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(borderStyle);
                     break;
             }
         }

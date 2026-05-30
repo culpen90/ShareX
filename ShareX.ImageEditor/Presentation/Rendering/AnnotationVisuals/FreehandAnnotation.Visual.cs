@@ -43,7 +43,7 @@ public partial class FreehandAnnotation
             Stroke = brush,
             StrokeThickness = StrokeWidth,
             StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
-            StrokeLineCap = PenLineCap.Flat,
+            StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(BorderStyle),
             StrokeJoin = PenLineJoin.Round,
             Data = CreateSmoothedGeometry(),
             Tag = this

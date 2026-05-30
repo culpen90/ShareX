@@ -45,7 +45,7 @@ public partial class RectangleAnnotation
             Stroke = strokeBrush,
             StrokeThickness = StrokeWidth,
             StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
-            StrokeLineCap = PenLineCap.Flat,
+            StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(BorderStyle),
             Fill = fillBrush,
             RadiusX = Math.Max(0, CornerRadius),
             RadiusY = Math.Max(0, CornerRadius),
