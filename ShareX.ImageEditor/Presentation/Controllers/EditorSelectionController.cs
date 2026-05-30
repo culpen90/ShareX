@@ -172,7 +172,7 @@ public class EditorSelectionController
                 _isDraggingHandle = true;
                 _draggedHandle = handleSource;
                 _startPoint = point; // Capture start for resize delta
-                _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
+                _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.CustomCursorKind.ClosedHand);
                 e.Handled = true;
                 return true;
             }
@@ -233,7 +233,7 @@ public class EditorSelectionController
                     _lastDragPoint = point;
                     UpdateSelectionHandles();
                     SelectionChanged?.Invoke(true);
-                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.CustomCursorKind.ClosedHand);
                     e.Handled = true;
                     return true;
                 }
@@ -287,7 +287,7 @@ public class EditorSelectionController
                     _lastDragPoint = point;
                     UpdateSelectionHandles();
                     SelectionChanged?.Invoke(true);
-                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.CustomCursorKind.ClosedHand);
                     e.Handled = true;
                     return true;
                 }
@@ -307,7 +307,7 @@ public class EditorSelectionController
                         _lastDragPoint = point;
                         UpdateSelectionHandles();
                         SelectionChanged?.Invoke(true);
-                        _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
+                        _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.CustomCursorKind.ClosedHand);
                         e.Handled = true;
                         return true;
                     }
@@ -1314,8 +1314,8 @@ public class EditorSelectionController
     private Cursor GetSelectionHandleCursor()
     {
         return IsSelectionInteractionActive()
-            ? CursorAssetLoader.GetClosedHandCursor()
-            : CursorAssetLoader.GetOpenHandCursor();
+            ? _view.GetClosedHandCursor()
+            : _view.GetOpenHandCursor();
     }
 
     private void RefreshSelectionHandleCursors()
@@ -1335,7 +1335,7 @@ public class EditorSelectionController
     {
         if (IsSelectionInteractionActive())
         {
-            _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
+            _view.ApplyInteractionCursor(CursorAssetLoader.CustomCursorKind.ClosedHand);
         }
         else
         {
@@ -1353,8 +1353,8 @@ public class EditorSelectionController
         return vm.ActiveTool switch
         {
             EditorTool.Select => SelectToolCursor,
-            EditorTool.Crop or EditorTool.CutOut => CursorAssetLoader.GetCrosshairCursor(),
-            _ => CursorAssetLoader.GetCrosshairCursor()
+            EditorTool.Crop or EditorTool.CutOut => _view.GetCrosshairCursor(),
+            _ => _view.GetCrosshairCursor()
         };
     }
 

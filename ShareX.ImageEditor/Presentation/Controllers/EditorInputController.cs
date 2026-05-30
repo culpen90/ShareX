@@ -206,7 +206,7 @@ public class EditorInputController
                     _cropDragStartPoint = e.GetPosition(canvas);
                     _draggedCropHandleTag = cropTag;
                     _isDraggingCropHandle = true;
-                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.CustomCursorKind.ClosedHand);
                     e.Handled = true;
                     return;
                 }
@@ -232,7 +232,7 @@ public class EditorInputController
                     _cropDragStartPoint = clickPos;
                     _draggedCropHandleTag = "Crop_Move";
                     _isDraggingCropHandle = true;
-                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetClosedHandCursor());
+                    _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.CustomCursorKind.ClosedHand);
                     e.Handled = true;
                     return;
                 }
@@ -269,7 +269,7 @@ public class EditorInputController
         _isDrawing = true;
         if (UsesCrosshairInteractionCapture(vm.ActiveTool))
         {
-            _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.GetCrosshairCursor());
+            _view.BeginInteractionCursorCapture(e.Pointer, CursorAssetLoader.CustomCursorKind.Crosshair);
         }
         else
         {
@@ -493,7 +493,7 @@ public class EditorInputController
 
         if (_currentShape != null)
         {
-            _currentShape.Cursor = CursorAssetLoader.GetCrosshairCursor();
+            _currentShape.Cursor = _view.GetCrosshairCursor();
 
             var currentLeft = Canvas.GetLeft(_currentShape);
             var currentTop = Canvas.GetTop(_currentShape);
@@ -564,7 +564,7 @@ public class EditorInputController
             var cvs = _view.FindControl<Canvas>("AnnotationCanvas") ?? sender as Canvas;
             if (cvs != null)
             {
-                _view.ApplyInteractionCursor(CursorAssetLoader.GetClosedHandCursor());
+                _view.ApplyInteractionCursor(CursorAssetLoader.CustomCursorKind.ClosedHand);
                 var cropCurrent = e.GetPosition(cvs);
                 var newRect = ComputeCropHandleResizedRect(_draggedCropHandleTag!, _cropDragStartPoint, cropCurrent, _cropDragStartRect, cvs.Bounds.Width, cvs.Bounds.Height);
                 UpdateCropOverlayBounds(newRect);
@@ -959,7 +959,7 @@ public class EditorInputController
     {
         if (_isDraggingCropHandle)
         {
-            _view.BeginInteractionCursorCapture(pointer, CursorAssetLoader.GetClosedHandCursor());
+            _view.BeginInteractionCursorCapture(pointer, CursorAssetLoader.CustomCursorKind.ClosedHand);
             return;
         }
 
@@ -968,7 +968,7 @@ public class EditorInputController
             var vm = ViewModel;
             if (vm != null && UsesCrosshairInteractionCapture(vm.ActiveTool))
             {
-                _view.BeginInteractionCursorCapture(pointer, CursorAssetLoader.GetCrosshairCursor());
+                _view.BeginInteractionCursorCapture(pointer, CursorAssetLoader.CustomCursorKind.Crosshair);
             }
         }
     }

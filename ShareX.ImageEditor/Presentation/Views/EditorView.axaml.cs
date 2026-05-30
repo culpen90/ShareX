@@ -78,6 +78,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         private EffectBrowserPanel? _effectBrowserPanel;
         private ImageEditorOptions? _effectBrowserPanelOptions;
         private Cursor? _interactionCursorOverride;
+        private CursorAssetLoader.CustomCursorKind? _interactionCursorAsset;
 
         // Window-level key handler reference (so shortcuts work regardless of focus)
         private Window? _parentWindow;
@@ -213,6 +214,8 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 vm.DpiScale = scaling;
             }
+
+            UpdateCursorForTool();
 
             // Force an immediate overlay canvas refresh after the DPI change so that
             // selection handles reposition correctly on the rescaled canvas.
@@ -1084,9 +1087,40 @@ namespace ShareX.ImageEditor.Presentation.Views
             return vm.ActiveTool switch
             {
                 EditorTool.Select => ArrowCursor,
-                EditorTool.Crop or EditorTool.CutOut => CursorAssetLoader.GetCrosshairCursor(),
-                _ => CursorAssetLoader.GetCrosshairCursor()
+                EditorTool.Crop or EditorTool.CutOut => GetCrosshairCursor(),
+                _ => GetCrosshairCursor()
             };
+        }
+
+        internal Cursor GetCrosshairCursor()
+        {
+            return CursorAssetLoader.GetCrosshairCursor(GetCurrentRenderScaling());
+        }
+
+        internal Cursor GetOpenHandCursor()
+        {
+            return CursorAssetLoader.GetOpenHandCursor(GetCurrentRenderScaling());
+        }
+
+        internal Cursor GetClosedHandCursor()
+        {
+            return CursorAssetLoader.GetClosedHandCursor(GetCurrentRenderScaling());
+        }
+
+        private Cursor GetCustomCursor(CursorAssetLoader.CustomCursorKind cursorAsset)
+        {
+            return cursorAsset switch
+            {
+                CursorAssetLoader.CustomCursorKind.ClosedHand => GetClosedHandCursor(),
+                CursorAssetLoader.CustomCursorKind.Crosshair => GetCrosshairCursor(),
+                _ => GetOpenHandCursor()
+            };
+        }
+
+        private double GetCurrentRenderScaling()
+        {
+            double scaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? _lastRenderScaling;
+            return double.IsFinite(scaling) && scaling > 0 ? scaling : 1.0;
         }
 
         internal void ApplyAnnotationCursor(Control? control, Cursor cursor)
@@ -1112,11 +1146,19 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 if (_selectionController.IsInteractionActive || _zoomController.IsPanning || _inputController.IsCropInteractionActive)
                 {
-                    ApplyInteractionCursor(_interactionCursorOverride);
+                    if (_interactionCursorAsset is CursorAssetLoader.CustomCursorKind interactionCursorAsset)
+                    {
+                        ApplyInteractionCursor(GetCustomCursor(interactionCursorAsset), interactionCursorAsset);
+                    }
+                    else
+                    {
+                        ApplyInteractionCursor(_interactionCursorOverride);
+                    }
                 }
                 else
                 {
                     _interactionCursorOverride = null;
+                    _interactionCursorAsset = null;
                     HideInteractionCaptureLayer();
                 }
             }
@@ -1178,9 +1220,10 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
-        internal void ApplyInteractionCursor(Cursor cursor)
+        internal void ApplyInteractionCursor(Cursor cursor, CursorAssetLoader.CustomCursorKind? cursorAsset = null)
         {
             _interactionCursorOverride = cursor;
+            _interactionCursorAsset = cursorAsset;
             var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
             if (interactionLayer != null)
             {
@@ -1190,9 +1233,25 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
-        internal void BeginInteractionCursorCapture(IPointer pointer, Cursor cursor)
+        internal void ApplyInteractionCursor(CursorAssetLoader.CustomCursorKind cursorAsset)
         {
-            ApplyInteractionCursor(cursor);
+            ApplyInteractionCursor(GetCustomCursor(cursorAsset), cursorAsset);
+        }
+
+        internal void BeginInteractionCursorCapture(IPointer pointer, Cursor cursor, CursorAssetLoader.CustomCursorKind? cursorAsset = null)
+        {
+            ApplyInteractionCursor(cursor, cursorAsset);
+
+            var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
+            if (interactionLayer != null)
+            {
+                pointer.Capture(interactionLayer);
+            }
+        }
+
+        internal void BeginInteractionCursorCapture(IPointer pointer, CursorAssetLoader.CustomCursorKind cursorAsset)
+        {
+            ApplyInteractionCursor(cursorAsset);
 
             var interactionLayer = this.FindControl<Border>("InteractionCaptureLayer");
             if (interactionLayer != null)
@@ -1209,6 +1268,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
 
             _interactionCursorOverride = null;
+            _interactionCursorAsset = null;
             HideInteractionCaptureLayer();
             UpdateCursorForTool();
         }
