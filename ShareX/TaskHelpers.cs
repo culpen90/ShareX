@@ -42,6 +42,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1374,7 +1375,7 @@ namespace ShareX
 
                 if (bmp != null)
                 {
-                    using SKBitmap skBitmap = bmp.ToSKBitmap();
+                    using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
                     skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
                         events, taskMode, filePath);
                 }
@@ -1394,6 +1395,83 @@ namespace ShareX
             });
 
             return bmpResult;
+        }
+
+        // Avoid the slow PNG re-encode path for large captures while still bypassing
+        // the WindowsForms Bitmap->SKBitmap conversion that regressed post-effects opens.
+        private static SKBitmap GdiBitmapToSkBitmap(Bitmap bitmap)
+        {
+            Bitmap sourceBitmap = bitmap;
+            bool disposeSourceBitmap = false;
+            PixelFormat pixelFormat = bitmap.PixelFormat;
+
+            if (pixelFormat != PixelFormat.Format32bppArgb && pixelFormat != PixelFormat.Format32bppPArgb)
+            {
+                sourceBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppPArgb);
+                sourceBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
+
+                using (Graphics graphics = Graphics.FromImage(sourceBitmap))
+                {
+                    graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    graphics.DrawImage(bitmap, 0, 0, bitmap.Width, bitmap.Height);
+                }
+
+                disposeSourceBitmap = true;
+                pixelFormat = sourceBitmap.PixelFormat;
+            }
+
+            Rectangle rect = new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height);
+            BitmapData bmpData = sourceBitmap.LockBits(rect, ImageLockMode.ReadOnly, pixelFormat);
+
+            try
+            {
+                SKAlphaType alphaType = pixelFormat == PixelFormat.Format32bppPArgb ? SKAlphaType.Premul : SKAlphaType.Unpremul;
+                SKBitmap skBitmap = new SKBitmap(new SKImageInfo(sourceBitmap.Width, sourceBitmap.Height, SKColorType.Bgra8888, alphaType));
+
+                IntPtr dstPtr = skBitmap.GetPixels();
+                int dstStride = skBitmap.RowBytes;
+                int srcStride = bmpData.Stride;
+                int srcStrideAbs = Math.Abs(srcStride);
+                int height = sourceBitmap.Height;
+                int rowBytes = sourceBitmap.Width * 4;
+                IntPtr srcStart = bmpData.Scan0;
+
+                if (srcStride < 0)
+                {
+                    srcStart = IntPtr.Add(srcStart, srcStride * (height - 1));
+                }
+
+                if (srcStrideAbs == dstStride)
+                {
+                    int copyLength = dstStride * height;
+                    byte[] pixels = new byte[copyLength];
+                    Marshal.Copy(srcStart, pixels, 0, copyLength);
+                    Marshal.Copy(pixels, 0, dstPtr, copyLength);
+                }
+                else
+                {
+                    byte[] row = new byte[rowBytes];
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        IntPtr srcRow = IntPtr.Add(srcStart, y * srcStrideAbs);
+                        IntPtr dstRow = IntPtr.Add(dstPtr, y * dstStride);
+                        Marshal.Copy(srcRow, row, 0, rowBytes);
+                        Marshal.Copy(row, 0, dstRow, rowBytes);
+                    }
+                }
+
+                return skBitmap;
+            }
+            finally
+            {
+                sourceBitmap.UnlockBits(bmpData);
+
+                if (disposeSourceBitmap)
+                {
+                    sourceBitmap.Dispose();
+                }
+            }
         }
 
         public static void MainFormCopyImage(Bitmap bmp)

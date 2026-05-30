@@ -159,7 +159,7 @@ namespace ShareX.ImageEditor.Hosting
         public static SKBitmap? ShowEditorDialogBitmap(ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            return ShowEditorDialogBitmap(null, options, events, taskMode, imageFilePath);
+            return ShowEditorDialogBitmap((SKBitmap?)null, options, events, taskMode, imageFilePath);
         }
 
         public static SKBitmap? ShowEditorDialogBitmap(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
