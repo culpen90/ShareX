@@ -436,11 +436,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                 return;
             }
 
-            bool supportsBorderStyle = ActiveTool is EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line;
+            bool supportsBorderStyle = ActiveTool is EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Freehand;
 
             if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
             {
-                supportsBorderStyle = SelectedAnnotation.ToolType is EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line;
+                supportsBorderStyle = SelectedAnnotation.ToolType is EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Freehand;
             }
 
             if (supportsBorderStyle)
@@ -784,10 +784,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public bool ShowBorderStyle => ActiveTool switch
         {
-            EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line => true,
+            EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Freehand => true,
             EditorTool.Select => _selectedAnnotation != null && _selectedAnnotation.ToolType switch
             {
-                EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line => true,
+                EditorTool.Rectangle or EditorTool.Ellipse or EditorTool.Line or EditorTool.Freehand => true,
                 _ => false
             },
             _ => false
@@ -1061,6 +1061,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     StrokeWidth = Options.Thickness;
                     CornerRadius = Options.CornerRadius;
                     ShadowEnabled = Options.Shadow;
+                    SelectedBorderStyle = NormalizeBorderStyle(Options.BorderStyle);
                     FontSize = Options.TextFontSize;
                     break;
                 case EditorTool.Arrow:

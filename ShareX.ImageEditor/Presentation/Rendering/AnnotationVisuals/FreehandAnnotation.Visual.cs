@@ -26,6 +26,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using ShareX.ImageEditor.Presentation.Helpers;
 
 namespace ShareX.ImageEditor.Core.Annotations;
 
@@ -41,7 +42,8 @@ public partial class FreehandAnnotation
         {
             Stroke = brush,
             StrokeThickness = StrokeWidth,
-            StrokeLineCap = PenLineCap.Round,
+            StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(BorderStyle),
+            StrokeLineCap = PenLineCap.Flat,
             StrokeJoin = PenLineJoin.Round,
             Data = CreateSmoothedGeometry(),
             Tag = this

@@ -129,6 +129,8 @@ public static class AnnotationVisualFactory
                 break;
 
             case FreehandAnnotation freehand when control is Avalonia.Controls.Shapes.Path freehandPath:
+                freehandPath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(freehand.BorderStyle);
+                freehandPath.StrokeLineCap = PenLineCap.Flat;
                 freehandPath.Data = freehand.CreateSmoothedGeometry();
                 break;
 

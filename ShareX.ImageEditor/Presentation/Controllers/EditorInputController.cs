@@ -464,7 +464,8 @@ public class EditorInputController
                 {
                     Stroke = brush,
                     StrokeThickness = vm.StrokeWidth,
-                    StrokeLineCap = PenLineCap.Round,
+                    StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(vm.SelectedBorderStyle),
+                    StrokeLineCap = PenLineCap.Flat,
                     StrokeJoin = PenLineJoin.Round,
                     UseLayoutRounding = false,
                     IsHitTestVisible = false
@@ -484,7 +485,7 @@ public class EditorInputController
 
                 path.SetValue(Panel.ZIndexProperty, 1);
 
-                var freehand = new FreehandAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, ShadowEnabled = vm.ShadowEnabled, Points = new List<SKPoint> { ToSKPoint(_startPoint) } };
+                var freehand = new FreehandAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, ShadowEnabled = vm.ShadowEnabled, Points = new List<SKPoint> { ToSKPoint(_startPoint) } };
                 path.Tag = freehand;
                 path.Data = freehand.CreateSmoothedGeometry();
                 _currentShape = path;

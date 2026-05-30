@@ -632,6 +632,11 @@ namespace ShareX.ImageEditor.Presentation.Views
                     linePath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
                     linePath.StrokeLineCap = PenLineCap.Flat;
                     break;
+                case FreehandAnnotation freehandAnnotation when selected is global::Avalonia.Controls.Shapes.Path freehandPath:
+                    freehandAnnotation.BorderStyle = borderStyle;
+                    freehandPath.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(borderStyle);
+                    freehandPath.StrokeLineCap = PenLineCap.Flat;
+                    break;
             }
         }
 

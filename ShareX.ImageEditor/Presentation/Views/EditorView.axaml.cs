@@ -389,6 +389,10 @@ namespace ShareX.ImageEditor.Presentation.Views
                     {
                         vm.SelectedBorderStyle = line.BorderStyle;
                     }
+                    else if (vm.SelectedAnnotation is FreehandAnnotation freehand)
+                    {
+                        vm.SelectedBorderStyle = freehand.BorderStyle;
+                    }
                     else if (vm.SelectedAnnotation is CursorAnnotation cursor)
                     {
                         vm.SelectedCursorType = cursor.CursorType;
