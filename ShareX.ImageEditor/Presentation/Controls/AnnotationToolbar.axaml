@@ -242,6 +242,64 @@
                                 ToolTip.Tip="Background"
                                 FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18" Content="{x:Static theming:EditorIcons.PanelBackground}"/>
                         <Button Classes="editor-button toolbar-button"
+                                        ToolTip.Tip="Rotate / Flip"
+                                        MinWidth="54"
+                                        HorizontalContentAlignment="Stretch">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <TextBlock Grid.Column="0"
+                                                                Text="{x:Static theming:EditorIcons.ActionRotateRight}"
+                                                                FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                                FontWeight="Normal"
+                                                                FontSize="18"
+                                                                VerticalAlignment="Center"/>
+                                        <Border Grid.Column="1"/>
+                                        <TextBlock Grid.Column="2"
+                                                                Classes="dropdown-chevron"
+                                                                Classes.open="{Binding $parent[Button].Flyout.IsOpen}"
+                                                                Text="{x:Static theming:EditorIcons.ChevronDown}"
+                                                                FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                                FontWeight="Normal"
+                                                                FontSize="10"
+                                                                Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
+                                                                VerticalAlignment="Center"/>
+                                </Grid>
+                                <Button.Flyout>
+                                        <MenuFlyout Placement="BottomEdgeAlignedLeft" VerticalOffset="4">
+                                                <MenuItem Header="Rotate 90° clockwise"
+                                                                        Command="{ReflectionBinding Rotate90ClockwiseCommand}">
+                                                        <MenuItem.Icon>
+                                                                <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionRotateRight}"/>
+                                                        </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Rotate 90° counterclockwise"
+                                                                        Command="{ReflectionBinding Rotate90CounterClockwiseCommand}">
+                                                        <MenuItem.Icon>
+                                                                <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionRotateLeft}"/>
+                                                        </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Rotate 180°"
+                                                                        Command="{ReflectionBinding Rotate180Command}">
+                                                        <MenuItem.Icon>
+                                                                <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionRotateRight}"/>
+                                                        </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator/>
+                                                <MenuItem Header="Flip horizontal"
+                                                                        Command="{ReflectionBinding FlipHorizontalCommand}">
+                                                        <MenuItem.Icon>
+                                                                <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.flip_horizontal}"/>
+                                                        </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Flip vertical"
+                                                                        Command="{ReflectionBinding FlipVerticalCommand}">
+                                                        <MenuItem.Icon>
+                                                                <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.flip_vertical}"/>
+                                                        </MenuItem.Icon>
+                                                </MenuItem>
+                                        </MenuFlyout>
+                                </Button.Flyout>
+                        </Button>
+                        <Button Classes="editor-button toolbar-button"
                                 Classes.active="{ReflectionBinding IsEffectsButtonActive}"
                                 Command="{ReflectionBinding ToggleEffectsPanelCommand}"
                                 ToolTip.Tip="Image Effects"

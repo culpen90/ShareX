@@ -309,6 +309,16 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public ICommand ToggleEffectsPanelCommand => _viewModel.ToggleEffectsPanelCommand;
 
+    public ICommand Rotate90ClockwiseCommand => _viewModel.Rotate90ClockwiseCommand;
+
+    public ICommand Rotate90CounterClockwiseCommand => _viewModel.Rotate90CounterClockwiseCommand;
+
+    public ICommand Rotate180Command => _viewModel.Rotate180Command;
+
+    public ICommand FlipHorizontalCommand => _viewModel.FlipHorizontalCommand;
+
+    public ICommand FlipVerticalCommand => _viewModel.FlipVerticalCommand;
+
     public bool ShowFileMenu => _viewModel.ShowFileMenu;
 
     public bool ShowOptionsButton => _viewModel.ShowOptionsButton;
