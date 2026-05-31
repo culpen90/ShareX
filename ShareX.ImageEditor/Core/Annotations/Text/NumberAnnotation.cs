@@ -34,7 +34,6 @@ namespace ShareX.ImageEditor.Core.Annotations;
 public partial class NumberAnnotation : Annotation
 {
     private const float GeometryEpsilon = 0.001f;
-    private const float TailWidthMultiplier = 1.5f;
     private const float TextPaddingMultiplier = 0.35f;
 
     public override AnnotationCategory Category => AnnotationCategory.Text;
@@ -184,19 +183,21 @@ public partial class NumberAnnotation : Annotation
         float normalizedDirectionX = directionX / directionLength;
         float normalizedDirectionY = directionY / directionLength;
 
-        float tailWidth = radius * TailWidthMultiplier;
-        float halfTailWidth = tailWidth / 2f;
-
         var perpendicular = new SKPoint(-normalizedDirectionY, normalizedDirectionX);
-        var baseStart = new SKPoint(
-            center.X + perpendicular.X * halfTailWidth,
-            center.Y + perpendicular.Y * halfTailWidth);
-        var baseEnd = new SKPoint(
-            center.X - perpendicular.X * halfTailWidth,
-            center.Y - perpendicular.Y * halfTailWidth);
+        float projectionDistance = (radius * radius) / directionLength;
+        float offsetDistance = radius * MathF.Sqrt((directionLength * directionLength) - (radius * radius)) / directionLength;
+        var tangentCenter = new SKPoint(
+            center.X + normalizedDirectionX * projectionDistance,
+            center.Y + normalizedDirectionY * projectionDistance);
 
-        return TryGetCircleSegmentExitPoint(center, radius, baseStart, tailTip, out tailBaseStart) &&
-               TryGetCircleSegmentExitPoint(center, radius, baseEnd, tailTip, out tailBaseEnd);
+        tailBaseStart = new SKPoint(
+            tangentCenter.X + perpendicular.X * offsetDistance,
+            tangentCenter.Y + perpendicular.Y * offsetDistance);
+        tailBaseEnd = new SKPoint(
+            tangentCenter.X - perpendicular.X * offsetDistance,
+            tangentCenter.Y - perpendicular.Y * offsetDistance);
+
+        return true;
     }
 
     public override bool HitTest(SKPoint point, float tolerance = 5)
@@ -231,41 +232,6 @@ public partial class NumberAnnotation : Annotation
             StartPoint.Y - Radius,
             StartPoint.X + Radius,
             StartPoint.Y + Radius);
-    }
-
-    private static bool TryGetCircleSegmentExitPoint(SKPoint center, float radius, SKPoint start, SKPoint end, out SKPoint intersection)
-    {
-        float dx = end.X - start.X;
-        float dy = end.Y - start.Y;
-
-        float offsetX = start.X - center.X;
-        float offsetY = start.Y - center.Y;
-
-        float a = (dx * dx) + (dy * dy);
-        float b = 2f * ((offsetX * dx) + (offsetY * dy));
-        float c = (offsetX * offsetX) + (offsetY * offsetY) - (radius * radius);
-
-        float discriminant = (b * b) - (4f * a * c);
-        if (a <= GeometryEpsilon || discriminant < 0)
-        {
-            intersection = default;
-            return false;
-        }
-
-        float sqrtDiscriminant = MathF.Sqrt(discriminant);
-        float t1 = (-b - sqrtDiscriminant) / (2f * a);
-        float t2 = (-b + sqrtDiscriminant) / (2f * a);
-        float t = MathF.Max(t1, t2);
-
-        if (t < -GeometryEpsilon || t > 1f + GeometryEpsilon)
-        {
-            intersection = default;
-            return false;
-        }
-
-        t = Math.Clamp(t, 0f, 1f);
-        intersection = new SKPoint(start.X + (dx * t), start.Y + (dy * t));
-        return true;
     }
 
     private static bool PointInTriangle(SKPoint point, SKPoint a, SKPoint b, SKPoint c)
