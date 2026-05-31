@@ -570,14 +570,7 @@ public class EditorSelectionController
             if (handleTag.Contains("Bottom")) newHeight = Math.Max(20, height + deltaY);
             else if (handleTag.Contains("Top")) { var change = Math.Min(height - 20, deltaY); newTop += change; newHeight -= change; }
 
-            resizeBalloon.StartPoint = ToSKPoint(new Point(newLeft, newTop));
-            resizeBalloon.EndPoint = ToSKPoint(new Point(newLeft + newWidth, newTop + newHeight));
-
-            Canvas.SetLeft(resizeBalloonControl, newLeft);
-            Canvas.SetTop(resizeBalloonControl, newTop);
-            resizeBalloonControl.Width = newWidth;
-            resizeBalloonControl.Height = newHeight;
-            resizeBalloonControl.InvalidateVisual();
+            ApplyResizedBounds(resizeBalloon, newLeft, newTop, newWidth, newHeight);
 
             _startPoint = currentPoint;
             UpdateSelectionHandles();
@@ -804,6 +797,9 @@ public class EditorSelectionController
             return;
         }
 
+        var previousBounds = annotation.GetBounds();
+        var newBounds = new SKRect((float)left, (float)top, (float)(left + width), (float)(top + height));
+
         Canvas.SetLeft(_selectedShape, left);
         Canvas.SetTop(_selectedShape, top);
         _selectedShape.Width = Math.Max(1, width);
@@ -811,6 +807,11 @@ public class EditorSelectionController
 
         annotation.StartPoint = new SKPoint((float)left, (float)top);
         annotation.EndPoint = new SKPoint((float)(left + width), (float)(top + height));
+
+        if (annotation is SpeechBalloonAnnotation balloon)
+        {
+            UpdateSpeechBalloonTailForResize(balloon, previousBounds, newBounds);
+        }
 
         if (annotation.RotationAngle != 0)
         {
@@ -820,6 +821,22 @@ public class EditorSelectionController
 
         _selectedShape.InvalidateVisual();
         _selectedShape.InvalidateMeasure();
+    }
+
+    private static void UpdateSpeechBalloonTailForResize(SpeechBalloonAnnotation annotation, SKRect previousBounds, SKRect newBounds)
+    {
+        if (!annotation.HasTailPoint || previousBounds.Width <= 0 || previousBounds.Height <= 0)
+        {
+            return;
+        }
+
+        var tailPoint = annotation.GetEffectiveTailPoint();
+        float scaleX = newBounds.Width / previousBounds.Width;
+        float scaleY = newBounds.Height / previousBounds.Height;
+
+        annotation.SetTailPoint(new SKPoint(
+            newBounds.Left + ((tailPoint.X - previousBounds.Left) * scaleX),
+            newBounds.Top + ((tailPoint.Y - previousBounds.Top) * scaleY)));
     }
 
     private static bool TryGetHandleDirection(string handleTag, out int horizontalDirection, out int verticalDirection)
