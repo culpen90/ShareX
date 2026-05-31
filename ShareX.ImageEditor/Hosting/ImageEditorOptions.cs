@@ -141,6 +141,7 @@ namespace ShareX.ImageEditor.Hosting
 
         public int StepThickness { get; set; } = 4;
         public float StepFontSize { get; set; } = 30;
+        public bool StepTextBold { get; set; } = true;
         public StepType StepType { get; set; } = StepType.Numeric;
 
         // Highlight

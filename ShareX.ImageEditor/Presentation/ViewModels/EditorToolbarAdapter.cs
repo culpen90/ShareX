@@ -240,6 +240,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public bool ShowTextStyle => _viewModel.ShowTextStyle;
 
+    public bool ShowTextItalic => _viewModel.ShowTextItalic;
+
     public bool ShowShadow => _viewModel.ShowShadow;
 
     public bool ShowSpeechBalloonTail => _viewModel.ShowSpeechBalloonTail;

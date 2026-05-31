@@ -92,6 +92,7 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     bool ShowStrength { get; }
     bool ShowSpotlightBlur { get; }
     bool ShowTextStyle { get; }
+    bool ShowTextItalic { get; }
     bool ShowShadow { get; }
     bool ShowSpeechBalloonTail { get; }
     bool ShowToolOptions { get; }

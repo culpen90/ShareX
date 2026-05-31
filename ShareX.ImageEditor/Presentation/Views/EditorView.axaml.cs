@@ -352,6 +352,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                     if (vm.SelectedAnnotation is NumberAnnotation num)
                     {
                         vm.FontSize = num.FontSize;
+                        vm.TextBold = num.IsBold;
                         vm.FillColor = num.FillColor;
                         if (!string.IsNullOrEmpty(num.TextColor))
                             vm.TextColorValue = Avalonia.Media.Color.Parse(num.TextColor);

@@ -756,6 +756,16 @@ namespace ShareX.ImageEditor.Presentation.Views
                     ApplyTextFontStyle(textEditor, balloonAnnotation.IsBold, balloonAnnotation.IsItalic);
                 }
             }
+            else if (_selectionController.SelectedShape?.Tag is NumberAnnotation numberAnnotation)
+            {
+                numberAnnotation.IsBold = isBold;
+
+                if (_selectionController.SelectedShape is StepControl stepControl)
+                {
+                    AnnotationVisualFactory.UpdateVisualControl(stepControl, numberAnnotation);
+                    _selectionController.UpdateSelectionHandles();
+                }
+            }
         }
 
         private void ApplySelectedTextItalic(bool isItalic)

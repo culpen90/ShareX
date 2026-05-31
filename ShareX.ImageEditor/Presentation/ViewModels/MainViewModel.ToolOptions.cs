@@ -657,11 +657,13 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             bool isText = ActiveTool == EditorTool.Text;
             bool isSpeechBalloon = ActiveTool == EditorTool.SpeechBalloon;
+            bool isStep = ActiveTool == EditorTool.Step;
 
             if (ActiveTool == EditorTool.Select && SelectedAnnotation != null)
             {
                 isText = SelectedAnnotation is TextAnnotation;
                 isSpeechBalloon = SelectedAnnotation is SpeechBalloonAnnotation;
+                isStep = SelectedAnnotation is NumberAnnotation;
             }
 
             if (isText)
@@ -671,6 +673,10 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             else if (isSpeechBalloon)
             {
                 Options.SpeechBalloonTextBold = value;
+            }
+            else if (isStep)
+            {
+                Options.StepTextBold = value;
             }
         }
 
@@ -858,6 +864,17 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public bool ShowTextStyle => ActiveTool switch
         {
+            EditorTool.Text or EditorTool.SpeechBalloon or EditorTool.Step => true,
+            EditorTool.Select => _selectedAnnotation != null && _selectedAnnotation.ToolType switch
+            {
+                EditorTool.Text or EditorTool.SpeechBalloon or EditorTool.Step => true,
+                _ => false
+            },
+            _ => false
+        };
+
+        public bool ShowTextItalic => ActiveTool switch
+        {
             EditorTool.Text or EditorTool.SpeechBalloon => true,
             EditorTool.Select => _selectedAnnotation != null && _selectedAnnotation.ToolType switch
             {
@@ -953,6 +970,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(ShowStrength));
             OnPropertyChanged(nameof(ShowSpotlightBlur));
             OnPropertyChanged(nameof(ShowTextStyle));
+            OnPropertyChanged(nameof(ShowTextItalic));
             OnPropertyChanged(nameof(ShowShadow));
             OnPropertyChanged(nameof(ShowSpeechBalloonTail));
             OnPropertyChanged(nameof(ActiveToolIcon));
@@ -1109,7 +1127,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     ShadowEnabled = Options.Shadow;
                     FontSize = Options.StepFontSize;
                     SelectedStepType = NormalizeStepType(Options.StepType);
-                    TextBold = Options.TextBold;
+                    TextBold = Options.StepTextBold;
                     TextItalic = Options.TextItalic;
                     break;
                 case EditorTool.Highlight:

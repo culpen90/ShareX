@@ -431,6 +431,7 @@ public class EditorInputController
                     FillColor = vm.FillColor,
                     TextColor = vm.TextColor,
                     FontSize = vm.FontSize,
+                    IsBold = vm.TextBold,
                     StepType = vm.SelectedStepType,
                     ShadowEnabled = vm.ShadowEnabled,
                     ShadowColor = shadowColor,

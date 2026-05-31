@@ -387,6 +387,19 @@
                                                      IsVisible="{Binding ShowFontSize}"
                                                      ToolTip.Tip="Font size"/>
 
+                    <Button Classes="editor-button toolbar-button"
+                            Classes.active="{Binding TextBold}"
+                            Click="OnTextBoldClick"
+                            IsVisible="{Binding ShowTextStyle}"
+                            ToolTip.Tip="Toggle bold"
+                            Content="{x:Static theming:EditorIcons.FormatBold}"/>
+                    <Button Classes="editor-button toolbar-button"
+                            Classes.active="{Binding TextItalic}"
+                            Click="OnTextItalicClick"
+                            IsVisible="{Binding ShowTextItalic}"
+                            ToolTip.Tip="Toggle italic"
+                            Content="{x:Static theming:EditorIcons.FormatItalic}"/>
+
                     <controls:StepTypePickerDropdown x:Name="StepTypePicker"
                                                      StepTypeOptions="{Binding AvailableStepTypes}"
                                                      SelectedStepType="{Binding SelectedStepType, Mode=TwoWay}"
@@ -432,18 +445,6 @@
                                              IsVisible="{Binding ShowSpotlightBlur}"
                                              ToolTip.Tip="Blur amount"/>
 
-                    <Button Classes="editor-button toolbar-button"
-                            Classes.active="{Binding TextBold}"
-                            Click="OnTextBoldClick"
-                            IsVisible="{Binding ShowTextStyle}"
-                            ToolTip.Tip="Toggle bold"
-                            Content="{x:Static theming:EditorIcons.FormatBold}"/>
-                    <Button Classes="editor-button toolbar-button"
-                            Classes.active="{Binding TextItalic}"
-                            Click="OnTextItalicClick"
-                            IsVisible="{Binding ShowTextStyle}"
-                            ToolTip.Tip="Toggle italic"
-                            Content="{x:Static theming:EditorIcons.FormatItalic}"/>
                     <Button Classes="editor-button toolbar-button"
                             Classes.active="{Binding SpeechBalloonTail}"
                             Click="OnSpeechBalloonTailClick"

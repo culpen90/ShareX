@@ -58,6 +58,11 @@ public partial class NumberAnnotation : Annotation
     public string TextColor { get; set; } = "#FFFFFFFF";
 
     /// <summary>
+    /// Bold style for the step label.
+    /// </summary>
+    public bool IsBold { get; set; } = true;
+
+    /// <summary>
     /// Circle radius - auto-calculated based on FontSize if not explicitly set
     /// </summary>
     public float Radius
@@ -86,7 +91,7 @@ public partial class NumberAnnotation : Annotation
 
         using var font = new SKFont(SKTypeface.Default, Math.Max(1, FontSize * 0.6f))
         {
-            Embolden = true
+            Embolden = IsBold
         };
 
         float textWidth = font.MeasureText(displayText);
