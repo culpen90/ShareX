@@ -51,6 +51,8 @@ namespace ShareX.ImageEditor.Core.Annotations;
 [JsonDerivedType(typeof(TextAnnotation), typeDiscriminator: "Text")]
 public abstract class Annotation
 {
+    public const string DefaultShadowColorHex = "#80000000";
+
     /// <summary>
     /// Functional category of this annotation type (Shapes, Effects, or Text).
     /// </summary>
@@ -85,6 +87,11 @@ public abstract class Annotation
     /// Whether shadow is enabled for this annotation
     /// </summary>
     public bool ShadowEnabled { get; set; }
+
+    /// <summary>
+    /// Shadow color (hex color string)
+    /// </summary>
+    public string ShadowColor { get; set; } = DefaultShadowColorHex;
 
     /// <summary>
     /// Starting point (top-left for rectangles, start for lines/arrows)

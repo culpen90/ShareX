@@ -321,23 +321,25 @@ public class EditorInputController
             return;
         }
 
+        string shadowColor = vm.Options?.ShadowColorHex ?? Annotation.DefaultShadowColorHex;
+
         switch (vm.ActiveTool)
         {
             case EditorTool.Rectangle:
-                var rectAnnotation = new RectangleAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, FillColor = vm.FillColor, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var rectAnnotation = new RectangleAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, FillColor = vm.FillColor, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, ShadowColor = shadowColor, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = rectAnnotation.CreateVisual();
                 break;
             case EditorTool.Ellipse:
-                var ellipseAnnotation = new EllipseAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, FillColor = vm.FillColor, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var ellipseAnnotation = new EllipseAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, FillColor = vm.FillColor, ShadowEnabled = vm.ShadowEnabled, ShadowColor = shadowColor, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = ellipseAnnotation.CreateVisual();
                 break;
             case EditorTool.Line:
-                var lineAnnotation = new LineAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, ShadowEnabled = vm.ShadowEnabled, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var lineAnnotation = new LineAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, ShadowEnabled = vm.ShadowEnabled, ShadowColor = shadowColor, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = lineAnnotation.CreateVisual();
                 _currentShape.IsHitTestVisible = false;
                 break;
             case EditorTool.Arrow:
-                var arrowAnnotation = new ArrowAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, ShadowEnabled = vm.ShadowEnabled, Style = vm.SelectedArrowStyle, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var arrowAnnotation = new ArrowAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, ShadowEnabled = vm.ShadowEnabled, ShadowColor = shadowColor, Style = vm.SelectedArrowStyle, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 _currentShape = arrowAnnotation.CreateVisual();
                 _currentShape.IsHitTestVisible = false;
                 break;
@@ -413,7 +415,7 @@ public class EditorInputController
                 {
                     fillColor = IsColorLight(vm.SelectedColor) ? "#FF000000" : "#FFFFFFFF";
                 }
-                var balloonAnnotation = new SpeechBalloonAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = fillColor, TextColor = vm.TextColor, FontSize = vm.FontSize, FontFamily = vm.SelectedFontFamily, IsBold = vm.TextBold, IsItalic = vm.TextItalic, HorizontalAlignment = vm.SelectedTextHorizontalAlignment, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, TailEnabled = vm.SpeechBalloonTail, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
+                var balloonAnnotation = new SpeechBalloonAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, FillColor = fillColor, TextColor = vm.TextColor, FontSize = vm.FontSize, FontFamily = vm.SelectedFontFamily, IsBold = vm.TextBold, IsItalic = vm.TextItalic, HorizontalAlignment = vm.SelectedTextHorizontalAlignment, CornerRadius = vm.CornerRadius, ShadowEnabled = vm.ShadowEnabled, ShadowColor = shadowColor, TailEnabled = vm.SpeechBalloonTail, StartPoint = ToSKPoint(_startPoint), EndPoint = ToSKPoint(_startPoint) };
                 var balloonControl = balloonAnnotation.CreateVisual();
                 balloonControl.Width = 0;
                 balloonControl.Height = 0;
@@ -431,6 +433,7 @@ public class EditorInputController
                     FontSize = vm.FontSize,
                     StepType = vm.SelectedStepType,
                     ShadowEnabled = vm.ShadowEnabled,
+                    ShadowColor = shadowColor,
                     StartPoint = ToSKPoint(_startPoint),
                     Number = vm.NumberCounter
                 }; ;
@@ -474,18 +477,12 @@ public class EditorInputController
 
                 if (vm.ShadowEnabled)
                 {
-                    path.Effect = new Avalonia.Media.DropShadowEffect
-                    {
-                        OffsetX = 3,
-                        OffsetY = 3,
-                        BlurRadius = 4,
-                        Color = Avalonia.Media.Color.FromArgb(128, 0, 0, 0)
-                    };
+                    path.Effect = ShareX.ImageEditor.Presentation.Helpers.ShadowEffectHelper.CreateDropShadow(shadowColor);
                 }
 
                 path.SetValue(Panel.ZIndexProperty, 1);
 
-                var freehand = new FreehandAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, ShadowEnabled = vm.ShadowEnabled, Points = new List<SKPoint> { ToSKPoint(_startPoint) } };
+                var freehand = new FreehandAnnotation { StrokeColor = vm.SelectedColor, StrokeWidth = vm.StrokeWidth, BorderStyle = vm.SelectedBorderStyle, ShadowEnabled = vm.ShadowEnabled, ShadowColor = shadowColor, Points = new List<SKPoint> { ToSKPoint(_startPoint) } };
                 path.Tag = freehand;
                 path.Data = freehand.CreateSmoothedGeometry();
                 _currentShape = path;
@@ -1777,6 +1774,8 @@ public class EditorInputController
         string strokeColor = vm.SelectedColor;
         string fillColor = vm.FillColor;
 
+        string shadowColor = vm.Options?.ShadowColorHex ?? Annotation.DefaultShadowColorHex;
+
         var textAnnotation = new TextAnnotation
         {
             StrokeColor = strokeColor,
@@ -1789,6 +1788,7 @@ public class EditorInputController
             IsBold = vm.TextBold,
             IsItalic = vm.TextItalic,
             ShadowEnabled = vm.ShadowEnabled,
+            ShadowColor = shadowColor,
             StartPoint = ToSKPoint(_startPoint),
             EndPoint = ToSKPoint(_startPoint) // Will be updated when text is finalized
         };
@@ -1821,13 +1821,7 @@ public class EditorInputController
 
         if (vm.ShadowEnabled)
         {
-            textBox.Effect = new Avalonia.Media.DropShadowEffect
-            {
-                OffsetX = 3,
-                OffsetY = 3,
-                BlurRadius = 4,
-                Color = Avalonia.Media.Color.FromArgb(128, 0, 0, 0)
-            };
+            textBox.Effect = ShareX.ImageEditor.Presentation.Helpers.ShadowEffectHelper.CreateDropShadow(shadowColor);
         }
 
         Canvas.SetLeft(textBox, _startPoint.X);

@@ -316,13 +316,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             if (AreBackgroundEffectsActive)
             {
                 CanvasPadding = CalculateOutputPadding(BackgroundMargin, TargetOutputAspectRatio);
-                CanvasShadow = new BoxShadows(new BoxShadow
-                {
-                    Blur = BackgroundShadowRadius,
-                    Color = Color.FromArgb(80, 0, 0, 0),
-                    OffsetX = 0,
-                    OffsetY = 10
-                });
+                CanvasShadow = new BoxShadows(ShareX.ImageEditor.Presentation.Helpers.ShadowEffectHelper.CreateCanvasShadow(_options.ShadowColor, BackgroundShadowRadius));
                 CanvasCornerRadius = Math.Max(0, BackgroundRoundedCorner);
             }
             else

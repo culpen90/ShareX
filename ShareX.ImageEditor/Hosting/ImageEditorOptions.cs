@@ -33,6 +33,7 @@ namespace ShareX.ImageEditor.Hosting
     {
         public static readonly Color PrimaryColor = Color.FromArgb(255, 242, 60, 60);
         public static readonly Color SecondaryColor = Color.FromArgb(255, 250, 250, 250);
+        public static readonly Color DefaultShadowColor = Color.Parse(Annotation.DefaultShadowColorHex);
         public static readonly IReadOnlyList<string> DefaultFavoriteEffects = new[]
         {
             "resize_image",
@@ -81,6 +82,9 @@ namespace ShareX.ImageEditor.Hosting
         public int Thickness { get; set; } = 4;
         public int CornerRadius { get; set; } = 4;
         public bool Shadow { get; set; } = true;
+        public string ShadowColorHex { get; set; } = Annotation.DefaultShadowColorHex;
+        [JsonIgnore]
+        public Color ShadowColor { get => HexToColor(ShadowColorHex); set => ShadowColorHex = ColorToHex(value); }
         public BorderStyle BorderStyle { get; set; } = BorderStyle.Solid;
         public ArrowStyle ArrowStyle { get; set; } = ArrowStyle.Classic;
         public CursorType CursorType { get; set; } = CursorType.Default;
