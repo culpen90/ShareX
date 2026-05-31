@@ -175,6 +175,7 @@ public static class AnnotationVisualFactory
             case SpeechBalloonAnnotation balloon when control is SpeechBalloonControl balloonControl:
                 balloonControl.Annotation = balloon;
                 ApplyBoundsControl(balloonControl, balloon.GetBounds(), ensureMinimumSize);
+                ApplyRotationTransform(balloonControl, balloon.RotationAngle);
                 balloonControl.InvalidateVisual();
                 break;
 

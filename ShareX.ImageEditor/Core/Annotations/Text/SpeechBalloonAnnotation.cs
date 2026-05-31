@@ -236,7 +236,21 @@ public partial class SpeechBalloonAnnotation : Annotation
 
     public override bool HitTest(SKPoint point, float tolerance = 5)
     {
-        var bodyBounds = SKRect.Inflate(GetBounds(), tolerance, tolerance);
+        var bounds = GetBounds();
+
+        if (RotationAngle != 0)
+        {
+            float cx = bounds.MidX;
+            float cy = bounds.MidY;
+            float rad = -RotationAngle * (float)Math.PI / 180f;
+            float cos = (float)Math.Cos(rad);
+            float sin = (float)Math.Sin(rad);
+            float dx = point.X - cx;
+            float dy = point.Y - cy;
+            point = new SKPoint(cx + dx * cos - dy * sin, cy + dx * sin + dy * cos);
+        }
+
+        var bodyBounds = SKRect.Inflate(bounds, tolerance, tolerance);
         if (bodyBounds.Contains(point.X, point.Y))
         {
             return true;

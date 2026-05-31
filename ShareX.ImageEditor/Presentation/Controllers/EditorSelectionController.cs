@@ -504,7 +504,7 @@ public class EditorSelectionController
         // Special handling for SpeechBalloonControl tail dragging
         if (_selectedShape is SpeechBalloonControl balloonControl && balloonControl.Annotation is SpeechBalloonAnnotation balloon && balloon.TailEnabled && handleTag == "BalloonTail")
         {
-            balloon.SetTailPoint(new SKPoint((float)currentPoint.X, (float)currentPoint.Y));
+            balloon.SetTailPoint(GetSpeechBalloonTailPoint(balloon, currentPoint));
             balloonControl.InvalidateVisual();
             _startPoint = currentPoint;
             UpdateSelectionHandles();
@@ -999,21 +999,6 @@ public class EditorSelectionController
 
         if (_selectedShape is SpeechBalloonControl balloonControl && balloonControl.Annotation is SpeechBalloonAnnotation balloon)
         {
-            var balloonRect = GetLogicalRect(_selectedShape);
-            var balloonLeft = balloonRect.Left;
-            var balloonTop = balloonRect.Top;
-            var balloonWidth = balloonRect.Width;
-            var balloonHeight = balloonRect.Height;
-
-            CreateHandle(balloonLeft, balloonTop, "TopLeft");
-            CreateHandle(balloonLeft + balloonWidth / 2, balloonTop, "TopCenter");
-            CreateHandle(balloonLeft + balloonWidth, balloonTop, "TopRight");
-            CreateHandle(balloonLeft + balloonWidth, balloonTop + balloonHeight / 2, "RightCenter");
-            CreateHandle(balloonLeft + balloonWidth, balloonTop + balloonHeight, "BottomRight");
-            CreateHandle(balloonLeft + balloonWidth / 2, balloonTop + balloonHeight, "BottomCenter");
-            CreateHandle(balloonLeft, balloonTop + balloonHeight, "BottomLeft");
-            CreateHandle(balloonLeft, balloonTop + balloonHeight / 2, "LeftCenter");
-
             if (balloon.TailEnabled)
             {
                 if (!balloon.HasTailPoint)
@@ -1021,11 +1006,18 @@ public class EditorSelectionController
                     balloon.EnsureTailPointInitialized();
                     balloonControl.InvalidateVisual();
                 }
+            }
 
-                var tailPoint = balloon.GetEffectiveTailPoint();
-                var tailX = (double)tailPoint.X;
-                var tailY = (double)tailPoint.Y;
-                CreateHandle(tailX, tailY, "BalloonTail");
+            if (TryCreateRotatableSelectionHandles(balloonControl, overlay))
+            {
+                if (balloon.TailEnabled)
+                {
+                    Point rotatedTailHandle = GetSpeechBalloonTailHandlePoint(balloon);
+                    CreateHandle(rotatedTailHandle.X, rotatedTailHandle.Y, "BalloonTail");
+                }
+
+                UpdateHoverOutline();
+                return;
             }
 
             UpdateHoverOutline();
@@ -1202,6 +1194,9 @@ public class EditorSelectionController
     {
         switch (control)
         {
+            case SpeechBalloonControl { Annotation: SpeechBalloonAnnotation balloonAnnotation }:
+                annotation = balloonAnnotation;
+                return true;
             case global::Avalonia.Controls.Shapes.Rectangle { Tag: RectangleAnnotation rectangleAnnotation }
                 when rectangleAnnotation is not SmartEraserAnnotation:
                 annotation = rectangleAnnotation;
@@ -1277,6 +1272,35 @@ public class EditorSelectionController
     private static Point UnrotatePoint(Point point, Point center, double angleDeg)
     {
         return RotatePoint(point, center, -angleDeg);
+    }
+
+    private static Point GetSpeechBalloonTailHandlePoint(SpeechBalloonAnnotation annotation)
+    {
+        var tailPoint = annotation.GetEffectiveTailPoint();
+        Point handlePoint = new(tailPoint.X, tailPoint.Y);
+
+        if (annotation.RotationAngle == 0)
+        {
+            return handlePoint;
+        }
+
+        var bounds = annotation.GetBounds();
+        Point center = new(bounds.MidX, bounds.MidY);
+        return RotatePoint(handlePoint, center, annotation.RotationAngle);
+    }
+
+    private static SKPoint GetSpeechBalloonTailPoint(SpeechBalloonAnnotation annotation, Point visualPoint)
+    {
+        Point unrotatedPoint = visualPoint;
+
+        if (annotation.RotationAngle != 0)
+        {
+            var bounds = annotation.GetBounds();
+            Point center = new(bounds.MidX, bounds.MidY);
+            unrotatedPoint = UnrotatePoint(visualPoint, center, annotation.RotationAngle);
+        }
+
+        return new SKPoint((float)unrotatedPoint.X, (float)unrotatedPoint.Y);
     }
 
     private void CreateHandle(double x, double y, string tag)
@@ -1496,11 +1520,7 @@ public class EditorSelectionController
         // But AnnotationCanvas is usually below Overlay.
         // We can't put TextBox in Overlay because Overlay is for handles.
         textBox.SetValue(Panel.ZIndexProperty, 9999);
-
-        Canvas.SetLeft(textBox, ToOverlayCoordinate(balloonLeft));
-        Canvas.SetTop(textBox, ToOverlayCoordinate(balloonTop));
-        textBox.Width = balloonWidth;
-        textBox.Height = balloonHeight;
+        ApplySpeechBalloonTextEditorLayout(textBox, annotation, balloonLeft, balloonTop, balloonWidth, balloonHeight);
 
         textBox.LostFocus += (s, args) =>
         {
@@ -2120,6 +2140,32 @@ public class EditorSelectionController
         _balloonTextEditor.Resources["TextControlBorderBrush"] = Avalonia.Media.Brushes.Transparent;
         _balloonTextEditor.Resources["TextControlBorderBrushFocused"] = Avalonia.Media.Brushes.Transparent;
         _balloonTextEditor.Resources["TextControlBorderBrushPointerOver"] = Avalonia.Media.Brushes.Transparent;
+
+        ApplySpeechBalloonTextEditorLayout(
+            _balloonTextEditor,
+            annotation,
+            Canvas.GetLeft(balloonControl),
+            Canvas.GetTop(balloonControl),
+            balloonControl.Width,
+            balloonControl.Height);
+    }
+
+    private static void ApplySpeechBalloonTextEditorLayout(TextBox textBox, SpeechBalloonAnnotation annotation, double left, double top, double width, double height)
+    {
+        Canvas.SetLeft(textBox, ToOverlayCoordinate(left));
+        Canvas.SetTop(textBox, ToOverlayCoordinate(top));
+        textBox.Width = width;
+        textBox.Height = height;
+
+        if (annotation.RotationAngle != 0)
+        {
+            textBox.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
+            textBox.RenderTransform = new RotateTransform(annotation.RotationAngle);
+        }
+        else
+        {
+            textBox.RenderTransform = null;
+        }
     }
 
     private void ShowTextEditor(OutlinedTextControl textControl, Canvas canvas)
