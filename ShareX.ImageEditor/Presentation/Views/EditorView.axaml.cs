@@ -1497,7 +1497,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             // Skip shortcuts when a modal dialog is open (e.g. emoji picker search box)
             if (DataContext is MainViewModel { IsModalOpen: true }) return;
 
-            if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && !_inputController.IsDrawingActive)
             {
                 _selectionController.RefreshHoverFeedback(e.KeyModifiers);
             }
@@ -1667,7 +1667,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             // Skip shortcuts when the user is typing in a text field
             if (_parentWindow?.FocusManager?.GetFocusedElement() is TextBox) return;
 
-            if (e.Key is Key.LeftCtrl or Key.RightCtrl)
+            if (e.Key is Key.LeftCtrl or Key.RightCtrl && !_inputController.IsDrawingActive)
             {
                 _selectionController.RefreshHoverFeedback(e.KeyModifiers);
             }

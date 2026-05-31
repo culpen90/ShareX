@@ -93,6 +93,7 @@ public class EditorInputController
         _zoomController = zoomController;
     }
 
+    public bool IsDrawingActive => _isDrawing;
     public bool IsCropInteractionActive => _isDraggingCropHandle;
 
     private MainViewModel? ViewModel => _view.DataContext as MainViewModel;
