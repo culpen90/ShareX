@@ -1288,8 +1288,10 @@ public class EditorInputController
 
     private static bool CanMoveShapeDuringCreation(Control? shape)
     {
-        return shape is global::Avalonia.Controls.Shapes.Rectangle
-            or global::Avalonia.Controls.Shapes.Ellipse
+        return (shape is global::Avalonia.Controls.Shapes.Rectangle rectangle
+                && rectangle.Name != "CropOverlay"
+                && rectangle.Name != "CutOutOverlay")
+            || shape is global::Avalonia.Controls.Shapes.Ellipse
             or SpeechBalloonControl
             or SpotlightControl
             || shape is global::Avalonia.Controls.Shapes.Path { Tag: FreehandAnnotation }
