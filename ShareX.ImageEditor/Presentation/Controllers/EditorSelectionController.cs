@@ -75,6 +75,7 @@ public class EditorSelectionController
     private TextBox? _balloonTextEditor;
     private Point _lastPointerCanvasPoint;
     private bool _hasLastPointerCanvasPoint;
+    private KeyModifiers _currentKeyModifiers;
 
     public Control? SelectedShape => _selectedShape;
     public bool IsInteractionActive => IsSelectionInteractionActive();
@@ -155,8 +156,10 @@ public class EditorSelectionController
         if (canvas == null) return false;
 
         var point = e.GetPosition(canvas);
+        _currentKeyModifiers = e.KeyModifiers;
         if (_view.DataContext is MainViewModel vm && ShouldIgnoreSelection(vm, e.KeyModifiers))
         {
+            UpdateSelectionHandles();
             return false;
         }
 
@@ -397,6 +400,7 @@ public class EditorSelectionController
         if (canvas == null) return false;
 
         var currentPoint = e.GetPosition(canvas);
+        _currentKeyModifiers = e.KeyModifiers;
         _lastPointerCanvasPoint = currentPoint;
         _hasLastPointerCanvasPoint = true;
 
@@ -431,10 +435,14 @@ public class EditorSelectionController
 
     internal void RefreshHoverFeedback(KeyModifiers keyModifiers)
     {
+        _currentKeyModifiers = keyModifiers;
+
         if (IsSelectionInteractionActive())
         {
             return;
         }
+
+        UpdateSelectionHandles();
 
         if (_view.DataContext is not MainViewModel vm)
         {
@@ -463,6 +471,8 @@ public class EditorSelectionController
 
     public bool OnPointerReleased(object sender, PointerReleasedEventArgs e)
     {
+        _currentKeyModifiers = e.KeyModifiers;
+
         if (_isDraggingHandle)
         {
             FinalizeEmojiInteractiveRender();
@@ -1042,6 +1052,8 @@ public class EditorSelectionController
         _selectionHandles.Clear();
 
         if (_selectedShape == null) return;
+
+        if (ShouldSuppressSelectionHandles()) return;
 
         if (_selectedShape is global::Avalonia.Controls.Shapes.Path segmentPath
             && segmentPath.Tag is ICurvedSegmentAnnotation curvedSegment)
@@ -1722,6 +1734,14 @@ public class EditorSelectionController
     private static bool ShouldIgnoreSelection(MainViewModel vm, KeyModifiers keyModifiers)
     {
         return vm.ActiveTool != EditorTool.Select && keyModifiers.HasFlag(KeyModifiers.Control);
+    }
+
+    private bool ShouldSuppressSelectionHandles()
+    {
+        return !IsSelectionInteractionActive()
+            && _selectedShape != null
+            && _view.DataContext is MainViewModel vm
+            && ShouldIgnoreSelection(vm, _currentKeyModifiers);
     }
 
     public Control? HitTestShape(Canvas canvas, Point currentPoint)
