@@ -607,14 +607,6 @@ public class EditorInputController
 
         if (vm == null) return;
 
-        if (_currentShape is global::Avalonia.Controls.Shapes.Path freehandPath && freehandPath.Tag is FreehandAnnotation freehand)
-        {
-            freehand.Points.Add(ToSKPoint(currentPoint));
-            freehandPath.Data = freehand.CreateSmoothedGeometry();
-            freehandPath.InvalidateVisual();
-            return;
-        }
-
         bool ctrlHeld = e.KeyModifiers.HasFlag(KeyModifiers.Control);
         if (!ctrlHeld)
         {
@@ -626,6 +618,16 @@ public class EditorInputController
             _isMovingShapeDuringCreation = true;
             _lastDrawPoint = currentPoint;
             _wasCtrlHeldDuringDraw = true;
+            return;
+        }
+
+        if (_currentShape is global::Avalonia.Controls.Shapes.Path freehandPath && freehandPath.Tag is FreehandAnnotation freehand)
+        {
+            freehand.Points.Add(ToSKPoint(currentPoint));
+            freehandPath.Data = freehand.CreateSmoothedGeometry();
+            freehandPath.InvalidateVisual();
+            _lastDrawPoint = currentPoint;
+            _wasCtrlHeldDuringDraw = ctrlHeld;
             return;
         }
 
@@ -1290,6 +1292,7 @@ public class EditorInputController
             or global::Avalonia.Controls.Shapes.Ellipse
             or SpeechBalloonControl
             or SpotlightControl
+            || shape is global::Avalonia.Controls.Shapes.Path { Tag: FreehandAnnotation }
             || shape is global::Avalonia.Controls.Shapes.Path { Tag: LineAnnotation }
             || shape is global::Avalonia.Controls.Shapes.Path { Tag: ArrowAnnotation };
     }
@@ -1359,6 +1362,19 @@ public class EditorInputController
             balloonAnn.StartPoint = ToSKPoint(new Point(newLeft, newTop));
             balloonAnn.EndPoint = ToSKPoint(new Point(newLeft + balloon.Width, newTop + balloon.Height));
             balloon.InvalidateVisual();
+            return;
+        }
+
+        if (_currentShape is global::Avalonia.Controls.Shapes.Path freehandPath && freehandPath.Tag is FreehandAnnotation freehand)
+        {
+            for (int index = 0; index < freehand.Points.Count; index++)
+            {
+                var point = freehand.Points[index];
+                freehand.Points[index] = new SKPoint(point.X + (float)deltaX, point.Y + (float)deltaY);
+            }
+
+            freehandPath.Data = freehand.CreateSmoothedGeometry();
+            freehandPath.InvalidateVisual();
             return;
         }
 
