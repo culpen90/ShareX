@@ -153,7 +153,10 @@ public class EditorSelectionController
         if (canvas == null) return false;
 
         var point = e.GetPosition(canvas);
-        var props = e.GetCurrentPoint(canvas).Properties;
+        if (_view.DataContext is MainViewModel vm && ShouldIgnoreSelection(vm, e.KeyModifiers))
+        {
+            return false;
+        }
 
         // Check if clicked on a handle
         var overlay = _view.FindControl<Canvas>("OverlayCanvas");
@@ -185,11 +188,11 @@ public class EditorSelectionController
         // But logic in EditorView.axaml.cs had:
         // if (vm.ActiveTool == EditorTool.Select ...) -> Try select.
 
-        if (_view.DataContext is MainViewModel vm)
+        if (_view.DataContext is MainViewModel activeVm)
         {
             // When a drawing tool is active, allow selecting and dragging only shapes
             // that belong to the same tool type, without switching to the Select tool.
-            if (vm.ActiveTool != EditorTool.Select && vm.ActiveTool != EditorTool.Spotlight && vm.ActiveTool != EditorTool.Freehand)
+            if (activeVm.ActiveTool != EditorTool.Select && activeVm.ActiveTool != EditorTool.Spotlight && activeVm.ActiveTool != EditorTool.Freehand)
             {
                 // Hit test - find the direct child of the canvas
                 var hitSource = e.Source as global::Avalonia.Visual;
@@ -207,19 +210,19 @@ public class EditorSelectionController
 
                 // Fallback: manual hit test for thin shapes (e.g. lines, arrows)
                 var manualHit = HitTestShape(canvas, point);
-                if (hitTarget == null || GetControlToolType(hitTarget) != vm.ActiveTool)
+                if (hitTarget == null || GetControlToolType(hitTarget) != activeVm.ActiveTool)
                 {
-                    if (manualHit != null && GetControlToolType(manualHit) == vm.ActiveTool)
+                    if (manualHit != null && GetControlToolType(manualHit) == activeVm.ActiveTool)
                     {
                         hitTarget = manualHit;
                     }
-                    else if (hitTarget != null && GetControlToolType(hitTarget) != vm.ActiveTool)
+                    else if (hitTarget != null && GetControlToolType(hitTarget) != activeVm.ActiveTool)
                     {
                         hitTarget = null;
                     }
                 }
 
-                if (hitTarget != null && GetControlToolType(hitTarget) == vm.ActiveTool)
+                if (hitTarget != null && GetControlToolType(hitTarget) == activeVm.ActiveTool)
                 {
                     if (e.ClickCount == 2 && TryHandleDoubleClickEdit(hitTarget, canvas))
                     {
@@ -239,7 +242,7 @@ public class EditorSelectionController
                 }
             }
 
-            if (vm.ActiveTool == EditorTool.Select || vm.ActiveTool == EditorTool.Spotlight)
+            if (activeVm.ActiveTool == EditorTool.Select || activeVm.ActiveTool == EditorTool.Spotlight)
             {
                 // Hit test
                 var hitSource = e.Source as global::Avalonia.Visual;
@@ -267,7 +270,7 @@ public class EditorSelectionController
                     hitTarget = null;
                 }
 
-                if (vm.ActiveTool == EditorTool.Spotlight)
+                if (activeVm.ActiveTool == EditorTool.Spotlight)
                 {
                     if (!(hitTarget is SpotlightControl)) hitTarget = null;
                     if (!(manualHit is SpotlightControl)) manualHit = null;
@@ -408,6 +411,12 @@ public class EditorSelectionController
             HandleMove(currentPoint);
             e.Handled = true;
             return true;
+        }
+
+        if (_view.DataContext is MainViewModel vm && ShouldIgnoreSelection(vm, e.KeyModifiers))
+        {
+            ClearHoverOutline();
+            return false;
         }
 
         // Update hover state when not dragging
@@ -1672,6 +1681,11 @@ public class EditorSelectionController
             ApplyHoveredShapeCursor();
             UpdateHoverOutline();
         }
+    }
+
+    private static bool ShouldIgnoreSelection(MainViewModel vm, KeyModifiers keyModifiers)
+    {
+        return vm.ActiveTool != EditorTool.Select && keyModifiers.HasFlag(KeyModifiers.Control);
     }
 
     public Control? HitTestShape(Canvas canvas, Point currentPoint)
