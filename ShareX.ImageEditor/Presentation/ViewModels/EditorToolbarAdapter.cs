@@ -309,6 +309,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public ICommand ToggleEffectsPanelCommand => _viewModel.ToggleEffectsPanelCommand;
 
+    public ICommand AutoCropImageCommand => _viewModel.AutoCropImageCommand;
+
     public ICommand Rotate90ClockwiseCommand => _viewModel.Rotate90ClockwiseCommand;
 
     public ICommand Rotate90CounterClockwiseCommand => _viewModel.Rotate90CounterClockwiseCommand;

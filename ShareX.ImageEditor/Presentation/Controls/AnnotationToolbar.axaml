@@ -242,12 +242,12 @@
                                 ToolTip.Tip="Background"
                                 FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18" Content="{x:Static theming:EditorIcons.PanelBackground}"/>
                         <Button Classes="editor-button toolbar-button"
-                                        ToolTip.Tip="Rotate / Flip"
+                                        ToolTip.Tip="Quick Image Effects"
                                         MinWidth="54"
                                         HorizontalContentAlignment="Stretch">
                                 <Grid ColumnDefinitions="Auto,*,Auto">
                                         <TextBlock Grid.Column="0"
-                                                                Text="{x:Static theming:EditorIcons.ActionRotateRight}"
+                                                                Text="{x:Static theming:LucideIcons.wand_sparkles}"
                                                                 FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
                                                                 FontWeight="Normal"
                                                                 FontSize="18"
@@ -265,6 +265,13 @@
                                 </Grid>
                                 <Button.Flyout>
                                         <MenuFlyout Placement="BottomEdgeAlignedLeft" VerticalOffset="4">
+                                                <MenuItem Header="Auto crop image"
+                                                                        Command="{ReflectionBinding AutoCropImageCommand}">
+                                                        <MenuItem.Icon>
+                                                                <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ToolCrop}"/>
+                                                        </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator/>
                                                 <MenuItem Header="Rotate 90° clockwise"
                                                                         Command="{ReflectionBinding Rotate90ClockwiseCommand}">
                                                         <MenuItem.Icon>
