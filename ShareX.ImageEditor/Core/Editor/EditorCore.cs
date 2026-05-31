@@ -1465,13 +1465,25 @@ public class EditorCore : IDisposable
             yield return (HandleType.BottomLeft, rotate ? RotatePoint(bl, center, angle) : bl);
             yield return (HandleType.MiddleLeft, rotate ? RotatePoint(ml, center, angle) : ml);
 
-            // Rotation handle above the top-center for rotatable text and image annotations.
-            if (annotation is TextAnnotation or ImageAnnotation)
+            // Rotation handle above the top-center for annotations that support node rotation.
+            if (SupportsRotationHandle(annotation))
             {
                 var rotHandle = new SKPoint(bounds.MidX, bounds.Top - RotationHandleOffset);
                 yield return (HandleType.Rotate, rotate ? RotatePoint(rotHandle, center, angle) : rotHandle);
             }
         }
+    }
+
+    private static bool SupportsRotationHandle(Annotation annotation)
+    {
+        return annotation switch
+        {
+            TextAnnotation => true,
+            ImageAnnotation and not CursorAnnotation => true,
+            RectangleAnnotation and not SmartEraserAnnotation => true,
+            EllipseAnnotation => true,
+            _ => false
+        };
     }
 
     /// <summary>

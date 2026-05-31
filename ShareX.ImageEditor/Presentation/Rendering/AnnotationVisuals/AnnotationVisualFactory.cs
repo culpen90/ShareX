@@ -104,12 +104,14 @@ public static class AnnotationVisualFactory
                 ApplyBoundsControl(rectangleControl, rectangle.GetBounds(), ensureMinimumSize);
                 rectangleControl.RadiusX = Math.Max(0, rectangle.CornerRadius);
                 rectangleControl.RadiusY = Math.Max(0, rectangle.CornerRadius);
+                ApplyRotationTransform(rectangleControl, rectangle.RotationAngle);
                 break;
 
             case EllipseAnnotation ellipseAnnotation when control is Ellipse ellipseControl:
                 ellipseControl.StrokeDashArray = BorderStyleDashHelper.CreateStrokeDashArray(ellipseAnnotation.BorderStyle);
                 ellipseControl.StrokeLineCap = BorderStyleDashHelper.CreateStrokeLineCap(ellipseAnnotation.BorderStyle);
                 ApplyBoundsControl(ellipseControl, ellipseAnnotation.GetBounds(), ensureMinimumSize);
+                ApplyRotationTransform(ellipseControl, ellipseAnnotation.RotationAngle);
                 break;
 
             case LineAnnotation lineAnnotation when control is Avalonia.Controls.Shapes.Path linePath:

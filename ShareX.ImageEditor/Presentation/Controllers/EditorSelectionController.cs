@@ -1202,6 +1202,13 @@ public class EditorSelectionController
     {
         switch (control)
         {
+            case global::Avalonia.Controls.Shapes.Rectangle { Tag: RectangleAnnotation rectangleAnnotation }
+                when rectangleAnnotation is not SmartEraserAnnotation:
+                annotation = rectangleAnnotation;
+                return true;
+            case global::Avalonia.Controls.Shapes.Ellipse { Tag: EllipseAnnotation ellipseAnnotation }:
+                annotation = ellipseAnnotation;
+                return true;
             case OutlinedTextControl { Tag: TextAnnotation textAnnotation }:
                 annotation = textAnnotation;
                 return true;
