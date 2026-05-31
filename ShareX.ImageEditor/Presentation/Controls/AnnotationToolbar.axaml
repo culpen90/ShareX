@@ -278,7 +278,7 @@
                                                                 <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionRotateRight}"/>
                                                         </MenuItem.Icon>
                                                 </MenuItem>
-                                                <MenuItem Header="Rotate 90° counterclockwise"
+                                                <MenuItem Header="Rotate 90° counter-clockwise"
                                                                         Command="{ReflectionBinding Rotate90CounterClockwiseCommand}">
                                                         <MenuItem.Icon>
                                                                 <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.ActionRotateLeft}"/>
