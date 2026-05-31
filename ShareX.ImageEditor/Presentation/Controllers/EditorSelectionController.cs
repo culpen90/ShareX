@@ -73,6 +73,8 @@ public class EditorSelectionController
     private global::Avalonia.Controls.Shapes.Ellipse? _hoverEllipseBlack;
     private global::Avalonia.Controls.Shapes.Ellipse? _hoverEllipseWhite;
     private TextBox? _balloonTextEditor;
+    private Point _lastPointerCanvasPoint;
+    private bool _hasLastPointerCanvasPoint;
 
     public Control? SelectedShape => _selectedShape;
     public bool IsInteractionActive => IsSelectionInteractionActive();
@@ -395,6 +397,8 @@ public class EditorSelectionController
         if (canvas == null) return false;
 
         var currentPoint = e.GetPosition(canvas);
+        _lastPointerCanvasPoint = currentPoint;
+        _hasLastPointerCanvasPoint = true;
 
         if (_isDraggingHandle && _draggedHandle != null && _selectedShape != null)
         {
@@ -423,6 +427,38 @@ public class EditorSelectionController
         UpdateHoverState(canvas, currentPoint);
 
         return false;
+    }
+
+    internal void RefreshHoverFeedback(KeyModifiers keyModifiers)
+    {
+        if (IsSelectionInteractionActive())
+        {
+            return;
+        }
+
+        if (_view.DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        if (ShouldIgnoreSelection(vm, keyModifiers))
+        {
+            ClearHoverOutline();
+            return;
+        }
+
+        if (!_hasLastPointerCanvasPoint)
+        {
+            return;
+        }
+
+        var canvas = _view.FindControl<Canvas>("AnnotationCanvas");
+        if (canvas == null)
+        {
+            return;
+        }
+
+        UpdateHoverState(canvas, _lastPointerCanvasPoint);
     }
 
     public bool OnPointerReleased(object sender, PointerReleasedEventArgs e)
