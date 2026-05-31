@@ -54,9 +54,12 @@ public class EditorInputController
     private const double MinShapeSize = 5;
 
     private Point _startPoint;
+    private Point _lastDrawPoint;
     private Control? _currentShape;
     private bool _isDrawing;
     private bool _isCreatingEffect;
+    private bool _isMovingShapeDuringCreation;
+    private bool _wasCtrlHeldDuringDraw;
 
     private static bool UsesCrosshairInteractionCapture(EditorTool tool)
         => tool != EditorTool.Select && tool != EditorTool.Image && tool != EditorTool.Text;
@@ -266,6 +269,9 @@ public class EditorInputController
         }
 
         _startPoint = point;
+        _lastDrawPoint = point;
+        _isMovingShapeDuringCreation = false;
+        _wasCtrlHeldDuringDraw = e.KeyModifiers.HasFlag(KeyModifiers.Control);
         _isDrawing = true;
         if (UsesCrosshairInteractionCapture(vm.ActiveTool))
         {
@@ -608,6 +614,20 @@ public class EditorInputController
             return;
         }
 
+        bool ctrlHeld = e.KeyModifiers.HasFlag(KeyModifiers.Control);
+        if (!ctrlHeld)
+        {
+            _isMovingShapeDuringCreation = false;
+        }
+        else if (CanMoveShapeDuringCreation(_currentShape) && (_isMovingShapeDuringCreation || !_wasCtrlHeldDuringDraw))
+        {
+            MoveShapeDuringCreation(currentPoint);
+            _isMovingShapeDuringCreation = true;
+            _lastDrawPoint = currentPoint;
+            _wasCtrlHeldDuringDraw = true;
+            return;
+        }
+
         if (_currentShape.Name == "CutOutOverlay")
         {
             // Restored from ref\EditorView_master.axaml.cs lines 2024-2075
@@ -775,6 +795,9 @@ public class EditorInputController
             Canvas.SetTop(_currentShape, currentPoint.Y - numberRadius);
             numberAnn.StartPoint = ToSKPoint(currentPoint);
         }
+
+        _lastDrawPoint = currentPoint;
+        _wasCtrlHeldDuringDraw = ctrlHeld;
     }
 
     public void OnCanvasPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -808,6 +831,8 @@ public class EditorInputController
 
             e.Pointer.Capture(null);
             _isDrawing = false;
+            _isMovingShapeDuringCreation = false;
+            _wasCtrlHeldDuringDraw = false;
             _view.RestoreEditorSurfaceCursorForActiveTool();
 
             var vm = ViewModel;
@@ -931,7 +956,25 @@ public class EditorInputController
 
     public void OnKeyDown(object sender, KeyEventArgs e)
     {
-        // Keyboard shortcuts are handled elsewhere; no pointer emulation needed here.
+        if (!_isDrawing || e.Key is not Key.LeftCtrl and not Key.RightCtrl)
+        {
+            return;
+        }
+
+        // Re-arm Ctrl move mode immediately even if there hasn't been an
+        // intervening pointer move since the last release.
+        _wasCtrlHeldDuringDraw = false;
+    }
+
+    public void OnKeyUp(object sender, KeyEventArgs e)
+    {
+        if (!_isDrawing || e.Key is not Key.LeftCtrl and not Key.RightCtrl)
+        {
+            return;
+        }
+
+        _isMovingShapeDuringCreation = false;
+        _wasCtrlHeldDuringDraw = false;
     }
 
     private void CancelActiveRegionDrawing(Canvas canvas)
@@ -951,6 +994,8 @@ public class EditorInputController
         _currentShape = null;
         _cutOutDirection = null;
         _isDrawing = false;
+        _isMovingShapeDuringCreation = false;
+        _wasCtrlHeldDuringDraw = false;
         _view.RestoreEditorSurfaceCursorForActiveTool();
     }
 
@@ -1235,6 +1280,108 @@ public class EditorInputController
             _cropConfirmButton.Click -= OnCropConfirmButtonClick;
             overlay.Children.Remove(_cropConfirmButton);
             _cropConfirmButton = null;
+        }
+    }
+
+    private static bool CanMoveShapeDuringCreation(Control? shape)
+    {
+        return shape is global::Avalonia.Controls.Shapes.Rectangle
+            or global::Avalonia.Controls.Shapes.Ellipse
+            or SpeechBalloonControl
+            or SpotlightControl
+            || shape is global::Avalonia.Controls.Shapes.Path { Tag: LineAnnotation }
+            || shape is global::Avalonia.Controls.Shapes.Path { Tag: ArrowAnnotation };
+    }
+
+    private void MoveShapeDuringCreation(Point currentPoint)
+    {
+        if (_currentShape == null)
+        {
+            return;
+        }
+
+        double deltaX = currentPoint.X - _lastDrawPoint.X;
+        double deltaY = currentPoint.Y - _lastDrawPoint.Y;
+
+        if (deltaX == 0 && deltaY == 0)
+        {
+            return;
+        }
+
+        _startPoint = new Point(_startPoint.X + deltaX, _startPoint.Y + deltaY);
+
+        if (_currentShape is global::Avalonia.Controls.Shapes.Rectangle or global::Avalonia.Controls.Shapes.Ellipse)
+        {
+            double left = Canvas.GetLeft(_currentShape);
+            double top = Canvas.GetTop(_currentShape);
+            if (double.IsNaN(left)) left = 0;
+            if (double.IsNaN(top)) top = 0;
+
+            double newLeft = left + deltaX;
+            double newTop = top + deltaY;
+            Canvas.SetLeft(_currentShape, newLeft);
+            Canvas.SetTop(_currentShape, newTop);
+
+            UpdateEffectVisual(_currentShape, newLeft, newTop, _currentShape.Width, _currentShape.Height);
+
+            if (_currentShape.Tag is RectangleAnnotation rectAnn)
+            {
+                rectAnn.StartPoint = ToSKPoint(new Point(newLeft, newTop));
+                rectAnn.EndPoint = ToSKPoint(new Point(newLeft + _currentShape.Width, newTop + _currentShape.Height));
+            }
+            else if (_currentShape.Tag is EllipseAnnotation ellAnn)
+            {
+                ellAnn.StartPoint = ToSKPoint(new Point(newLeft, newTop));
+                ellAnn.EndPoint = ToSKPoint(new Point(newLeft + _currentShape.Width, newTop + _currentShape.Height));
+            }
+            else if (_currentShape.Tag is BaseEffectAnnotation effectAnn)
+            {
+                effectAnn.StartPoint = ToSKPoint(new Point(newLeft, newTop));
+                effectAnn.EndPoint = ToSKPoint(new Point(newLeft + _currentShape.Width, newTop + _currentShape.Height));
+            }
+
+            return;
+        }
+
+        if (_currentShape is SpeechBalloonControl balloon && balloon.Annotation is SpeechBalloonAnnotation balloonAnn)
+        {
+            double left = Canvas.GetLeft(balloon);
+            double top = Canvas.GetTop(balloon);
+            if (double.IsNaN(left)) left = 0;
+            if (double.IsNaN(top)) top = 0;
+
+            double newLeft = left + deltaX;
+            double newTop = top + deltaY;
+            Canvas.SetLeft(balloon, newLeft);
+            Canvas.SetTop(balloon, newTop);
+
+            balloonAnn.StartPoint = ToSKPoint(new Point(newLeft, newTop));
+            balloonAnn.EndPoint = ToSKPoint(new Point(newLeft + balloon.Width, newTop + balloon.Height));
+            balloon.InvalidateVisual();
+            return;
+        }
+
+        if (_currentShape is global::Avalonia.Controls.Shapes.Path linePath && linePath.Tag is LineAnnotation lineAnn)
+        {
+            lineAnn.StartPoint = new SKPoint(lineAnn.StartPoint.X + (float)deltaX, lineAnn.StartPoint.Y + (float)deltaY);
+            lineAnn.EndPoint = new SKPoint(lineAnn.EndPoint.X + (float)deltaX, lineAnn.EndPoint.Y + (float)deltaY);
+            AnnotationVisualFactory.UpdateVisualControl(linePath, lineAnn);
+            return;
+        }
+
+        if (_currentShape is global::Avalonia.Controls.Shapes.Path arrowPath && arrowPath.Tag is ArrowAnnotation arrowAnn)
+        {
+            arrowAnn.StartPoint = new SKPoint(arrowAnn.StartPoint.X + (float)deltaX, arrowAnn.StartPoint.Y + (float)deltaY);
+            arrowAnn.EndPoint = new SKPoint(arrowAnn.EndPoint.X + (float)deltaX, arrowAnn.EndPoint.Y + (float)deltaY);
+            AnnotationVisualFactory.UpdateVisualControl(arrowPath, arrowAnn);
+            return;
+        }
+
+        if (_currentShape is SpotlightControl spotlight && spotlight.Annotation is SpotlightAnnotation spotAnn)
+        {
+            spotAnn.StartPoint = new SKPoint(spotAnn.StartPoint.X + (float)deltaX, spotAnn.StartPoint.Y + (float)deltaY);
+            spotAnn.EndPoint = new SKPoint(spotAnn.EndPoint.X + (float)deltaX, spotAnn.EndPoint.Y + (float)deltaY);
+            _view.RefreshSpotlightOverlay();
         }
     }
 

@@ -1489,6 +1489,8 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnKeyDown(object? sender, KeyEventArgs e)
         {
+            _inputController.OnKeyDown(sender ?? this, e);
+
             // Skip shortcuts when the user is typing in a text field
             if (_parentWindow?.FocusManager?.GetFocusedElement() is TextBox) return;
 
@@ -1638,6 +1640,8 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnKeyUp(object? sender, KeyEventArgs e)
         {
+            _inputController.OnKeyUp(sender ?? this, e);
+
             if (DataContext is MainViewModel vm && e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
             {
                 // Close emoji modal dialog on Escape (before TextBox short-circuit)
