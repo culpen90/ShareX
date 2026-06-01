@@ -25,6 +25,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -69,6 +70,7 @@ public partial class AnnotationToolbar : UserControl
     public event EventHandler<bool>? TextItalicChanged;
     public event EventHandler<bool>? ShadowChanged;
     public event EventHandler<bool>? SpeechBalloonTailChanged;
+    public event EventHandler<Control>? FavoriteEffectsMenuRequested;
 
     public AnnotationToolbar()
     {
@@ -263,6 +265,23 @@ public partial class AnnotationToolbar : UserControl
         {
             toolbar.ClearSelection();
         }
+    }
+
+    private void OnImageEffectsButtonPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is not Control control)
+        {
+            return;
+        }
+
+        PointerPointProperties properties = e.GetCurrentPoint(control).Properties;
+        if (!properties.IsRightButtonPressed)
+        {
+            return;
+        }
+
+        FavoriteEffectsMenuRequested?.Invoke(this, control);
+        e.Handled = true;
     }
 
     private void OnOpenOptionsClick(object? sender, RoutedEventArgs e)

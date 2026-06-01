@@ -23,9 +23,11 @@
 
 #endregion License Information (GPL v3)
 
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
+using Avalonia.Controls.Primitives;
 using ShareX.ImageEditor.Core.Annotations;
 using ShareX.ImageEditor.Presentation.Controls;
 using ShareX.ImageEditor.Presentation.Helpers;
@@ -61,6 +63,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.TextItalicChanged += OnToolbarTextItalicChanged;
             toolbar.ShadowChanged += OnToolbarShadowChanged;
             toolbar.SpeechBalloonTailChanged += OnToolbarSpeechBalloonTailChanged;
+            toolbar.FavoriteEffectsMenuRequested += OnFavoriteEffectsMenuRequested;
         }
 
         private void UnhookAnnotationToolbarEvents()
@@ -87,6 +90,35 @@ namespace ShareX.ImageEditor.Presentation.Views
             toolbar.TextItalicChanged -= OnToolbarTextItalicChanged;
             toolbar.ShadowChanged -= OnToolbarShadowChanged;
             toolbar.SpeechBalloonTailChanged -= OnToolbarSpeechBalloonTailChanged;
+            toolbar.FavoriteEffectsMenuRequested -= OnFavoriteEffectsMenuRequested;
+        }
+
+        private void OnFavoriteEffectsMenuRequested(object? sender, Control target)
+        {
+            if (DataContext is not MainViewModel vm)
+            {
+                return;
+            }
+
+            EffectBrowserPanel effectBrowserPanel = EnsureEffectBrowserPanel(vm);
+            IReadOnlyList<MenuItem> favoriteMenuItems = effectBrowserPanel.CreateFavoriteMenuItems();
+            if (favoriteMenuItems.Count == 0)
+            {
+                return;
+            }
+
+            var menu = new ContextMenu
+            {
+                Placement = PlacementMode.BottomEdgeAlignedLeft,
+                PlacementTarget = target,
+                ItemsSource = favoriteMenuItems,
+                BorderBrush = (IBrush?)Resources["ShareX.Brush.Border"],
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(6),
+                Padding = new Thickness(6, 2)
+            };
+
+            menu.Open(target);
         }
 
         private void OnColorChanged(object? sender, IBrush color)
