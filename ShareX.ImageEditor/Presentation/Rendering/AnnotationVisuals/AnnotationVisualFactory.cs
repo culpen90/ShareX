@@ -23,6 +23,7 @@
 
 #endregion License Information (GPL v3)
 
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -138,7 +139,7 @@ public static class AnnotationVisualFactory
 
             case NumberAnnotation number when control is StepControl stepControl:
                 stepControl.Annotation = number;
-                ApplyBoundsControl(stepControl, number.GetBounds(), ensureMinimumSize);
+                ApplyBoundsControl(stepControl, number.GetInteractionBounds(), ensureMinimumSize);
                 stepControl.InvalidateVisual();
                 break;
 
@@ -173,9 +174,10 @@ public static class AnnotationVisualFactory
                 break;
 
             case SpeechBalloonAnnotation balloon when control is SpeechBalloonControl balloonControl:
+                var balloonBounds = balloon.GetInteractionBounds();
                 balloonControl.Annotation = balloon;
-                ApplyBoundsControl(balloonControl, balloon.GetBounds(), ensureMinimumSize);
-                ApplyRotationTransform(balloonControl, balloon.RotationAngle);
+                ApplyBoundsControl(balloonControl, balloonBounds, ensureMinimumSize);
+                ApplyRotationTransform(balloonControl, balloon.RotationAngle, GetRelativeCenterOrigin(balloon.GetBounds(), balloonBounds));
                 balloonControl.InvalidateVisual();
                 break;
 
@@ -694,11 +696,24 @@ public static class AnnotationVisualFactory
         control.Height = height;
     }
 
-    private static void ApplyRotationTransform(Control control, float rotationAngle)
+    private static RelativePoint GetRelativeCenterOrigin(SKRect innerBounds, SKRect outerBounds)
+    {
+        if (outerBounds.Width <= 0 || outerBounds.Height <= 0)
+        {
+            return new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
+        }
+
+        return new RelativePoint(
+            (innerBounds.MidX - outerBounds.Left) / outerBounds.Width,
+            (innerBounds.MidY - outerBounds.Top) / outerBounds.Height,
+            RelativeUnit.Relative);
+    }
+
+    private static void ApplyRotationTransform(Control control, float rotationAngle, RelativePoint? transformOrigin = null)
     {
         if (rotationAngle != 0)
         {
-            control.RenderTransformOrigin = new Avalonia.RelativePoint(0.5, 0.5, Avalonia.RelativeUnit.Relative);
+            control.RenderTransformOrigin = transformOrigin ?? new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
             control.RenderTransform = new RotateTransform(rotationAngle);
         }
         else

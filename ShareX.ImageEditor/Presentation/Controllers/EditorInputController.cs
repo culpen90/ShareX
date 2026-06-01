@@ -768,16 +768,17 @@ public class EditorInputController
         }
         else if (_currentShape is SpeechBalloonControl balloon)
         {
-            Canvas.SetLeft(balloon, left);
-            Canvas.SetTop(balloon, top);
-            balloon.Width = width;
-            balloon.Height = height;
             if (balloon.Annotation is SpeechBalloonAnnotation balloonAnn)
             {
                 balloonAnn.StartPoint = ToSKPoint(new Point(left, top));
                 balloonAnn.EndPoint = ToSKPoint(new Point(left + width, top + height));
+                AnnotationVisualFactory.UpdateVisualControl(
+                    balloon,
+                    balloonAnn,
+                    AnnotationVisualMode.Persisted,
+                    _view.EditorCore.CanvasSize.Width,
+                    _view.EditorCore.CanvasSize.Height);
             }
-            balloon.InvalidateVisual();
         }
         else if (_currentShape is Image imageControl && _currentShape.Tag is CursorAnnotation cursorAnnotation)
         {
@@ -1351,19 +1352,20 @@ public class EditorInputController
 
         if (_currentShape is SpeechBalloonControl balloon && balloon.Annotation is SpeechBalloonAnnotation balloonAnn)
         {
-            double left = Canvas.GetLeft(balloon);
-            double top = Canvas.GetTop(balloon);
-            if (double.IsNaN(left)) left = 0;
-            if (double.IsNaN(top)) top = 0;
+            balloonAnn.StartPoint = new SKPoint(balloonAnn.StartPoint.X + (float)deltaX, balloonAnn.StartPoint.Y + (float)deltaY);
+            balloonAnn.EndPoint = new SKPoint(balloonAnn.EndPoint.X + (float)deltaX, balloonAnn.EndPoint.Y + (float)deltaY);
 
-            double newLeft = left + deltaX;
-            double newTop = top + deltaY;
-            Canvas.SetLeft(balloon, newLeft);
-            Canvas.SetTop(balloon, newTop);
+            if (balloonAnn.HasTailPoint)
+            {
+                balloonAnn.SetTailPoint(new SKPoint(balloonAnn.TailPoint.X + (float)deltaX, balloonAnn.TailPoint.Y + (float)deltaY));
+            }
 
-            balloonAnn.StartPoint = ToSKPoint(new Point(newLeft, newTop));
-            balloonAnn.EndPoint = ToSKPoint(new Point(newLeft + balloon.Width, newTop + balloon.Height));
-            balloon.InvalidateVisual();
+            AnnotationVisualFactory.UpdateVisualControl(
+                balloon,
+                balloonAnn,
+                AnnotationVisualMode.Persisted,
+                _view.EditorCore.CanvasSize.Width,
+                _view.EditorCore.CanvasSize.Height);
             return;
         }
 

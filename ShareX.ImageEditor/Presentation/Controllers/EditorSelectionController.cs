@@ -560,7 +560,12 @@ public class EditorSelectionController
         if (_selectedShape is SpeechBalloonControl balloonControl && balloonControl.Annotation is SpeechBalloonAnnotation balloon && balloon.TailEnabled && handleTag == "BalloonTail")
         {
             balloon.SetTailPoint(GetSpeechBalloonTailPoint(balloon, currentPoint));
-            balloonControl.InvalidateVisual();
+            AnnotationVisualFactory.UpdateVisualControl(
+                balloonControl,
+                balloon,
+                AnnotationVisualMode.Persisted,
+                _view.EditorCore.CanvasSize.Width,
+                _view.EditorCore.CanvasSize.Height);
             _startPoint = currentPoint;
             UpdateSelectionHandles();
             return;
@@ -569,7 +574,12 @@ public class EditorSelectionController
         if (_selectedShape is StepControl stepControl && stepControl.Annotation is NumberAnnotation number && handleTag == "StepTail")
         {
             number.SetTailPoint(new SKPoint((float)currentPoint.X, (float)currentPoint.Y));
-            stepControl.InvalidateVisual();
+            AnnotationVisualFactory.UpdateVisualControl(
+                stepControl,
+                number,
+                AnnotationVisualMode.Persisted,
+                _view.EditorCore.CanvasSize.Width,
+                _view.EditorCore.CanvasSize.Height);
             _startPoint = currentPoint;
             UpdateSelectionHandles();
             return;
@@ -874,6 +884,13 @@ public class EditorSelectionController
             _selectedShape.RenderTransform = new RotateTransform(annotation.RotationAngle);
         }
 
+        AnnotationVisualFactory.UpdateVisualControl(
+            _selectedShape,
+            annotation,
+            AnnotationVisualMode.Persisted,
+            _view.EditorCore.CanvasSize.Width,
+            _view.EditorCore.CanvasSize.Height);
+
         _selectedShape.InvalidateVisual();
         _selectedShape.InvalidateMeasure();
     }
@@ -1078,7 +1095,12 @@ public class EditorSelectionController
                 if (!balloon.HasTailPoint)
                 {
                     balloon.EnsureTailPointInitialized();
-                    balloonControl.InvalidateVisual();
+                    AnnotationVisualFactory.UpdateVisualControl(
+                        balloonControl,
+                        balloon,
+                        AnnotationVisualMode.Persisted,
+                        _view.EditorCore.CanvasSize.Width,
+                        _view.EditorCore.CanvasSize.Height);
                 }
             }
 
@@ -1479,19 +1501,17 @@ public class EditorSelectionController
         }
 
         var annotation = balloonControl.Annotation;
-        var balloonLeft = Canvas.GetLeft(balloonControl);
-        var balloonTop = Canvas.GetTop(balloonControl);
-        var balloonWidth = balloonControl.Width;
-        var balloonHeight = balloonControl.Height;
+        var balloonRect = GetLogicalRect(balloonControl);
+        var balloonLeft = balloonRect.Left;
+        var balloonTop = balloonRect.Top;
+        var balloonWidth = balloonRect.Width;
+        var balloonHeight = balloonRect.Height;
 
         // Check if balloon is too small (e.g. user just clicked without dragging)
         if (balloonWidth < 50 || balloonHeight < 30)
         {
             balloonWidth = Math.Max(balloonWidth, 200);
             balloonHeight = Math.Max(balloonHeight, 100);
-
-            balloonControl.Width = balloonWidth;
-            balloonControl.Height = balloonHeight;
 
             annotation.EndPoint = new SKPoint(
                 annotation.StartPoint.X + (float)balloonWidth,
@@ -1506,7 +1526,12 @@ public class EditorSelectionController
                 annotation.SetTailPoint(annotation.GetDefaultTailPoint());
             }
 
-            balloonControl.InvalidateVisual();
+            AnnotationVisualFactory.UpdateVisualControl(
+                balloonControl,
+                annotation,
+                AnnotationVisualMode.Persisted,
+                _view.EditorCore.CanvasSize.Width,
+                _view.EditorCore.CanvasSize.Height);
             UpdateSelectionHandles();
         }
 
@@ -2228,13 +2253,14 @@ public class EditorSelectionController
         _balloonTextEditor.Resources["TextControlBorderBrushFocused"] = Avalonia.Media.Brushes.Transparent;
         _balloonTextEditor.Resources["TextControlBorderBrushPointerOver"] = Avalonia.Media.Brushes.Transparent;
 
+        var bodyBounds = annotation.GetBounds();
         ApplySpeechBalloonTextEditorLayout(
             _balloonTextEditor,
             annotation,
-            Canvas.GetLeft(balloonControl),
-            Canvas.GetTop(balloonControl),
-            balloonControl.Width,
-            balloonControl.Height);
+            bodyBounds.Left,
+            bodyBounds.Top,
+            bodyBounds.Width,
+            bodyBounds.Height);
     }
 
     private static void ApplySpeechBalloonTextEditorLayout(TextBox textBox, SpeechBalloonAnnotation annotation, double left, double top, double width, double height)
