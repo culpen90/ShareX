@@ -1626,7 +1626,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                                 {
                                     e.Handled = true;
                                 }
-                                else if (vm.UseContinueWorkflow)
+                                else if (vm.ShowTaskButtons)
                                 {
                                     vm.ContinueCommand.Execute(null);
                                     e.Handled = true;
