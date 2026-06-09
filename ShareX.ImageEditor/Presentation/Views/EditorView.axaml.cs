@@ -338,10 +338,11 @@ namespace ShareX.ImageEditor.Presentation.Views
                     // But Apply... methods limit damage.
 
                     // Don't sync stroke properties from ImageAnnotation, effect annotations,
-                    // or SmartEraser. They use nonstandard option semantics and would
-                    // clobber the shared defaults for other tools.
+                    // Spotlight, or SmartEraser. They use nonstandard option semantics and
+                    // would clobber the shared defaults for other tools.
                     if (vm.SelectedAnnotation is not ImageAnnotation
                         && vm.SelectedAnnotation is not BaseEffectAnnotation
+                        && vm.SelectedAnnotation is not SpotlightAnnotation
                         && vm.SelectedAnnotation is not SmartEraserAnnotation)
                     {
                         vm.SelectedColor = vm.SelectedAnnotation.StrokeColor;
