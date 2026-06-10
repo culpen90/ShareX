@@ -417,8 +417,8 @@
                                                    ToolTip.Tip="Starting number"/>
 
                     <controls:StrengthSlider x:Name="EffectStrengthSlider"
-                                             SelectedStrength="{Binding EffectStrength, Mode=TwoWay}"
                                              Maximum="{Binding EffectStrengthMaximum}"
+                                             SelectedStrength="{Binding EffectStrength, Mode=TwoWay}"
                                              IsVisible="{Binding ShowStrength}"
                                              ToolTip.Tip="Effect strength"/>
 
@@ -441,9 +441,9 @@
                     </Border>
 
                     <controls:StrengthSlider x:Name="SpotlightBlurSlider"
-                                             SelectedStrength="{Binding SpotlightBlur, Mode=TwoWay}"
                                              Minimum="0"
                                              Maximum="{Binding SpotlightBlurMaximum}"
+                                             SelectedStrength="{Binding SpotlightBlur, Mode=TwoWay}"
                                              IsVisible="{Binding ShowSpotlightBlur}"
                                              ToolTip.Tip="Blur amount"/>
 
