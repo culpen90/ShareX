@@ -129,11 +129,18 @@ namespace ShareX.ImageEditor.Hosting
         {
             SKBitmap? result = null;
 
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                Initialize();
+            Initialize();
 
+            TaskCompletionSource tcs = new TaskCompletionSource();
+
+            Dispatcher.UIThread.Post(() =>
+            {
                 EditorWindow window = new EditorWindow(options);
+
+                if (imageBitmap != null)
+                {
+                    window.LoadImage(imageBitmap);
+                }
 
                 if (window.DataContext is MainViewModel vm)
                 {
@@ -160,22 +167,12 @@ namespace ShareX.ImageEditor.Hosting
                     }
                 });
 
-                DispatcherFrame frame = new DispatcherFrame();
+                window.Closed += (s, a) => tcs.SetResult();
 
-                window.Closed += (s, e) =>
-                {
-                    frame.Continue = false;
-                };
-
-                window.Show();
-
-                if (imageBitmap != null)
-                {
-                    window.LoadImage(imageBitmap);
-                }
-
-                Dispatcher.UIThread.PushFrame(frame);
+                Application.Current.Run(window);
             });
+
+            tcs.Task.ConfigureAwait(false).GetAwaiter().GetResult();
 
             return result;
         }
