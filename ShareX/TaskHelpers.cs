@@ -1317,34 +1317,19 @@ namespace ShareX
         {
             Bitmap bmpResult = null;
 
-            EditorEvents events = new EditorEvents
+            Program.MainForm.InvokeSafe(() =>
             {
-                CopyImageRequested = (skBitmap) =>
+                EditorEvents events = new EditorEvents
                 {
-                    using Bitmap img = skBitmap.ToBitmap();
-                    MainFormCopyImage(img);
-                },
-                SaveImageRequested = (skBitmap, newFilePath) =>
-                {
-                    using Bitmap img = skBitmap.ToBitmap();
-
-                    if (string.IsNullOrEmpty(newFilePath))
+                    CopyImageRequested = (skBitmap) =>
                     {
-                        string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                        string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                        newFilePath = Path.Combine(screenshotsFolder, fileName);
-                    }
-
-                    ImageHelpers.SaveImage(img, newFilePath);
-                    return newFilePath;
-                },
-                SaveImageAsRequested = (skBitmap, newFilePath) =>
-                {
-                    using Bitmap img = skBitmap.ToBitmap();
-                    string savedPath = null;
-
-                    Program.MainForm.InvokeSafe(() =>
+                        using Bitmap img = skBitmap.ToBitmap();
+                        MainFormCopyImage(img);
+                    },
+                    SaveImageRequested = (skBitmap, newFilePath) =>
                     {
+                        using Bitmap img = skBitmap.ToBitmap();
+
                         if (string.IsNullOrEmpty(newFilePath))
                         {
                             string screenshotsFolder = GetScreenshotsFolder(taskSettings);
@@ -1352,52 +1337,62 @@ namespace ShareX
                             newFilePath = Path.Combine(screenshotsFolder, fileName);
                         }
 
-                        savedPath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
-                    });
-
-                    return savedPath;
-                },
-                PrintImageRequested = (skBitmap) =>
-                {
-                    Bitmap output = skBitmap.ToBitmap();
-                    MainFormPrintImage(output);
-                },
-                PinImageRequested = (skBitmap) =>
-                {
-                    Bitmap output = skBitmap.ToBitmap();
-                    Program.MainForm.InvokeSafe(() =>
+                        ImageHelpers.SaveImage(img, newFilePath);
+                        return newFilePath;
+                    },
+                    SaveImageAsRequested = (skBitmap, newFilePath) =>
                     {
-                        PinToScreen(output, taskSettings);
-                    });
-                },
-                UploadImageRequested = (skBitmap) =>
+                        using Bitmap img = skBitmap.ToBitmap();
+
+                        if (string.IsNullOrEmpty(newFilePath))
+                        {
+                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                            newFilePath = Path.Combine(screenshotsFolder, fileName);
+                        }
+
+                        newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
+                        return newFilePath;
+                    },
+                    PrintImageRequested = (skBitmap) =>
+                    {
+                        Bitmap bmp = skBitmap.ToBitmap();
+                        MainFormPrintImage(bmp);
+                    },
+                    PinImageRequested = (skBitmap) =>
+                    {
+                        Bitmap bmp = skBitmap.ToBitmap();
+                        PinToScreen(bmp, taskSettings);
+                    },
+                    UploadImageRequested = (skBitmap) =>
+                    {
+                        Bitmap bmp = skBitmap.ToBitmap();
+                        MainFormUploadImage(bmp, taskSettings);
+                    }
+                };
+
+                SKBitmap skBitmapResult = null;
+
+                if (bmp != null)
                 {
-                    Bitmap output = skBitmap.ToBitmap();
-                    MainFormUploadImage(output, taskSettings);
+                    using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
+                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                        events, taskMode, filePath);
                 }
-            };
-
-            SKBitmap skBitmapResult = null;
-
-            if (bmp != null)
-            {
-                using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
-                skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                    events, taskMode, filePath);
-            }
-            else
-            {
-                skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                    events, taskMode, filePath);
-            }
-
-            if (skBitmapResult != null)
-            {
-                using (skBitmapResult)
+                else
                 {
-                    bmpResult = skBitmapResult.ToBitmap();
+                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                        events, taskMode, filePath);
                 }
-            }
+
+                if (skBitmapResult != null)
+                {
+                    using (skBitmapResult)
+                    {
+                        bmpResult = skBitmapResult.ToBitmap();
+                    }
+                }
+            });
 
             return bmpResult;
         }
