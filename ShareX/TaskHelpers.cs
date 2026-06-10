@@ -1374,12 +1374,12 @@ namespace ShareX
             if (bmp != null)
             {
                 using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
-                skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                skBitmapResult = AvaloniaIntegration.ShowEditorDialog(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
                     events, taskMode, filePath);
             }
             else
             {
-                skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                skBitmapResult = AvaloniaIntegration.ShowEditorDialog(taskSettings.ToolsSettingsReference.ImageEditorOptions,
                     events, taskMode, filePath);
             }
 

@@ -101,39 +101,13 @@ namespace ShareX.ImageEditor.Hosting
             }
         }
 
-        public static void ShowEditor(string filePath)
-        {
-            Initialize();
-            EditorWindow window = new EditorWindow();
-
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-            {
-                window.LoadImage(filePath);
-            }
-
-            window.Show();
-        }
-
-        public static void ShowEditor(Stream imageStream)
-        {
-            Initialize();
-            EditorWindow window = new EditorWindow();
-
-            if (imageStream != null)
-            {
-                window.LoadImage(imageStream);
-            }
-
-            window.Show();
-        }
-
-        public static SKBitmap? ShowEditorDialogBitmap(ImageEditorOptions options, EditorEvents? events = null,
+        public static SKBitmap? ShowEditorDialog(ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            return ShowEditorDialogBitmap((SKBitmap?)null, options, events, taskMode, imageFilePath);
+            return ShowEditorDialog((SKBitmap?)null, options, events, taskMode, imageFilePath);
         }
 
-        public static SKBitmap? ShowEditorDialogBitmap(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
+        public static SKBitmap? ShowEditorDialog(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
             return ShowEditorDialogCore(
