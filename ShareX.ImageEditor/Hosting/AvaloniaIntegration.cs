@@ -224,50 +224,55 @@ namespace ShareX.ImageEditor.Hosting
                 });
             }
 
-            Initialize();
-            EditorWindow window = new EditorWindow(options);
+            using ManualResetEventSlim completionEvent = new ManualResetEventSlim(false);
 
-            initializeImage?.Invoke(window);
-
-            // Set file path from events or parameter
-            string? filePath = imageFilePath ?? events?.ImageFilePath;
-
-            if (window.DataContext is MainViewModel vm)
+            Dispatcher.UIThread.Post(() =>
             {
-                if (!string.IsNullOrEmpty(filePath))
-                {
-                    vm.ImageFilePath = filePath;
-                }
+                Initialize();
+                EditorWindow window = new EditorWindow(options);
 
-                vm.ShowFileMenu = true;
-                vm.ShowOptionsButton = true;
-                vm.ShowTaskButtons = true;
-                vm.UseContinueWorkflow = taskMode;
-                vm.ShowBottomToolbar = true;
-                vm.ShowStartScreen = !taskMode;
-            }
+                initializeImage?.Invoke(window);
 
-            SetupEvents(window, events, () =>
-            {
+                // Set file path from events or parameter
+                string? filePath = imageFilePath ?? events?.ImageFilePath;
+
                 if (window.DataContext is MainViewModel vm)
                 {
-                    result = getResult(window, vm);
+                    if (!string.IsNullOrEmpty(filePath))
+                    {
+                        vm.ImageFilePath = filePath;
+                    }
+
+                    vm.ShowFileMenu = true;
+                    vm.ShowOptionsButton = true;
+                    vm.ShowTaskButtons = true;
+                    vm.UseContinueWorkflow = taskMode;
+                    vm.ShowBottomToolbar = true;
+                    vm.ShowStartScreen = !taskMode;
                 }
+
+                SetupEvents(window, events, () =>
+                {
+                    if (window.DataContext is MainViewModel vm)
+                    {
+                        result = getResult(window, vm);
+                    }
+                });
+
+                window.Show();
+
+                window.Closed += (s, e) =>
+                {
+                    if (restoreScopedDiagnostics)
+                    {
+                        EditorServices.Diagnostics = previousDiagnosticsSink;
+                    }
+
+                    completionEvent.Set();
+                };
             });
 
-            window.Show();
-
-            DispatcherFrame frame = new DispatcherFrame();
-            window.Closed += (s, e) =>
-            {
-                frame.Continue = false;
-
-                if (restoreScopedDiagnostics)
-                {
-                    EditorServices.Diagnostics = previousDiagnosticsSink;
-                }
-            };
-            Dispatcher.UIThread.PushFrame(frame);
+            completionEvent.Wait();
 
             return result;
         }

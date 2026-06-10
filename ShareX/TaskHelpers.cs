@@ -1317,82 +1317,79 @@ namespace ShareX
         {
             Bitmap bmpResult = null;
 
-            Program.MainForm.InvokeSafe(() =>
+            EditorEvents events = new EditorEvents
             {
-                EditorEvents events = new EditorEvents
+                CopyImageRequested = (skBitmap) =>
                 {
-                    CopyImageRequested = (skBitmap) =>
-                    {
-                        using Bitmap img = skBitmap.ToBitmap();
-                        MainFormCopyImage(img);
-                    },
-                    SaveImageRequested = (skBitmap, newFilePath) =>
-                    {
-                        using Bitmap img = skBitmap.ToBitmap();
+                    using Bitmap img = skBitmap.ToBitmap();
+                    MainFormCopyImage(img);
+                },
+                SaveImageRequested = (skBitmap, newFilePath) =>
+                {
+                    using Bitmap img = skBitmap.ToBitmap();
 
-                        if (string.IsNullOrEmpty(newFilePath))
-                        {
-                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                            newFilePath = Path.Combine(screenshotsFolder, fileName);
-                        }
-
-                        ImageHelpers.SaveImage(img, newFilePath);
-                        return newFilePath;
-                    },
-                    SaveImageAsRequested = (skBitmap, newFilePath) =>
+                    if (string.IsNullOrEmpty(newFilePath))
                     {
-                        using Bitmap img = skBitmap.ToBitmap();
-
-                        if (string.IsNullOrEmpty(newFilePath))
-                        {
-                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                            newFilePath = Path.Combine(screenshotsFolder, fileName);
-                        }
-
-                        newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
-                        return newFilePath;
-                    },
-                    PrintImageRequested = (skBitmap) =>
-                    {
-                        Bitmap bmp = skBitmap.ToBitmap();
-                        MainFormPrintImage(bmp);
-                    },
-                    PinImageRequested = (skBitmap) =>
-                    {
-                        Bitmap bmp = skBitmap.ToBitmap();
-                        PinToScreen(bmp, taskSettings);
-                    },
-                    UploadImageRequested = (skBitmap) =>
-                    {
-                        Bitmap bmp = skBitmap.ToBitmap();
-                        MainFormUploadImage(bmp, taskSettings);
+                        string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                        string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                        newFilePath = Path.Combine(screenshotsFolder, fileName);
                     }
-                };
 
-                SKBitmap skBitmapResult = null;
+                    ImageHelpers.SaveImage(img, newFilePath);
+                    return newFilePath;
+                },
+                SaveImageAsRequested = (skBitmap, newFilePath) =>
+                {
+                    using Bitmap img = skBitmap.ToBitmap();
 
-                if (bmp != null)
-                {
-                    using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
-                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                        events, taskMode, filePath);
-                }
-                else
-                {
-                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                        events, taskMode, filePath);
-                }
-
-                if (skBitmapResult != null)
-                {
-                    using (skBitmapResult)
+                    if (string.IsNullOrEmpty(newFilePath))
                     {
-                        bmpResult = skBitmapResult.ToBitmap();
+                        string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                        string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                        newFilePath = Path.Combine(screenshotsFolder, fileName);
                     }
+
+                    newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
+                    return newFilePath;
+                },
+                PrintImageRequested = (skBitmap) =>
+                {
+                    Bitmap bmp = skBitmap.ToBitmap();
+                    MainFormPrintImage(bmp);
+                },
+                PinImageRequested = (skBitmap) =>
+                {
+                    Bitmap bmp = skBitmap.ToBitmap();
+                    PinToScreen(bmp, taskSettings);
+                },
+                UploadImageRequested = (skBitmap) =>
+                {
+                    Bitmap bmp = skBitmap.ToBitmap();
+                    MainFormUploadImage(bmp, taskSettings);
                 }
-            });
+            };
+
+            SKBitmap skBitmapResult = null;
+
+            if (bmp != null)
+            {
+                using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
+                skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                    events, taskMode, filePath);
+            }
+            else
+            {
+                skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                    events, taskMode, filePath);
+            }
+
+            if (skBitmapResult != null)
+            {
+                using (skBitmapResult)
+                {
+                    bmpResult = skBitmapResult.ToBitmap();
+                }
+            }
 
             return bmpResult;
         }
