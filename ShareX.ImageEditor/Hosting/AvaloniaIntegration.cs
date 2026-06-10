@@ -190,39 +190,6 @@ namespace ShareX.ImageEditor.Hosting
             where T : class
         {
             T? result = null;
-            IEditorDiagnosticsSink? previousDiagnosticsSink = null;
-            bool restoreScopedDiagnostics = false;
-
-            if (events?.DiagnosticReported != null)
-            {
-                var diagnosticHandler = events.DiagnosticReported;
-                previousDiagnosticsSink = EditorServices.Diagnostics;
-                restoreScopedDiagnostics = true;
-
-                EditorServices.Diagnostics = new DelegateEditorDiagnosticsSink(diagnosticEvent =>
-                {
-                    try
-                    {
-                        diagnosticHandler(diagnosticEvent);
-                    }
-                    catch
-                    {
-                        // Host diagnostics callback failures must not break the editor.
-                    }
-
-                    if (previousDiagnosticsSink != null)
-                    {
-                        try
-                        {
-                            previousDiagnosticsSink.Report(diagnosticEvent);
-                        }
-                        catch
-                        {
-                            // Ignore downstream sink failures.
-                        }
-                    }
-                });
-            }
 
             using ManualResetEventSlim completionEvent = new ManualResetEventSlim(false);
 
@@ -233,11 +200,10 @@ namespace ShareX.ImageEditor.Hosting
 
                 initializeImage?.Invoke(window);
 
-                // Set file path from events or parameter
-                string? filePath = imageFilePath ?? events?.ImageFilePath;
-
                 if (window.DataContext is MainViewModel vm)
                 {
+                    string? filePath = imageFilePath ?? events?.ImageFilePath;
+
                     if (!string.IsNullOrEmpty(filePath))
                     {
                         vm.ImageFilePath = filePath;
@@ -263,11 +229,6 @@ namespace ShareX.ImageEditor.Hosting
 
                 window.Closed += (s, e) =>
                 {
-                    if (restoreScopedDiagnostics)
-                    {
-                        EditorServices.Diagnostics = previousDiagnosticsSink;
-                    }
-
                     completionEvent.Set();
                 };
             });
@@ -289,10 +250,11 @@ namespace ShareX.ImageEditor.Hosting
                 vm.HasHostCopyHandler = true;
                 vm.CopyRequested += () =>
                 {
-                    using var skBitmap = window.GetResultBitmap();
+                    using SKBitmap? skBitmap = window.GetResultBitmap();
+
                     if (skBitmap != null)
                     {
-                        InvokeHostCallback(skBitmap, events.CopyImageRequested, nameof(EditorEvents.CopyImageRequested));
+                        events.CopyImageRequested(skBitmap);
                     }
 
                     return Task.CompletedTask;
@@ -306,10 +268,12 @@ namespace ShareX.ImageEditor.Hosting
                 {
                     string? savedPath = null;
 
-                    using var skBitmap = window.GetResultBitmap();
+                    using SKBitmap? skBitmap = window.GetResultBitmap();
+
                     if (skBitmap != null)
                     {
-                        savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageRequested, nameof(EditorEvents.SaveImageRequested));
+                        savedPath = events.SaveImageRequested(skBitmap, vm.ImageFilePath);
+
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
@@ -328,10 +292,12 @@ namespace ShareX.ImageEditor.Hosting
                 {
                     string? savedPath = null;
 
-                    using var skBitmap = window.GetResultBitmap();
+                    using SKBitmap? skBitmap = window.GetResultBitmap();
+
                     if (skBitmap != null)
                     {
-                        savedPath = InvokeHostSaveCallback(skBitmap, vm.ImageFilePath, events.SaveImageAsRequested, nameof(EditorEvents.SaveImageAsRequested));
+                        savedPath = events.SaveImageAsRequested(skBitmap, vm.ImageFilePath);
+
                         if (!string.IsNullOrEmpty(savedPath))
                         {
                             vm.ImageFilePath = savedPath;
@@ -347,10 +313,11 @@ namespace ShareX.ImageEditor.Hosting
             {
                 vm.PrintRequested += () =>
                 {
-                    using var skBitmap = window.GetResultBitmap();
+                    using SKBitmap? skBitmap = window.GetResultBitmap();
+
                     if (skBitmap != null)
                     {
-                        InvokeHostCallback(skBitmap, events.PrintImageRequested, nameof(EditorEvents.PrintImageRequested));
+                        events.PrintImageRequested(skBitmap);
                     }
                 };
             }
@@ -359,10 +326,11 @@ namespace ShareX.ImageEditor.Hosting
             {
                 vm.PinRequested += () =>
                 {
-                    using var skBitmap = window.GetResultBitmap();
+                    using SKBitmap? skBitmap = window.GetResultBitmap();
+
                     if (skBitmap != null)
                     {
-                        InvokeHostCallback(skBitmap, events.PinImageRequested, nameof(EditorEvents.PinImageRequested));
+                        events.PinImageRequested(skBitmap);
                     }
                 };
             }
@@ -371,50 +339,19 @@ namespace ShareX.ImageEditor.Hosting
             {
                 vm.UploadRequested += () =>
                 {
-                    using var skBitmap = window.GetResultBitmap();
+                    using SKBitmap? skBitmap = window.GetResultBitmap();
+
                     if (skBitmap != null)
                     {
-                        InvokeHostCallback(skBitmap, events.UploadImageRequested, nameof(EditorEvents.UploadImageRequested));
+                        events.UploadImageRequested(skBitmap);
                     }
                 };
             }
 
             window.Closed += (s, e) =>
             {
-                try
-                {
-                    onResult();
-                }
-                catch (Exception ex)
-                {
-                    EditorServices.ReportError(nameof(AvaloniaIntegration), "Failed to process editor dialog result.", ex);
-                }
+                onResult();
             };
-        }
-
-        private static void InvokeHostCallback<T>(T data, Action<T> callback, string callbackName)
-        {
-            try
-            {
-                callback(data);
-            }
-            catch (Exception ex)
-            {
-                EditorServices.ReportError(nameof(AvaloniaIntegration), $"Host callback '{callbackName}' failed.", ex);
-            }
-        }
-
-        private static string? InvokeHostSaveCallback(SKBitmap skBitmap, string? filePath, Func<SKBitmap, string?, string?> callback, string callbackName)
-        {
-            try
-            {
-                return callback(skBitmap, filePath);
-            }
-            catch (Exception ex)
-            {
-                EditorServices.ReportError(nameof(AvaloniaIntegration), $"Host callback '{callbackName}' failed.", ex);
-                return null;
-            }
         }
     }
 }
