@@ -32,6 +32,7 @@ using ShareX.ImageEditor.Hosting.Diagnostics;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
 using SkiaSharp;
+using System.Threading;
 
 namespace ShareX.ImageEditor.Hosting
 {
@@ -69,8 +70,11 @@ namespace ShareX.ImageEditor.Hosting
     public static class AvaloniaIntegration
     {
         private static bool initialized = false;
-
         private static readonly object _initLock = new object();
+        private static Thread? _uiThread;
+        private static ManualResetEventSlim? _uiThreadReady;
+        private static Dispatcher? _uiDispatcher;
+        private static Exception? _uiThreadInitializationException;
 
         public static void Initialize()
         {
@@ -80,51 +84,151 @@ namespace ShareX.ImageEditor.Hosting
                 {
                     if (!initialized)
                     {
-                        EditorServices.EnsureDefaultDesktopWallpaperService();
-
-                        if (Application.Current == null)
-                        {
-                            AppBuilder builder = AppBuilder.Configure<AvaloniaApp>()
-                                .UsePlatformDetect()
-                                .WithInterFont();
-
-#if DEBUG
-                            builder = builder.LogToTrace();
-#endif
-
-                            builder.SetupWithoutStarting();
-                        }
-
+                        EnsureUiThread();
                         initialized = true;
                     }
                 }
             }
         }
 
-        public static void ShowEditor(string filePath)
+        private static void EnsureUiThread()
         {
-            Initialize();
-            EditorWindow window = new EditorWindow();
-
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            if (_uiThread != null && _uiDispatcher != null)
             {
-                window.LoadImage(filePath);
+                return;
             }
 
-            window.Show();
+            _uiThreadReady = new ManualResetEventSlim(false);
+            _uiThreadInitializationException = null;
+            _uiThread = new Thread(() =>
+            {
+                try
+                {
+                    EditorServices.EnsureDefaultDesktopWallpaperService();
+
+                    if (Application.Current == null)
+                    {
+                        AppBuilder builder = AppBuilder.Configure<AvaloniaApp>()
+                            .UsePlatformDetect()
+                            .WithInterFont();
+
+#if DEBUG
+                        builder = builder.LogToTrace();
+#endif
+
+                        builder.SetupWithoutStarting();
+                    }
+
+                    _uiDispatcher = Dispatcher.UIThread;
+                    _uiThreadReady?.Set();
+                    Dispatcher.UIThread.MainLoop(CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    _uiThreadInitializationException = ex;
+                    _uiThreadReady?.Set();
+                }
+            })
+            {
+                IsBackground = true,
+                Name = nameof(AvaloniaIntegration) + "UIThread"
+            };
+
+            if (OperatingSystem.IsWindows())
+            {
+                _uiThread.SetApartmentState(ApartmentState.STA);
+            }
+
+            _uiThread.Start();
+            _uiThreadReady.Wait();
+
+            if (_uiDispatcher == null)
+            {
+                throw new InvalidOperationException("Failed to initialize Avalonia UI thread.", _uiThreadInitializationException);
+            }
+        }
+
+        private static void InvokeOnUiThread(Action action)
+        {
+            InvokeOnUiThread<object?>(() =>
+            {
+                action();
+                return null;
+            });
+        }
+
+        private static T InvokeOnUiThread<T>(Func<T> action)
+        {
+            Initialize();
+
+            if (_uiDispatcher == null)
+            {
+                throw new InvalidOperationException("Avalonia UI dispatcher is not available.");
+            }
+
+            if (_uiDispatcher.CheckAccess())
+            {
+                return action();
+            }
+
+            using ManualResetEventSlim completion = new ManualResetEventSlim(false);
+            T result = default!;
+            Exception? exception = null;
+
+            _uiDispatcher.Post(() =>
+            {
+                try
+                {
+                    result = action();
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
+                finally
+                {
+                    completion.Set();
+                }
+            });
+
+            completion.Wait();
+
+            if (exception != null)
+            {
+                throw new AggregateException("Avalonia UI operation failed.", exception);
+            }
+
+            return result;
+        }
+
+        public static void ShowEditor(string filePath)
+        {
+            InvokeOnUiThread(() =>
+            {
+                EditorWindow window = new EditorWindow();
+
+                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                {
+                    window.LoadImage(filePath);
+                }
+
+                window.Show();
+            });
         }
 
         public static void ShowEditor(Stream imageStream)
         {
-            Initialize();
-            EditorWindow window = new EditorWindow();
-
-            if (imageStream != null)
+            InvokeOnUiThread(() =>
             {
-                window.LoadImage(imageStream);
-            }
+                EditorWindow window = new EditorWindow();
 
-            window.Show();
+                if (imageStream != null)
+                {
+                    window.LoadImage(imageStream);
+                }
+
+                window.Show();
+            });
         }
 
         public static byte[]? ShowEditorDialog(ImageEditorOptions options, EditorEvents? events = null,
@@ -136,24 +240,32 @@ namespace ShareX.ImageEditor.Hosting
         public static byte[]? ShowEditorDialog(Stream? imageStream, ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            return ShowEditorDialogCore(
-                options,
-                window =>
-                {
-                    if (imageStream != null)
+            if (_uiDispatcher?.CheckAccess() == true)
+            {
+                throw new InvalidOperationException("Synchronous editor dialogs are not supported on the Avalonia UI thread.");
+            }
+
+            Task<byte[]?> dialogTask = InvokeOnUiThread(() =>
+                ShowEditorDialogCoreAsync(
+                    options,
+                    window =>
                     {
-                        window.LoadImage(imageStream);
-                    }
-                },
-                events,
-                taskMode,
-                imageFilePath,
-                (window, vm) => vm.TaskResult switch
-                {
-                    MainViewModel.EditorTaskResult.Continue => window.GetResultBytes(),
-                    MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBytes(),
-                    _ => null
-                });
+                        if (imageStream != null)
+                        {
+                            window.LoadImage(imageStream);
+                        }
+                    },
+                    events,
+                    taskMode,
+                    imageFilePath,
+                    (window, vm) => vm.TaskResult switch
+                    {
+                        MainViewModel.EditorTaskResult.Continue => window.GetResultBytes(),
+                        MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBytes(),
+                        _ => null
+                    }));
+
+            return dialogTask.GetAwaiter().GetResult();
         }
 
         public static SKBitmap? ShowEditorDialogBitmap(ImageEditorOptions options, EditorEvents? events = null,
@@ -165,111 +277,128 @@ namespace ShareX.ImageEditor.Hosting
         public static SKBitmap? ShowEditorDialogBitmap(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            return ShowEditorDialogCore(
-                options,
-                window =>
-                {
-                    if (imageBitmap != null)
+            if (_uiDispatcher?.CheckAccess() == true)
+            {
+                throw new InvalidOperationException("Synchronous editor dialogs are not supported on the Avalonia UI thread.");
+            }
+
+            Task<SKBitmap?> dialogTask = InvokeOnUiThread(() =>
+                ShowEditorDialogCoreAsync(
+                    options,
+                    window =>
                     {
-                        window.LoadImage(imageBitmap);
-                    }
-                },
-                events,
-                taskMode,
-                imageFilePath,
-                (window, vm) => vm.TaskResult switch
-                {
-                    MainViewModel.EditorTaskResult.Continue => window.GetResultBitmap(),
-                    MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBitmap(),
-                    _ => null
-                });
+                        if (imageBitmap != null)
+                        {
+                            window.LoadImage(imageBitmap);
+                        }
+                    },
+                    events,
+                    taskMode,
+                    imageFilePath,
+                    (window, vm) => vm.TaskResult switch
+                    {
+                        MainViewModel.EditorTaskResult.Continue => window.GetResultBitmap(),
+                        MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBitmap(),
+                        _ => null
+                    }));
+
+            return dialogTask.GetAwaiter().GetResult();
         }
 
-        private static T? ShowEditorDialogCore<T>(ImageEditorOptions options, Action<EditorWindow>? initializeImage,
+        private static Task<T?> ShowEditorDialogCoreAsync<T>(ImageEditorOptions options, Action<EditorWindow>? initializeImage,
             EditorEvents? events, bool taskMode, string? imageFilePath, Func<EditorWindow, MainViewModel, T?> getResult)
             where T : class
         {
             T? result = null;
             IEditorDiagnosticsSink? previousDiagnosticsSink = null;
             bool restoreScopedDiagnostics = false;
+            TaskCompletionSource<T?> completion = new TaskCompletionSource<T?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            if (events?.DiagnosticReported != null)
+            try
             {
-                var diagnosticHandler = events.DiagnosticReported;
-                previousDiagnosticsSink = EditorServices.Diagnostics;
-                restoreScopedDiagnostics = true;
-
-                EditorServices.Diagnostics = new DelegateEditorDiagnosticsSink(diagnosticEvent =>
+                if (events?.DiagnosticReported != null)
                 {
-                    try
-                    {
-                        diagnosticHandler(diagnosticEvent);
-                    }
-                    catch
-                    {
-                        // Host diagnostics callback failures must not break the editor.
-                    }
+                    var diagnosticHandler = events.DiagnosticReported;
+                    previousDiagnosticsSink = EditorServices.Diagnostics;
+                    restoreScopedDiagnostics = true;
 
-                    if (previousDiagnosticsSink != null)
+                    EditorServices.Diagnostics = new DelegateEditorDiagnosticsSink(diagnosticEvent =>
                     {
                         try
                         {
-                            previousDiagnosticsSink.Report(diagnosticEvent);
+                            diagnosticHandler(diagnosticEvent);
                         }
                         catch
                         {
-                            // Ignore downstream sink failures.
+                            // Host diagnostics callback failures must not break the editor.
                         }
-                    }
-                });
-            }
 
-            Initialize();
-            EditorWindow window = new EditorWindow(options);
-
-            initializeImage?.Invoke(window);
-
-            // Set file path from events or parameter
-            string? filePath = imageFilePath ?? events?.ImageFilePath;
-
-            if (window.DataContext is MainViewModel vm)
-            {
-                if (!string.IsNullOrEmpty(filePath))
-                {
-                    vm.ImageFilePath = filePath;
+                        if (previousDiagnosticsSink != null)
+                        {
+                            try
+                            {
+                                previousDiagnosticsSink.Report(diagnosticEvent);
+                            }
+                            catch
+                            {
+                                // Ignore downstream sink failures.
+                            }
+                        }
+                    });
                 }
 
-                vm.ShowFileMenu = true;
-                vm.ShowOptionsButton = true;
-                vm.ShowTaskButtons = true;
-                vm.UseContinueWorkflow = taskMode;
-                vm.ShowBottomToolbar = true;
-                vm.ShowStartScreen = !taskMode;
-            }
+                EditorWindow window = new EditorWindow(options);
 
-            SetupEvents(window, events, () =>
-            {
+                initializeImage?.Invoke(window);
+
+                string? filePath = imageFilePath ?? events?.ImageFilePath;
+
                 if (window.DataContext is MainViewModel vm)
                 {
-                    result = getResult(window, vm);
+                    if (!string.IsNullOrEmpty(filePath))
+                    {
+                        vm.ImageFilePath = filePath;
+                    }
+
+                    vm.ShowFileMenu = true;
+                    vm.ShowOptionsButton = true;
+                    vm.ShowTaskButtons = true;
+                    vm.UseContinueWorkflow = taskMode;
+                    vm.ShowBottomToolbar = true;
+                    vm.ShowStartScreen = !taskMode;
                 }
-            });
 
-            window.Show();
+                SetupEvents(window, events, () =>
+                {
+                    if (window.DataContext is MainViewModel vm)
+                    {
+                        result = getResult(window, vm);
+                    }
+                });
 
-            DispatcherFrame frame = new DispatcherFrame();
-            window.Closed += (s, e) =>
+                window.Closed += (s, e) =>
+                {
+                    if (restoreScopedDiagnostics)
+                    {
+                        EditorServices.Diagnostics = previousDiagnosticsSink;
+                    }
+
+                    completion.TrySetResult(result);
+                };
+
+                window.Show();
+            }
+            catch (Exception ex)
             {
-                frame.Continue = false;
-
                 if (restoreScopedDiagnostics)
                 {
                     EditorServices.Diagnostics = previousDiagnosticsSink;
                 }
-            };
-            Dispatcher.UIThread.PushFrame(frame);
 
-            return result;
+                completion.TrySetException(ex);
+            }
+
+            return completion.Task;
         }
 
         private static void SetupEvents(EditorWindow window, EditorEvents? events, Action onResult)
