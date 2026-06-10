@@ -127,35 +127,6 @@ namespace ShareX.ImageEditor.Hosting
             window.Show();
         }
 
-        public static byte[]? ShowEditorDialog(ImageEditorOptions options, EditorEvents? events = null,
-            bool taskMode = false, string? imageFilePath = null)
-        {
-            return ShowEditorDialog((Stream?)null, options, events, taskMode, imageFilePath);
-        }
-
-        public static byte[]? ShowEditorDialog(Stream? imageStream, ImageEditorOptions options, EditorEvents? events = null,
-            bool taskMode = false, string? imageFilePath = null)
-        {
-            return ShowEditorDialogCore(
-                options,
-                window =>
-                {
-                    if (imageStream != null)
-                    {
-                        window.LoadImage(imageStream);
-                    }
-                },
-                events,
-                taskMode,
-                imageFilePath,
-                (window, vm) => vm.TaskResult switch
-                {
-                    MainViewModel.EditorTaskResult.Continue => window.GetResultBytes(),
-                    MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBytes(),
-                    _ => null
-                });
-        }
-
         public static SKBitmap? ShowEditorDialogBitmap(ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
@@ -166,14 +137,8 @@ namespace ShareX.ImageEditor.Hosting
             bool taskMode = false, string? imageFilePath = null)
         {
             return ShowEditorDialogCore(
+                imageBitmap,
                 options,
-                window =>
-                {
-                    if (imageBitmap != null)
-                    {
-                        window.LoadImage(imageBitmap);
-                    }
-                },
                 events,
                 taskMode,
                 imageFilePath,
@@ -185,20 +150,17 @@ namespace ShareX.ImageEditor.Hosting
                 });
         }
 
-        private static T? ShowEditorDialogCore<T>(ImageEditorOptions options, Action<EditorWindow>? initializeImage,
+        private static T? ShowEditorDialogCore<T>(SKBitmap? imageBitmap, ImageEditorOptions options,
             EditorEvents? events, bool taskMode, string? imageFilePath, Func<EditorWindow, MainViewModel, T?> getResult)
             where T : class
         {
             T? result = null;
 
-            using ManualResetEventSlim completionEvent = new ManualResetEventSlim(false);
-
-            Dispatcher.UIThread.Post(() =>
+            Dispatcher.UIThread.Invoke(() =>
             {
                 Initialize();
-                EditorWindow window = new EditorWindow(options);
 
-                initializeImage?.Invoke(window);
+                EditorWindow window = new EditorWindow(options);
 
                 if (window.DataContext is MainViewModel vm)
                 {
@@ -225,15 +187,22 @@ namespace ShareX.ImageEditor.Hosting
                     }
                 });
 
-                window.Show();
+                DispatcherFrame frame = new DispatcherFrame();
 
                 window.Closed += (s, e) =>
                 {
-                    completionEvent.Set();
+                    frame.Continue = false;
                 };
-            });
 
-            completionEvent.Wait();
+                window.Show();
+
+                if (imageBitmap != null)
+                {
+                    window.LoadImage(imageBitmap);
+                }
+
+                Dispatcher.UIThread.PushFrame(frame);
+            });
 
             return result;
         }
