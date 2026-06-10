@@ -104,7 +104,7 @@ namespace ShareX.ImageEditor.Hosting
         public static SKBitmap? ShowEditorDialog(ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            return ShowEditorDialog((SKBitmap?)null, options, events, taskMode, imageFilePath);
+            return ShowEditorDialog(null, options, events, taskMode, imageFilePath);
         }
 
         public static SKBitmap? ShowEditorDialog(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
@@ -124,11 +124,10 @@ namespace ShareX.ImageEditor.Hosting
                 });
         }
 
-        private static T? ShowEditorDialogCore<T>(SKBitmap? imageBitmap, ImageEditorOptions options,
-            EditorEvents? events, bool taskMode, string? imageFilePath, Func<EditorWindow, MainViewModel, T?> getResult)
-            where T : class
+        private static SKBitmap? ShowEditorDialogCore(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events,
+            bool taskMode, string? imageFilePath, Func<EditorWindow, MainViewModel, SKBitmap?> getResult)
         {
-            T? result = null;
+            SKBitmap? result = null;
 
             Dispatcher.UIThread.Invoke(() =>
             {
