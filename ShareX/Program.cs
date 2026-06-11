@@ -23,6 +23,7 @@
 
 #endregion License Information (GPL v3)
 
+using Avalonia.Win32.Interoperability;
 using ShareX.HelpersLib;
 using ShareX.HistoryLib;
 using ShareX.ImageEditor.Hosting;
@@ -321,6 +322,7 @@ namespace ShareX
         private static void Run()
         {
             ApplicationConfiguration.Initialize();
+            Application.AddMessageFilter(new WinFormsAvaloniaMessageFilter());
 
             DebugHelper.WriteLine("ShareX starting.");
             DebugHelper.WriteLine("Version: " + VersionText);

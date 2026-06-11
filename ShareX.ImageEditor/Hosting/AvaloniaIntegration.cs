@@ -169,7 +169,7 @@ namespace ShareX.ImageEditor.Hosting
 
                 window.Closed += (s, a) => tcs.SetResult();
 
-                Application.Current.Run(window);
+                window.Show();
             });
 
             tcs.Task.ConfigureAwait(false).GetAwaiter().GetResult();
