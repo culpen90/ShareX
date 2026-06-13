@@ -62,6 +62,19 @@ public abstract class BaseEffectAnnotation : Annotation, IDisposable
     public override bool HitTest(SKPoint point, float tolerance = 5)
     {
         var bounds = GetBounds();
+
+        if (RotationAngle != 0)
+        {
+            float cx = bounds.MidX;
+            float cy = bounds.MidY;
+            float rad = -RotationAngle * (float)Math.PI / 180f;
+            float cos = (float)Math.Cos(rad);
+            float sin = (float)Math.Sin(rad);
+            float dx = point.X - cx;
+            float dy = point.Y - cy;
+            point = new SKPoint(cx + dx * cos - dy * sin, cy + dx * sin + dy * cos);
+        }
+
         var inflatedBounds = SKRect.Inflate(bounds, tolerance, tolerance);
         return inflatedBounds.Contains(point);
     }
@@ -93,6 +106,37 @@ public abstract class BaseEffectAnnotation : Annotation, IDisposable
     internal virtual void UpdateEffectFromInteractionCache(SKBitmap source, SKBitmap cachedEffectBitmap)
     {
         UpdateEffectFromAlignedCache(source, cachedEffectBitmap);
+    }
+
+    protected void UpdateEffectFromProcessedSource(SKBitmap source, SKBitmap processedSource)
+    {
+        if (source == null || processedSource == null) return;
+        if (processedSource.Width != source.Width || processedSource.Height != source.Height) return;
+
+        var rect = GetBounds();
+        int fullW = (int)rect.Width;
+        int fullH = (int)rect.Height;
+        if (fullW <= 0 || fullH <= 0) return;
+
+        var result = new SKBitmap(fullW, fullH);
+        result.Erase(SKColors.Transparent);
+
+        using (var canvas = new SKCanvas(result))
+        {
+            if (RotationAngle != 0)
+            {
+                float localCenterX = fullW / 2f;
+                float localCenterY = fullH / 2f;
+                canvas.Translate(localCenterX, localCenterY);
+                canvas.RotateDegrees(-RotationAngle);
+                canvas.Translate(-localCenterX, -localCenterY);
+            }
+
+            canvas.DrawBitmap(processedSource, -rect.Left, -rect.Top);
+        }
+
+        EffectBitmap?.Dispose();
+        EffectBitmap = result;
     }
 
     protected void UpdateEffectFromAlignedCache(SKBitmap source, SKBitmap cachedEffectBitmap)

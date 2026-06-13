@@ -181,6 +181,11 @@ public static class AnnotationVisualFactory
                 balloonControl.InvalidateVisual();
                 break;
 
+            case BaseEffectAnnotation effectAnnotation when control is Rectangle effectControl:
+                ApplyBoundsControl(effectControl, effectAnnotation.GetBounds(), ensureMinimumSize);
+                ApplyRotationTransform(effectControl, effectAnnotation.RotationAngle);
+                break;
+
             case SpotlightAnnotation spotlight when mode == AnnotationVisualMode.Preview && control is Rectangle:
                 ApplyBoundsControl(control, spotlight.GetBounds(), ensureMinimumSize: true);
                 break;

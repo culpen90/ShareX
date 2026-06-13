@@ -603,6 +603,12 @@ public class EditorSelectionController
         {
             _startPoint = currentPoint;
             UpdateSelectionHandles();
+
+            if (_selectedShape?.Tag is BaseEffectAnnotation)
+            {
+                RequestUpdateEffect?.Invoke(_selectedShape);
+            }
+
             return;
         }
 
@@ -1293,6 +1299,9 @@ public class EditorSelectionController
             case SpeechBalloonControl { Annotation: SpeechBalloonAnnotation balloonAnnotation }:
                 annotation = balloonAnnotation;
                 return true;
+            case global::Avalonia.Controls.Shapes.Rectangle { Tag: BaseEffectAnnotation effectAnnotation }:
+                annotation = effectAnnotation;
+                return true;
             case global::Avalonia.Controls.Shapes.Rectangle { Tag: RectangleAnnotation rectangleAnnotation }
                 when rectangleAnnotation is not SmartEraserAnnotation:
                 annotation = rectangleAnnotation;
@@ -1346,6 +1355,11 @@ public class EditorSelectionController
             AnnotationVisualMode.Persisted,
             _view.EditorCore.CanvasSize.Width,
             _view.EditorCore.CanvasSize.Height);
+
+        if (annotation is BaseEffectAnnotation)
+        {
+            RequestUpdateEffect?.Invoke(_selectedShape);
+        }
     }
 
     private static Point RotatePoint(Point point, Point center, double angleDeg)

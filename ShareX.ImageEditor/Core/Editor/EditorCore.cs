@@ -1478,6 +1478,7 @@ public class EditorCore : IDisposable
     {
         return annotation switch
         {
+            BaseEffectAnnotation => true,
             TextAnnotation => true,
             ImageAnnotation and not CursorAnnotation => true,
             SpeechBalloonAnnotation => true,
