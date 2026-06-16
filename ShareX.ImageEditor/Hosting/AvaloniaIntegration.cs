@@ -28,7 +28,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
-using ShareX.ImageEditor.Hosting.Diagnostics;
 using ShareX.ImageEditor.Presentation.ViewModels;
 using ShareX.ImageEditor.Presentation.Views;
 using SkiaSharp;
@@ -62,7 +61,6 @@ namespace ShareX.ImageEditor.Hosting
         public Action<SKBitmap>? PrintImageRequested { get; set; }
         public Action<SKBitmap>? PinImageRequested { get; set; }
         public Action<SKBitmap>? UploadImageRequested { get; set; }
-        public Action<EditorDiagnosticEvent>? DiagnosticReported { get; set; }
         public string? ImageFilePath { get; set; }
     }
 

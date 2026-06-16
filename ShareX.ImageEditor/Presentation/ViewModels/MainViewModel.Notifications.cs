@@ -27,7 +27,6 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ShareX.ImageEditor.Presentation.Theming;
 using System.Globalization;
-using System.Threading;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
 {
