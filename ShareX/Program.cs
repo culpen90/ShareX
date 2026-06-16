@@ -322,7 +322,6 @@ namespace ShareX
         private static void Run()
         {
             ApplicationConfiguration.Initialize();
-            Application.AddMessageFilter(new WinFormsAvaloniaMessageFilter());
 
             DebugHelper.WriteLine("ShareX starting.");
             DebugHelper.WriteLine("Version: " + VersionText);
@@ -353,18 +352,16 @@ namespace ShareX
             CheckPuushMode();
             DebugWriteFlags();
 
+            DebugHelper.WriteLine("Avalonia init started.");
+            Application.AddMessageFilter(new WinFormsAvaloniaMessageFilter());
+            AvaloniaIntegration.Initialize();
+            DebugHelper.WriteLine("Avalonia init finished.");
+
             SettingManager.LoadInitialSettings();
 
             UpdateManager = new ShareXUpdateManager();
             LanguageHelper.ChangeLanguage(Settings.Language);
             CleanupManager.CleanupAsync();
-
-            if (!DefaultTaskSettings.ToolsSettings.UseLegacyImageEditor)
-            {
-                DebugHelper.WriteLine("Avalonia init started.");
-                AvaloniaIntegration.Initialize();
-                DebugHelper.WriteLine("Avalonia init finished.");
-            }
 
             DebugHelper.WriteLine("MainForm init started.");
             MainForm = new MainForm();

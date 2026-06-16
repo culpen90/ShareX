@@ -70,13 +70,13 @@ namespace ShareX.ImageEditor.Hosting
     {
         private static bool initialized = false;
 
-        private static readonly object _initLock = new object();
+        private static readonly object initLock = new object();
 
         public static void Initialize()
         {
             if (!initialized)
             {
-                lock (_initLock)
+                lock (initLock)
                 {
                     if (!initialized)
                     {
@@ -110,28 +110,15 @@ namespace ShareX.ImageEditor.Hosting
         public static SKBitmap? ShowEditorDialog(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {
-            return ShowEditorDialogCore(
-                imageBitmap,
-                options,
-                events,
-                taskMode,
-                imageFilePath,
-                (window, vm) => vm.TaskResult switch
-                {
-                    MainViewModel.EditorTaskResult.Continue => window.GetResultBitmap(),
-                    MainViewModel.EditorTaskResult.ContinueNoSave => window.GetSourceBitmap(),
-                    _ => null
-                });
+            return ShowEditorDialogCore(imageBitmap, options, events, taskMode, imageFilePath);
         }
 
         private static SKBitmap? ShowEditorDialogCore(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events,
-            bool taskMode, string? imageFilePath, Func<EditorWindow, MainViewModel, SKBitmap?> getResult)
+            bool taskMode, string? imageFilePath)
         {
-            SKBitmap? result = null;
-
             Initialize();
 
-            TaskCompletionSource tcs = new TaskCompletionSource();
+            TaskCompletionSource<SKBitmap?> tcs = new TaskCompletionSource<SKBitmap?>();
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -159,25 +146,35 @@ namespace ShareX.ImageEditor.Hosting
                     vm.ShowStartScreen = !taskMode;
                 }
 
-                SetupEvents(window, events, () =>
+                SetupEvents(window, events);
+
+                window.Closed += (s, a) =>
                 {
+                    SKBitmap? result = null;
+
                     if (window.DataContext is MainViewModel vm)
                     {
-                        result = getResult(window, vm);
+                        switch (vm.TaskResult)
+                        {
+                            case MainViewModel.EditorTaskResult.Continue:
+                                result = window.GetResultBitmap();
+                                break;
+                            case MainViewModel.EditorTaskResult.ContinueNoSave:
+                                result = window.GetSourceBitmap();
+                                break;
+                        }
                     }
-                });
 
-                window.Closed += (s, a) => tcs.SetResult();
+                    tcs.SetResult(result);
+                };
 
                 window.Show();
             });
 
-            tcs.Task.ConfigureAwait(false).GetAwaiter().GetResult();
-
-            return result;
+            return tcs.Task.ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        private static void SetupEvents(EditorWindow window, EditorEvents? events, Action onResult)
+        private static void SetupEvents(EditorWindow window, EditorEvents? events)
         {
             if (events == null) return;
 
@@ -286,11 +283,6 @@ namespace ShareX.ImageEditor.Hosting
                     }
                 };
             }
-
-            window.Closed += (s, e) =>
-            {
-                onResult();
-            };
         }
     }
 }
