@@ -422,6 +422,13 @@
                                              IsVisible="{Binding ShowStrength}"
                                              ToolTip.Tip="Effect strength"/>
 
+                    <Button Classes="editor-button toolbar-button"
+                            Classes.active="{Binding EffectEllipse}"
+                            Click="OnEffectEllipseClick"
+                            IsVisible="{Binding ShowEffectEllipse}"
+                            ToolTip.Tip="Toggle ellipse shape"
+                            Content="{x:Static theming:EditorIcons.ToggleEllipseShape}"/>
+
                     <Border Background="Transparent"
                                     Width="40"
                                     Height="40"

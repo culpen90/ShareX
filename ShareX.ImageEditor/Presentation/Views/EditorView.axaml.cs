@@ -415,10 +415,15 @@ namespace ShareX.ImageEditor.Presentation.Views
                             spotlight.DarkenOpacity / 255f * MainViewModel.GetMaxEffectStrength(EditorTool.Spotlight),
                             MidpointRounding.AwayFromZero);
                         vm.SpotlightBlur = spotlight.BlurAmount;
+                        vm.EffectEllipse = spotlight.IsEllipse;
                     }
                     else if (vm.SelectedAnnotation is BaseEffectAnnotation effect)
                     {
                         vm.EffectStrength = (int)effect.Amount;
+                        if (effect is MagnifyAnnotation magnify)
+                        {
+                            vm.EffectEllipse = magnify.IsEllipse;
+                        }
                         if (effect is HighlightAnnotation highlight)
                         {
                             vm.FillColor = highlight.FillColor;

@@ -1802,7 +1802,7 @@ public class EditorSelectionController
 
             if (child is SpotlightControl sc && sc.Annotation is SpotlightAnnotation sa)
             {
-                if (sa.GetBounds().Contains(ToSKPoint(currentPoint))) return sc;
+                if (sa.HitTest(ToSKPoint(currentPoint))) return sc;
                 continue;
             }
 
@@ -2033,8 +2033,11 @@ public class EditorSelectionController
 
         if (width <= 0 || height <= 0) return;
 
-        // 3. Ellipse Outline (for Ellipse and Step/Number)
-        if (_hoveredShape is Ellipse || (_hoveredShape is StepControl hoveredStepControl && hoveredStepControl.Annotation is NumberAnnotation hoveredNumberAnnotation && !hoveredNumberAnnotation.IsTailVisible()))
+        // 3. Ellipse Outline (for Ellipse, Step/Number, and ellipse effect regions)
+        if (_hoveredShape is Ellipse ||
+            (_hoveredShape?.Tag is MagnifyAnnotation { IsEllipse: true }) ||
+            (_hoveredShape is SpotlightControl { Annotation.IsEllipse: true }) ||
+            (_hoveredShape is StepControl hoveredStepControl && hoveredStepControl.Annotation is NumberAnnotation hoveredNumberAnnotation && !hoveredNumberAnnotation.IsTailVisible()))
         {
             if (_hoverEllipseBlack == null)
             {
