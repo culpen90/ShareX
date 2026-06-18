@@ -143,6 +143,7 @@ namespace ShareX.ImageEditor.Hosting
         public float StepFontSize { get; set; } = 30;
         public bool StepTextBold { get; set; } = true;
         public StepType StepType { get; set; } = StepType.Numeric;
+        public bool StepTail { get; set; } = true;
 
         // Highlight
         public string HighlightFillColorHex { get; set; } = ColorToHex(Colors.Yellow);

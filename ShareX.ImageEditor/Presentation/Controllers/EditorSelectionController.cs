@@ -571,7 +571,7 @@ public class EditorSelectionController
             return;
         }
 
-        if (_selectedShape is StepControl stepControl && stepControl.Annotation is NumberAnnotation number && handleTag == "StepTail")
+        if (_selectedShape is StepControl stepControl && stepControl.Annotation is NumberAnnotation number && number.TailEnabled && handleTag == "StepTail")
         {
             number.SetTailPoint(new SKPoint((float)currentPoint.X, (float)currentPoint.Y));
             AnnotationVisualFactory.UpdateVisualControl(
@@ -1128,8 +1128,12 @@ public class EditorSelectionController
 
         if (_selectedShape is StepControl stepControl && stepControl.Annotation is NumberAnnotation number)
         {
-            var tailHandlePoint = number.GetTailHandlePoint();
-            CreateHandle(tailHandlePoint.X, tailHandlePoint.Y, "StepTail");
+            if (number.TailEnabled)
+            {
+                var tailHandlePoint = number.GetTailHandlePoint();
+                CreateHandle(tailHandlePoint.X, tailHandlePoint.Y, "StepTail");
+            }
+
             UpdateHoverOutline();
             return;
         }

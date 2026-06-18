@@ -440,6 +440,7 @@ public class EditorInputController
                     FontSize = vm.FontSize,
                     IsBold = vm.TextBold,
                     StepType = vm.SelectedStepType,
+                    TailEnabled = vm.SpeechBalloonTail,
                     ShadowEnabled = vm.ShadowEnabled,
                     ShadowColor = shadowColor,
                     StartPoint = ToSKPoint(_startPoint),

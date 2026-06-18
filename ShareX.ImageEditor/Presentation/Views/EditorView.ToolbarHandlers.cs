@@ -745,15 +745,22 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void ApplySelectedSpeechBalloonTail(bool isEnabled)
         {
-            if (_selectionController.SelectedShape is not SpeechBalloonControl balloonControl ||
-                balloonControl.Annotation is not SpeechBalloonAnnotation balloonAnnotation)
+            if (_selectionController.SelectedShape is SpeechBalloonControl balloonControl &&
+                balloonControl.Annotation is SpeechBalloonAnnotation balloonAnnotation)
             {
+                balloonAnnotation.TailEnabled = isEnabled;
+                balloonControl.InvalidateVisual();
+                _selectionController.UpdateSelectionHandles();
                 return;
             }
 
-            balloonAnnotation.TailEnabled = isEnabled;
-            balloonControl.InvalidateVisual();
-            _selectionController.UpdateSelectionHandles();
+            if (_selectionController.SelectedShape is StepControl stepControl &&
+                stepControl.Annotation is NumberAnnotation numberAnnotation)
+            {
+                numberAnnotation.TailEnabled = isEnabled;
+                AnnotationVisualFactory.UpdateVisualControl(stepControl, numberAnnotation);
+                _selectionController.UpdateSelectionHandles();
+            }
         }
 
         private void ApplySelectedTextBold(bool isBold)

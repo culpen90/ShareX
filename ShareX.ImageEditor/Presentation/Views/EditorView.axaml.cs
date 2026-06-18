@@ -355,6 +355,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.FontSize = num.FontSize;
                         vm.TextBold = num.IsBold;
                         vm.FillColor = num.FillColor;
+                        vm.SpeechBalloonTail = num.TailEnabled;
                         if (!string.IsNullOrEmpty(num.TextColor))
                             vm.TextColorValue = Avalonia.Media.Color.Parse(num.TextColor);
                     }

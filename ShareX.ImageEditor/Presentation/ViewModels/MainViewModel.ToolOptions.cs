@@ -635,15 +635,21 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         partial void OnSpeechBalloonTailChanged(bool value)
         {
             bool appliesToSpeechBalloon = ActiveTool == EditorTool.SpeechBalloon;
+            bool appliesToStep = ActiveTool == EditorTool.Step;
 
-            if (ActiveTool == EditorTool.Select && SelectedAnnotation is SpeechBalloonAnnotation)
+            if (ActiveTool == EditorTool.Select)
             {
-                appliesToSpeechBalloon = true;
+                appliesToSpeechBalloon = SelectedAnnotation is SpeechBalloonAnnotation;
+                appliesToStep = SelectedAnnotation is NumberAnnotation;
             }
 
             if (appliesToSpeechBalloon)
             {
                 Options.SpeechBalloonTail = value;
+            }
+            else if (appliesToStep)
+            {
+                Options.StepTail = value;
             }
         }
 
@@ -854,8 +860,8 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public bool ShowSpeechBalloonTail => ActiveTool switch
         {
-            EditorTool.SpeechBalloon => true,
-            EditorTool.Select => SelectedAnnotation is SpeechBalloonAnnotation,
+            EditorTool.SpeechBalloon or EditorTool.Step => true,
+            EditorTool.Select => SelectedAnnotation is SpeechBalloonAnnotation or NumberAnnotation,
             _ => false
         };
 
@@ -1122,6 +1128,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
                     TextColorValue = Options.StepTextColor;
                     StrokeWidth = Options.StepThickness;
                     ShadowEnabled = Options.Shadow;
+                    SpeechBalloonTail = Options.StepTail;
                     FontSize = Options.StepFontSize;
                     SelectedStepType = NormalizeStepType(Options.StepType);
                     TextBold = Options.StepTextBold;
