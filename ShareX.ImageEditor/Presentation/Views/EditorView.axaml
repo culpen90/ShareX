@@ -22,6 +22,12 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
+        <Style Selector="Border.gradient-preview-half.left">
+            <Setter Property="CornerRadius" Value="5,0,0,5"/>
+        </Style>
+        <Style Selector="Border.gradient-preview-half.right">
+            <Setter Property="CornerRadius" Value="0,5,5,0"/>
+        </Style>
         <Style Selector="Border.gradient-preview-half:pointerover">
             <Setter Property="Background" Value="#66FFFFFF"/>
             <Setter Property="BorderBrush" Value="#CCFFFFFF"/>
@@ -341,12 +347,12 @@
                                             ClipToBounds="True">
                                         <Grid ColumnDefinitions="*,*">
                                             <Border Grid.Column="0"
-                                                    Classes="gradient-preview-half"
+                                                    Classes="gradient-preview-half left"
                                                     Cursor="Hand"
                                                     ToolTip.Tip="Edit gradient color 1"
                                                     PointerPressed="OnGradientColor1PreviewPointerPressed"/>
                                             <Border Grid.Column="1"
-                                                    Classes="gradient-preview-half"
+                                                    Classes="gradient-preview-half right"
                                                     Cursor="Hand"
                                                     ToolTip.Tip="Edit gradient color 2"
                                                     PointerPressed="OnGradientColor2PreviewPointerPressed"/>
