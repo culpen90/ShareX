@@ -166,7 +166,12 @@ namespace ShareX.ImageEditor.Hosting
         public double BackgroundRoundedCorner { get; set; } = 20;
         public double BackgroundShadowRadius { get; set; } = 30;
         public string BackgroundType { get; set; } = "Transparent";
-        public string BackgroundGradientPresetName { get; set; } = "Sunset Glow";
+        public string BackgroundGradientColor1Hex { get; set; } = ColorToHex(Color.FromArgb(255, 255, 126, 95));
+        [JsonIgnore]
+        public Color BackgroundGradientColor1 { get => HexToColor(BackgroundGradientColor1Hex); set => BackgroundGradientColor1Hex = ColorToHex(value); }
+        public string BackgroundGradientColor2Hex { get; set; } = ColorToHex(Color.FromArgb(255, 254, 180, 123));
+        [JsonIgnore]
+        public Color BackgroundGradientColor2 { get => HexToColor(BackgroundGradientColor2Hex); set => BackgroundGradientColor2Hex = ColorToHex(value); }
         public string BackgroundColorHex { get; set; } = ColorToHex(Color.FromArgb(255, 34, 34, 34));
         [JsonIgnore]
         public Color BackgroundColor { get => HexToColor(BackgroundColorHex); set => BackgroundColorHex = ColorToHex(value); }

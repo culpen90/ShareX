@@ -25,6 +25,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
@@ -1990,6 +1991,24 @@ namespace ShareX.ImageEditor.Presentation.Views
             {
                 vm.SetBackgroundImagePath(files[0].Path.LocalPath);
             }
+        }
+
+        private void OnGradientColor1PreviewPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            OpenGradientColorPicker(BackgroundGradientColor1Popup, BackgroundGradientColor2Popup);
+            e.Handled = true;
+        }
+
+        private void OnGradientColor2PreviewPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            OpenGradientColorPicker(BackgroundGradientColor2Popup, BackgroundGradientColor1Popup);
+            e.Handled = true;
+        }
+
+        private static void OpenGradientColorPicker(Popup popupToOpen, Popup popupToClose)
+        {
+            popupToClose.IsOpen = false;
+            popupToOpen.IsOpen = true;
         }
 
         private void OnNewImageRequested(object? sender, EventArgs e)
