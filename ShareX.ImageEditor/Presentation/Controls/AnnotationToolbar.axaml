@@ -465,7 +465,7 @@
                                 Classes.active="{Binding ShadowEnabled}"
                                 Click="OnShadowClick"
                                 PointerPressed="OnShadowPointerPressed"
-                                ToolTip.Tip="Toggle shadow"
+                                ToolTip.Tip="Toggle shadow&#x0a;Shadow options (Right click)"
                                 Content="{x:Static theming:EditorIcons.MenuTheme}"/>
                         <Popup x:Name="ShadowOptionsPopup"
                                PlacementTarget="{Binding #ShadowToggleButton}"
