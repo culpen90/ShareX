@@ -862,6 +862,11 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             _selectedBorderStyle = NormalizeBorderStyle(_options.BorderStyle);
             _selectedArrowStyle = NormalizeArrowStyle(_options.ArrowStyle);
             _shadowEnabled = _options.Shadow;
+            _shadowColor = _options.ShadowColorHex;
+            _shadowBlurRadius = _options.ShadowBlurRadius;
+            _shadowOpacity = _options.ShadowOpacity;
+            _shadowOffsetX = _options.ShadowOffsetX;
+            _shadowOffsetY = _options.ShadowOffsetY;
             _textBold = _options.TextBold;
             _textItalic = _options.TextItalic;
 

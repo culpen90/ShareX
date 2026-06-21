@@ -45,7 +45,7 @@ public partial class NumberAnnotation
 
         if (ShadowEnabled)
         {
-            control.Effect = ShareX.ImageEditor.Presentation.Helpers.ShadowEffectHelper.CreateDropShadow(ShadowColor);
+            control.Effect = ShareX.ImageEditor.Presentation.Helpers.ShadowEffectHelper.CreateDropShadow(this);
         }
 
         return control;

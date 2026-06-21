@@ -349,6 +349,11 @@ namespace ShareX.ImageEditor.Presentation.Views
                         vm.SelectedColor = vm.SelectedAnnotation.StrokeColor;
                         vm.StrokeWidth = (int)vm.SelectedAnnotation.StrokeWidth;
                         vm.ShadowEnabled = vm.SelectedAnnotation.ShadowEnabled;
+                        vm.ShadowColorValue = Avalonia.Media.Color.Parse(vm.SelectedAnnotation.ShadowColor);
+                        vm.ShadowBlurRadius = vm.SelectedAnnotation.ShadowBlurRadius;
+                        vm.ShadowOpacity = vm.SelectedAnnotation.ShadowOpacity;
+                        vm.ShadowOffsetX = vm.SelectedAnnotation.ShadowOffsetX;
+                        vm.ShadowOffsetY = vm.SelectedAnnotation.ShadowOffsetY;
                     }
 
                     if (vm.SelectedAnnotation is NumberAnnotation num)

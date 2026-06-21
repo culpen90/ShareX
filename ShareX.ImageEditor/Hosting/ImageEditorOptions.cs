@@ -85,6 +85,10 @@ namespace ShareX.ImageEditor.Hosting
         public string ShadowColorHex { get; set; } = Annotation.DefaultShadowColorHex;
         [JsonIgnore]
         public Color ShadowColor { get => HexToColor(ShadowColorHex); set => ShadowColorHex = ColorToHex(value); }
+        public double ShadowBlurRadius { get; set; } = Annotation.DefaultShadowBlurRadius;
+        public double ShadowOpacity { get; set; } = Annotation.DefaultShadowOpacity;
+        public double ShadowOffsetX { get; set; } = Annotation.DefaultShadowOffsetX;
+        public double ShadowOffsetY { get; set; } = Annotation.DefaultShadowOffsetY;
         public BorderStyle BorderStyle { get; set; } = BorderStyle.Solid;
         public ArrowStyle ArrowStyle { get; set; } = ArrowStyle.Classic;
         public CursorType CursorType { get; set; } = CursorType.Default;

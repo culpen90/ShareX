@@ -181,6 +181,36 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
         set => _viewModel.ShadowEnabled = value;
     }
 
+    public IBrush ShadowColorBrush
+    {
+        get => _viewModel.ShadowColorBrush;
+        set => _viewModel.ShadowColorBrush = value;
+    }
+
+    public double ShadowBlurRadius
+    {
+        get => _viewModel.ShadowBlurRadius;
+        set => _viewModel.ShadowBlurRadius = value;
+    }
+
+    public double ShadowOpacity
+    {
+        get => _viewModel.ShadowOpacity;
+        set => _viewModel.ShadowOpacity = value;
+    }
+
+    public double ShadowOffsetX
+    {
+        get => _viewModel.ShadowOffsetX;
+        set => _viewModel.ShadowOffsetX = value;
+    }
+
+    public double ShadowOffsetY
+    {
+        get => _viewModel.ShadowOffsetY;
+        set => _viewModel.ShadowOffsetY = value;
+    }
+
     public bool SpeechBalloonTail
     {
         get => _viewModel.SpeechBalloonTail;
@@ -411,6 +441,9 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
             case nameof(MainViewModel.TextColor):
                 OnPropertyChanged(nameof(TextColor));
                 OnPropertyChanged(nameof(TextColorBrush));
+                break;
+            case nameof(MainViewModel.ShadowColor):
+                OnPropertyChanged(nameof(ShadowColorBrush));
                 break;
             case nameof(MainViewModel.HasSelectedAnnotation):
                 OnPropertyChanged(nameof(HasSelection));

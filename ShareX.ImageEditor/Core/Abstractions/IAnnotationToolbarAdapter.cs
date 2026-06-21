@@ -66,6 +66,11 @@ public interface IAnnotationToolbarAdapter : INotifyPropertyChanged
     float SpotlightBlur { get; set; }
     float SpotlightBlurMaximum { get; }
     bool ShadowEnabled { get; set; }
+    IBrush ShadowColorBrush { get; set; }
+    double ShadowBlurRadius { get; set; }
+    double ShadowOpacity { get; set; }
+    double ShadowOffsetX { get; set; }
+    double ShadowOffsetY { get; set; }
     bool SpeechBalloonTail { get; set; }
     bool EffectEllipse { get; set; }
     bool TextBold { get; set; }
