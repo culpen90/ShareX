@@ -474,7 +474,7 @@
                                VerticalOffset="4">
                             <Border Classes="popup-border popup-surface"
                                     Classes.open="{Binding #ShadowOptionsPopup.IsOpen}"
-                                    Background="{DynamicResource ShareX.Brush.Background.Popup}"
+                                    Background="{DynamicResource ShareX.Brush.Background.Panel}"
                                     CornerRadius="8"
                                     Padding="10"
                                     BorderBrush="{DynamicResource ShareX.Brush.Border}"
@@ -482,14 +482,16 @@
                                     MinWidth="240">
                                 <StackPanel Spacing="8">
                                     <TextBlock Text="Shadow"
-                                               FontWeight="SemiBold"/>
-                                    <Grid ColumnDefinitions="90,*" RowDefinitions="Auto" RowSpacing="8" ColumnSpacing="8">
+                                               FontSize="16"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource ShareX.Brush.Accent}"/>
+                                    <Grid ColumnDefinitions="90,*" RowDefinitions="Auto" RowSpacing="8" ColumnSpacing="8" Margin="0,0,0,8">
                                         <TextBlock Grid.Row="0" Grid.Column="0"
                                                    Text="Color"
                                                    VerticalAlignment="Center"/>
                                         <controls:ColorPickerDropdown Grid.Row="0" Grid.Column="1"
                                                                       SelectedColor="{Binding ShadowColorBrush, Mode=TwoWay}"
-                                                                      HorizontalAlignment="Left"
+                                                                      HorizontalAlignment="Right"
                                                                       ToolTip.Tip="Shadow color"/>
                                     </Grid>
 
