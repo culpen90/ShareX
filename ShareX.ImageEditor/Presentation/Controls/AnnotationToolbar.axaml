@@ -246,7 +246,7 @@
                                 Classes.active="{ReflectionBinding IsEffectsButtonActive}"
                                 Command="{ReflectionBinding ToggleEffectsPanelCommand}"
                                 PointerPressed="OnImageEffectsButtonPointerPressed"
-                                ToolTip.Tip="Image Effects"
+                                ToolTip.Tip="Image Effects&#x0a;Favorite image effects (Right click)"
                                 FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18" Content="{x:Static theming:EditorIcons.PanelEffects}"/>
                     </StackPanel>
 
