@@ -459,95 +459,96 @@
                             IsVisible="{Binding ShowSpeechBalloonTail}"
                             ToolTip.Tip="Toggle tail"
                             Content="{x:Static theming:EditorIcons.ToggleSpeechBalloonTail}"/>
-                    <Button x:Name="ShadowToggleButton"
-                            Classes="editor-button toolbar-button"
-                            Classes.active="{Binding ShadowEnabled}"
-                            Click="OnShadowClick"
-                            PointerPressed="OnShadowPointerPressed"
-                            IsVisible="{Binding ShowShadow}"
-                            ToolTip.Tip="Toggle shadow"
-                            Content="{x:Static theming:EditorIcons.MenuTheme}"/>
-                    <Popup x:Name="ShadowOptionsPopup"
-                           PlacementTarget="{Binding #ShadowToggleButton}"
-                           Placement="Bottom"
-                           IsLightDismissEnabled="True"
-                           VerticalOffset="4">
-                        <Border Classes="popup-border popup-surface"
-                                Classes.open="{Binding #ShadowOptionsPopup.IsOpen}"
-                                Background="{DynamicResource ShareX.Brush.Background.Popup}"
-                                CornerRadius="8"
-                                Padding="10"
-                                BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                                BorderThickness="1"
-                                MinWidth="240">
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="Shadow"
-                                           FontWeight="SemiBold"/>
-                                <Grid ColumnDefinitions="90,*" RowDefinitions="Auto" RowSpacing="8" ColumnSpacing="8">
-                                    <TextBlock Grid.Row="0" Grid.Column="0"
-                                               Text="Color"
-                                               VerticalAlignment="Center"/>
-                                    <controls:ColorPickerDropdown Grid.Row="0" Grid.Column="1"
-                                                                  SelectedColor="{Binding ShadowColorBrush, Mode=TwoWay}"
-                                                                  HorizontalAlignment="Left"
-                                                                  ToolTip.Tip="Shadow color"/>
-                                </Grid>
-
-                                <StackPanel Spacing="0">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <TextBlock Grid.Column="0" Text="Blur"/>
-                                        <Border Grid.Column="1" Classes="capsule">
-                                            <TextBlock Text="{Binding ShadowBlurRadius, StringFormat='{}{0:F0} px'}"/>
-                                        </Border>
+                    <Grid IsVisible="{Binding ShowShadow}">
+                        <Button x:Name="ShadowToggleButton"
+                                Classes="editor-button toolbar-button"
+                                Classes.active="{Binding ShadowEnabled}"
+                                Click="OnShadowClick"
+                                PointerPressed="OnShadowPointerPressed"
+                                ToolTip.Tip="Toggle shadow"
+                                Content="{x:Static theming:EditorIcons.MenuTheme}"/>
+                        <Popup x:Name="ShadowOptionsPopup"
+                               PlacementTarget="{Binding #ShadowToggleButton}"
+                               Placement="Bottom"
+                               IsLightDismissEnabled="True"
+                               VerticalOffset="4">
+                            <Border Classes="popup-border popup-surface"
+                                    Classes.open="{Binding #ShadowOptionsPopup.IsOpen}"
+                                    Background="{DynamicResource ShareX.Brush.Background.Popup}"
+                                    CornerRadius="8"
+                                    Padding="10"
+                                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                                    BorderThickness="1"
+                                    MinWidth="240">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Shadow"
+                                               FontWeight="SemiBold"/>
+                                    <Grid ColumnDefinitions="90,*" RowDefinitions="Auto" RowSpacing="8" ColumnSpacing="8">
+                                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                                   Text="Color"
+                                                   VerticalAlignment="Center"/>
+                                        <controls:ColorPickerDropdown Grid.Row="0" Grid.Column="1"
+                                                                      SelectedColor="{Binding ShadowColorBrush, Mode=TwoWay}"
+                                                                      HorizontalAlignment="Left"
+                                                                      ToolTip.Tip="Shadow color"/>
                                     </Grid>
-                                    <Slider Minimum="0"
-                                            Maximum="200"
-                                            Value="{Binding ShadowBlurRadius, Mode=TwoWay}"
-                                            Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
-                                </StackPanel>
 
-                                <StackPanel Spacing="0">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <TextBlock Grid.Column="0" Text="Opacity"/>
-                                        <Border Grid.Column="1" Classes="capsule">
-                                            <TextBlock Text="{Binding ShadowOpacity, StringFormat='{}{0:P0}'}"/>
-                                        </Border>
-                                    </Grid>
-                                    <Slider Minimum="0"
-                                            Maximum="1"
-                                            TickFrequency="0.01"
-                                            Value="{Binding ShadowOpacity, Mode=TwoWay}"
-                                            Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
-                                </StackPanel>
+                                    <StackPanel Spacing="0">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Grid.Column="0" Text="Blur"/>
+                                            <Border Grid.Column="1" Classes="capsule">
+                                                <TextBlock Text="{Binding ShadowBlurRadius, StringFormat='{}{0:F0} px'}"/>
+                                            </Border>
+                                        </Grid>
+                                        <Slider Minimum="0"
+                                                Maximum="200"
+                                                Value="{Binding ShadowBlurRadius, Mode=TwoWay}"
+                                                Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
+                                    </StackPanel>
 
-                                <StackPanel Spacing="0">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <TextBlock Grid.Column="0" Text="Offset X"/>
-                                        <Border Grid.Column="1" Classes="capsule">
-                                            <TextBlock Text="{Binding ShadowOffsetX, StringFormat='{}{0:F0} px'}"/>
-                                        </Border>
-                                    </Grid>
-                                    <Slider Minimum="-200"
-                                            Maximum="200"
-                                            Value="{Binding ShadowOffsetX, Mode=TwoWay}"
-                                            Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
-                                </StackPanel>
+                                    <StackPanel Spacing="0">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Grid.Column="0" Text="Opacity"/>
+                                            <Border Grid.Column="1" Classes="capsule">
+                                                <TextBlock Text="{Binding ShadowOpacity, StringFormat='{}{0:P0}'}"/>
+                                            </Border>
+                                        </Grid>
+                                        <Slider Minimum="0"
+                                                Maximum="1"
+                                                TickFrequency="0.01"
+                                                Value="{Binding ShadowOpacity, Mode=TwoWay}"
+                                                Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
+                                    </StackPanel>
 
-                                <StackPanel Spacing="0">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <TextBlock Grid.Column="0" Text="Offset Y"/>
-                                        <Border Grid.Column="1" Classes="capsule">
-                                            <TextBlock Text="{Binding ShadowOffsetY, StringFormat='{}{0:F0} px'}"/>
-                                        </Border>
-                                    </Grid>
-                                    <Slider Minimum="-200"
-                                            Maximum="200"
-                                            Value="{Binding ShadowOffsetY, Mode=TwoWay}"
-                                            Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
+                                    <StackPanel Spacing="0">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Grid.Column="0" Text="Offset X"/>
+                                            <Border Grid.Column="1" Classes="capsule">
+                                                <TextBlock Text="{Binding ShadowOffsetX, StringFormat='{}{0:F0} px'}"/>
+                                            </Border>
+                                        </Grid>
+                                        <Slider Minimum="-200"
+                                                Maximum="200"
+                                                Value="{Binding ShadowOffsetX, Mode=TwoWay}"
+                                                Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Spacing="0">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Grid.Column="0" Text="Offset Y"/>
+                                            <Border Grid.Column="1" Classes="capsule">
+                                                <TextBlock Text="{Binding ShadowOffsetY, StringFormat='{}{0:F0} px'}"/>
+                                            </Border>
+                                        </Grid>
+                                        <Slider Minimum="-200"
+                                                Maximum="200"
+                                                Value="{Binding ShadowOffsetY, Mode=TwoWay}"
+                                                Background="{DynamicResource ShareX.Brush.Control.Background.Disabled}"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </Popup>
+                            </Border>
+                        </Popup>
+                    </Grid>
                 </StackPanel>
             </ScrollViewer>
         </Border>
