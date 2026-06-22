@@ -58,7 +58,7 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnHotkeyKeyDown(object? sender, KeyEventArgs e)
         {
-            if (sender is not Control { DataContext: ToolbarCustomizationItemViewModel { IsTool: true } item })
+            if (sender is not Control { DataContext: ToolbarCustomizationItemViewModel { IsHotkeyEditable: true } item })
             {
                 return;
             }

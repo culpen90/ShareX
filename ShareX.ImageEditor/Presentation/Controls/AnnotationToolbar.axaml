@@ -123,9 +123,10 @@
                                             Background="{DynamicResource ShareX.Brush.Separator}"
                                             IsVisible="{Binding IsGroupSeparatorVisible}"/>
                                     <Button Classes="editor-button toolbar-button"
-                                            Tag="{Binding Tool}"
+                                            Tag="{Binding}"
                                             Classes.active="{Binding IsActive}"
-                                            Click="OnSelectToolClick"
+                                            Click="OnToolbarItemClick"
+                                            PointerPressed="OnToolbarItemPointerPressed"
                                             IsVisible="{Binding IsButtonVisible}"
                                             ToolTip.Tip="{Binding ToolTip}"
                                             Content="{Binding Icon}"/>
@@ -137,21 +138,6 @@
                     <StackPanel Orientation="Horizontal"
                                 Spacing="4"
                                 IsVisible="{Binding ShowTrailingActions, ElementName=AnnotationToolbarRoot}">
-                        <Border Width="1"
-                                Margin="4,0"
-                                Background="{DynamicResource ShareX.Brush.Separator}"/>
-                        <Button Classes="editor-button toolbar-button"
-                                Classes.active="{ReflectionBinding IsSettingsPanelOpen}"
-                                Command="{ReflectionBinding ToggleSettingsPanelCommand}"
-                                ToolTip.Tip="Background"
-                                FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18" Content="{x:Static theming:EditorIcons.PanelBackground}"/>
-                        <Button Classes="editor-button toolbar-button"
-                                x:Name="ImageEffectsButton"
-                                Classes.active="{ReflectionBinding IsEffectsButtonActive}"
-                                Command="{ReflectionBinding ToggleEffectsPanelCommand}"
-                                PointerPressed="OnImageEffectsButtonPointerPressed"
-                                ToolTip.Tip="Image Effects&#x0a;Favorite image effects (Right click)"
-                                FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18" Content="{x:Static theming:EditorIcons.PanelEffects}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"

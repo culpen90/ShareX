@@ -150,7 +150,7 @@ public sealed class ToolbarCustomizationDialogViewModel : ViewModelBase
             return;
         }
 
-        foreach (ToolbarCustomizationItemViewModel item in Items.Where(item => item.IsTool && !string.IsNullOrWhiteSpace(item.Hotkey)))
+        foreach (ToolbarCustomizationItemViewModel item in Items.Where(item => item.IsHotkeyEditable && !string.IsNullOrWhiteSpace(item.Hotkey)))
         {
             item.Hotkey = ToolbarHotkeyHelper.Normalize(item.Hotkey);
         }
@@ -206,7 +206,7 @@ public sealed class ToolbarCustomizationDialogViewModel : ViewModelBase
     {
         Dictionary<string, ToolbarCustomizationItemViewModel> usedHotkeys = new(StringComparer.OrdinalIgnoreCase);
 
-        foreach (ToolbarCustomizationItemViewModel item in Items.Where(item => item.IsTool))
+        foreach (ToolbarCustomizationItemViewModel item in Items.Where(item => item.IsHotkeyEditable))
         {
             string hotkey = item.Hotkey.Trim();
             if (hotkey.Length == 0)

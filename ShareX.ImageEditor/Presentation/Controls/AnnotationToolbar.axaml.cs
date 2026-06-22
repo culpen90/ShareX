@@ -276,6 +276,16 @@ public partial class AnnotationToolbar : UserControl
         }
     }
 
+    private void OnToolbarItemClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: ToolbarCustomizationItemViewModel item } &&
+            DataContext is EditorToolbarAdapter toolbar)
+        {
+            toolbar.ExecuteToolbarItem(item);
+            e.Handled = true;
+        }
+    }
+
     private void OnUndoClick(object? sender, RoutedEventArgs e)
     {
         if (DataContext is IAnnotationToolbarAdapter toolbar)
@@ -308,9 +318,10 @@ public partial class AnnotationToolbar : UserControl
         }
     }
 
-    private void OnImageEffectsButtonPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void OnToolbarItemPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not Control control)
+        if (sender is not Control { DataContext: ToolbarCustomizationItemViewModel item } control ||
+            item.Id != ToolbarCustomizationItemViewModel.ImageEffectsItemId)
         {
             return;
         }

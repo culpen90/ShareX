@@ -25,6 +25,7 @@
 
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
+using ShareX.ImageEditor.Presentation.Controls;
 using System.Collections.ObjectModel;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels
@@ -71,14 +72,36 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             foreach (ToolbarCustomizationItemViewModel item in _toolbarItems)
             {
-                if (ToolbarHotkeyHelper.Matches(item.Hotkey, key, modifiers))
+                if (item.IsHotkeyEditable && item.Tool.HasValue && ToolbarHotkeyHelper.Matches(item.Hotkey, key, modifiers))
                 {
-                    SelectToolCommand.Execute(item.Tool);
+                    SelectToolCommand.Execute(item.Tool.Value);
                     return true;
                 }
             }
 
             return false;
+        }
+
+        internal void ExecuteToolbarItem(ToolbarCustomizationItemViewModel item)
+        {
+            if (item.Tool.HasValue)
+            {
+                SelectToolCommand.Execute(item.Tool.Value);
+                return;
+            }
+
+            switch (item.Id)
+            {
+                case ToolbarCustomizationItemViewModel.BackgroundItemId:
+                    ToggleSettingsPanelCommand.Execute(null);
+                    break;
+                case ToolbarCustomizationItemViewModel.ImageEffectsItemId:
+                    if (ToggleEffectsPanelCommand.CanExecute(null))
+                    {
+                        ToggleEffectsPanelCommand.Execute(null);
+                    }
+                    break;
+            }
         }
 
         private void ApplyToolbarCustomizationItems(IEnumerable<ToolbarCustomizationItemViewModel> items, bool persist)
@@ -105,7 +128,14 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             foreach (ToolbarCustomizationItemViewModel item in _toolbarItems)
             {
-                item.IsActive = item.Tool == ActiveTool;
+                item.IsActive = item.Tool.HasValue
+                    ? item.Tool.Value == ActiveTool
+                    : item.Id switch
+                    {
+                        ToolbarCustomizationItemViewModel.BackgroundItemId => IsSettingsPanelOpen,
+                        ToolbarCustomizationItemViewModel.ImageEffectsItemId => IsEffectsPanelOpen && EffectsPanelContent is not EditorOptionsPanel,
+                        _ => false
+                    };
             }
         }
 
@@ -117,6 +147,23 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             {
                 _visibleToolbarItems.Add(item);
             }
+        }
+
+        partial void OnIsEffectsPanelOpenChanged(bool value)
+        {
+            RefreshToolbarItemActiveStates();
+        }
+
+        partial void OnEffectsPanelContentChanged(object? value)
+        {
+            RefreshToolbarItemActiveStates();
+        }
+
+        private void RefreshToolbarItemActiveStates()
+        {
+            UpdateToolbarActiveStates();
+            OnPropertyChanged(nameof(ToolbarItems));
+            OnPropertyChanged(nameof(VisibleToolbarItems));
         }
     }
 }

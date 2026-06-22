@@ -92,7 +92,7 @@
                                                           HorizontalAlignment="Center"
                                                           VerticalAlignment="Center"
                                                           ToolTip.Tip="Begin group">
-                                                <TextBlock Text="{x:Static theming:LucideIcons.separator_vertical}"
+                                                <TextBlock Text="{x:Static theming:LucideIcons.arrow_right_from_line}"
                                                            FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
                                                            FontWeight="Normal"
                                                            HorizontalAlignment="Center"
@@ -125,14 +125,14 @@
                                             </Grid>
 
                                             <TextBox Grid.Column="5"
-                                                     Text="{Binding Hotkey, Mode=TwoWay}"
-                                                     IsEnabled="{Binding IsTool}"
-                                                     PlaceholderText="None"
+                                                     Text="{Binding HotkeyDisplayText}"
+                                                     IsEnabled="{Binding IsHotkeyEditable}"
                                                      TextAlignment="Center"
                                                      IsReadOnly="True"
                                                      KeyDown="OnHotkeyKeyDown"
                                                      VerticalAlignment="Center"
-                                                     VerticalContentAlignment="Center"/>
+                                                     VerticalContentAlignment="Center"
+                                                     ToolTip.Tip="Click and press a shortcut. Backspace or Delete clears it."/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>

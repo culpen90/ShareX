@@ -638,6 +638,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             OnPropertyChanged(nameof(AreBackgroundEffectsActive));
             OnPropertyChanged(nameof(EffectiveCanvasBackground));
             RefreshSmartPaddingState(ensureCache: value && _originalSourceImage != null, forceCacheRefresh: value);
+            RefreshToolbarItemActiveStates();
         }
 
         public void UpdateCoreHistoryState(bool canUndo, bool canRedo)

@@ -31,34 +31,46 @@ namespace ShareX.ImageEditor.Presentation.ViewModels;
 
 public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 {
-    private sealed record ToolDefinition(EditorTool Tool, string Name, string Icon, string DefaultHotkey);
+    public const string BackgroundItemId = "Background";
+    public const string ImageEffectsItemId = "ImageEffects";
 
-    private static readonly IReadOnlyList<ToolDefinition> ToolDefinitions = new[]
+    private sealed record ToolbarItemDefinition(
+        string Id,
+        EditorTool? Tool,
+        string Name,
+        string Icon,
+        string DefaultHotkey,
+        bool IsHotkeyEditable,
+        bool BeginGroupByDefault);
+
+    private static readonly IReadOnlyList<ToolbarItemDefinition> ItemDefinitions = new[]
     {
-        new ToolDefinition(EditorTool.Select, "Select", EditorIcons.ToolSelect, "V"),
-        new ToolDefinition(EditorTool.Rectangle, "Rectangle", EditorIcons.ToolRectangle, "R"),
-        new ToolDefinition(EditorTool.Ellipse, "Ellipse", EditorIcons.ToolEllipse, "E"),
-        new ToolDefinition(EditorTool.Line, "Line", EditorIcons.ToolLine, "L"),
-        new ToolDefinition(EditorTool.Arrow, "Arrow", EditorIcons.ToolArrow, "A"),
-        new ToolDefinition(EditorTool.Freehand, "Freehand", EditorIcons.ToolFreehand, "F"),
-        new ToolDefinition(EditorTool.Text, "Text", EditorIcons.ToolText, "T"),
-        new ToolDefinition(EditorTool.SpeechBalloon, "Speech Balloon", EditorIcons.ToolSpeechBalloon, "O"),
-        new ToolDefinition(EditorTool.Step, "Step", EditorIcons.ToolStep, "N"),
-        new ToolDefinition(EditorTool.Image, "Image", EditorIcons.ToolImage, "I"),
-        new ToolDefinition(EditorTool.Emoji, "Emoji", EditorIcons.ToolEmoji, "J"),
-        new ToolDefinition(EditorTool.Cursor, "Cursor", EditorIcons.ToolCursor, "K"),
-        new ToolDefinition(EditorTool.Highlight, "Highlight", EditorIcons.ToolHighlight, "H"),
-        new ToolDefinition(EditorTool.SmartEraser, "Smart Eraser", EditorIcons.ToolSmartEraser, "W"),
-        new ToolDefinition(EditorTool.Blur, "Blur", EditorIcons.ToolBlur, "B"),
-        new ToolDefinition(EditorTool.Pixelate, "Pixelate", EditorIcons.ToolPixelate, "P"),
-        new ToolDefinition(EditorTool.Magnify, "Magnify", EditorIcons.ToolMagnify, "M"),
-        new ToolDefinition(EditorTool.Spotlight, "Spotlight", EditorIcons.ToolSpotlight, "S"),
-        new ToolDefinition(EditorTool.Crop, "Crop", EditorIcons.ToolCrop, "C"),
-        new ToolDefinition(EditorTool.CutOut, "Cut Out", EditorIcons.ToolCutOut, "U")
+        CreateToolDefinition(EditorTool.Select, "Select", EditorIcons.ToolSelect, "V", beginGroupByDefault: true),
+        CreateToolDefinition(EditorTool.Rectangle, "Rectangle", EditorIcons.ToolRectangle, "R"),
+        CreateToolDefinition(EditorTool.Ellipse, "Ellipse", EditorIcons.ToolEllipse, "E"),
+        CreateToolDefinition(EditorTool.Line, "Line", EditorIcons.ToolLine, "L"),
+        CreateToolDefinition(EditorTool.Arrow, "Arrow", EditorIcons.ToolArrow, "A"),
+        CreateToolDefinition(EditorTool.Freehand, "Freehand", EditorIcons.ToolFreehand, "F"),
+        CreateToolDefinition(EditorTool.Text, "Text", EditorIcons.ToolText, "T"),
+        CreateToolDefinition(EditorTool.SpeechBalloon, "Speech Balloon", EditorIcons.ToolSpeechBalloon, "O"),
+        CreateToolDefinition(EditorTool.Step, "Step", EditorIcons.ToolStep, "N"),
+        CreateToolDefinition(EditorTool.Image, "Image", EditorIcons.ToolImage, "I"),
+        CreateToolDefinition(EditorTool.Emoji, "Emoji", EditorIcons.ToolEmoji, "J"),
+        CreateToolDefinition(EditorTool.Cursor, "Cursor", EditorIcons.ToolCursor, "K"),
+        CreateToolDefinition(EditorTool.Highlight, "Highlight", EditorIcons.ToolHighlight, "H"),
+        CreateToolDefinition(EditorTool.SmartEraser, "Smart Eraser", EditorIcons.ToolSmartEraser, "W"),
+        CreateToolDefinition(EditorTool.Blur, "Blur", EditorIcons.ToolBlur, "B"),
+        CreateToolDefinition(EditorTool.Pixelate, "Pixelate", EditorIcons.ToolPixelate, "P"),
+        CreateToolDefinition(EditorTool.Magnify, "Magnify", EditorIcons.ToolMagnify, "M"),
+        CreateToolDefinition(EditorTool.Spotlight, "Spotlight", EditorIcons.ToolSpotlight, "S"),
+        CreateToolDefinition(EditorTool.Crop, "Crop", EditorIcons.ToolCrop, "C", beginGroupByDefault: true),
+        CreateToolDefinition(EditorTool.CutOut, "Cut Out", EditorIcons.ToolCutOut, "U"),
+        new ToolbarItemDefinition(BackgroundItemId, null, "Background", EditorIcons.PanelBackground, "", false, false),
+        new ToolbarItemDefinition(ImageEffectsItemId, null, "Image Effects", EditorIcons.PanelEffects, "", false, false)
     };
 
-    private static readonly IReadOnlyDictionary<string, ToolDefinition> ToolDefinitionsById =
-        ToolDefinitions.ToDictionary(definition => GetToolId(definition.Tool), StringComparer.OrdinalIgnoreCase);
+    private static readonly IReadOnlyDictionary<string, ToolbarItemDefinition> ItemDefinitionsById =
+        ItemDefinitions.ToDictionary(definition => definition.Id, StringComparer.OrdinalIgnoreCase);
 
     private bool _isVisible = true;
     private bool _isActive;
@@ -69,12 +81,13 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 
     private ToolbarCustomizationItemViewModel(
         string id,
-        EditorTool tool,
+        EditorTool? tool,
         string name,
         string icon,
         string hotkey,
         bool isVisible,
-        bool beginGroup)
+        bool beginGroup,
+        bool isHotkeyEditable)
     {
         Id = id;
         Tool = tool;
@@ -83,11 +96,13 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         _hotkey = hotkey;
         _isVisible = isVisible;
         _beginGroup = beginGroup;
+        IsHotkeyEditable = isHotkeyEditable;
     }
 
     public string Id { get; }
-    public bool IsTool => true;
-    public EditorTool Tool { get; }
+    public bool IsTool => Tool.HasValue;
+    public EditorTool? Tool { get; }
+    public bool IsHotkeyEditable { get; }
     public string Name { get; }
     public string Icon { get; }
 
@@ -112,6 +127,7 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
             if (SetProperty(ref _hotkey, value ?? ""))
             {
                 OnPropertyChanged(nameof(ToolTip));
+                OnPropertyChanged(nameof(HotkeyDisplayText));
             }
         }
     }
@@ -148,19 +164,25 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 
     public bool IsButtonVisible => IsVisible;
     public bool IsGroupSeparatorVisible => IsVisible && BeginGroup;
+    public string HotkeyDisplayText => string.IsNullOrWhiteSpace(Hotkey) ? "None" : Hotkey;
 
     public string ToolTip
     {
         get
         {
             string hotkey = Hotkey.Trim();
-            return hotkey.Length > 0 ? $"{Name} ({hotkey})" : Name;
+            if (Id == ImageEffectsItemId)
+            {
+                return "Image Effects\nFavorite image effects (Right click)";
+            }
+
+            return IsHotkeyEditable && hotkey.Length > 0 ? $"{Name} ({hotkey})" : Name;
         }
     }
 
     public ToolbarCustomizationItemViewModel Clone()
     {
-        return new ToolbarCustomizationItemViewModel(Id, Tool, Name, Icon, Hotkey, IsVisible, BeginGroup)
+        return new ToolbarCustomizationItemViewModel(Id, Tool, Name, Icon, Hotkey, IsVisible, BeginGroup, IsHotkeyEditable)
         {
             IsActive = IsActive,
             CanMoveUp = CanMoveUp,
@@ -175,13 +197,13 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
             Id = Id,
             BeginGroup = BeginGroup,
             IsVisible = IsVisible,
-            Hotkey = Hotkey.Trim()
+            Hotkey = IsHotkeyEditable ? Hotkey.Trim() : ""
         };
     }
 
     public static IReadOnlyList<ToolbarCustomizationItemViewModel> CreateDefaultItems()
     {
-        return ToolDefinitions.Select(definition => CreateTool(definition)).ToList();
+        return ItemDefinitions.Select(definition => CreateItem(definition)).ToList();
     }
 
     public static IReadOnlyList<ToolbarCustomizationItemViewModel> CreateFromOptions(IReadOnlyList<ImageEditorToolbarItemOptions>? options)
@@ -196,32 +218,41 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 
         foreach (ImageEditorToolbarItemOptions option in options)
         {
-            if (ToolDefinitionsById.TryGetValue(option.Id, out ToolDefinition? definition))
+            if (ItemDefinitionsById.TryGetValue(option.Id, out ToolbarItemDefinition? definition))
             {
-                items.Add(CreateTool(definition, option.IsVisible, option.Hotkey ?? definition.DefaultHotkey, option.BeginGroup));
+                items.Add(CreateItem(definition, option.IsVisible, option.Hotkey ?? definition.DefaultHotkey, option.BeginGroup));
                 usedToolIds.Add(option.Id);
             }
         }
 
-        foreach (ToolDefinition missingDefinition in ToolDefinitions.Where(definition => !usedToolIds.Contains(GetToolId(definition.Tool))))
+        foreach (ToolbarItemDefinition missingDefinition in ItemDefinitions.Where(definition => !usedToolIds.Contains(definition.Id)))
         {
-            items.Add(CreateTool(missingDefinition));
+            items.Add(CreateItem(missingDefinition));
         }
 
         return items.Count > 0 ? items : CreateDefaultItems();
     }
 
-    private static ToolbarCustomizationItemViewModel CreateTool(ToolDefinition definition, bool isVisible = true, string? hotkey = null, bool? beginGroup = null)
+    private static ToolbarCustomizationItemViewModel CreateItem(ToolbarItemDefinition definition, bool isVisible = true, string? hotkey = null, bool? beginGroup = null)
     {
         return new ToolbarCustomizationItemViewModel(
-            GetToolId(definition.Tool),
+            definition.Id,
             definition.Tool,
             definition.Name,
             definition.Icon,
-            hotkey ?? definition.DefaultHotkey,
+            definition.IsHotkeyEditable ? hotkey ?? definition.DefaultHotkey : "",
             isVisible,
-            beginGroup ?? definition.Tool is EditorTool.Select or EditorTool.Crop);
+            beginGroup ?? definition.BeginGroupByDefault,
+            definition.IsHotkeyEditable);
     }
 
-    private static string GetToolId(EditorTool tool) => tool.ToString();
+    private static ToolbarItemDefinition CreateToolDefinition(
+        EditorTool tool,
+        string name,
+        string icon,
+        string defaultHotkey,
+        bool beginGroupByDefault = false)
+    {
+        return new ToolbarItemDefinition(tool.ToString(), tool, name, icon, defaultHotkey, true, beginGroupByDefault);
+    }
 }

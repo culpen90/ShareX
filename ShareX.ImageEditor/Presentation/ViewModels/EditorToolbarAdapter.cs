@@ -383,6 +383,8 @@ public sealed class EditorToolbarAdapter : IAnnotationToolbarAdapter
 
     public ICommand ExitEditorCommand => _viewModel.ExitEditorCommand;
 
+    public void ExecuteToolbarItem(ToolbarCustomizationItemViewModel item) => _viewModel.ExecuteToolbarItem(item);
+
     private void OnRecentImageFilesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         SyncRecentImageMenuItems();
