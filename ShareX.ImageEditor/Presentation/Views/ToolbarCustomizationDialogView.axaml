@@ -49,69 +49,81 @@
                                     <Border BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                             BorderThickness="0,0,0,1"
                                             Padding="8">
-                                        <Grid ColumnDefinitions="34,34,34,64,*,150"
-                                              ColumnSpacing="8"
-                                              VerticalAlignment="Center">
-                                            <Button Grid.Column="0"
-                                                    Classes="editor-button"
-                                                    Width="32"
-                                                    Height="32"
-                                                    Padding="0"
-                                                    IsEnabled="{Binding CanMoveUp}"
-                                                    Click="OnMoveUpClick"
-                                                    ToolTip.Tip="Move up">
-                                                <TextBlock Text="{x:Static theming:LucideIcons.chevron_up}"
-                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                                           FontWeight="Normal"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                            </Button>
+                                        <DockPanel LastChildFill="True"
+                                                   VerticalAlignment="Center">
+                                            <TextBox DockPanel.Dock="Right"
+                                                     Width="150"
+                                                     Text="{Binding HotkeyDisplayText, Mode=OneWay}"
+                                                     IsEnabled="{Binding IsHotkeyEditable}"
+                                                     TextAlignment="Center"
+                                                     IsReadOnly="True"
+                                                     VerticalAlignment="Center"
+                                                     VerticalContentAlignment="Center"
+                                                     ToolTip.Tip="Click and press a shortcut. Backspace or Delete clears it."/>
 
-                                            <Button Grid.Column="1"
-                                                    Classes="editor-button"
-                                                    Width="32"
-                                                    Height="32"
-                                                    Padding="0"
-                                                    IsEnabled="{Binding CanMoveDown}"
-                                                    Click="OnMoveDownClick"
-                                                    ToolTip.Tip="Move down">
-                                                <TextBlock Text="{x:Static theming:LucideIcons.chevron_down}"
-                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                                           FontWeight="Normal"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                            </Button>
+                                            <StackPanel DockPanel.Dock="Left"
+                                                        Orientation="Horizontal"
+                                                        Spacing="10"
+                                                        Margin="0,0,10,0"
+                                                        VerticalAlignment="Center">
+                                                <Button Classes="editor-button"
+                                                        Width="32"
+                                                        Height="32"
+                                                        Padding="0"
+                                                        IsEnabled="{Binding CanMoveUp}"
+                                                        Click="OnMoveUpClick"
+                                                        ToolTip.Tip="Move up">
+                                                    <TextBlock Text="{x:Static theming:LucideIcons.chevron_up}"
+                                                               FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                               FontWeight="Normal"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Button>
 
-                                            <ToggleButton Grid.Column="2"
-                                                          Classes="editor-button"
-                                                          Classes.active="{Binding BeginGroup}"
-                                                          Width="32"
-                                                          Height="32"
-                                                          Padding="0"
-                                                          IsChecked="{Binding BeginGroup, Mode=TwoWay}"
-                                                          HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          ToolTip.Tip="Begin group">
-                                                <TextBlock Text="{x:Static theming:LucideIcons.arrow_right_from_line}"
-                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                                           FontWeight="Normal"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                            </ToggleButton>
+                                                <Button Classes="editor-button"
+                                                        Width="32"
+                                                        Height="32"
+                                                        Padding="0"
+                                                        IsEnabled="{Binding CanMoveDown}"
+                                                        Click="OnMoveDownClick"
+                                                        ToolTip.Tip="Move down">
+                                                    <TextBlock Text="{x:Static theming:LucideIcons.chevron_down}"
+                                                               FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                               FontWeight="Normal"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Button>
 
-                                            <ToggleSwitch Grid.Column="3"
-                                                          OnContent=""
-                                                          OffContent=""
-                                                          IsChecked="{Binding IsVisible, Mode=TwoWay}"
-                                                          IsEnabled="{Binding IsVisibilityEditable}"
-                                                          HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          ToolTip.Tip="Show / Hide"/>
+                                                <ToggleButton Classes="editor-button"
+                                                              Classes.active="{Binding BeginGroup}"
+                                                              Width="32"
+                                                              Height="32"
+                                                              Padding="0"
+                                                              IsChecked="{Binding BeginGroup, Mode=TwoWay}"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center"
+                                                              ToolTip.Tip="Begin group">
+                                                    <TextBlock Text="{x:Static theming:LucideIcons.arrow_right_from_line}"
+                                                               FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                               FontWeight="Normal"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </ToggleButton>
 
-                                            <Grid Grid.Column="4"
-                                                  ColumnDefinitions="32,*"
+                                                <ToggleSwitch Width="44"
+                                                              OnContent=""
+                                                              OffContent=""
+                                                              IsChecked="{Binding IsVisible, Mode=TwoWay}"
+                                                              IsEnabled="{Binding IsVisibilityEditable}"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center"
+                                                              ToolTip.Tip="Show / Hide"/>
+                                            </StackPanel>
+
+                                            <Grid ColumnDefinitions="32,*"
                                                   ColumnSpacing="10"
-                                                  VerticalAlignment="Center">
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,10,0">
                                                 <TextBlock Text="{Binding Icon}"
                                                            FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
                                                            FontWeight="Normal"
@@ -124,17 +136,7 @@
                                                            Foreground="{DynamicResource ShareX.Brush.Text}"
                                                            VerticalAlignment="Center"/>
                                             </Grid>
-
-                                            <TextBox Grid.Column="5"
-                                                     Text="{Binding HotkeyDisplayText}"
-                                                     IsEnabled="{Binding IsHotkeyEditable}"
-                                                     TextAlignment="Center"
-                                                     IsReadOnly="True"
-                                                     KeyDown="OnHotkeyKeyDown"
-                                                     VerticalAlignment="Center"
-                                                     VerticalContentAlignment="Center"
-                                                     ToolTip.Tip="Click and press a shortcut. Backspace or Delete clears it."/>
-                                        </Grid>
+                                        </DockPanel>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

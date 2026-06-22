@@ -172,7 +172,7 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 
     public bool IsButtonVisible => IsVisible;
     public bool IsGroupSeparatorVisible => IsVisible && BeginGroup;
-    public string HotkeyDisplayText => string.IsNullOrWhiteSpace(Hotkey) ? "None" : Hotkey;
+    public string HotkeyDisplayText => Hotkey;
 
     public string ToolTip
     {

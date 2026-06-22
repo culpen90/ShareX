@@ -36,6 +36,7 @@ namespace ShareX.ImageEditor.Presentation.Views
         public ToolbarCustomizationDialogView()
         {
             AvaloniaXamlLoader.Load(this);
+            AddHandler(InputElement.KeyDownEvent, OnHotkeyKeyDown, RoutingStrategies.Tunnel);
         }
 
         private void OnMoveUpClick(object? sender, RoutedEventArgs e)
@@ -58,12 +59,12 @@ namespace ShareX.ImageEditor.Presentation.Views
 
         private void OnHotkeyKeyDown(object? sender, KeyEventArgs e)
         {
-            if (sender is not Control { DataContext: ToolbarCustomizationItemViewModel { IsHotkeyEditable: true } item })
+            if (e.Source is not TextBox { DataContext: ToolbarCustomizationItemViewModel { IsHotkeyEditable: true } item })
             {
                 return;
             }
 
-            if (e.Key is Key.Back or Key.Delete)
+            if (e.Key is Key.Back or Key.Delete || e.Key.ToString().Equals("Backspace", StringComparison.OrdinalIgnoreCase))
             {
                 item.Hotkey = "";
                 e.Handled = true;
