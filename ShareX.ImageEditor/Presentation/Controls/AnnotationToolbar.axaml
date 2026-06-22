@@ -26,89 +26,6 @@
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Disabled">
                 <StackPanel Orientation="Horizontal" Spacing="4">
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="4"
-                                IsVisible="{ReflectionBinding ShowFileMenu}">
-                        <Button Classes="editor-button toolbar-button"
-                                ToolTip.Tip="File"
-                                x:Name="FileMenuButton"
-                                MinWidth="54"
-                                HorizontalContentAlignment="Stretch">
-                            <Grid ColumnDefinitions="Auto,*,Auto">
-                                <TextBlock Grid.Column="0"
-                                           Text="{x:Static theming:EditorIcons.FileMenu}"
-                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" FontSize="18"
-                                           VerticalAlignment="Center"/>
-                                <Border Grid.Column="1"/>
-                                <TextBlock Grid.Column="2"
-                                           Classes="dropdown-chevron"
-                                           Classes.open="{Binding #FileMenuButton.Flyout.IsOpen}"
-                                           Text="{x:Static theming:EditorIcons.ChevronDown}"
-                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                           FontWeight="Normal"
-                                           FontSize="10"
-                                           Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                            <Button.Flyout>
-                                <MenuFlyout Placement="BottomEdgeAlignedLeft" VerticalOffset="4">
-                                    <MenuItem Header="New..."
-                                              Command="{ReflectionBinding NewImageCommand}"
-                                              InputGesture="Ctrl+N">
-                                        <MenuItem.Icon>
-                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileNew}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Open..."
-                                              Command="{ReflectionBinding OpenImageCommand}"
-                                              InputGesture="Ctrl+O">
-                                        <MenuItem.Icon>
-                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileOpen}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Open recent"
-                                              IsVisible="{ReflectionBinding HasRecentImageFiles}"
-                                              ItemsSource="{ReflectionBinding RecentImageMenuItems}">
-                                        <MenuItem.Icon>
-                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.history}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <Separator/>
-                                    <MenuItem Header="Save"
-                                              Command="{ReflectionBinding SaveCommand}"
-                                              InputGesture="Ctrl+S">
-                                        <MenuItem.Icon>
-                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileSave}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Save as..."
-                                              Command="{ReflectionBinding SaveAsCommand}"
-                                              InputGesture="Ctrl+Shift+S">
-                                        <MenuItem.Icon>
-                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileSaveAs}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <Separator/>
-                                                                        <MenuItem Header="Options"
-                                                                                          IsVisible="{ReflectionBinding ShowOptionsButton}"
-                                                                                          Click="OnOpenOptionsClick">
-                                        <MenuItem.Icon>
-                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.settings}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <Separator IsVisible="{ReflectionBinding ShowOptionsButton}"/>
-                                    <MenuItem Header="Exit"
-                                              Command="{ReflectionBinding ExitEditorCommand}"
-                                              InputGesture="Escape">
-                                        <MenuItem.Icon>
-                                            <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileExit}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-                    </StackPanel>
-
                     <ItemsControl ItemsSource="{ReflectionBinding VisibleToolbarItems}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -123,11 +40,92 @@
                                             Background="{DynamicResource ShareX.Brush.Separator}"
                                             IsVisible="{Binding IsGroupSeparatorVisible}"/>
                                     <Button Classes="editor-button toolbar-button"
+                                            ToolTip.Tip="File"
+                                            x:Name="FileMenuButton"
+                                            MinWidth="54"
+                                            HorizontalContentAlignment="Stretch"
+                                            IsVisible="{Binding IsFileMenu}">
+                                        <Grid ColumnDefinitions="Auto,*,Auto">
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding Icon}"
+                                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                       FontWeight="Normal"
+                                                       FontSize="18"
+                                                       VerticalAlignment="Center"/>
+                                            <Border Grid.Column="1"/>
+                                            <TextBlock Grid.Column="2"
+                                                       Classes="dropdown-chevron"
+                                                       Classes.open="{Binding #FileMenuButton.Flyout.IsOpen}"
+                                                       Text="{x:Static theming:EditorIcons.ChevronDown}"
+                                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                       FontWeight="Normal"
+                                                       FontSize="10"
+                                                       Foreground="{DynamicResource ShareX.Brush.Text.Secondary}"
+                                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <Button.Flyout>
+                                            <MenuFlyout Placement="BottomEdgeAlignedLeft" VerticalOffset="4">
+                                                <MenuItem Header="New..."
+                                                          Command="{Binding #AnnotationToolbarRoot.DataContext.NewImageCommand}"
+                                                          InputGesture="Ctrl+N">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileNew}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Open..."
+                                                          Command="{Binding #AnnotationToolbarRoot.DataContext.OpenImageCommand}"
+                                                          InputGesture="Ctrl+O">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileOpen}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Open recent"
+                                                          IsVisible="{Binding #AnnotationToolbarRoot.DataContext.HasRecentImageFiles}"
+                                                          ItemsSource="{Binding #AnnotationToolbarRoot.DataContext.RecentImageMenuItems}">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.history}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator/>
+                                                <MenuItem Header="Save"
+                                                          Command="{Binding #AnnotationToolbarRoot.DataContext.SaveCommand}"
+                                                          InputGesture="Ctrl+S">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileSave}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="Save as..."
+                                                          Command="{Binding #AnnotationToolbarRoot.DataContext.SaveAsCommand}"
+                                                          InputGesture="Ctrl+Shift+S">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileSaveAs}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator/>
+                                                <MenuItem Header="Options"
+                                                          IsVisible="{Binding #AnnotationToolbarRoot.DataContext.ShowOptionsButton}"
+                                                          Click="OnOpenOptionsClick">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:LucideIcons.settings}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <Separator IsVisible="{Binding #AnnotationToolbarRoot.DataContext.ShowOptionsButton}"/>
+                                                <MenuItem Header="Exit"
+                                                          Command="{Binding #AnnotationToolbarRoot.DataContext.ExitEditorCommand}"
+                                                          InputGesture="Escape">
+                                                    <MenuItem.Icon>
+                                                        <TextBlock FontFamily="{DynamicResource ShareX.FontFamily.Icon}" FontWeight="Normal" Text="{x:Static theming:EditorIcons.FileExit}"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                            </MenuFlyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                    <Button Classes="editor-button toolbar-button"
                                             Tag="{Binding}"
                                             Classes.active="{Binding IsActive}"
                                             Click="OnToolbarItemClick"
                                             PointerPressed="OnToolbarItemPointerPressed"
-                                            IsVisible="{Binding IsButtonVisible}"
+                                            IsVisible="{Binding IsRegularButton}"
                                             ToolTip.Tip="{Binding ToolTip}"
                                             Content="{Binding Icon}"/>
                                 </StackPanel>

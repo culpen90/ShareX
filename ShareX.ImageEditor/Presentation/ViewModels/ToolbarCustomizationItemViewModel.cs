@@ -31,6 +31,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels;
 
 public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 {
+    public const string FileItemId = "File";
     public const string BackgroundItemId = "Background";
     public const string ImageEffectsItemId = "ImageEffects";
 
@@ -41,10 +42,12 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         string Icon,
         string DefaultHotkey,
         bool IsHotkeyEditable,
+        bool IsVisibilityEditable,
         bool BeginGroupByDefault);
 
     private static readonly IReadOnlyList<ToolbarItemDefinition> ItemDefinitions = new[]
     {
+        new ToolbarItemDefinition(FileItemId, null, "File", EditorIcons.FileMenu, "", false, false, false),
         CreateToolDefinition(EditorTool.Select, "Select", EditorIcons.ToolSelect, "V", beginGroupByDefault: true),
         CreateToolDefinition(EditorTool.Rectangle, "Rectangle", EditorIcons.ToolRectangle, "R"),
         CreateToolDefinition(EditorTool.Ellipse, "Ellipse", EditorIcons.ToolEllipse, "E"),
@@ -65,8 +68,8 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         CreateToolDefinition(EditorTool.Spotlight, "Spotlight", EditorIcons.ToolSpotlight, "S"),
         CreateToolDefinition(EditorTool.Crop, "Crop", EditorIcons.ToolCrop, "C", beginGroupByDefault: true),
         CreateToolDefinition(EditorTool.CutOut, "Cut Out", EditorIcons.ToolCutOut, "U"),
-        new ToolbarItemDefinition(BackgroundItemId, null, "Background", EditorIcons.PanelBackground, "", false, false),
-        new ToolbarItemDefinition(ImageEffectsItemId, null, "Image Effects", EditorIcons.PanelEffects, "", false, false)
+        new ToolbarItemDefinition(BackgroundItemId, null, "Background", EditorIcons.PanelBackground, "", false, true, false),
+        new ToolbarItemDefinition(ImageEffectsItemId, null, "Image Effects", EditorIcons.PanelEffects, "", false, true, false)
     };
 
     private static readonly IReadOnlyDictionary<string, ToolbarItemDefinition> ItemDefinitionsById =
@@ -87,7 +90,8 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         string hotkey,
         bool isVisible,
         bool beginGroup,
-        bool isHotkeyEditable)
+        bool isHotkeyEditable,
+        bool isVisibilityEditable)
     {
         Id = id;
         Tool = tool;
@@ -97,12 +101,16 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         _isVisible = isVisible;
         _beginGroup = beginGroup;
         IsHotkeyEditable = isHotkeyEditable;
+        IsVisibilityEditable = isVisibilityEditable;
     }
 
     public string Id { get; }
+    public bool IsFileMenu => string.Equals(Id, FileItemId, StringComparison.OrdinalIgnoreCase);
+    public bool IsRegularButton => !IsFileMenu;
     public bool IsTool => Tool.HasValue;
     public EditorTool? Tool { get; }
     public bool IsHotkeyEditable { get; }
+    public bool IsVisibilityEditable { get; }
     public string Name { get; }
     public string Icon { get; }
 
@@ -182,7 +190,7 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 
     public ToolbarCustomizationItemViewModel Clone()
     {
-        return new ToolbarCustomizationItemViewModel(Id, Tool, Name, Icon, Hotkey, IsVisible, BeginGroup, IsHotkeyEditable)
+        return new ToolbarCustomizationItemViewModel(Id, Tool, Name, Icon, Hotkey, IsVisible, BeginGroup, IsHotkeyEditable, IsVisibilityEditable)
         {
             IsActive = IsActive,
             CanMoveUp = CanMoveUp,
@@ -196,7 +204,7 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         {
             Id = Id,
             BeginGroup = BeginGroup,
-            IsVisible = IsVisible,
+            IsVisible = !IsVisibilityEditable || IsVisible,
             Hotkey = IsHotkeyEditable ? Hotkey.Trim() : ""
         };
     }
@@ -241,9 +249,10 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
             definition.Name,
             definition.Icon,
             definition.IsHotkeyEditable ? hotkey ?? definition.DefaultHotkey : "",
-            isVisible,
+            definition.IsVisibilityEditable ? isVisible : true,
             beginGroup ?? definition.BeginGroupByDefault,
-            definition.IsHotkeyEditable);
+            definition.IsHotkeyEditable,
+            definition.IsVisibilityEditable);
     }
 
     private static ToolbarItemDefinition CreateToolDefinition(
@@ -253,6 +262,6 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         string defaultHotkey,
         bool beginGroupByDefault = false)
     {
-        return new ToolbarItemDefinition(tool.ToString(), tool, name, icon, defaultHotkey, true, beginGroupByDefault);
+        return new ToolbarItemDefinition(tool.ToString(), tool, name, icon, defaultHotkey, true, true, beginGroupByDefault);
     }
 }

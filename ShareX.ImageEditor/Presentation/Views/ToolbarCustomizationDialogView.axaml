@@ -103,6 +103,7 @@
                                                           OnContent=""
                                                           OffContent=""
                                                           IsChecked="{Binding IsVisible, Mode=TwoWay}"
+                                                          IsEnabled="{Binding IsVisibilityEditable}"
                                                           HorizontalAlignment="Center"
                                                           VerticalAlignment="Center"
                                                           ToolTip.Tip="Show / Hide"/>
