@@ -85,7 +85,7 @@ internal static class ToolbarHotkeyHelper
             : hotkey.Trim();
     }
 
-    private static string Format(Key key, KeyModifiers modifiers)
+    public static string Format(Key key, KeyModifiers modifiers)
     {
         List<string> parts = new();
 

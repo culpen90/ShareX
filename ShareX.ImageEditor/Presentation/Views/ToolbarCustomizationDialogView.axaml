@@ -121,6 +121,9 @@
                                                      Text="{Binding Hotkey, Mode=TwoWay}"
                                                      IsEnabled="{Binding IsTool}"
                                                      PlaceholderText="None"
+                                                     TextAlignment="Center"
+                                                     IsReadOnly="True"
+                                                     KeyDown="OnHotkeyKeyDown"
                                                      VerticalAlignment="Center"/>
 
                                             <Button Grid.Column="5"

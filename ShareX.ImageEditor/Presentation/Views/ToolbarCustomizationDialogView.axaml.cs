@@ -24,6 +24,7 @@
 #endregion License Information (GPL v3)
 
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ShareX.ImageEditor.Presentation.ViewModels;
@@ -62,6 +63,38 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.Remove(item);
                 e.Handled = true;
             }
+        }
+
+        private void OnHotkeyKeyDown(object? sender, KeyEventArgs e)
+        {
+            if (sender is not Control { DataContext: ToolbarCustomizationItemViewModel { IsTool: true } item })
+            {
+                return;
+            }
+
+            if (e.Key is Key.Back or Key.Delete)
+            {
+                item.Hotkey = "";
+                e.Handled = true;
+                return;
+            }
+
+            if (IsModifierKey(e.Key))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            item.Hotkey = ToolbarHotkeyHelper.Format(e.Key, e.KeyModifiers);
+            e.Handled = true;
+        }
+
+        private static bool IsModifierKey(Key key)
+        {
+            return key is Key.LeftShift or Key.RightShift
+                or Key.LeftCtrl or Key.RightCtrl
+                or Key.LeftAlt or Key.RightAlt
+                or Key.LWin or Key.RWin;
         }
     }
 }
