@@ -88,7 +88,7 @@
                                                           IsChecked="{Binding IsVisible, Mode=TwoWay}"
                                                           HorizontalAlignment="Center"
                                                           VerticalAlignment="Center"
-                                                          ToolTip.Tip="Show or hide tool"/>
+                                                          ToolTip.Tip="Show / Hide"/>
 
                                             <Grid Grid.Column="3"
                                                   ColumnDefinitions="32,*"

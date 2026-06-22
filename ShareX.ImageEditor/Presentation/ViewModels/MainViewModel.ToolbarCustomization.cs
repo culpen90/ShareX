@@ -32,12 +32,15 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
     public partial class MainViewModel : ViewModelBase
     {
         private readonly ObservableCollection<ToolbarCustomizationItemViewModel> _toolbarItems = new();
+        private readonly ObservableCollection<ToolbarCustomizationItemViewModel> _visibleToolbarItems = new();
 
         public ReadOnlyObservableCollection<ToolbarCustomizationItemViewModel> ToolbarItems { get; private set; } = null!;
+        public ReadOnlyObservableCollection<ToolbarCustomizationItemViewModel> VisibleToolbarItems { get; private set; } = null!;
 
         private void InitializeToolbarCustomization()
         {
             ToolbarItems = new ReadOnlyObservableCollection<ToolbarCustomizationItemViewModel>(_toolbarItems);
+            VisibleToolbarItems = new ReadOnlyObservableCollection<ToolbarCustomizationItemViewModel>(_visibleToolbarItems);
             ApplyToolbarCustomizationItems(
                 ToolbarCustomizationItemViewModel.CreateFromOptions(Options.ToolbarItems),
                 persist: Options.ToolbarItems.Count == 0);
@@ -88,7 +91,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             }
 
             UpdateToolbarActiveStates();
+            RefreshVisibleToolbarItems();
             OnPropertyChanged(nameof(ToolbarItems));
+            OnPropertyChanged(nameof(VisibleToolbarItems));
 
             if (persist)
             {
@@ -101,6 +106,16 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             foreach (ToolbarCustomizationItemViewModel item in _toolbarItems)
             {
                 item.IsActive = item.Tool == ActiveTool;
+            }
+        }
+
+        private void RefreshVisibleToolbarItems()
+        {
+            _visibleToolbarItems.Clear();
+
+            foreach (ToolbarCustomizationItemViewModel item in _toolbarItems.Where(item => item.IsVisible))
+            {
+                _visibleToolbarItems.Add(item);
             }
         }
     }

@@ -109,7 +109,7 @@
                         </Button>
                     </StackPanel>
 
-                    <ItemsControl ItemsSource="{ReflectionBinding ToolbarItems}">
+                    <ItemsControl ItemsSource="{ReflectionBinding VisibleToolbarItems}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" Spacing="4"/>
