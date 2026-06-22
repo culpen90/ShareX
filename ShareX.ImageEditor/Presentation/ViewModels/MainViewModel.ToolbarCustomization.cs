@@ -72,9 +72,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         {
             foreach (ToolbarCustomizationItemViewModel item in _toolbarItems)
             {
-                if (item.IsHotkeyEditable && item.Tool.HasValue && ToolbarHotkeyHelper.Matches(item.Hotkey, key, modifiers))
+                if (item.IsHotkeyEditable && ToolbarHotkeyHelper.Matches(item.Hotkey, key, modifiers))
                 {
-                    SelectToolCommand.Execute(item.Tool.Value);
+                    ExecuteToolbarItem(item);
                     return true;
                 }
             }

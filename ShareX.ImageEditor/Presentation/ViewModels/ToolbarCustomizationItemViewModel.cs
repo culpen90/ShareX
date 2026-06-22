@@ -68,8 +68,8 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         CreateToolDefinition(EditorTool.Spotlight, "Spotlight", EditorIcons.ToolSpotlight, "S"),
         CreateToolDefinition(EditorTool.Crop, "Crop", EditorIcons.ToolCrop, "C", beginGroupByDefault: true),
         CreateToolDefinition(EditorTool.CutOut, "Cut Out", EditorIcons.ToolCutOut, "U"),
-        new ToolbarItemDefinition(BackgroundItemId, null, "Background", EditorIcons.PanelBackground, "", false, true, false),
-        new ToolbarItemDefinition(ImageEffectsItemId, null, "Image Effects", EditorIcons.PanelEffects, "", false, true, false)
+        new ToolbarItemDefinition(BackgroundItemId, null, "Background", EditorIcons.PanelBackground, "", true, true, false),
+        new ToolbarItemDefinition(ImageEffectsItemId, null, "Image Effects", EditorIcons.PanelEffects, "", true, true, false)
     };
 
     private static readonly IReadOnlyDictionary<string, ToolbarItemDefinition> ItemDefinitionsById =
@@ -181,7 +181,8 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
             string hotkey = Hotkey.Trim();
             if (Id == ImageEffectsItemId)
             {
-                return "Image Effects\nFavorite image effects (Right click)";
+                string header = IsHotkeyEditable && hotkey.Length > 0 ? $"{Name} ({hotkey})" : Name;
+                return $"{header}\nFavorite image effects (Right click)";
             }
 
             return IsHotkeyEditable && hotkey.Length > 0 ? $"{Name} ({hotkey})" : Name;
