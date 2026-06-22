@@ -40,7 +40,7 @@
                                             Background="{DynamicResource ShareX.Brush.Separator}"
                                             IsVisible="{Binding IsGroupSeparatorVisible}"/>
                                     <Button Classes="editor-button toolbar-button"
-                                            ToolTip.Tip="File"
+                                            ToolTip.Tip="{Binding ToolTip}"
                                             x:Name="FileMenuButton"
                                             MinWidth="54"
                                             HorizontalContentAlignment="Stretch"

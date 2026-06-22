@@ -91,6 +91,18 @@ public partial class AnnotationToolbar : UserControl
         set => SetValue(ShowEditingActionsProperty, value);
     }
 
+    public void OpenFileMenu()
+    {
+        Button? fileButton = this.GetVisualDescendants()
+            .OfType<Button>()
+            .FirstOrDefault(button => button.DataContext is ToolbarCustomizationItemViewModel item && item.IsFileMenu);
+
+        if (fileButton?.Flyout is FlyoutBase flyout)
+        {
+            flyout.ShowAt(fileButton);
+        }
+    }
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);

@@ -493,6 +493,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.SaveRequested += OnSaveRequested;
                 vm.SaveAsRequested += OnSaveAsRequested;
                 vm.OpenOptionsPanelRequested += OnOpenOptionsPanelRequested;
+                vm.FileMenuRequested += OnFileMenuRequested;
 
                 // Original code subscribed to vm.PropertyChanged
                 vm.PropertyChanged += OnViewModelPropertyChanged;
@@ -557,6 +558,7 @@ namespace ShareX.ImageEditor.Presentation.Views
                 vm.SaveRequested -= OnSaveRequested;
                 vm.SaveAsRequested -= OnSaveAsRequested;
                 vm.OpenOptionsPanelRequested -= OnOpenOptionsPanelRequested;
+                vm.FileMenuRequested -= OnFileMenuRequested;
                 vm.ImageInsertionRequested -= OnImageInsertionRequested;
                 vm.EmojiInsertionRequested -= OnEmojiInsertionRequested;
             }
@@ -1066,6 +1068,11 @@ namespace ShareX.ImageEditor.Presentation.Views
                 DataContext = vm
             };
             vm.IsEffectsPanelOpen = true;
+        }
+
+        private void OnFileMenuRequested(object? sender, EventArgs e)
+        {
+            this.FindControl<AnnotationToolbar>("AnnotationToolbarControl")?.OpenFileMenu();
         }
 
         private EffectBrowserPanel EnsureEffectBrowserPanel(MainViewModel vm)

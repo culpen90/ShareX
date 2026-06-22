@@ -47,7 +47,7 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 
     private static readonly IReadOnlyList<ToolbarItemDefinition> ItemDefinitions = new[]
     {
-        new ToolbarItemDefinition(FileItemId, null, "File", EditorIcons.FileMenu, "", false, false, false),
+        new ToolbarItemDefinition(FileItemId, null, "File", EditorIcons.FileMenu, "", true, false, false),
         CreateToolDefinition(EditorTool.Select, "Select", EditorIcons.ToolSelect, "V", beginGroupByDefault: true),
         CreateToolDefinition(EditorTool.Rectangle, "Rectangle", EditorIcons.ToolRectangle, "R"),
         CreateToolDefinition(EditorTool.Ellipse, "Ellipse", EditorIcons.ToolEllipse, "E"),

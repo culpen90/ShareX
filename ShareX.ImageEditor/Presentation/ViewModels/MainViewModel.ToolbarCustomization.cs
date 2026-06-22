@@ -37,6 +37,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
         public ReadOnlyObservableCollection<ToolbarCustomizationItemViewModel> ToolbarItems { get; private set; } = null!;
         public ReadOnlyObservableCollection<ToolbarCustomizationItemViewModel> VisibleToolbarItems { get; private set; } = null!;
+        public event EventHandler? FileMenuRequested;
 
         private void InitializeToolbarCustomization()
         {
@@ -92,6 +93,9 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
 
             switch (item.Id)
             {
+                case ToolbarCustomizationItemViewModel.FileItemId:
+                    FileMenuRequested?.Invoke(this, EventArgs.Empty);
+                    break;
                 case ToolbarCustomizationItemViewModel.BackgroundItemId:
                     ToggleSettingsPanelCommand.Execute(null);
                     break;
