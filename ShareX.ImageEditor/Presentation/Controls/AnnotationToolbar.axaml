@@ -137,11 +137,6 @@
 
                     <StackPanel Orientation="Horizontal"
                                 Spacing="4"
-                                IsVisible="{Binding ShowTrailingActions, ElementName=AnnotationToolbarRoot}">
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="4"
                                 IsVisible="{Binding ShowEditingActions, ElementName=AnnotationToolbarRoot}">
                         <Border Width="1" Margin="4,0" Background="{DynamicResource ShareX.Brush.Separator}"/>
                         <Button Classes="editor-button toolbar-button"

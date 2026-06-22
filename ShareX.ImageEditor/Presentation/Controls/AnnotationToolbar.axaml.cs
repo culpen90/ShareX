@@ -49,9 +49,6 @@ public partial class AnnotationToolbar : UserControl
     public static readonly StyledProperty<bool> ShowEditingActionsProperty =
         AvaloniaProperty.Register<AnnotationToolbar, bool>(nameof(ShowEditingActions), true);
 
-    public static readonly StyledProperty<bool> ShowTrailingActionsProperty =
-        AvaloniaProperty.Register<AnnotationToolbar, bool>(nameof(ShowTrailingActions), true);
-
     private readonly SolidColorBrush? _activeBrush;
     private readonly SolidColorBrush? _activeForegroundBrush;
     private IPlatformSettings? _platformSettings;
@@ -92,12 +89,6 @@ public partial class AnnotationToolbar : UserControl
     {
         get => GetValue(ShowEditingActionsProperty);
         set => SetValue(ShowEditingActionsProperty, value);
-    }
-
-    public bool ShowTrailingActions
-    {
-        get => GetValue(ShowTrailingActionsProperty);
-        set => SetValue(ShowTrailingActionsProperty, value);
     }
 
     private void InitializeComponent()
