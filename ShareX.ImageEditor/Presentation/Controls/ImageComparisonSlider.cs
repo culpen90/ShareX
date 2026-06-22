@@ -42,8 +42,10 @@ public class ImageComparisonSlider : Control
     public static readonly StyledProperty<double> SliderPositionProperty =
         AvaloniaProperty.Register<ImageComparisonSlider, double>(nameof(SliderPosition), 0.5);
 
+    private const double CheckerSize = 12d;
     private static readonly IBrush EmptyBackgroundBrush = new SolidColorBrush(Color.FromRgb(16, 16, 16));
-    private static readonly IBrush ImageBackgroundBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+    private static readonly IBrush CheckerLightBrush = new SolidColorBrush(Color.FromRgb(235, 235, 235));
+    private static readonly IBrush CheckerDarkBrush = new SolidColorBrush(Color.FromRgb(205, 205, 205));
     private static readonly IBrush SliderBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
     private static readonly IPen SliderPen = new Pen(SliderBrush, 2);
     private static readonly IBrush HandleBrush = new SolidColorBrush(Color.FromArgb(230, 35, 35, 35));
@@ -102,7 +104,7 @@ public class ImageComparisonSlider : Control
         }
 
         Rect imageBounds = GetImageBounds(bounds, leftImage, rightImage);
-        context.FillRectangle(ImageBackgroundBrush, imageBounds);
+        DrawTransparencyBackground(context, imageBounds);
 
         if (rightImage != null)
         {
@@ -114,6 +116,7 @@ public class ImageComparisonSlider : Control
             double sliderX = imageBounds.Left + imageBounds.Width * SliderPosition;
             using (context.PushClip(new Rect(imageBounds.Left, imageBounds.Top, Math.Max(0, sliderX - imageBounds.Left), imageBounds.Height)))
             {
+                DrawTransparencyBackground(context, imageBounds);
                 DrawBitmap(context, leftImage, imageBounds);
             }
         }
@@ -163,6 +166,33 @@ public class ImageComparisonSlider : Control
         PixelSize pixelSize = bitmap.PixelSize;
         Rect source = new(0, 0, pixelSize.Width, pixelSize.Height);
         context.DrawImage(bitmap, source, destination);
+    }
+
+    private static void DrawTransparencyBackground(DrawingContext context, Rect bounds)
+    {
+        context.FillRectangle(CheckerLightBrush, bounds);
+
+        int columns = (int)Math.Ceiling(bounds.Width / CheckerSize);
+        int rows = (int)Math.Ceiling(bounds.Height / CheckerSize);
+
+        for (int y = 0; y < rows; y++)
+        {
+            for (int x = 0; x < columns; x++)
+            {
+                if ((x + y) % 2 == 0)
+                {
+                    continue;
+                }
+
+                Rect cell = new(
+                    bounds.Left + x * CheckerSize,
+                    bounds.Top + y * CheckerSize,
+                    Math.Min(CheckerSize, bounds.Right - (bounds.Left + x * CheckerSize)),
+                    Math.Min(CheckerSize, bounds.Bottom - (bounds.Top + y * CheckerSize)));
+
+                context.FillRectangle(CheckerDarkBrush, cell);
+            }
+        }
     }
 
     private static Rect GetImageBounds(Rect bounds, Bitmap? leftImage, Bitmap? rightImage)
