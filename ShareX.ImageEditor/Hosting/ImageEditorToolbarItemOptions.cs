@@ -28,7 +28,7 @@ namespace ShareX.ImageEditor.Hosting
     public class ImageEditorToolbarItemOptions
     {
         public string Id { get; set; } = "";
-        public bool IsSeparator { get; set; }
+        public bool? BeginGroup { get; set; }
         public bool IsVisible { get; set; } = true;
         public string Hotkey { get; set; } = "";
     }

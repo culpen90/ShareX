@@ -64,31 +64,30 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
     private bool _isActive;
     private bool _canMoveUp;
     private bool _canMoveDown;
+    private bool _beginGroup;
     private string _hotkey = "";
 
     private ToolbarCustomizationItemViewModel(
         string id,
-        bool isSeparator,
-        EditorTool? tool,
+        EditorTool tool,
         string name,
         string icon,
         string hotkey,
-        bool isVisible)
+        bool isVisible,
+        bool beginGroup)
     {
         Id = id;
-        IsSeparator = isSeparator;
         Tool = tool;
         Name = name;
         Icon = icon;
         _hotkey = hotkey;
         _isVisible = isVisible;
+        _beginGroup = beginGroup;
     }
 
     public string Id { get; }
-    public bool IsSeparator { get; }
-    public bool IsTool => !IsSeparator;
-    public bool CanRemove => IsSeparator;
-    public EditorTool? Tool { get; }
+    public bool IsTool => true;
+    public EditorTool Tool { get; }
     public string Name { get; }
     public string Icon { get; }
 
@@ -100,7 +99,7 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
             if (SetProperty(ref _isVisible, value))
             {
                 OnPropertyChanged(nameof(IsButtonVisible));
-                OnPropertyChanged(nameof(IsSeparatorVisible));
+                OnPropertyChanged(nameof(IsGroupSeparatorVisible));
             }
         }
     }
@@ -135,21 +134,33 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         set => SetProperty(ref _canMoveDown, value);
     }
 
-    public bool IsButtonVisible => IsTool && IsVisible;
-    public bool IsSeparatorVisible => IsSeparator && IsVisible;
+    public bool BeginGroup
+    {
+        get => _beginGroup;
+        set
+        {
+            if (SetProperty(ref _beginGroup, value))
+            {
+                OnPropertyChanged(nameof(IsGroupSeparatorVisible));
+            }
+        }
+    }
+
+    public bool IsButtonVisible => IsVisible;
+    public bool IsGroupSeparatorVisible => IsVisible && BeginGroup;
 
     public string ToolTip
     {
         get
         {
             string hotkey = Hotkey.Trim();
-            return IsTool && hotkey.Length > 0 ? $"{Name} ({hotkey})" : Name;
+            return hotkey.Length > 0 ? $"{Name} ({hotkey})" : Name;
         }
     }
 
     public ToolbarCustomizationItemViewModel Clone()
     {
-        return new ToolbarCustomizationItemViewModel(Id, IsSeparator, Tool, Name, Icon, Hotkey, IsVisible)
+        return new ToolbarCustomizationItemViewModel(Id, Tool, Name, Icon, Hotkey, IsVisible, BeginGroup)
         {
             IsActive = IsActive,
             CanMoveUp = CanMoveUp,
@@ -162,24 +173,15 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         return new ImageEditorToolbarItemOptions
         {
             Id = Id,
-            IsSeparator = IsSeparator,
+            BeginGroup = BeginGroup,
             IsVisible = IsVisible,
-            Hotkey = IsTool ? Hotkey.Trim() : ""
+            Hotkey = Hotkey.Trim()
         };
     }
 
     public static IReadOnlyList<ToolbarCustomizationItemViewModel> CreateDefaultItems()
     {
-        List<ToolbarCustomizationItemViewModel> items = ToolDefinitions
-            .Where(definition => definition.Tool is not (EditorTool.Crop or EditorTool.CutOut))
-            .Select(definition => CreateTool(definition))
-            .ToList();
-
-        items.Add(CreateSeparator("separator:default-crop-tools", isVisible: true));
-        items.Add(CreateTool(ToolDefinitions.First(definition => definition.Tool == EditorTool.Crop)));
-        items.Add(CreateTool(ToolDefinitions.First(definition => definition.Tool == EditorTool.CutOut)));
-
-        return items;
+        return ToolDefinitions.Select(definition => CreateTool(definition)).ToList();
     }
 
     public static IReadOnlyList<ToolbarCustomizationItemViewModel> CreateFromOptions(IReadOnlyList<ImageEditorToolbarItemOptions>? options)
@@ -194,15 +196,9 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
 
         foreach (ImageEditorToolbarItemOptions option in options)
         {
-            if (option.IsSeparator)
-            {
-                items.Add(CreateSeparator(string.IsNullOrWhiteSpace(option.Id) ? CreateSeparatorId() : option.Id, option.IsVisible));
-                continue;
-            }
-
             if (ToolDefinitionsById.TryGetValue(option.Id, out ToolDefinition? definition))
             {
-                items.Add(CreateTool(definition, option.IsVisible, option.Hotkey ?? definition.DefaultHotkey));
+                items.Add(CreateTool(definition, option.IsVisible, option.Hotkey ?? definition.DefaultHotkey, option.BeginGroup));
                 usedToolIds.Add(option.Id);
             }
         }
@@ -215,36 +211,17 @@ public sealed class ToolbarCustomizationItemViewModel : ViewModelBase
         return items.Count > 0 ? items : CreateDefaultItems();
     }
 
-    public static ToolbarCustomizationItemViewModel CreateSeparator()
-    {
-        return CreateSeparator(CreateSeparatorId(), isVisible: true);
-    }
-
-    private static ToolbarCustomizationItemViewModel CreateTool(ToolDefinition definition, bool isVisible = true, string? hotkey = null)
+    private static ToolbarCustomizationItemViewModel CreateTool(ToolDefinition definition, bool isVisible = true, string? hotkey = null, bool? beginGroup = null)
     {
         return new ToolbarCustomizationItemViewModel(
             GetToolId(definition.Tool),
-            isSeparator: false,
             definition.Tool,
             definition.Name,
             definition.Icon,
             hotkey ?? definition.DefaultHotkey,
-            isVisible);
-    }
-
-    private static ToolbarCustomizationItemViewModel CreateSeparator(string id, bool isVisible)
-    {
-        return new ToolbarCustomizationItemViewModel(
-            id,
-            isSeparator: true,
-            tool: null,
-            "Separator",
-            "|",
-            "",
-            isVisible);
+            isVisible,
+            beginGroup ?? definition.Tool is EditorTool.Select or EditorTool.Crop);
     }
 
     private static string GetToolId(EditorTool tool) => tool.ToString();
-
-    private static string CreateSeparatorId() => $"separator:{Guid.NewGuid():N}";
 }

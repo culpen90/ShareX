@@ -56,15 +56,6 @@ namespace ShareX.ImageEditor.Presentation.Views
             }
         }
 
-        private void OnRemoveClick(object? sender, RoutedEventArgs e)
-        {
-            if (DataContext is ToolbarCustomizationDialogViewModel vm && sender is Control { DataContext: ToolbarCustomizationItemViewModel item })
-            {
-                vm.Remove(item);
-                e.Handled = true;
-            }
-        }
-
         private void OnHotkeyKeyDown(object? sender, KeyEventArgs e)
         {
             if (sender is not Control { DataContext: ToolbarCustomizationItemViewModel { IsTool: true } item })

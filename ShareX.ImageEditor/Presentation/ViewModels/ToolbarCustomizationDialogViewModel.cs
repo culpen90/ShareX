@@ -52,7 +52,6 @@ public sealed class ToolbarCustomizationDialogViewModel : ViewModelBase
             item.PropertyChanged += OnItemPropertyChanged;
         }
 
-        AddSeparatorCommand = new RelayCommand(AddSeparator);
         ResetCommand = new RelayCommand(Reset);
         OkCommand = new RelayCommand(Ok, () => CanSave);
         CancelCommand = new RelayCommand(Cancel);
@@ -62,7 +61,6 @@ public sealed class ToolbarCustomizationDialogViewModel : ViewModelBase
     }
 
     public ObservableCollection<ToolbarCustomizationItemViewModel> Items { get; }
-    public IRelayCommand AddSeparatorCommand { get; }
     public IRelayCommand ResetCommand { get; }
     public IRelayCommand OkCommand { get; }
     public IRelayCommand CancelCommand { get; }
@@ -124,35 +122,6 @@ public sealed class ToolbarCustomizationDialogViewModel : ViewModelBase
         Items.Move(index, index + 1);
         SelectedItem = item;
         RefreshMoveStates();
-    }
-
-    public void Remove(ToolbarCustomizationItemViewModel? item)
-    {
-        if (item?.CanRemove != true)
-        {
-            return;
-        }
-
-        item.PropertyChanged -= OnItemPropertyChanged;
-        Items.Remove(item);
-        RefreshMoveStates();
-        RefreshValidation();
-    }
-
-    private void AddSeparator()
-    {
-        ToolbarCustomizationItemViewModel separator = ToolbarCustomizationItemViewModel.CreateSeparator();
-
-        int insertIndex = SelectedItem != null ? Items.IndexOf(SelectedItem) + 1 : Items.Count;
-        if (insertIndex < 0 || insertIndex > Items.Count)
-        {
-            insertIndex = Items.Count;
-        }
-
-        Items.Insert(insertIndex, separator);
-        SelectedItem = separator;
-        RefreshMoveStates();
-        RefreshValidation();
     }
 
     private void Reset()

@@ -107,9 +107,6 @@
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
-                        <Border Width="1"
-                                Margin="4,0"
-                                Background="{DynamicResource ShareX.Brush.Separator}"/>
                     </StackPanel>
 
                     <ItemsControl ItemsSource="{ReflectionBinding ToolbarItems}">
@@ -120,7 +117,11 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="vm:ToolbarCustomizationItemViewModel">
-                                <Panel>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <Border Width="1"
+                                            Margin="4,0"
+                                            Background="{DynamicResource ShareX.Brush.Separator}"
+                                            IsVisible="{Binding IsGroupSeparatorVisible}"/>
                                     <Button Classes="editor-button toolbar-button"
                                             Tag="{Binding Tool}"
                                             Classes.active="{Binding IsActive}"
@@ -128,11 +129,7 @@
                                             IsVisible="{Binding IsButtonVisible}"
                                             ToolTip.Tip="{Binding ToolTip}"
                                             Content="{Binding Icon}"/>
-                                    <Border Width="1"
-                                            Margin="4,0"
-                                            Background="{DynamicResource ShareX.Brush.Separator}"
-                                            IsVisible="{Binding IsSeparatorVisible}"/>
-                                </Panel>
+                                </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
