@@ -49,7 +49,7 @@
                                     <Border BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                             BorderThickness="0,0,0,1"
                                             Padding="8">
-                                        <Grid ColumnDefinitions="34,34,64,*,58,150"
+                                        <Grid ColumnDefinitions="34,34,34,64,*,150"
                                               ColumnSpacing="8"
                                               VerticalAlignment="Center">
                                             <Button Grid.Column="0"
@@ -82,32 +82,7 @@
                                                            VerticalAlignment="Center"/>
                                             </Button>
 
-                                            <ToggleSwitch Grid.Column="2"
-                                                          OnContent=""
-                                                          OffContent=""
-                                                          IsChecked="{Binding IsVisible, Mode=TwoWay}"
-                                                          HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center"
-                                                          ToolTip.Tip="Show / Hide"/>
-
-                                            <Grid Grid.Column="3"
-                                                  ColumnDefinitions="32,*"
-                                                  ColumnSpacing="10"
-                                                  VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Icon}"
-                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
-                                                           FontWeight="Normal"
-                                                           FontSize="18"
-                                                           Foreground="{DynamicResource ShareX.Brush.Text}"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding Name}"
-                                                           Foreground="{DynamicResource ShareX.Brush.Text}"
-                                                           VerticalAlignment="Center"/>
-                                            </Grid>
-
-                                            <ToggleButton Grid.Column="4"
+                                            <ToggleButton Grid.Column="2"
                                                           Classes="editor-button"
                                                           Classes.active="{Binding BeginGroup}"
                                                           Width="32"
@@ -123,6 +98,31 @@
                                                            HorizontalAlignment="Center"
                                                            VerticalAlignment="Center"/>
                                             </ToggleButton>
+
+                                            <ToggleSwitch Grid.Column="3"
+                                                          OnContent=""
+                                                          OffContent=""
+                                                          IsChecked="{Binding IsVisible, Mode=TwoWay}"
+                                                          HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"
+                                                          ToolTip.Tip="Show / Hide"/>
+
+                                            <Grid Grid.Column="4"
+                                                  ColumnDefinitions="32,*"
+                                                  ColumnSpacing="10"
+                                                  VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Icon}"
+                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                           FontWeight="Normal"
+                                                           FontSize="18"
+                                                           Foreground="{DynamicResource ShareX.Brush.Text}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Name}"
+                                                           Foreground="{DynamicResource ShareX.Brush.Text}"
+                                                           VerticalAlignment="Center"/>
+                                            </Grid>
 
                                             <TextBox Grid.Column="5"
                                                      Text="{Binding Hotkey, Mode=TwoWay}"
