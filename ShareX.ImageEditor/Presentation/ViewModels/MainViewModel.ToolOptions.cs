@@ -1100,6 +1100,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
         partial void OnActiveToolChanged(EditorTool value)
         {
             RememberAnnotationToolIfEligible(value);
+            UpdateToolbarActiveStates();
 
             _isLoadingOptions = true;
             try

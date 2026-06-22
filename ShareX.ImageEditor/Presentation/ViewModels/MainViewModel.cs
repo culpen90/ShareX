@@ -843,6 +843,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels
             RecentImageFiles = new ReadOnlyObservableCollection<string>(_recentImageFiles);
             _activeTool = GetInitialAnnotationTool();
 
+            InitializeToolbarCustomization();
             ToolbarAdapter = new EditorToolbarAdapter(this);
             Current = this;
             GradientPresets = BuildGradientPresets();

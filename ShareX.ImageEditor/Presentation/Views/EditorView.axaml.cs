@@ -1535,6 +1535,12 @@ namespace ShareX.ImageEditor.Presentation.Views
                 }
                 else if (e.KeyModifiers.HasFlag(KeyModifiers.Control | KeyModifiers.Shift))
                 {
+                    if (vm.TrySelectToolForToolbarHotkey(e.Key, e.KeyModifiers))
+                    {
+                        e.Handled = true;
+                        return;
+                    }
+
                     switch (e.Key)
                     {
                         case Key.Z: vm.RedoCommand.Execute(null); e.Handled = true; break;
@@ -1558,6 +1564,12 @@ namespace ShareX.ImageEditor.Presentation.Views
                 }
                 else if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && !e.KeyModifiers.HasFlag(KeyModifiers.Shift))
                 {
+                    if (vm.TrySelectToolForToolbarHotkey(e.Key, e.KeyModifiers))
+                    {
+                        e.Handled = true;
+                        return;
+                    }
+
                     switch (e.Key)
                     {
                         case Key.Z: vm.UndoCommand.Execute(null); e.Handled = true; break;
@@ -1603,8 +1615,22 @@ namespace ShareX.ImageEditor.Presentation.Views
                         _selectionController.MoveSelectedShape(dx, dy);
                         e.Handled = true;
                     }
+                    else if (e.KeyModifiers == KeyModifiers.Shift)
+                    {
+                        if (vm.TrySelectToolForToolbarHotkey(e.Key, e.KeyModifiers))
+                        {
+                            e.Handled = true;
+                            return;
+                        }
+                    }
                     else if (e.KeyModifiers == KeyModifiers.None)
                     {
+                        if (vm.TrySelectToolForToolbarHotkey(e.Key, e.KeyModifiers))
+                        {
+                            e.Handled = true;
+                            return;
+                        }
+
                         // Tool shortcuts
                         switch (e.Key)
                         {
@@ -1612,27 +1638,6 @@ namespace ShareX.ImageEditor.Presentation.Views
                             case Key.End: _editorCore.SendToBack(); e.Handled = true; break;
                             case Key.PageUp: _editorCore.BringForward(); e.Handled = true; break;
                             case Key.PageDown: _editorCore.SendBackward(); e.Handled = true; break;
-
-                            case Key.V: vm.SelectToolCommand.Execute(EditorTool.Select); e.Handled = true; break;
-                            case Key.R: vm.SelectToolCommand.Execute(EditorTool.Rectangle); e.Handled = true; break;
-                            case Key.E: vm.SelectToolCommand.Execute(EditorTool.Ellipse); e.Handled = true; break;
-                            case Key.L: vm.SelectToolCommand.Execute(EditorTool.Line); e.Handled = true; break;
-                            case Key.A: vm.SelectToolCommand.Execute(EditorTool.Arrow); e.Handled = true; break;
-                            case Key.F: vm.SelectToolCommand.Execute(EditorTool.Freehand); e.Handled = true; break; // Freehand
-                            case Key.T: vm.SelectToolCommand.Execute(EditorTool.Text); e.Handled = true; break;
-                            case Key.J: vm.SelectToolCommand.Execute(EditorTool.Emoji); e.Handled = true; break;
-                            case Key.O: vm.SelectToolCommand.Execute(EditorTool.SpeechBalloon); e.Handled = true; break;
-                            case Key.N: vm.SelectToolCommand.Execute(EditorTool.Step); e.Handled = true; break;
-                            case Key.K: vm.SelectToolCommand.Execute(EditorTool.Cursor); e.Handled = true; break;
-                            case Key.W: vm.SelectToolCommand.Execute(EditorTool.SmartEraser); e.Handled = true; break;
-                            case Key.S: vm.SelectToolCommand.Execute(EditorTool.Spotlight); e.Handled = true; break;
-                            case Key.B: vm.SelectToolCommand.Execute(EditorTool.Blur); e.Handled = true; break;
-                            case Key.P: vm.SelectToolCommand.Execute(EditorTool.Pixelate); e.Handled = true; break;
-                            case Key.I: vm.SelectToolCommand.Execute(EditorTool.Image); e.Handled = true; break;
-                            case Key.H: vm.SelectToolCommand.Execute(EditorTool.Highlight); e.Handled = true; break;
-                            case Key.M: vm.SelectToolCommand.Execute(EditorTool.Magnify); e.Handled = true; break;
-                            case Key.C: vm.SelectToolCommand.Execute(EditorTool.Crop); e.Handled = true; break;
-                            case Key.U: vm.SelectToolCommand.Execute(EditorTool.CutOut); e.Handled = true; break;
 
                             case Key.Enter:
                                 if (_inputController.TryConfirmCrop())

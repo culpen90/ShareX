@@ -68,6 +68,20 @@
                           VerticalAlignment="Center"/>
         </Grid>
 
+        <Button Classes="editor-button"
+                Command="{Binding OpenToolbarCustomizationDialogCommand}"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="{x:Static theming:EditorIcons.ActionToggleToolbars}"
+                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                           FontWeight="Normal"
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="Customize toolbar" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
         <controls:LabeledToggleSwitch Label="Remember window state"
                                       IsChecked="{Binding EditorRememberWindowState, Mode=TwoWay}"
                                       Margin="0,0,0,8"/>

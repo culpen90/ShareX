@@ -1,0 +1,170 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ShareX.ImageEditor.Presentation.ViewModels"
+             xmlns:theming="using:ShareX.ImageEditor.Presentation.Theming"
+             mc:Ignorable="d"
+             d:DesignWidth="720"
+             d:DesignHeight="620"
+             x:Class="ShareX.ImageEditor.Presentation.Views.ToolbarCustomizationDialogView"
+             x:Name="ToolbarCustomizationDialogRoot"
+             x:DataType="vm:ToolbarCustomizationDialogViewModel">
+
+    <Border Background="{DynamicResource ShareX.Brush.Background.Popup}"
+            BorderBrush="{DynamicResource ShareX.Brush.Border}"
+            BorderThickness="1"
+            CornerRadius="4"
+            Padding="0"
+            Width="720"
+            MaxHeight="620"
+            BoxShadow="0 4 10 0 #40000000">
+        <Grid RowDefinitions="Auto,*,Auto" Background="{DynamicResource ShareX.Brush.Background.Panel}">
+            <Border Grid.Row="0"
+                    Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
+                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                    BorderThickness="0,0,0,1"
+                    Padding="14,8">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <TextBlock Text="Customize Toolbar" FontSize="15" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                        <Button Classes="editor-button"
+                                Command="{Binding AddSeparatorCommand}"
+                                Height="32"
+                                Padding="10,0"
+                                Content="Add separator"/>
+                        <Button Classes="editor-button"
+                                Command="{Binding ResetCommand}"
+                                Height="32"
+                                Padding="10,0"
+                                Content="Reset"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="14" RowSpacing="8">
+                <Grid ColumnDefinitions="34,34,*,90,150,78"
+                      ColumnSpacing="8"
+                      Margin="0,0,0,2">
+                    <TextBlock Grid.Column="2" Text="Tool" Foreground="{DynamicResource ShareX.Brush.Text}"/>
+                    <TextBlock Grid.Column="3" Text="Shown" Foreground="{DynamicResource ShareX.Brush.Text}" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="4" Text="Hotkey" Foreground="{DynamicResource ShareX.Brush.Text}"/>
+                </Grid>
+
+                <Border Grid.Row="1"
+                        BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ToolbarCustomizationItemViewModel">
+                                    <Border BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                                            BorderThickness="0,0,0,1"
+                                            Padding="8">
+                                        <Grid ColumnDefinitions="34,34,*,90,150,78"
+                                              ColumnSpacing="8"
+                                              VerticalAlignment="Center">
+                                            <Button Grid.Column="0"
+                                                    Classes="editor-button"
+                                                    Width="32"
+                                                    Height="32"
+                                                    Padding="0"
+                                                    IsEnabled="{Binding CanMoveUp}"
+                                                    Click="OnMoveUpClick"
+                                                    ToolTip.Tip="Move up">
+                                                <TextBlock Text="{x:Static theming:LucideIcons.chevron_up}"
+                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                           FontWeight="Normal"
+                                                           HorizontalAlignment="Center"/>
+                                            </Button>
+
+                                            <Button Grid.Column="1"
+                                                    Classes="editor-button"
+                                                    Width="32"
+                                                    Height="32"
+                                                    Padding="0"
+                                                    IsEnabled="{Binding CanMoveDown}"
+                                                    Click="OnMoveDownClick"
+                                                    ToolTip.Tip="Move down">
+                                                <TextBlock Text="{x:Static theming:LucideIcons.chevron_down}"
+                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                           FontWeight="Normal"
+                                                           HorizontalAlignment="Center"/>
+                                            </Button>
+
+                                            <Grid Grid.Column="2"
+                                                  ColumnDefinitions="32,*"
+                                                  ColumnSpacing="10"
+                                                  VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Icon}"
+                                                           FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                                           FontWeight="Normal"
+                                                           FontSize="18"
+                                                           Foreground="{DynamicResource ShareX.Brush.Text}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Name}"
+                                                           Foreground="{DynamicResource ShareX.Brush.Text}"
+                                                           VerticalAlignment="Center"/>
+                                            </Grid>
+
+                                            <ToggleSwitch Grid.Column="3"
+                                                          OnContent=""
+                                                          OffContent=""
+                                                          IsChecked="{Binding IsVisible, Mode=TwoWay}"
+                                                          HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"/>
+
+                                            <TextBox Grid.Column="4"
+                                                     Text="{Binding Hotkey, Mode=TwoWay}"
+                                                     IsEnabled="{Binding IsTool}"
+                                                     PlaceholderText="None"
+                                                     VerticalAlignment="Center"/>
+
+                                            <Button Grid.Column="5"
+                                                    Classes="editor-button"
+                                                    Height="32"
+                                                    Padding="8,0"
+                                                    Content="Remove"
+                                                    IsVisible="{Binding CanRemove}"
+                                                    Click="OnRemoveClick"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="2"
+                    Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
+                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
+                    BorderThickness="0,1,0,0"
+                    Padding="10">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding ValidationMessage}"
+                               IsVisible="{Binding HasValidationMessage}"
+                               Foreground="{DynamicResource ShareX.Brush.TaskMode.Cancel.Border}"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center"
+                               Margin="4,0,16,0"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Right">
+                        <Button Classes="editor-button"
+                                Padding="20,0"
+                                Content="OK"
+                                Command="{Binding OkCommand}"
+                                HorizontalContentAlignment="Center"/>
+                        <Button Classes="editor-button"
+                                Padding="20,0"
+                                Content="Cancel"
+                                Command="{Binding CancelCommand}"
+                                HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

@@ -69,6 +69,7 @@ namespace ShareX.ImageEditor.Hosting
         public bool AutoCopyImageToClipboard { get; set; } = false;
         public bool ShowInsertImageDialog { get; set; } = true;
         public bool ShowNotifications { get; set; } = true;
+        public List<ImageEditorToolbarItemOptions> ToolbarItems { get; set; } = new List<ImageEditorToolbarItemOptions>();
 
         // Shared
         public string BorderColorHex { get; set; } = ColorToHex(PrimaryColor);
