@@ -23,11 +23,6 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="4"/>
         </Style>
-        <Style Selector="TextBlock.comparer-title">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text}"/>
-        </Style>
         <Style Selector="TextBlock.path-text">
             <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -47,25 +42,8 @@
     </Window.Resources>
 
     <ThemeVariantScope RequestedThemeVariant="{x:Static theming:ThemeManager.ShareXDark}">
-        <Grid RowDefinitions="Auto,*" Background="{DynamicResource ShareX.Brush.Background.Main}">
-            <Border Grid.Row="0"
-                    Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
-                    BorderBrush="{DynamicResource ShareX.Brush.Border}"
-                    BorderThickness="0,0,0,1"
-                    Padding="16,12">
-                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                    <TextBlock Grid.Row="0" Grid.Column="0" Classes="comparer-title" Text="Image Comparer"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,6,0,0" Text="{Binding StatusText}" FontWeight="Normal"/>
-                    <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-                               Text="{Binding SimilarityText}"
-                               Foreground="{Binding SimilarityBrush}"
-                               FontSize="22"
-                               FontWeight="SemiBold"
-                               VerticalAlignment="Center"/>
-                </Grid>
-            </Border>
-
-            <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="16" RowSpacing="12">
+        <Grid Background="{DynamicResource ShareX.Brush.Background.Main}">
+            <Grid RowDefinitions="Auto,*" Margin="16" RowSpacing="12">
                 <Grid Grid.Row="0" ColumnDefinitions="*,*" ColumnSpacing="12">
                     <Border Grid.Column="0" Classes="comparer-panel" Padding="12">
                         <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
@@ -93,11 +71,18 @@
                                 BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                 BorderThickness="0,0,0,1"
                                 Padding="12">
-                            <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="8">
+                            <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="16">
                                 <RadioButton Grid.Column="0" Content="Slider" GroupName="ComparisonMode"
                                              IsChecked="{Binding IsSliderMode}"/>
                                 <RadioButton Grid.Column="1" Content="Diff View" GroupName="ComparisonMode"
                                              IsChecked="{Binding IsDiffViewMode}"/>
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding SimilarityText}"
+                                           Foreground="{Binding SimilarityBrush}"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
 
