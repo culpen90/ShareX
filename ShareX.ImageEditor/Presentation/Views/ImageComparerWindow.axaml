@@ -46,20 +46,32 @@
             <Grid RowDefinitions="Auto,*" Margin="16" RowSpacing="12">
                 <Grid Grid.Row="0" ColumnDefinitions="*,*" ColumnSpacing="12">
                     <Border Grid.Column="0" Classes="comparer-panel" Padding="12">
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Image 1" FontSize="16" Foreground="{DynamicResource ShareX.Brush.Text}"/>
-                            <Button Grid.Row="0" Grid.Column="1" Classes="editor-button" Content="Choose..." Command="{Binding SelectImage1Command}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Classes="path-text"
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0"
+                                       Text="Image 1"
+                                       FontSize="16"
+                                       Foreground="{DynamicResource ShareX.Brush.Text}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1"
+                                       Classes="path-text"
+                                       VerticalAlignment="Center"
                                        Text="{Binding Image1Path, TargetNullValue='No image selected'}"/>
+                            <Button Grid.Column="2" Classes="editor-button" Content="Choose..." Command="{Binding SelectImage1Command}"/>
                         </Grid>
                     </Border>
 
                     <Border Grid.Column="1" Classes="comparer-panel" Padding="12">
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Image 2" FontSize="16" Foreground="{DynamicResource ShareX.Brush.Text}"/>
-                            <Button Grid.Row="0" Grid.Column="1" Classes="editor-button" Content="Choose..." Command="{Binding SelectImage2Command}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Classes="path-text"
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <TextBlock Grid.Column="0"
+                                       Text="Image 2"
+                                       FontSize="16"
+                                       Foreground="{DynamicResource ShareX.Brush.Text}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1"
+                                       Classes="path-text"
+                                       VerticalAlignment="Center"
                                        Text="{Binding Image2Path, TargetNullValue='No image selected'}"/>
+                            <Button Grid.Column="2" Classes="editor-button" Content="Choose..." Command="{Binding SelectImage2Command}"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -70,7 +82,7 @@
                                 Background="{DynamicResource ShareX.Brush.Background.Toolbar}"
                                 BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                 BorderThickness="0,0,0,1"
-                                Padding="12">
+                                Padding="16,12">
                             <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="16">
                                 <RadioButton Grid.Column="0" Content="Slider" GroupName="ComparisonMode"
                                              IsChecked="{Binding IsSliderMode}"/>
