@@ -110,7 +110,7 @@
                             </Grid>
                         </Border>
 
-                        <Grid Grid.Row="1" Background="{DynamicResource ShareX.Brush.Checkered}">
+                        <Grid Grid.Row="1" Background="{DynamicResource ShareX.Brush.Background.Panel}">
                             <TextBlock Text="Select Image 1 and Image 2 to show the comparison preview."
                                        IsVisible="{Binding !CanShowComparison}"
                                        HorizontalAlignment="Center"
