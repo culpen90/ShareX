@@ -30,7 +30,6 @@ using CommunityToolkit.Mvvm.Input;
 using ShareX.ImageEditor.Core.ImageComparison;
 using ShareX.ImageEditor.Presentation.Rendering;
 using SkiaSharp;
-using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels;
@@ -39,28 +38,6 @@ public enum ImageComparerMode
 {
     Slider,
     DiffView
-}
-
-public enum ImageComparerSource
-{
-    Image1,
-    Image2,
-    Diff
-}
-
-public sealed class ImageComparerSourceItem
-{
-    public ImageComparerSourceItem(ImageComparerSource source, string displayName)
-    {
-        Source = source;
-        DisplayName = displayName;
-    }
-
-    public ImageComparerSource Source { get; }
-
-    public string DisplayName { get; }
-
-    public override string ToString() => DisplayName;
 }
 
 public sealed partial class ImageComparerViewModel : ViewModelBase, IDisposable
@@ -101,12 +78,6 @@ public sealed partial class ImageComparerViewModel : ViewModelBase, IDisposable
     private ImageComparerMode _selectedMode;
 
     [ObservableProperty]
-    private ImageComparerSourceItem? _selectedLeftSource;
-
-    [ObservableProperty]
-    private ImageComparerSourceItem? _selectedRightSource;
-
-    [ObservableProperty]
     private string _statusText = "Select two images to compare.";
 
     [ObservableProperty]
@@ -120,21 +91,6 @@ public sealed partial class ImageComparerViewModel : ViewModelBase, IDisposable
     [NotifyPropertyChangedFor(nameof(IsSliderComparisonVisible))]
     [NotifyPropertyChangedFor(nameof(IsDiffComparisonVisible))]
     private bool _hasComparison;
-
-    public ImageComparerViewModel()
-    {
-        PreviewSources =
-        [
-            new ImageComparerSourceItem(ImageComparerSource.Image1, "Image 1"),
-            new ImageComparerSourceItem(ImageComparerSource.Image2, "Image 2"),
-            new ImageComparerSourceItem(ImageComparerSource.Diff, "Diff image")
-        ];
-
-        SelectedLeftSource = PreviewSources[0];
-        SelectedRightSource = PreviewSources[1];
-    }
-
-    public ObservableCollection<ImageComparerSourceItem> PreviewSources { get; }
 
     public Func<string, Task<string?>>? SelectImageFileRequested { get; set; }
 
@@ -182,21 +138,6 @@ public sealed partial class ImageComparerViewModel : ViewModelBase, IDisposable
     private async Task SelectImage2Async()
     {
         await SelectImageAsync(2);
-    }
-
-    partial void OnSelectedModeChanged(ImageComparerMode value)
-    {
-        RefreshDisplayedImages();
-    }
-
-    partial void OnSelectedLeftSourceChanged(ImageComparerSourceItem? value)
-    {
-        RefreshDisplayedImages();
-    }
-
-    partial void OnSelectedRightSourceChanged(ImageComparerSourceItem? value)
-    {
-        RefreshDisplayedImages();
     }
 
     private async Task SelectImageAsync(int imageNumber)
@@ -286,19 +227,8 @@ public sealed partial class ImageComparerViewModel : ViewModelBase, IDisposable
 
     private void RefreshDisplayedImages()
     {
-        DisplayedLeftImage = GetPreview(SelectedLeftSource?.Source ?? ImageComparerSource.Image1);
-        DisplayedRightImage = GetPreview(SelectedRightSource?.Source ?? ImageComparerSource.Image2);
-    }
-
-    private Bitmap? GetPreview(ImageComparerSource source)
-    {
-        return source switch
-        {
-            ImageComparerSource.Image1 => Image1Preview,
-            ImageComparerSource.Image2 => Image2Preview,
-            ImageComparerSource.Diff => DiffPreview,
-            _ => null
-        };
+        DisplayedLeftImage = Image1Preview;
+        DisplayedRightImage = Image2Preview;
     }
 
     public void Dispose()

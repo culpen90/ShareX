@@ -93,20 +93,11 @@
                                 BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                 BorderThickness="0,0,0,1"
                                 Padding="12">
-                            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+                            <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="8">
                                 <RadioButton Grid.Column="0" Content="Slider" GroupName="ComparisonMode"
                                              IsChecked="{Binding IsSliderMode}"/>
                                 <RadioButton Grid.Column="1" Content="Diff View" GroupName="ComparisonMode"
                                              IsChecked="{Binding IsDiffViewMode}"/>
-
-                                <TextBlock Grid.Column="3" Text="Left" VerticalAlignment="Center"/>
-                                <ComboBox Grid.Column="4" Width="130"
-                                          ItemsSource="{Binding PreviewSources}"
-                                          SelectedItem="{Binding SelectedLeftSource}"/>
-                                <TextBlock Grid.Column="5" Text="Right" VerticalAlignment="Center"/>
-                                <ComboBox Grid.Column="6" Width="130"
-                                          ItemsSource="{Binding PreviewSources}"
-                                          SelectedItem="{Binding SelectedRightSource}"/>
                             </Grid>
                         </Border>
 
