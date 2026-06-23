@@ -111,7 +111,7 @@ public class ImageComparisonSlider : Control
 
         if (leftImage != null)
         {
-            double sliderX = imageBounds.Left + imageBounds.Width * SliderPosition;
+            double sliderX = GetSliderX(imageBounds);
             using (context.PushClip(new Rect(imageBounds.Left, imageBounds.Top, Math.Max(0, sliderX - imageBounds.Left), imageBounds.Height)))
             {
                 DrawTransparencyBackground(context, imageBounds);
@@ -206,16 +206,17 @@ public class ImageComparisonSlider : Control
         double scale = Math.Min(bounds.Width / imageWidth, bounds.Height / imageHeight);
         double width = imageWidth * scale;
         double height = imageHeight * scale;
-        return new Rect(
-            bounds.Left + (bounds.Width - width) / 2d,
-            bounds.Top + (bounds.Height - height) / 2d,
-            width,
-            height);
+        double left = Math.Round(bounds.Left + (bounds.Width - width) / 2d);
+        double top = Math.Round(bounds.Top + (bounds.Height - height) / 2d);
+        double right = Math.Round(bounds.Left + (bounds.Width + width) / 2d);
+        double bottom = Math.Round(bounds.Top + (bounds.Height + height) / 2d);
+
+        return new Rect(left, top, Math.Max(1d, right - left), Math.Max(1d, bottom - top));
     }
 
     private void DrawSlider(DrawingContext context, Rect imageBounds)
     {
-        double sliderX = imageBounds.Left + imageBounds.Width * SliderPosition;
+        double sliderX = GetSliderX(imageBounds);
         Point top = new(sliderX, imageBounds.Top);
         Point bottom = new(sliderX, imageBounds.Bottom);
         context.DrawLine(SliderPen, top, bottom);
@@ -240,5 +241,10 @@ public class ImageComparisonSlider : Control
         SliderPosition = imageBounds.Width <= 0
             ? 0.5
             : Math.Clamp((pointerPosition.X - imageBounds.Left) / imageBounds.Width, 0d, 1d);
+    }
+
+    private double GetSliderX(Rect imageBounds)
+    {
+        return Math.Round(imageBounds.Left + imageBounds.Width * SliderPosition);
     }
 }
