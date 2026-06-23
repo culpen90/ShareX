@@ -123,10 +123,10 @@
                                                             IsVisible="{Binding IsSliderComparisonVisible}"
                                                             Margin="12"/>
 
-                            <Border IsVisible="{Binding IsDiffComparisonVisible}" Margin="12" Background="Black">
-                                <Image Classes="preview-image"
-                                       Source="{Binding DiffPreview}"/>
-                            </Border>
+                            <Image Classes="preview-image"
+                                   Source="{Binding DiffPreview}"
+                                   IsVisible="{Binding IsDiffComparisonVisible}"
+                                   Margin="12"/>
                         </Grid>
                     </Grid>
                 </Border>

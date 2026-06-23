@@ -43,7 +43,6 @@ public class ImageComparisonSlider : Control
         AvaloniaProperty.Register<ImageComparisonSlider, double>(nameof(SliderPosition), 0.5);
 
     private const double CheckerSize = 12d;
-    private static readonly IBrush EmptyBackgroundBrush = new SolidColorBrush(Color.FromRgb(16, 16, 16));
     private static readonly IBrush CheckerLightBrush = new SolidColorBrush(Color.FromRgb(235, 235, 235));
     private static readonly IBrush CheckerDarkBrush = new SolidColorBrush(Color.FromRgb(205, 205, 205));
     private static readonly IBrush SliderBrush = new SolidColorBrush(Color.FromRgb(255, 255, 255));
@@ -93,7 +92,6 @@ public class ImageComparisonSlider : Control
         base.Render(context);
 
         Rect bounds = new(Bounds.Size);
-        context.FillRectangle(EmptyBackgroundBrush, bounds);
 
         Bitmap? leftImage = LeftImage;
         Bitmap? rightImage = RightImage;
