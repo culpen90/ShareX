@@ -241,7 +241,7 @@
     <value>آپلود فولدر</value>
   </data>
   <data name="UploadTask_CreateURLShortenerTask_Shorten_URL___0__" xml:space="preserve">
-    <value>کوتاه کردن آدرس {{0}}</value>
+    <value>کوتاه کردن آدرس ({0})</value>
   </data>
   <data name="ActionsToolbarEditForm_Separator" xml:space="preserve">
     <value>جداکننده</value>
