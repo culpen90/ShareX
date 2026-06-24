@@ -117,4 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblInputFilePath.Text" xml:space="preserve">
+    <value>Input file percorso:</value>
+  </data>
+  <data name="lblOutputFolder.Text" xml:space="preserve">
+    <value>Output cartella:</value>
+  </data>
+  <data name="lblOutputFileName.Text" xml:space="preserve">
+    <value>Nome file di output:</value>
+  </data>
+  <data name="lblVideoQuality.Text" xml:space="preserve">
+    <value>Qualità video:</value>
+  </data>
+  <data name="btnEncode.Text" xml:space="preserve">
+    <value>Avvia encoding</value>
+  </data>
+  <data name="cbAutoOpenFolder.Text" xml:space="preserve">
+    <value>Apri cartella after encoding</value>
+  </data>
+  <data name="cbUseCustomArguments.Text" xml:space="preserve">
+    <value>Use personalizzato arguments:</value>
+  </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>Codificatore video:</value>
+  </data>
+  <data name="cbVideoQualityUseBitrate.Text" xml:space="preserve">
+    <value>Usa bitrate</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - Convertitore video</value>
+  </data>
 </root>

@@ -117,4 +117,127 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btnTextUploaderTest.Text" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="lblURLShortener.Text" xml:space="preserve">
+    <value>Abbreviatore URL:</value>
+  </data>
+  <data name="btnURLShortenerTest.Text" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="lblTextUploader.Text" xml:space="preserve">
+    <value>Text caricamentoer:</value>
+  </data>
+  <data name="tsmiCustomUploaderGuide.Text" xml:space="preserve">
+    <value>Personalizzato caricamentoer guide...</value>
+  </data>
+  <data name="tsmiClearUploaders.Text" xml:space="preserve">
+    <value>Clear caricamentoers...</value>
+  </data>
+  <data name="tsmiExportAll.Text" xml:space="preserve">
+    <value>Esporta all...</value>
+  </data>
+  <data name="tsmiUpdateFolder.Text" xml:space="preserve">
+    <value>Update cartella...</value>
+  </data>
+  <data name="btnNew.Text" xml:space="preserve">
+    <value>Nuovo</value>
+  </data>
+  <data name="btnDuplicate.Text" xml:space="preserve">
+    <value>Duplica</value>
+  </data>
+  <data name="btnRemove.Text" xml:space="preserve">
+    <value>Rimuovi</value>
+  </data>
+  <data name="btnImageUploaderTest.Text" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="lblFileUploader.Text" xml:space="preserve">
+    <value>File caricamentoer:</value>
+  </data>
+  <data name="btnFileUploaderTest.Text" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="lblImageUploader.Text" xml:space="preserve">
+    <value>Immagine caricamentoer:</value>
+  </data>
+  <data name="cHeadersName.HeaderText" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="cHeadersValue.HeaderText" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="cParametersName.HeaderText" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="cParametersValue.HeaderText" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="lblHeaders.Text" xml:space="preserve">
+    <value>Intestazioni:</value>
+  </data>
+  <data name="lblParameters.Text" xml:space="preserve">
+    <value>Parametri URL:</value>
+  </data>
+  <data name="lblRequestURL.Text" xml:space="preserve">
+    <value>URL richiesta:</value>
+  </data>
+  <data name="lblRequestMethod.Text" xml:space="preserve">
+    <value>Metodo:</value>
+  </data>
+  <data name="lblBody.Text" xml:space="preserve">
+    <value>Corpo:</value>
+  </data>
+  <data name="cArgumentsName.HeaderText" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="cArgumentsValue.HeaderText" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="lblFileFormName.Text" xml:space="preserve">
+    <value>Nome campo file:</value>
+  </data>
+  <data name="btnDataBeautify.Text" xml:space="preserve">
+    <value>Abbellisci</value>
+  </data>
+  <data name="btnDataMinify.Text" xml:space="preserve">
+    <value>Minify</value>
+  </data>
+  <data name="lblResultErrorMessage.Text" xml:space="preserve">
+    <value>Errore message:</value>
+  </data>
+  <data name="lblResultDeletionURL.Text" xml:space="preserve">
+    <value>URL eliminazione:</value>
+  </data>
+  <data name="lblResultThumbnailURL.Text" xml:space="preserve">
+    <value>Miniatura URL:</value>
+  </data>
+  <data name="lblResultURL.Text" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="lblDestinationType.Text" xml:space="preserve">
+    <value>Tipo destinazione:</value>
+  </data>
+  <data name="lblName.Text" xml:space="preserve">
+    <value>Nome:</value>
+  </data>
+  <data name="mbDestinationType.ToolTip" xml:space="preserve">
+    <value>Currently destination type is used when users importa personalizzato caricamentoer by double clicking the .sxcu file.</value>
+  </data>
+  <data name="lblURLSharingService.Text" xml:space="preserve">
+    <value>URL sharing servizio:</value>
+  </data>
+  <data name="btnURLSharingServiceTest.Text" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="lblUploaders.Text" xml:space="preserve">
+    <value>Caricaers:</value>
+  </data>
+  <data name="btnTestURLSyntax.Text" xml:space="preserve">
+    <value>Test...</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - Personalizzato caricamentoer impostazioni</value>
+  </data>
 </root>
