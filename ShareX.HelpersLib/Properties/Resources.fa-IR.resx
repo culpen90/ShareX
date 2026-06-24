@@ -163,7 +163,7 @@
     <value>نسخه جدیدتری از {0} در دسترس است.</value>
   </data>
   <data name="AfterUploadTasks_ShowQRCode" xml:space="preserve">
-    <value>نمایش پنجره کد QR </value>
+    <value>نمایش پنجره کد QR</value>
   </data>
   <data name="ShapeType_DrawingSpeechBalloon" xml:space="preserve">
     <value>بالن متن (S)</value>

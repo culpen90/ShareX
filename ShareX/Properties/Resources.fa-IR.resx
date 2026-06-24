@@ -198,7 +198,7 @@
     <value>اشتراک گذاری آدرس ({0})</value>
   </data>
   <data name="ApplicationSettingsForm_cbSteamShowInApp_CheckedChanged_For_settings_to_take_effect_ShareX_needs_to_be_reopened_from_Steam_" xml:space="preserve">
-    <value>برای اعمال تنظیمات نرم افزار باید بسته و سپس باز شود. </value>
+    <value>برای اعمال تنظیمات نرم افزار باید بسته و سپس باز شود.</value>
   </data>
   <data name="UploadManager_UploadURL_URL_to_download_from_and_upload" xml:space="preserve">
     <value>آدرس برای دانلود و آپلود</value>
@@ -226,7 +226,7 @@
     <value>نام نمی تواند خالی باشد</value>
   </data>
   <data name="FileExistForm_txtNewName_TextChanged_Use_new_name__" xml:space="preserve">
-    <value>از نام جدید استفاده کن:</value>
+    <value>از نام جدید استفاده کن: </value>
   </data>
   <data name="UploadManager_IsUploadConfirmed_Don_t_show_this_message_again_" xml:space="preserve">
     <value>دیگر این پیام را نمایش نده</value>

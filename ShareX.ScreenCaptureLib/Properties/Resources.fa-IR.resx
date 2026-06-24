@@ -253,7 +253,7 @@
     <value>بریدن عکس ...</value>
   </data>
   <data name="ShapeManager_CreateToolbar_DropShadow" xml:space="preserve">
-    <value>حذف سایه عکس </value>
+    <value>حذف سایه عکس</value>
   </data>
   <data name="ShapeManager_CreateToolbar_FlipHorizontal" xml:space="preserve">
     <value>چرخاندن افقی تصویر</value>
