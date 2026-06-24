@@ -117,4 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblInputFilePath.Text" xml:space="preserve">
+    <value>Input fájl elérési út:</value>
+  </data>
+  <data name="lblOutputFolder.Text" xml:space="preserve">
+    <value>Output mappa:</value>
+  </data>
+  <data name="lblOutputFileName.Text" xml:space="preserve">
+    <value>Output fájlnév:</value>
+  </data>
+  <data name="lblVideoQuality.Text" xml:space="preserve">
+    <value>Videó minőség:</value>
+  </data>
+  <data name="btnEncode.Text" xml:space="preserve">
+    <value>Indítás encoding</value>
+  </data>
+  <data name="cbAutoOpenFolder.Text" xml:space="preserve">
+    <value>Megnyitás mappa after encoding</value>
+  </data>
+  <data name="cbUseCustomArguments.Text" xml:space="preserve">
+    <value>Egyéni argumentumok használata:</value>
+  </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>Videókódoló:</value>
+  </data>
+  <data name="cbVideoQualityUseBitrate.Text" xml:space="preserve">
+    <value>Bitráta használata</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - Videókonvertáló</value>
+  </data>
 </root>
