@@ -206,4 +206,28 @@ Yoksa yeterince hızlı kaydetemez ve kare kayıpları meydana gelir.</value>
   <data name="cbx264UseBitrate.Text" xml:space="preserve">
     <value>Bit hızı kullan</value>
   </data>
+  <data name="cbUseCustomFFmpegPath.Text" xml:space="preserve">
+    <value>Özel FFmpeg yolu kullan:</value>
+  </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>Video kodlayıcı:</value>
+  </data>
+  <data name="lblAudioEncoder.Text" xml:space="preserve">
+    <value>Ses kodlayıcı:</value>
+  </data>
+  <data name="lblAACBitrate.Text" xml:space="preserve">
+    <value>Bit hızı:</value>
+  </data>
+  <data name="lblOpusBitrate.Text" xml:space="preserve">
+    <value>Bit hızı:</value>
+  </data>
+  <data name="lblNVENCTune.Text" xml:space="preserve">
+    <value>İnce ayar:</value>
+  </data>
+  <data name="lblAMFBitrate.Text" xml:space="preserve">
+    <value>Bit hızı:</value>
+  </data>
+  <data name="btnResetOptions.Text" xml:space="preserve">
+    <value>Seçenekleri sıfırla...</value>
+  </data>
 </root>

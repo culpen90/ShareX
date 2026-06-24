@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,52 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblMargin.Text" xml:space="preserve">
+    <value>Kenar boşluğu:</value>
+  </data>
+  <data name="lblPadding.Text" xml:space="preserve">
+    <value>Dolgu:</value>
+  </data>
+  <data name="cbSmartPadding.Text" xml:space="preserve">
+    <value>Akıllı dolgu</value>
+  </data>
+  <data name="lblRoundedCorner.Text" xml:space="preserve">
+    <value>Yuvarlatılmış köşe:</value>
+  </data>
+  <data name="lblShadowRadius.Text" xml:space="preserve">
+    <value>Yarıçap:</value>
+  </data>
+  <data name="lblBackground.Text" xml:space="preserve">
+    <value>Arka plan:</value>
+  </data>
+  <data name="btnShadowColor.Text" xml:space="preserve">
+    <value>Renk...</value>
+  </data>
+  <data name="lblShadowAngle.Text" xml:space="preserve">
+    <value>Açı:</value>
+  </data>
+  <data name="lblShadowOpacity.Text" xml:space="preserve">
+    <value>Opaklık:</value>
+  </data>
+  <data name="lblShadowDistance.Text" xml:space="preserve">
+    <value>Mesafe:</value>
+  </data>
+  <data name="gbShadow.Text" xml:space="preserve">
+    <value>Gölge</value>
+  </data>
+  <data name="btnResetOptions.Text" xml:space="preserve">
+    <value>Seçenekleri sıfırla...</value>
+  </data>
+  <data name="btnBackgroundImageFilePathBrowse.Text" xml:space="preserve">
+    <value>Görüntü dosyasına gözat...</value>
+  </data>
+  <data name="btnPrint.ToolTip" xml:space="preserve">
+    <value>Yazdır...</value>
+  </data>
+  <data name="btnSave.ToolTip" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="btnUpload.ToolTip" xml:space="preserve">
+    <value>Yükle</value>
+  </data>
+  <data name="btnSaveAs.ToolTip" xml:space="preserve">
+    <value>Farklı kaydet...</value>
+  </data>
+  <data name="btnCopy.ToolTip" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>ShareX - Resim birleştirici</value>
-  </data>
-  <data name="btnAdd.Text" xml:space="preserve">
-    <value>Ekle...</value>
-  </data>
-  <data name="btnCombine.Text" xml:space="preserve">
-    <value>Resimleri birleştir ve kaydet/yükle yakalama sonrası ayarlarına göre</value>
-  </data>
-  <data name="btnMoveDown.Text" xml:space="preserve">
-    <value>Aşağı taşı</value>
-  </data>
-  <data name="btnMoveUp.Text" xml:space="preserve">
-    <value>Yukarı taşı</value>
-  </data>
-  <data name="btnRemove.Text" xml:space="preserve">
-    <value>Kaldır</value>
-  </data>
-  <data name="chFilepath.Text" xml:space="preserve">
-    <value>Resim dosya yolu</value>
-  </data>
-  <data name="lblOrientation.Text" xml:space="preserve">
-    <value>Birleştirme yönü:</value>
-  </data>
-  <data name="lblSpace.Text" xml:space="preserve">
-    <value>Resimler arasındaki boşluk:</value>
-  </data>
-  <data name="lblSpacePixel.Text" xml:space="preserve">
-    <value>piksel olarak</value>
-  </data>
-  <data name="cbAutoFillBackground.Text" xml:space="preserve">
-    <value>Otomatik arkaplanı doldur</value>
-  </data>
-  <data name="lblImageAlignment.Text" xml:space="preserve">
-    <value>Resim hizası:</value>
-  </data>
-  <data name="rbOrientationHorizontal.Text" xml:space="preserve">
-    <value>Yatay</value>
-  </data>
-  <data name="rbOrientationVertical.Text" xml:space="preserve">
-    <value>Dikey</value>
-  </data>
-  <data name="lblWrapAfter.Text" xml:space="preserve">
-    <value>Şundan sonra sar:</value>
-  </data>
-  <data name="lblWrapAfterImages.Text" xml:space="preserve">
-    <value>görüntü</value>
+    <value>ShareX - Görüntü güzelleştirici</value>
   </data>
 </root>
