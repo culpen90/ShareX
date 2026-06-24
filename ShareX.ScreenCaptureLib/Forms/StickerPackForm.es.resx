@@ -117,4 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblFolder.Text" xml:space="preserve">
+    <value>Carpeta:</value>
+  </data>
+  <data name="lblName.Text" xml:space="preserve">
+    <value>Nombre:</value>
+  </data>
+  <data name="btnAdd.Text" xml:space="preserve">
+    <value>Añadir</value>
+  </data>
+  <data name="btnRemove.Text" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - Paquetes de stickers</value>
+  </data>
 </root>
