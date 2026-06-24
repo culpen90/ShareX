@@ -1322,4 +1322,7 @@ Apakah anda ingin mengunduh dan menginstalnya?</value>
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Salin jalur folder ke clipboard</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Pembanding gambar</value>
+  </data>
 </root>

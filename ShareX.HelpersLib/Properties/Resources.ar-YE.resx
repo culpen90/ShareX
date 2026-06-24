@@ -1322,4 +1322,7 @@
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>نسخ مسار المجلد إلى الحافظة</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>مقارن الصور</value>
+  </data>
 </root>

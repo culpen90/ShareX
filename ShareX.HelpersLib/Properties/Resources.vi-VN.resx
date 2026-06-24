@@ -1322,4 +1322,7 @@ Bạn có muốn tải về và cài đặt không?</value>
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Sao chép thư mục path to clipboard</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Trình so sánh ảnh</value>
+  </data>
 </root>

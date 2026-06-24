@@ -1322,4 +1322,7 @@
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>フォルダーパスをクリップボードにコピー</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>画像比較</value>
+  </data>
 </root>

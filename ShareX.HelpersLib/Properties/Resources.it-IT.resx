@@ -1322,4 +1322,7 @@ Vuoi scaricarla e installarla ora?</value>
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Copia cartella percorso to appunti</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Comparatore immagini</value>
+  </data>
 </root>

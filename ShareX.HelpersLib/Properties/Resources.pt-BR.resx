@@ -1322,4 +1322,7 @@ Você gostaria de baixar e instalar?</value>
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Copiar caminho da pasta para a área de transferência</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Comparador de imagens</value>
+  </data>
 </root>

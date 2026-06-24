@@ -1322,4 +1322,7 @@
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Копировать папка path to clipboard</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Сравнение изображений</value>
+  </data>
 </root>

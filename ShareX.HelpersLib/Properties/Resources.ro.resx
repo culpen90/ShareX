@@ -1322,4 +1322,7 @@ Doriți să o descărcați și să o instalați?</value>
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Copiază cale folder to clipboard</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Comparator de imagini</value>
+  </data>
 </root>

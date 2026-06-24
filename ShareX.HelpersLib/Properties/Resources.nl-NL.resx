@@ -1322,4 +1322,7 @@ Wil je deze downloaden en installeren?</value>
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Mappad naar klembord kopiëren</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Afbeeldingsvergelijker</value>
+  </data>
 </root>

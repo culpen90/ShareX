@@ -1322,4 +1322,7 @@
   <data name="ImageBeautifierBackgroundType_Transparent" xml:space="preserve">
     <value>透明</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>圖像比較器</value>
+  </data>
 </root>

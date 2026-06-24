@@ -1322,4 +1322,7 @@ Czy chcesz ją pobrać i zainstalować?</value>
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>Kopiuj ścieżkę folderu do schowka</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>Porównywarka obrazów</value>
+  </data>
 </root>

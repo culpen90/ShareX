@@ -1322,4 +1322,7 @@
   <data name="AfterCaptureTasks_CopyFolderPathToClipboard" xml:space="preserve">
     <value>کپی پوشه مسیر to کلیپ‌بورد</value>
   </data>
+  <data name="HotkeyType_ImageComparer" xml:space="preserve">
+    <value>مقایسه‌گر تصویر</value>
+  </data>
 </root>
