@@ -639,4 +639,31 @@
   <data name="$this.Text" xml:space="preserve">
     <value>ShareX - Setări pentru sarcini</value>
   </data>
+  <data name="cbUseCustomActionCompletedSound.Text" xml:space="preserve">
+    <value>Folosește sunet personalizat pentru acțiune finalizată:</value>
+  </data>
+  <data name="cbPlaySoundAfterAction.Text" xml:space="preserve">
+    <value>Redă sunet după finalizarea acțiunii</value>
+  </data>
+  <data name="cbUseRandomImageEffect.Text" xml:space="preserve">
+    <value>Folosește efect de imagine aleatoriu</value>
+  </data>
+  <data name="cbCaptureAutoHideDesktopIcons.Text" xml:space="preserve">
+    <value>Ascunde automat pictogramele de pe desktop</value>
+  </data>
+  <data name="lblCaptureCustomWindow.Text" xml:space="preserve">
+    <value>Titlu de fereastră preconfigurat:</value>
+  </data>
+  <data name="lblRegionCaptureBackgroundDimStrength.Text" xml:space="preserve">
+    <value>Intensitate estompare fundal:</value>
+  </data>
+  <data name="cbRegionCaptureShowCenterCrosshair.Text" xml:space="preserve">
+    <value>Arată reticulul central</value>
+  </data>
+  <data name="cbCloseWindowAfterOpenServiceLink.Text" xml:space="preserve">
+    <value>Închide fereastra OCR după deschiderea linkului serviciului</value>
+  </data>
+  <data name="cbImageEditorUseLegacyImageEditor.Text" xml:space="preserve">
+    <value>Folosește editorul de imagini vechi</value>
+  </data>
 </root>

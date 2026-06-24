@@ -117,4 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblImageFilePath.Text" xml:space="preserve">
+    <value>تصویر فایل مسیر:</value>
+  </data>
+  <data name="lblRowCount.Text" xml:space="preserve">
+    <value>تعداد ردیف:</value>
+  </data>
+  <data name="lblColumnCount.Text" xml:space="preserve">
+    <value>تعداد ستون:</value>
+  </data>
+  <data name="lblOutputFolder.Text" xml:space="preserve">
+    <value>Output پوشه:</value>
+  </data>
+  <data name="btnSplitImage.Text" xml:space="preserve">
+    <value>Split تصویر</value>
+  </data>
+  <data name="btnCopyChatEmoji.Text" xml:space="preserve">
+    <value>کپی chat emoji syntax</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - تصویر splitter</value>
+  </data>
 </root>

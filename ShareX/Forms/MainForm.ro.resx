@@ -717,4 +717,67 @@
   <data name="tsmiWindow.Text" xml:space="preserve">
     <value>Fereastră</value>
   </data>
+  <data name="tsmiPinToScreen.Text" xml:space="preserve">
+    <value>Fixează pe ecran...</value>
+  </data>
+  <data name="tsmiImageComparer.Text" xml:space="preserve">
+    <value>Comparator de imagini...</value>
+  </data>
+  <data name="tsmiImageBeautifier.Text" xml:space="preserve">
+    <value>Îmbunătățitor de imagini...</value>
+  </data>
+  <data name="tsmiAI.Text" xml:space="preserve">
+    <value>Analizează imaginea...</value>
+  </data>
+  <data name="tsmiHashChecker.Text" xml:space="preserve">
+    <value>Verificator de hash...</value>
+  </data>
+  <data name="tsmiMetadata.Text" xml:space="preserve">
+    <value>Metadate...</value>
+  </data>
+  <data name="tsbDestinationSettings.Text" xml:space="preserve">
+    <value>Setări destinație...</value>
+  </data>
+  <data name="tsbCustomUploaderSettings.Text" xml:space="preserve">
+    <value>Setări încărcător personalizat...</value>
+  </data>
+  <data name="tsbX.Text" xml:space="preserve">
+    <value>Urmărește @ShareX...</value>
+  </data>
+  <data name="tsmiBeautifyImage.Text" xml:space="preserve">
+    <value>Îmbunătățește imaginea...</value>
+  </data>
+  <data name="tsmiPinSelectedFile.Text" xml:space="preserve">
+    <value>Fixează pe ecran</value>
+  </data>
+  <data name="tsmiAnalyzeImage.Text" xml:space="preserve">
+    <value>Analizează imaginea...</value>
+  </data>
+  <data name="tsmiGoogleLens.Text" xml:space="preserve">
+    <value>Google Lens...</value>
+  </data>
+  <data name="tsmiTrayPinToScreen.Text" xml:space="preserve">
+    <value>Fixează pe ecran...</value>
+  </data>
+  <data name="tsmiTrayImageComparer.Text" xml:space="preserve">
+    <value>Comparator de imagini...</value>
+  </data>
+  <data name="tsmiTrayImageBeautifier.Text" xml:space="preserve">
+    <value>Îmbunătățitor de imagini...</value>
+  </data>
+  <data name="tsmiTrayAI.Text" xml:space="preserve">
+    <value>Analizează imaginea...</value>
+  </data>
+  <data name="tsmiTrayHashChecker.Text" xml:space="preserve">
+    <value>Verificator de hash...</value>
+  </data>
+  <data name="tsmiTrayMetadata.Text" xml:space="preserve">
+    <value>Metadate...</value>
+  </data>
+  <data name="cHotkey.HeaderText" xml:space="preserve">
+    <value>Tastă rapidă</value>
+  </data>
+  <data name="cDescription.HeaderText" xml:space="preserve">
+    <value>Descriere</value>
+  </data>
 </root>

@@ -205,4 +205,28 @@ Pentru codificarea în timp real (de exemplu, înregistrarea ecranului), preseta
   <data name="lblVideoSource.Text" xml:space="preserve">
     <value>Sursă video:</value>
   </data>
+  <data name="cbUseCustomFFmpegPath.Text" xml:space="preserve">
+    <value>Use personalizat FFmpeg cale:</value>
+  </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>Video codificator:</value>
+  </data>
+  <data name="lblAudioEncoder.Text" xml:space="preserve">
+    <value>Audio codificator:</value>
+  </data>
+  <data name="lblAACBitrate.Text" xml:space="preserve">
+    <value>Rată de biți:</value>
+  </data>
+  <data name="lblOpusBitrate.Text" xml:space="preserve">
+    <value>Rată de biți:</value>
+  </data>
+  <data name="lblNVENCTune.Text" xml:space="preserve">
+    <value>Ajustare:</value>
+  </data>
+  <data name="lblAMFBitrate.Text" xml:space="preserve">
+    <value>Rată de biți:</value>
+  </data>
+  <data name="btnResetOptions.Text" xml:space="preserve">
+    <value>Resetează opțiuni...</value>
+  </data>
 </root>

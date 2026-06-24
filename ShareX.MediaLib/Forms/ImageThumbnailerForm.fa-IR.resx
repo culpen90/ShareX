@@ -138,4 +138,10 @@
   <data name="lblOutputFolder.Text" xml:space="preserve">
     <value>پوشه خروجی:</value>
   </data>
+  <data name="btnGenerate.Text" xml:space="preserve">
+    <value>Generate بندانگشتیs</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - تصویر بندانگشتیer</value>
+  </data>
 </root>

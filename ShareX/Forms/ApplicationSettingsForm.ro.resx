@@ -420,4 +420,10 @@
   <data name="$this.Text" xml:space="preserve">
     <value>ShareX - Setări ale aplicației</value>
   </data>
+  <data name="lblUpdateChannel.Text" xml:space="preserve">
+    <value>Canal de actualizare:</value>
+  </data>
+  <data name="cbAutoCheckUpdate.Text" xml:space="preserve">
+    <value>Verifică automat actualizările</value>
+  </data>
 </root>
