@@ -750,4 +750,34 @@
   <data name="chURL.Text" xml:space="preserve">
     <value>عنوان URL</value>
   </data>
+  <data name="tsmiImageComparer.Text" xml:space="preserve">
+    <value>مقارن الصور...</value>
+  </data>
+  <data name="tsmiAI.Text" xml:space="preserve">
+    <value>تحليل الصورة...</value>
+  </data>
+  <data name="tsmiMetadata.Text" xml:space="preserve">
+    <value>البيانات الوصفية...</value>
+  </data>
+  <data name="tsbDestinationSettings.Text" xml:space="preserve">
+    <value>إعدادات الوجهة...</value>
+  </data>
+  <data name="tsbCustomUploaderSettings.Text" xml:space="preserve">
+    <value>إعدادات الرافع المخصص...</value>
+  </data>
+  <data name="tsmiAnalyzeImage.Text" xml:space="preserve">
+    <value>تحليل الصورة...</value>
+  </data>
+  <data name="tsmiGoogleLens.Text" xml:space="preserve">
+    <value>Google Lens...</value>
+  </data>
+  <data name="tsmiTrayImageComparer.Text" xml:space="preserve">
+    <value>مقارن الصور...</value>
+  </data>
+  <data name="tsmiTrayAI.Text" xml:space="preserve">
+    <value>تحليل الصورة...</value>
+  </data>
+  <data name="tsmiTrayMetadata.Text" xml:space="preserve">
+    <value>البيانات الوصفية...</value>
+  </data>
 </root>

@@ -117,67 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblFilterFrom.Text" xml:space="preserve">
-    <value>من:</value>
+  <data name="cbSkipDuplicates.Text" xml:space="preserve">
+    <value>تخطي الملفات المكررة</value>
   </data>
-  <data name="gbAdvancedSearch.Text" xml:space="preserve">
-    <value>بحث متقدّم</value>
+  <data name="btnBrowse.Text" xml:space="preserve">
+    <value>استعراض...</value>
   </data>
-  <data name="tsbAdvancedSearch.Text" xml:space="preserve">
-    <value>بحث متقدّم...</value>
+  <data name="lblFolderPath.Text" xml:space="preserve">
+    <value>مسار المجلد:</value>
   </data>
-  <data name="btnAdvancedSearchClose.Text" xml:space="preserve">
-    <value>إغلاق</value>
+  <data name="btnImport.Text" xml:space="preserve">
+    <value>استيراد</value>
   </data>
-  <data name="chDateTime.Text" xml:space="preserve">
-    <value>التأريخ</value>
-  </data>
-  <data name="cbDateFilter.Text" xml:space="preserve">
-    <value>التأريخ:</value>
-  </data>
-  <data name="chFilename.Text" xml:space="preserve">
-    <value>اسم الملف</value>
-  </data>
-  <data name="lblFilenameFilter.Text" xml:space="preserve">
-    <value>اسم الملف:</value>
-  </data>
-  <data name="tsbSettings.Text" xml:space="preserve">
-    <value>الإعدادات...</value>
-  </data>
-  <data name="tsbSearch.Text" xml:space="preserve">
-    <value>بحث</value>
-  </data>
-  <data name="tslSearch.Text" xml:space="preserve">
-    <value>بحث:</value>
-  </data>
-  <data name="btnAdvancedSearchReset.Text" xml:space="preserve">
-    <value>إعادة تعيين</value>
+  <data name="cbOnlyImportImageFiles.Text" xml:space="preserve">
+    <value>استيراد ملفات الصور فقط</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>ShareX - السجل</value>
-  </data>
-  <data name="lblFilterTo.Text" xml:space="preserve">
-    <value>إلى:</value>
-  </data>
-  <data name="cbTypeFilter.Text" xml:space="preserve">
-    <value>النوع:</value>
-  </data>
-  <data name="cbHostFilter.Text" xml:space="preserve">
-    <value>المضيف:</value>
-  </data>
-  <data name="lblURLFilter.Text" xml:space="preserve">
-    <value>عنوان URL:</value>
-  </data>
-  <data name="chURL.Text" xml:space="preserve">
-    <value>عنوان URL</value>
-  </data>
-  <data name="tsbShowStats.Text" xml:space="preserve">
-    <value>عرض الإحصائيات...</value>
-  </data>
-  <data name="tsbFavorites.Text" xml:space="preserve">
-    <value>المفضلة</value>
-  </data>
-  <data name="tsbImportFolder.Text" xml:space="preserve">
-    <value>استيراد مجلد...</value>
+    <value>ShareX - استيراد مجلد</value>
   </data>
 </root>

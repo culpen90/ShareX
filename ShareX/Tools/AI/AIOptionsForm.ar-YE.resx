@@ -117,67 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblFilterFrom.Text" xml:space="preserve">
-    <value>من:</value>
+  <data name="lblProvider.Text" xml:space="preserve">
+    <value>الموفر:</value>
   </data>
-  <data name="gbAdvancedSearch.Text" xml:space="preserve">
-    <value>بحث متقدّم</value>
+  <data name="btnOpenAILoadModels.ToolTip" xml:space="preserve">
+    <value>تحميل النماذج</value>
   </data>
-  <data name="tsbAdvancedSearch.Text" xml:space="preserve">
-    <value>بحث متقدّم...</value>
+  <data name="lblOpenAIAPIKey.Text" xml:space="preserve">
+    <value>مفتاح API:</value>
   </data>
-  <data name="btnAdvancedSearchClose.Text" xml:space="preserve">
-    <value>إغلاق</value>
+  <data name="lblOpenAIModel.Text" xml:space="preserve">
+    <value>النموذج:</value>
   </data>
-  <data name="chDateTime.Text" xml:space="preserve">
-    <value>التأريخ</value>
+  <data name="lblOpenAICustomURL.Text" xml:space="preserve">
+    <value>عنوان URL الأساسي المخصص:</value>
   </data>
-  <data name="cbDateFilter.Text" xml:space="preserve">
-    <value>التأريخ:</value>
+  <data name="lblReasoningEffort.Text" xml:space="preserve">
+    <value>جهد الاستدلال:</value>
   </data>
-  <data name="chFilename.Text" xml:space="preserve">
-    <value>اسم الملف</value>
+  <data name="lblVerbosity.Text" xml:space="preserve">
+    <value>الإسهاب:</value>
   </data>
-  <data name="lblFilenameFilter.Text" xml:space="preserve">
-    <value>اسم الملف:</value>
+  <data name="gbOpenAI.Text" xml:space="preserve">
+    <value>إعدادات الموفر</value>
   </data>
-  <data name="tsbSettings.Text" xml:space="preserve">
-    <value>الإعدادات...</value>
+  <data name="lblGeminiAPIKey.Text" xml:space="preserve">
+    <value>مفتاح API:</value>
   </data>
-  <data name="tsbSearch.Text" xml:space="preserve">
-    <value>بحث</value>
+  <data name="lblGeminiModel.Text" xml:space="preserve">
+    <value>النموذج:</value>
   </data>
-  <data name="tslSearch.Text" xml:space="preserve">
-    <value>بحث:</value>
+  <data name="gbGemini.Text" xml:space="preserve">
+    <value>إعدادات الموفر</value>
   </data>
-  <data name="btnAdvancedSearchReset.Text" xml:space="preserve">
-    <value>إعادة تعيين</value>
+  <data name="lblOpenRouterAPIKey.Text" xml:space="preserve">
+    <value>مفتاح API:</value>
+  </data>
+  <data name="lblOpenRouterModel.Text" xml:space="preserve">
+    <value>النموذج:</value>
+  </data>
+  <data name="gbOpenRouter.Text" xml:space="preserve">
+    <value>إعدادات الموفر</value>
+  </data>
+  <data name="btnTestConnection.Text" xml:space="preserve">
+    <value>اختبار</value>
+  </data>
+  <data name="cbAutoStartRegion.Text" xml:space="preserve">
+    <value>بدء المنطقة تلقائيًا</value>
+  </data>
+  <data name="cbAutoStartAnalyze.Text" xml:space="preserve">
+    <value>بدء التحليل تلقائيًا</value>
+  </data>
+  <data name="cbAutoCopyResult.Text" xml:space="preserve">
+    <value>نسخ النتيجة تلقائيًا</value>
+  </data>
+  <data name="btnOK.Text" xml:space="preserve">
+    <value>موافق</value>
+  </data>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>إلغاء</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>ShareX - السجل</value>
-  </data>
-  <data name="lblFilterTo.Text" xml:space="preserve">
-    <value>إلى:</value>
-  </data>
-  <data name="cbTypeFilter.Text" xml:space="preserve">
-    <value>النوع:</value>
-  </data>
-  <data name="cbHostFilter.Text" xml:space="preserve">
-    <value>المضيف:</value>
-  </data>
-  <data name="lblURLFilter.Text" xml:space="preserve">
-    <value>عنوان URL:</value>
-  </data>
-  <data name="chURL.Text" xml:space="preserve">
-    <value>عنوان URL</value>
-  </data>
-  <data name="tsbShowStats.Text" xml:space="preserve">
-    <value>عرض الإحصائيات...</value>
-  </data>
-  <data name="tsbFavorites.Text" xml:space="preserve">
-    <value>المفضلة</value>
-  </data>
-  <data name="tsbImportFolder.Text" xml:space="preserve">
-    <value>استيراد مجلد...</value>
+    <value>ShareX - خيارات الذكاء الاصطناعي</value>
   </data>
 </root>
