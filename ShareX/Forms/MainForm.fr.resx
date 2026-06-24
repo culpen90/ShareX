@@ -744,4 +744,40 @@
   <data name="cDescription.HeaderText" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="tsmiImageComparer.Text" xml:space="preserve">
+    <value>Comparateur d’images...</value>
+  </data>
+  <data name="tsmiAI.Text" xml:space="preserve">
+    <value>Analyser l’image...</value>
+  </data>
+  <data name="tsmiOCR.Text" xml:space="preserve">
+    <value>OCR...</value>
+  </data>
+  <data name="tsmiMetadata.Text" xml:space="preserve">
+    <value>Métadonnées...</value>
+  </data>
+  <data name="tsbDestinationSettings.Text" xml:space="preserve">
+    <value>Paramètres de destination...</value>
+  </data>
+  <data name="tsbCustomUploaderSettings.Text" xml:space="preserve">
+    <value>Paramètres de l’uploader personnalisé...</value>
+  </data>
+  <data name="tsmiAnalyzeImage.Text" xml:space="preserve">
+    <value>Analyser l’image...</value>
+  </data>
+  <data name="tsmiGoogleLens.Text" xml:space="preserve">
+    <value>Google Lens...</value>
+  </data>
+  <data name="tsmiTrayImageComparer.Text" xml:space="preserve">
+    <value>Comparateur d’images...</value>
+  </data>
+  <data name="tsmiTrayAI.Text" xml:space="preserve">
+    <value>Analyser l’image...</value>
+  </data>
+  <data name="tsmiTrayOCR.Text" xml:space="preserve">
+    <value>OCR...</value>
+  </data>
+  <data name="tsmiTrayMetadata.Text" xml:space="preserve">
+    <value>Métadonnées...</value>
+  </data>
 </root>

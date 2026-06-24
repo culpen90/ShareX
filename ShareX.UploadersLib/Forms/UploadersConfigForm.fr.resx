@@ -969,4 +969,40 @@ Utiliser une bibliothèque chiffrée désactive le partage.</value>
   <data name="cbYouTubeShowDialog.Text" xml:space="preserve">
     <value>Afficher la fenêtre de dialogue des options vidéo</value>
   </data>
+  <data name="lblPrivateBinPassword.Text" xml:space="preserve">
+    <value>Mot de passe :</value>
+  </data>
+  <data name="lblPrivateBinUsername.Text" xml:space="preserve">
+    <value>Nom d’utilisateur :</value>
+  </data>
+  <data name="gbPrivateBinCredentials.Text" xml:space="preserve">
+    <value>Identifiants</value>
+  </data>
+  <data name="gbPrivateBinCredentials.ToolTip" xml:space="preserve">
+    <value>Certains serveurs peuvent nécessiter une autorisation supplémentaire</value>
+  </data>
+  <data name="lblZWSToken.Text" xml:space="preserve">
+    <value>Jeton :</value>
+  </data>
+  <data name="lblZWSURL.Text" xml:space="preserve">
+    <value>URL :</value>
+  </data>
+  <data name="cbPlikTTLUnit.Items2" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="lblPrivateBinCustomUrl.Text" xml:space="preserve">
+    <value>URL personnalisée :</value>
+  </data>
+  <data name="lblPrivateBinExpiration.Text" xml:space="preserve">
+    <value>Expiration :</value>
+  </data>
+  <data name="lblPrivateBinFormat.Text" xml:space="preserve">
+    <value>Format :</value>
+  </data>
+  <data name="lblPrivateBinPastePassword.Text" xml:space="preserve">
+    <value>Mot de passe du collage :</value>
+  </data>
+  <data name="cbPrivateBinBurnAfterReading.Text" xml:space="preserve">
+    <value>Détruire après lecture</value>
+  </data>
 </root>

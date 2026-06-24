@@ -226,4 +226,7 @@ Autrement, il ne pourra pas suivre l'enregistrement : il y aura donc beaucoup de
   <data name="btnResetOptions.Text" xml:space="preserve">
     <value>Réinitialiser les options...</value>
   </data>
+  <data name="lblNVENCTune.Text" xml:space="preserve">
+    <value>Réglage :</value>
+  </data>
 </root>

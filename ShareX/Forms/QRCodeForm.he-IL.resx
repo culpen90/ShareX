@@ -138,4 +138,13 @@
   <data name="btnUploadImage.Text" xml:space="preserve">
     <value>העלה תמונה</value>
   </data>
+  <data name="btnScanScreen.Text" xml:space="preserve">
+    <value>סרוק מסך</value>
+  </data>
+  <data name="btnScanRegion.Text" xml:space="preserve">
+    <value>סרוק אזור...</value>
+  </data>
+  <data name="btnScanImageFile.Text" xml:space="preserve">
+    <value>סרוק קובץ תמונה...</value>
+  </data>
 </root>
