@@ -204,9 +204,6 @@
   <data name="lblImageSizeLimitHint.Text" xml:space="preserve">
     <value>KB</value>
   </data>
-  <data name="lblImageJPEGQualityHint.Text" xml:space="preserve">
-    <value>0-100</value>
-  </data>
   <data name="lblImageGIFQuality.Text" xml:space="preserve">
     <value>Calidad de GIF:</value>
   </data>

@@ -165,9 +165,6 @@
   <data name="cbSteamShowInApp.Text" xml:space="preserve">
     <value>Saat ShareX terbuka, tampilkan "In-App" di Steam</value>
   </data>
-  <data name="gbSteam.Text" xml:space="preserve">
-    <value>Steam</value>
-  </data>
   <data name="cbChromeExtensionSupport.Text" xml:space="preserve">
     <value>Aktifkan dukungan ekstensi Chrome</value>
   </data>
@@ -177,17 +174,11 @@
   <data name="gbChrome.Text" xml:space="preserve">
     <value>Ekstensi Chrome</value>
   </data>
-  <data name="gbWindows.Text" xml:space="preserve">
-    <value>Windows</value>
-  </data>
   <data name="tpIntegration.Text" xml:space="preserve">
     <value>Integrasi</value>
   </data>
   <data name="btnOpenScreenshotsFolder.Text" xml:space="preserve">
     <value>Buka...</value>
-  </data>
-  <data name="lblPreviewPersonalFolderPath.Text" xml:space="preserve">
-    <value>...</value>
   </data>
   <data name="btnBrowsePersonalFolderPath.Text" xml:space="preserve">
     <value>Jelajahi...</value>
@@ -200,9 +191,6 @@
   </data>
   <data name="btnOpenPersonalFolderPath.Text" xml:space="preserve">
     <value>Buka...</value>
-  </data>
-  <data name="lblSaveImageSubFolderPatternPreview.Text" xml:space="preserve">
-    <value>...</value>
   </data>
   <data name="lblSaveImageSubFolderPattern.Text" xml:space="preserve">
     <value>Pola sub folder:</value>

@@ -138,12 +138,6 @@
   <data name="lblAMFQuality.Text" xml:space="preserve">
     <value>کیفیت:</value>
   </data>
-  <data name="btnHelperDevicesHelp.Text" xml:space="preserve">
-    <value>؟</value>
-  </data>
-  <data name="btnFFmpegBrowse.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
   <data name="lblAMFUsage.Text" xml:space="preserve">
     <value>استفاده:</value>
   </data>
@@ -155,8 +149,5 @@
   </data>
   <data name="lblAudioSource.Text" xml:space="preserve">
     <value>منبع صدا:</value>
-  </data>
-  <data name="tpGIF.Text" xml:space="preserve">
-    <value>گیف</value>
   </data>
 </root>

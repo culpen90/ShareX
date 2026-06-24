@@ -291,9 +291,6 @@
   <data name="lblPersonalFolderPath.Text" xml:space="preserve">
     <value>Pasta raiz do ShareX:</value>
   </data>
-  <data name="lblPreviewPersonalFolderPath.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
   <data name="lblProxyHost.Text" xml:space="preserve">
     <value>Domínio:</value>
   </data>
@@ -314,9 +311,6 @@
   </data>
   <data name="lblSaveImageSubFolderPattern.Text" xml:space="preserve">
     <value>Modelo padrão de sub-pastas:</value>
-  </data>
-  <data name="lblSaveImageSubFolderPatternPreview.Text" xml:space="preserve">
-    <value>...</value>
   </data>
   <data name="lblTrayLeftClickAction.Text" xml:space="preserve">
     <value>Ao clicar com o botão esquerdo do rato no ícon da bandeja:</value>

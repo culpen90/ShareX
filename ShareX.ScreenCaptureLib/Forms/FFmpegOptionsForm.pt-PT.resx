@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblx264CRF.Text" xml:space="preserve">
-    <value>CRF:</value>
-  </data>
   <data name="nudx264CRF.ToolTip" xml:space="preserve">
     <value>Factor de taxa constante (CRF): O valor pode ser entre 0-51, em que 0 é sem perdas, 30 é padrão, e 51 é pior qualidade possível.
 
@@ -149,17 +146,8 @@ Caso contrário é impossível acompanhar a gravação e irão ocorrer muitas fa
   <data name="lblXvidQscale.Text" xml:space="preserve">
     <value>Taxa de bitrate variável:</value>
   </data>
-  <data name="btnFFmpegBrowse.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
   <data name="cbCustomCommands.Text" xml:space="preserve">
     <value>Utilizador comandos personalizados</value>
-  </data>
-  <data name="tpX264.Text" xml:space="preserve">
-    <value>x264 / x265</value>
-  </data>
-  <data name="lblVP8BitrateK.Text" xml:space="preserve">
-    <value>kbps</value>
   </data>
   <data name="lblVP8Bitrate.Text" xml:space="preserve">
     <value>Taxa de bitrate variável:</value>

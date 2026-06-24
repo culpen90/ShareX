@@ -150,17 +150,11 @@
   <data name="btnImageEffects.Text" xml:space="preserve">
     <value>Configuração de efeitos de imagem...</value>
   </data>
-  <data name="btnRegionCaptureSnapSizesAdd.Text" xml:space="preserve">
-    <value>+</value>
-  </data>
   <data name="btnRegionCaptureSnapSizesDialogAdd.Text" xml:space="preserve">
     <value>Adicionar</value>
   </data>
   <data name="btnRegionCaptureSnapSizesDialogCancel.Text" xml:space="preserve">
     <value>Cancelar</value>
-  </data>
-  <data name="btnRegionCaptureSnapSizesRemove.Text" xml:space="preserve">
-    <value>-</value>
   </data>
   <data name="btnScreenRecorderFFmpegOptions.Text" xml:space="preserve">
     <value>Opções de gravação do ecrã...</value>
@@ -347,12 +341,6 @@
   </data>
   <data name="lblCaptureCustomRegionWidth.Text" xml:space="preserve">
     <value>Largura</value>
-  </data>
-  <data name="lblCaptureCustomRegionX.Text" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="lblCaptureCustomRegionY.Text" xml:space="preserve">
-    <value>Y</value>
   </data>
   <data name="lblCaptureShadowOffset.Text" xml:space="preserve">
     <value>Alinhamento de sombra:</value>

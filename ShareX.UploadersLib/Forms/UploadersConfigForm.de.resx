@@ -633,9 +633,6 @@ Das Benutzen einer verschlüsselten Bibliothek deaktiviert das Teilen.</value>
   <data name="lblFirebaseWebAPIKey.Text" xml:space="preserve">
     <value>Web API Schlüssel:</value>
   </data>
-  <data name="tpFirebaseDynamicLinks.Text" xml:space="preserve">
-    <value>Firebase dynamische Links</value>
-  </data>
   <data name="lblKuttPassword.Text" xml:space="preserve">
     <value>Passwort:</value>
   </data>

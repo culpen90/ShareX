@@ -129,9 +129,6 @@
   <data name="$this.Text" xml:space="preserve">
     <value>ShareX - Paramètres de service de mise en ligne personnalisé</value>
   </data>
-  <data name="mbHelp.Text" xml:space="preserve">
-    <value>?</value>
-  </data>
   <data name="btnDataBeautify.Text" xml:space="preserve">
     <value>Beautifier</value>
   </data>

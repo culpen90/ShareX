@@ -552,39 +552,6 @@
   <data name="tsbAbout.Text" xml:space="preserve">
     <value>정보...</value>
   </data>
-  <data name="tsmiCopyURL.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl+C</value>
-  </data>
-  <data name="tsmiCopyFile.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Shift+C</value>
-  </data>
-  <data name="tsmiCopyImage.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Alt+C</value>
-  </data>
-  <data name="tsmiOpenFolder.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Shift+엔터</value>
-  </data>
-  <data name="tsmiOpenFile.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl+Enter</value>
-  </data>
-  <data name="tsmiCopyFilePath.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl+Shift+C</value>
-  </data>
-  <data name="tsmiUploadSelectedFile.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl+U</value>
-  </data>
-  <data name="tsmiDownloadSelectedURL.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl+D</value>
-  </data>
-  <data name="tsmiEditSelectedFile.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Ctrl+E</value>
-  </data>
-  <data name="tsmiDeleteSelectedFile.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Shift+Del</value>
-  </data>
-  <data name="tsmiDeleteSelectedItem.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Del</value>
-  </data>
   <data name="tsmiDownloadSelectedURL.Text" xml:space="preserve">
     <value>다운로드</value>
   </data>
@@ -609,9 +576,6 @@
   <data name="tsmiTrayScrollingCapture.Text" xml:space="preserve">
     <value>스크롤 촬영...</value>
   </data>
-  <data name="niTray.Text" xml:space="preserve">
-    <value>ShareX</value>
-  </data>
   <data name="tsmiTrayShortenURL.Text" xml:space="preserve">
     <value>URL 단축...</value>
   </data>
@@ -623,9 +587,6 @@
   </data>
   <data name="tsmiTrayToggleHotkeys.Text" xml:space="preserve">
     <value>단축키 비활성화</value>
-  </data>
-  <data name="tsmiOpenURL.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Enter</value>
   </data>
   <data name="tsmiTrayImageCombiner.Text" xml:space="preserve">
     <value>이미지 취합기...</value>
@@ -683,9 +644,6 @@
   </data>
   <data name="tsmiTrayScreenshotDelay1.Text" xml:space="preserve">
     <value>1 초</value>
-  </data>
-  <data name="tsbDiscord.Text" xml:space="preserve">
-    <value>디스코드</value>
   </data>
   <data name="tsmiTrayCustomUploaderSettings.Text" xml:space="preserve">
     <value>커스텀 업로더 설정...</value>

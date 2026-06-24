@@ -148,9 +148,6 @@
   <data name="cbCustomCommands.Text" xml:space="preserve">
     <value>Власні команди:</value>
   </data>
-  <data name="lblVP8BitrateK.Text" xml:space="preserve">
-    <value>кбіт/с</value>
-  </data>
   <data name="lblVP8Bitrate.Text" xml:space="preserve">
     <value>Бітрейт:</value>
   </data>

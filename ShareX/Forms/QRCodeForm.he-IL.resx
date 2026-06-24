@@ -120,9 +120,6 @@
   <data name="$this.Text" xml:space="preserve">
     <value>ShareX - קוד QR</value>
   </data>
-  <data name="lblQRCodeSizeHint.Text" xml:space="preserve">
-    <value>px</value>
-  </data>
   <data name="lblQRCodeSize.Text" xml:space="preserve">
     <value>גודל קוד QR:</value>
   </data>

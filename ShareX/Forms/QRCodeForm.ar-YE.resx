@@ -126,9 +126,6 @@
   <data name="lblQRCode.Text" xml:space="preserve">
     <value>رمز QR:</value>
   </data>
-  <data name="lblQRCodeSizeHint.Text" xml:space="preserve">
-    <value>px</value>
-  </data>
   <data name="btnSaveImage.Text" xml:space="preserve">
     <value>حفظ الصورة...</value>
   </data>

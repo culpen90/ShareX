@@ -161,9 +161,6 @@ Por exemplo, se o teu nome for 'bucket.example.com' a hiperligação será http:
   <data name="lblPolrAPIHostname.Text" xml:space="preserve">
     <value>Anfitrião da API: (e.g http://example.com/api.php, Deixe em branco para usar polr.me)</value>
   </data>
-  <data name="tpFirebaseDynamicLinks.Text" xml:space="preserve">
-    <value>Hiperligações dinâmicas Firebase</value>
-  </data>
   <data name="lblFirebaseDomainExample.Text" xml:space="preserve">
     <value>Exemplo: google.page.ink</value>
   </data>
@@ -632,9 +629,6 @@ Utilizar uma biblioteca encriptada desactiva compartilhamento.</value>
   </data>
   <data name="lblSeafileAPIURL.Text" xml:space="preserve">
     <value>Hiperligação da API:</value>
-  </data>
-  <data name="tpStreamable.Text" xml:space="preserve">
-    <value>Transmitível</value>
   </data>
   <data name="cbStreamableUseDirectURL.Text" xml:space="preserve">
     <value>Utilizar hiperligação directa</value>

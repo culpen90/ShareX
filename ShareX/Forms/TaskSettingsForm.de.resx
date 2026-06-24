@@ -315,9 +315,6 @@
   <data name="lblImageGIFQuality.Text" xml:space="preserve">
     <value>GIF Qualität:</value>
   </data>
-  <data name="lblImageJPEGQualityHint.Text" xml:space="preserve">
-    <value>0 - 100</value>
-  </data>
   <data name="lblImageFileExist.Text" xml:space="preserve">
     <value>Wenn Datei existiert:</value>
   </data>

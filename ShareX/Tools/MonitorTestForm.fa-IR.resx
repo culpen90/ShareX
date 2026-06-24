@@ -154,21 +154,6 @@
   <data name="$this.Text" xml:space="preserve">
     <value>ShareX - تست صفحه نمایش</value>
   </data>
-  <data name="lblBlackWhiteValue.Text" xml:space="preserve">
-    <value>۰</value>
-  </data>
-  <data name="lblRedValue.Text" xml:space="preserve">
-    <value>۰</value>
-  </data>
-  <data name="lblBlueValue.Text" xml:space="preserve">
-    <value>۰</value>
-  </data>
-  <data name="lblGreenValue.Text" xml:space="preserve">
-    <value>۰</value>
-  </data>
-  <data name="lblShapeSizeValue.Text" xml:space="preserve">
-    <value>۱</value>
-  </data>
   <data name="btnColorDialog.Text" xml:space="preserve">
     <value>پنجره رنگ ...</value>
   </data>

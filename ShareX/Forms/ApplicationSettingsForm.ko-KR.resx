@@ -339,20 +339,8 @@
   <data name="cbExportHistory.Text" xml:space="preserve">
     <value>기록</value>
   </data>
-  <data name="lblSaveImageSubFolderPatternPreview.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="lblPreviewPersonalFolderPath.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
   <data name="btnPersonalFolderPathApply.Text" xml:space="preserve">
     <value>적용</value>
-  </data>
-  <data name="gbWindows.Text" xml:space="preserve">
-    <value>Windows</value>
-  </data>
-  <data name="gbSteam.Text" xml:space="preserve">
-    <value>Steam</value>
   </data>
   <data name="tpTheme.Text" xml:space="preserve">
     <value>테마</value>

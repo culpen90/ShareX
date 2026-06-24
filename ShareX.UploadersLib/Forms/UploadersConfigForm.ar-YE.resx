@@ -417,9 +417,6 @@
   <data name="grpSeafileShareSettings.Text" xml:space="preserve">
     <value>إعدادات المشاركة لـ Seafile</value>
   </data>
-  <data name="tpSeafile.Text" xml:space="preserve">
-    <value>Seafile</value>
-  </data>
   <data name="btnSharedFolderRemove.Text" xml:space="preserve">
     <value>حذف</value>
   </data>
@@ -926,11 +923,5 @@
   </data>
   <data name="gbFTPAccount.Text" xml:space="preserve">
     <value>الحساب</value>
-  </data>
-  <data name="btnGoogleDriveFolderIDHelp.Text" xml:space="preserve">
-    <value>؟</value>
-  </data>
-  <data name="btnAmazonS3StorageClassHelp.Text" xml:space="preserve">
-    <value>؟</value>
   </data>
 </root>

@@ -120,14 +120,8 @@
   <data name="lblInputFilePath.Text" xml:space="preserve">
     <value>Caminho de ficheiro:</value>
   </data>
-  <data name="btnInputFilePathBrowse.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
   <data name="lblOutputFolder.Text" xml:space="preserve">
     <value>Pasta de destino:</value>
-  </data>
-  <data name="btnOutputFolderBrowse.Text" xml:space="preserve">
-    <value>...</value>
   </data>
   <data name="lblOutputFileName.Text" xml:space="preserve">
     <value>Nome do ficheiro de destino:</value>

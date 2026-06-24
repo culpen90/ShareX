@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblImageJPEGQualityHint.Text" xml:space="preserve">
-    <value>۰ - ۱۰۰</value>
-  </data>
   <data name="tpActions.Text" xml:space="preserve">
     <value>کارها</value>
   </data>

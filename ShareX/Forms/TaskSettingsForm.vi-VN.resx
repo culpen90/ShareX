@@ -351,17 +351,8 @@
   <data name="btnAfterCapture.Text" xml:space="preserve">
     <value>Sau khi chụp...</value>
   </data>
-  <data name="btnRegionCaptureSnapSizesRemove.Text" xml:space="preserve">
-    <value>-</value>
-  </data>
-  <data name="btnRegionCaptureSnapSizesAdd.Text" xml:space="preserve">
-    <value>+</value>
-  </data>
   <data name="lblAutoIncrementNumber.Text" xml:space="preserve">
     <value>Số tăng tự động:</value>
-  </data>
-  <data name="lblImageJPEGQualityHint.Text" xml:space="preserve">
-    <value>0 - 100</value>
   </data>
   <data name="btnRegionCaptureSnapSizesDialogAdd.Text" xml:space="preserve">
     <value>Thêm</value>
@@ -401,12 +392,6 @@
   </data>
   <data name="cbRegionCaptureIsFixedSize.Text" xml:space="preserve">
     <value>Chế độ vùng cố định kích thước:</value>
-  </data>
-  <data name="lblCaptureCustomRegionY.Text" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="lblCaptureCustomRegionX.Text" xml:space="preserve">
-    <value>X</value>
   </data>
   <data name="lblRegionCaptureFixedSizeWidth.Text" xml:space="preserve">
     <value>Rộng:</value>

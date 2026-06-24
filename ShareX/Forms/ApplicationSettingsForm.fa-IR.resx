@@ -256,9 +256,6 @@
   <data name="cbShellContextMenu.Text" xml:space="preserve">
     <value>شیرایکس را در راست کلیک پنجره ویندوز اکسپلورر اضافه کن</value>
   </data>
-  <data name="gbWindows.Text" xml:space="preserve">
-    <value>ویندوز</value>
-  </data>
   <data name="tpIntegration.Text" xml:space="preserve">
     <value>تعامل</value>
   </data>
@@ -465,8 +462,5 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>ShareX - تنظیمات برنامه</value>
-  </data>
-  <data name="lblPreviewPersonalFolderPath.Text" xml:space="preserve">
-    <value>...</value>
   </data>
 </root>

@@ -160,12 +160,6 @@
   <data name="btnCancel.Text" xml:space="preserve">
     <value>انصراف</value>
   </data>
-  <data name="txtY.Text" xml:space="preserve">
-    <value>۰</value>
-  </data>
-  <data name="txtX.Text" xml:space="preserve">
-    <value>۰</value>
-  </data>
   <data name="rbBlue.Text" xml:space="preserve">
     <value>آبی:</value>
   </data>

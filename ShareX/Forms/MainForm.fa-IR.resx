@@ -554,9 +554,6 @@
   <data name="tsmiShowDebugLog.Text" xml:space="preserve">
     <value>خطایابی ...</value>
   </data>
-  <data name="tsmiDeleteSelectedItem.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>کلید Delete</value>
-  </data>
   <data name="tsmiDeleteSelectedFile.Text" xml:space="preserve">
     <value>حذف فایل بصورت محلی ...</value>
   </data>

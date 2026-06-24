@@ -342,20 +342,8 @@
   <data name="tpTheme.Text" xml:space="preserve">
     <value>Theme</value>
   </data>
-  <data name="gbSteam.Text" xml:space="preserve">
-    <value>Steam</value>
-  </data>
-  <data name="gbWindows.Text" xml:space="preserve">
-    <value>Windows</value>
-  </data>
   <data name="btnPersonalFolderPathApply.Text" xml:space="preserve">
     <value>Áp dụng</value>
-  </data>
-  <data name="lblPreviewPersonalFolderPath.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="lblSaveImageSubFolderPatternPreview.Text" xml:space="preserve">
-    <value>...</value>
   </data>
   <data name="lblExportImportNote.Text" xml:space="preserve">
     <value>Lưu ý: Việc này sẽ xuất ra tất cả các tệp tin cài đặt và lịch sử</value>

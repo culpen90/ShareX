@@ -183,9 +183,6 @@
   <data name="lblImageSizeLimitHint.Text" xml:space="preserve">
     <value>kB</value>
   </data>
-  <data name="lblImageJPEGQualityHint.Text" xml:space="preserve">
-    <value>0 - 100</value>
-  </data>
   <data name="lblImageGIFQuality.Text" xml:space="preserve">
     <value>Kualitas GIF:</value>
   </data>
@@ -237,12 +234,6 @@
   <data name="lblCaptureCustomRegionHeight.Text" xml:space="preserve">
     <value>Tinggi</value>
   </data>
-  <data name="lblCaptureCustomRegionY.Text" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="lblCaptureCustomRegionX.Text" xml:space="preserve">
-    <value>X</value>
-  </data>
   <data name="cbShowCursor.Text" xml:space="preserve">
     <value>Tampilkan penunjuk di screenshot</value>
   </data>
@@ -275,12 +266,6 @@
   </data>
   <data name="cbRegionCaptureShowInfo.Text" xml:space="preserve">
     <value>Tampilkan info ukuran dan posisi</value>
-  </data>
-  <data name="btnRegionCaptureSnapSizesRemove.Text" xml:space="preserve">
-    <value>-</value>
-  </data>
-  <data name="btnRegionCaptureSnapSizesAdd.Text" xml:space="preserve">
-    <value>+</value>
   </data>
   <data name="btnRegionCaptureSnapSizesDialogCancel.Text" xml:space="preserve">
     <value>Batal</value>

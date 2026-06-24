@@ -138,17 +138,11 @@
   <data name="chURL.Text" xml:space="preserve">
     <value>hiperligação</value>
   </data>
-  <data name="niTray.Text" xml:space="preserve">
-    <value>ShareX</value>
-  </data>
   <data name="tsbAbout.Text" xml:space="preserve">
     <value>Sobre...</value>
   </data>
   <data name="tsbApplicationSettings.Text" xml:space="preserve">
     <value>Definições da aplicação...</value>
-  </data>
-  <data name="tsbDiscord.Text" xml:space="preserve">
-    <value>Discord</value>
   </data>
   <data name="tsbDonate.Text" xml:space="preserve">
     <value>Faça uma doação...</value>
@@ -278,9 +272,6 @@
   </data>
   <data name="tsmiDeleteSelectedFile.Text" xml:space="preserve">
     <value>Apagar ficheiro local...</value>
-  </data>
-  <data name="tsmiDeleteSelectedItem.ShortcutKeyDisplayString" xml:space="preserve">
-    <value>Apagar</value>
   </data>
   <data name="tsmiDeleteSelectedItem.Text" xml:space="preserve">
     <value>Remover tarefa da lista</value>

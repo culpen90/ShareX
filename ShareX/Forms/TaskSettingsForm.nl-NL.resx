@@ -135,12 +135,6 @@
   <data name="lblCaptureCustomRegionHeight.Text" xml:space="preserve">
     <value>Hoogte</value>
   </data>
-  <data name="lblCaptureCustomRegionY.Text" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="lblCaptureCustomRegionX.Text" xml:space="preserve">
-    <value>X</value>
-  </data>
   <data name="cbShowCursor.Text" xml:space="preserve">
     <value>Toon cursor in schermafdrukken</value>
   </data>

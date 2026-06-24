@@ -123,9 +123,6 @@
   <data name="btnAbort.Text" xml:space="preserve">
     <value>انصراف</value>
   </data>
-  <data name="lblTimer.Text" xml:space="preserve">
-    <value>۰۰:۰۰:۰۰</value>
-  </data>
   <data name="tsmiAbort.Text" xml:space="preserve">
     <value>انصراف</value>
   </data>

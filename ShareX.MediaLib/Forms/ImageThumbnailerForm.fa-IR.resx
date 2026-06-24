@@ -129,9 +129,6 @@
   <data name="btnAdd.Text" xml:space="preserve">
     <value>اضافه کردن ...</value>
   </data>
-  <data name="btnOutputFolder.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
   <data name="lblHeight.Text" xml:space="preserve">
     <value>ارتفاع:</value>
   </data>

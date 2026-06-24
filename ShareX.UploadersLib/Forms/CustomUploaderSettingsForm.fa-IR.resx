@@ -189,7 +189,4 @@
   <data name="lblResultDeletionURL.Text" xml:space="preserve">
     <value>آدرس حذف:</value>
   </data>
-  <data name="mbHelp.Text" xml:space="preserve">
-    <value>؟</value>
-  </data>
 </root>

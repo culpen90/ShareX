@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="tpYouTube.Text" xml:space="preserve">
-    <value>یوتیوب</value>
-  </data>
   <data name="cbGoogleCloudStorageStripExtensionVideo.Text" xml:space="preserve">
     <value>ویدئو</value>
   </data>
@@ -464,24 +461,6 @@
   </data>
   <data name="btnFTPAdd.Text" xml:space="preserve">
     <value>اضافه کردن</value>
-  </data>
-  <data name="btnAmazonS3StorageClassHelp.Text" xml:space="preserve">
-    <value>؟</value>
-  </data>
-  <data name="btnAzureStoragePortal.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="btnFTPSCertificateLocationBrowse.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="btnSFTPKeyLocationBrowse.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="btnAmazonS3AccessKeyOpen.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="btnAmazonS3BucketNameOpen.Text" xml:space="preserve">
-    <value>...</value>
   </data>
   <data name="lblAzureStorageAccountName.Text" xml:space="preserve">
     <value>نام اکانت:</value>
