@@ -141,4 +141,7 @@
   <data name="btnAdd.Text" xml:space="preserve">
     <value>Tambah...</value>
   </data>
+  <data name="lblQuality.Text" xml:space="preserve">
+    <value>Kualitas:</value>
+  </data>
 </root>

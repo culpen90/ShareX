@@ -117,4 +117,127 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btnTextUploaderTest.Text" xml:space="preserve">
+    <value>Uji</value>
+  </data>
+  <data name="lblURLShortener.Text" xml:space="preserve">
+    <value>Pemendek URL:</value>
+  </data>
+  <data name="btnURLShortenerTest.Text" xml:space="preserve">
+    <value>Uji</value>
+  </data>
+  <data name="lblTextUploader.Text" xml:space="preserve">
+    <value>Pengunggah teks:</value>
+  </data>
+  <data name="tsmiCustomUploaderGuide.Text" xml:space="preserve">
+    <value>Panduan pengunggah kustom...</value>
+  </data>
+  <data name="tsmiClearUploaders.Text" xml:space="preserve">
+    <value>Bersihkan pengunggah...</value>
+  </data>
+  <data name="tsmiExportAll.Text" xml:space="preserve">
+    <value>Ekspor semua...</value>
+  </data>
+  <data name="tsmiUpdateFolder.Text" xml:space="preserve">
+    <value>Perbarui folder...</value>
+  </data>
+  <data name="btnNew.Text" xml:space="preserve">
+    <value>Baru</value>
+  </data>
+  <data name="btnDuplicate.Text" xml:space="preserve">
+    <value>Duplikat</value>
+  </data>
+  <data name="btnRemove.Text" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="btnImageUploaderTest.Text" xml:space="preserve">
+    <value>Uji</value>
+  </data>
+  <data name="lblFileUploader.Text" xml:space="preserve">
+    <value>Pengunggah file:</value>
+  </data>
+  <data name="btnFileUploaderTest.Text" xml:space="preserve">
+    <value>Uji</value>
+  </data>
+  <data name="lblImageUploader.Text" xml:space="preserve">
+    <value>Pengunggah gambar:</value>
+  </data>
+  <data name="cHeadersName.HeaderText" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="cHeadersValue.HeaderText" xml:space="preserve">
+    <value>Nilai</value>
+  </data>
+  <data name="cParametersName.HeaderText" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="cParametersValue.HeaderText" xml:space="preserve">
+    <value>Nilai</value>
+  </data>
+  <data name="lblHeaders.Text" xml:space="preserve">
+    <value>Header:</value>
+  </data>
+  <data name="lblParameters.Text" xml:space="preserve">
+    <value>Parameter URL:</value>
+  </data>
+  <data name="lblRequestURL.Text" xml:space="preserve">
+    <value>URL permintaan:</value>
+  </data>
+  <data name="lblRequestMethod.Text" xml:space="preserve">
+    <value>Metode:</value>
+  </data>
+  <data name="lblBody.Text" xml:space="preserve">
+    <value>Isi:</value>
+  </data>
+  <data name="cArgumentsName.HeaderText" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="cArgumentsValue.HeaderText" xml:space="preserve">
+    <value>Nilai</value>
+  </data>
+  <data name="lblFileFormName.Text" xml:space="preserve">
+    <value>Nama formulir file:</value>
+  </data>
+  <data name="btnDataBeautify.Text" xml:space="preserve">
+    <value>Percantik</value>
+  </data>
+  <data name="btnDataMinify.Text" xml:space="preserve">
+    <value>Minify</value>
+  </data>
+  <data name="lblResultErrorMessage.Text" xml:space="preserve">
+    <value>Pesan kesalahan:</value>
+  </data>
+  <data name="lblResultDeletionURL.Text" xml:space="preserve">
+    <value>URL penghapusan:</value>
+  </data>
+  <data name="lblResultThumbnailURL.Text" xml:space="preserve">
+    <value>URL thumbnail:</value>
+  </data>
+  <data name="lblResultURL.Text" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="lblDestinationType.Text" xml:space="preserve">
+    <value>Jenis tujuan:</value>
+  </data>
+  <data name="lblName.Text" xml:space="preserve">
+    <value>Nama:</value>
+  </data>
+  <data name="mbDestinationType.ToolTip" xml:space="preserve">
+    <value>Saat ini jenis tujuan digunakan saat pengguna mengimpor pengunggah kustom dengan mengeklik dua kali file .sxcu.</value>
+  </data>
+  <data name="lblURLSharingService.Text" xml:space="preserve">
+    <value>Layanan berbagi URL:</value>
+  </data>
+  <data name="btnURLSharingServiceTest.Text" xml:space="preserve">
+    <value>Uji</value>
+  </data>
+  <data name="lblUploaders.Text" xml:space="preserve">
+    <value>Pengunggah:</value>
+  </data>
+  <data name="btnTestURLSyntax.Text" xml:space="preserve">
+    <value>Uji...</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - Pengaturan pengunggah kustom</value>
+  </data>
 </root>

@@ -117,4 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblInputFilePath.Text" xml:space="preserve">
+    <value>Jalur file masukan:</value>
+  </data>
+  <data name="lblOutputFolder.Text" xml:space="preserve">
+    <value>Folder keluaran:</value>
+  </data>
+  <data name="lblOutputFileName.Text" xml:space="preserve">
+    <value>Nama file keluaran:</value>
+  </data>
+  <data name="lblVideoQuality.Text" xml:space="preserve">
+    <value>Kualitas video:</value>
+  </data>
+  <data name="btnEncode.Text" xml:space="preserve">
+    <value>Mulai encoding</value>
+  </data>
+  <data name="cbAutoOpenFolder.Text" xml:space="preserve">
+    <value>Buka folder setelah encoding</value>
+  </data>
+  <data name="cbUseCustomArguments.Text" xml:space="preserve">
+    <value>Gunakan argumen kustom:</value>
+  </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>Encoder video:</value>
+  </data>
+  <data name="cbVideoQualityUseBitrate.Text" xml:space="preserve">
+    <value>Gunakan bitrate</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - Pengonversi video</value>
+  </data>
 </root>
