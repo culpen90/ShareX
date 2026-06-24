@@ -117,4 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblInputFilePath.Text" xml:space="preserve">
+    <value>Input 파일 경로:</value>
+  </data>
+  <data name="lblOutputFolder.Text" xml:space="preserve">
+    <value>Output 폴더:</value>
+  </data>
+  <data name="lblOutputFileName.Text" xml:space="preserve">
+    <value>Output 파일 name:</value>
+  </data>
+  <data name="lblVideoQuality.Text" xml:space="preserve">
+    <value>비디오 품질:</value>
+  </data>
+  <data name="btnEncode.Text" xml:space="preserve">
+    <value>시작 encoding</value>
+  </data>
+  <data name="cbAutoOpenFolder.Text" xml:space="preserve">
+    <value>열기 폴더 after encoding</value>
+  </data>
+  <data name="cbUseCustomArguments.Text" xml:space="preserve">
+    <value>Use 사용자 지정 arguments:</value>
+  </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>비디오 인코더:</value>
+  </data>
+  <data name="cbVideoQualityUseBitrate.Text" xml:space="preserve">
+    <value>비트레이트 사용</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>ShareX - 비디오 변환기</value>
+  </data>
 </root>

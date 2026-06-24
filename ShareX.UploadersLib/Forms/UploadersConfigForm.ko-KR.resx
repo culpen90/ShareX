@@ -778,7 +778,7 @@
     <value>기타 설정</value>
   </data>
   <data name="lblPlikTTL.Text" xml:space="preserve">
-    <value>다음 시간 뒤 파일 자동 삭제 </value>
+    <value>다음 시간 뒤 파일 자동 삭제</value>
   </data>
   <data name="lblPlikURL.Text" xml:space="preserve">
     <value>호스트</value>
@@ -787,7 +787,7 @@
     <value>사용자이름과 비밀번호 필요?</value>
   </data>
   <data name="lblPlikAPIKey.Text" xml:space="preserve">
-    <value>API 키: </value>
+    <value>API 키:</value>
   </data>
   <data name="lblPlikPassword.Text" xml:space="preserve">
     <value>비밀번호:</value>
@@ -871,7 +871,7 @@
     <value>URL 미리보기:</value>
   </data>
   <data name="lblBoxShareAccessLevel.Text" xml:space="preserve">
-    <value>공유된 링크 접근 권한: </value>
+    <value>공유된 링크 접근 권한:</value>
   </data>
   <data name="lblAzureStorageUploadPath.Text" xml:space="preserve">
     <value>업로드 경로:</value>
@@ -923,5 +923,86 @@
   </data>
   <data name="cbOneDriveUseDirectLink.Text" xml:space="preserve">
     <value>핫링크 사용하기</value>
+  </data>
+  <data name="lblPrivateBinPassword.Text" xml:space="preserve">
+    <value>비밀번호:</value>
+  </data>
+  <data name="lblPrivateBinUsername.Text" xml:space="preserve">
+    <value>사용자 이름:</value>
+  </data>
+  <data name="gbPrivateBinCredentials.Text" xml:space="preserve">
+    <value>자격 증명</value>
+  </data>
+  <data name="gbPrivateBinCredentials.ToolTip" xml:space="preserve">
+    <value>Some servers might require 추가itional authorization</value>
+  </data>
+  <data name="cbKuttReuse.Text" xml:space="preserve">
+    <value>지정한 대상의 URL이 있으면 반환</value>
+  </data>
+  <data name="lblZWSToken.Text" xml:space="preserve">
+    <value>토큰:</value>
+  </data>
+  <data name="lblZWSURL.Text" xml:space="preserve">
+    <value>URL:</value>
+  </data>
+  <data name="cbAmazonS3SignedPayload.Text" xml:space="preserve">
+    <value>서명된 페이로드</value>
+  </data>
+  <data name="cbGoogleCloudStorageSetPublicACL.Text" xml:space="preserve">
+    <value>Set public-read ACL on 파일</value>
+  </data>
+  <data name="gbGoogleCloudStorageAdvanced.Text" xml:space="preserve">
+    <value>고급</value>
+  </data>
+  <data name="lblGoogleCloudStorageBucket.Text" xml:space="preserve">
+    <value>버킷 이름:</value>
+  </data>
+  <data name="lblAzureStorageCacheControl.Text" xml:space="preserve">
+    <value>Cache-Control 헤더:</value>
+  </data>
+  <data name="lblB2ManageLink.Text" xml:space="preserve">
+    <value>Application Key를 만들거나 버킷을 관리하려면 여기를 클릭하세요.</value>
+  </data>
+  <data name="lblB2Bucket.Text" xml:space="preserve">
+    <value>버킷 이름:</value>
+  </data>
+  <data name="cbOwnCloudAppendFileNameToURL.Text" xml:space="preserve">
+    <value>Append 파일 name to URL</value>
+  </data>
+  <data name="cbSeafileCreateShareableURLRaw.Text" xml:space="preserve">
+    <value>원시 URL 사용</value>
+  </data>
+  <data name="cbPlikTTLUnit.Items" xml:space="preserve">
+    <value>일</value>
+  </data>
+  <data name="cbPlikTTLUnit.Items1" xml:space="preserve">
+    <value>시간</value>
+  </data>
+  <data name="cbPlikTTLUnit.Items2" xml:space="preserve">
+    <value>분</value>
+  </data>
+  <data name="cbPlikTTLUnit.Items3" xml:space="preserve">
+    <value>사용 안 함</value>
+  </data>
+  <data name="lblYouTubePermissionsTip.Text" xml:space="preserve">
+    <value>You may revoke your access at anytime using the 링크 below:</value>
+  </data>
+  <data name="cbYouTubeShowDialog.Text" xml:space="preserve">
+    <value>비디오 옵션 대화 상자 표시</value>
+  </data>
+  <data name="lblPrivateBinCustomUrl.Text" xml:space="preserve">
+    <value>사용자 지정 URL:</value>
+  </data>
+  <data name="lblPrivateBinExpiration.Text" xml:space="preserve">
+    <value>만료:</value>
+  </data>
+  <data name="lblPrivateBinFormat.Text" xml:space="preserve">
+    <value>형식:</value>
+  </data>
+  <data name="lblPrivateBinPastePassword.Text" xml:space="preserve">
+    <value>붙여넣기 비밀번호:</value>
+  </data>
+  <data name="cbPrivateBinBurnAfterReading.Text" xml:space="preserve">
+    <value>읽은 후 삭제</value>
   </data>
 </root>

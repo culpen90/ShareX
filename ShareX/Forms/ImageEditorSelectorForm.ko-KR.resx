@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,34 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btnLegacyImageEditor.Text" xml:space="preserve">
+    <value>기존 이미지 편집기</value>
+  </data>
+  <data name="btnModernImageEditor.Text" xml:space="preserve">
+    <value>최신 이미지 편집기</value>
+  </data>
+  <data name="lblNote.Text" xml:space="preserve">
+    <value>언제든지 다음 위치에서 변경할 수 있습니다:
+작업 설정 → 도구 → 기존 이미지 편집기 사용</value>
+  </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>ShareX - 해시 검사</value>
-  </data>
-  <data name="btnFilePathBrowse.Text" xml:space="preserve">
-    <value>탐색...</value>
-  </data>
-  <data name="btnStartHashCheck.Text" xml:space="preserve">
-    <value>시작</value>
-  </data>
-  <data name="lblHashType.Text" xml:space="preserve">
-    <value>해시 종류:</value>
-  </data>
-  <data name="lblResult.Text" xml:space="preserve">
-    <value>결과:</value>
-  </data>
-  <data name="lblTarget.Text" xml:space="preserve">
-    <value>타겟:</value>
-  </data>
-  <data name="lblFilePath.Text" xml:space="preserve">
-    <value>파일 경로:</value>
-  </data>
-  <data name="lblFilePath2.Text" xml:space="preserve">
-    <value>파일 경로:</value>
-  </data>
-  <data name="btnFilePathBrowse2.Text" xml:space="preserve">
-    <value>찾아보기...</value>
-  </data>
-  <data name="cbCompareTwoFiles.Text" xml:space="preserve">
-    <value>Compare two 파일s</value>
+    <value>ShareX - 이미지 편집기 선택</value>
   </data>
 </root>
