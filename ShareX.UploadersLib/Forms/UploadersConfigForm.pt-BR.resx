@@ -975,4 +975,34 @@ Usar uma biblioteca encriptada desabilita o compartilhamento.</value>
   <data name="cbOneDriveUseDirectLink.Text" xml:space="preserve">
     <value>Usar link direto</value>
   </data>
+  <data name="lblPrivateBinPassword.Text" xml:space="preserve">
+    <value>Senha:</value>
+  </data>
+  <data name="lblPrivateBinUsername.Text" xml:space="preserve">
+    <value>Nome de usuário:</value>
+  </data>
+  <data name="gbPrivateBinCredentials.Text" xml:space="preserve">
+    <value>Credenciais</value>
+  </data>
+  <data name="gbPrivateBinCredentials.ToolTip" xml:space="preserve">
+    <value>Alguns servidores podem exigir autorização adicional</value>
+  </data>
+  <data name="lblAzureStorageCacheControl.Text" xml:space="preserve">
+    <value>Cabeçalho Cache-Control:</value>
+  </data>
+  <data name="lblPrivateBinCustomUrl.Text" xml:space="preserve">
+    <value>URL personalizada:</value>
+  </data>
+  <data name="lblPrivateBinExpiration.Text" xml:space="preserve">
+    <value>Expiração:</value>
+  </data>
+  <data name="lblPrivateBinFormat.Text" xml:space="preserve">
+    <value>Formato:</value>
+  </data>
+  <data name="lblPrivateBinPastePassword.Text" xml:space="preserve">
+    <value>Senha de colagem:</value>
+  </data>
+  <data name="cbPrivateBinBurnAfterReading.Text" xml:space="preserve">
+    <value>Destruir após leitura</value>
+  </data>
 </root>

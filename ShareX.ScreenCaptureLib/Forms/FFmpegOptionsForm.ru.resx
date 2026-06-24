@@ -230,4 +230,7 @@
   <data name="lblVideoEncoder.Text" xml:space="preserve">
     <value>Энкодер видео:</value>
   </data>
+  <data name="lblNVENCTune.Text" xml:space="preserve">
+    <value>Настройка:</value>
+  </data>
 </root>

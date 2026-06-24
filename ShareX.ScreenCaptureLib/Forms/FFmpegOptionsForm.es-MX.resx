@@ -196,4 +196,37 @@ De lo contrario, la grabación se desfasará y se perderán fotogramas.</value>
   <data name="lblQSVPreset.Text" xml:space="preserve">
     <value>Preajuste:</value>
   </data>
+  <data name="nudGIFBayerScale.ToolTip" xml:space="preserve">
+    <value>Controla el índice de escala Bayer; una escala más alta mostrará más bandas. El valor predeterminado es 2.</value>
+  </data>
+  <data name="lblCommandLineArgs.Text" xml:space="preserve">
+    <value>Argumentos adicionales de línea de comandos:</value>
+  </data>
+  <data name="cbUseCustomFFmpegPath.Text" xml:space="preserve">
+    <value>Use personalizado FFmpeg path:</value>
+  </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>Codificador de video:</value>
+  </data>
+  <data name="lblAudioEncoder.Text" xml:space="preserve">
+    <value>Codificador de audio:</value>
+  </data>
+  <data name="lblAACBitrate.Text" xml:space="preserve">
+    <value>Tasa de bits:</value>
+  </data>
+  <data name="lblOpusBitrate.Text" xml:space="preserve">
+    <value>Tasa de bits:</value>
+  </data>
+  <data name="cbx264UseBitrate.Text" xml:space="preserve">
+    <value>Usar tasa de bits</value>
+  </data>
+  <data name="lblNVENCTune.Text" xml:space="preserve">
+    <value>Ajuste:</value>
+  </data>
+  <data name="lblAMFBitrate.Text" xml:space="preserve">
+    <value>Tasa de bits:</value>
+  </data>
+  <data name="btnResetOptions.Text" xml:space="preserve">
+    <value>Restablecer opciones...</value>
+  </data>
 </root>

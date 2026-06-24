@@ -420,4 +420,10 @@
   <data name="tpSettings.Text" xml:space="preserve">
     <value>Cài đặt</value>
   </data>
+  <data name="lblUpdateChannel.Text" xml:space="preserve">
+    <value>Kênh cập nhật:</value>
+  </data>
+  <data name="cbAutoCheckUpdate.Text" xml:space="preserve">
+    <value>Tự động kiểm tra bản cập nhật</value>
+  </data>
 </root>

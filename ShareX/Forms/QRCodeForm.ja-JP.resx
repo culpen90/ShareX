@@ -138,4 +138,13 @@
   <data name="btnUploadImage.Text" xml:space="preserve">
     <value>画像をアップロード</value>
   </data>
+  <data name="btnScanScreen.Text" xml:space="preserve">
+    <value>画面をスキャン</value>
+  </data>
+  <data name="btnScanRegion.Text" xml:space="preserve">
+    <value>領域をスキャン...</value>
+  </data>
+  <data name="btnScanImageFile.Text" xml:space="preserve">
+    <value>画像ファイルをスキャン...</value>
+  </data>
 </root>

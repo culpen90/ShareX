@@ -423,4 +423,7 @@
   <data name="lblDefaultPrinterOverride.Text" xml:space="preserve">
     <value>Sobrescribir impresora predeterminada:</value>
   </data>
+  <data name="lblUpdateChannel.Text" xml:space="preserve">
+    <value>Canal de actualización:</value>
+  </data>
 </root>

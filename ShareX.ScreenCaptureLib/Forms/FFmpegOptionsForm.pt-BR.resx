@@ -208,4 +208,25 @@ Caso contrário a gravação não conseguirá continuar e várias quedas de quad
   <data name="lblCommandLineArgs.Text" xml:space="preserve">
     <value>Argumentos de linha de comando adicionais:</value>
   </data>
+  <data name="lblVideoEncoder.Text" xml:space="preserve">
+    <value>Codificador de vídeo:</value>
+  </data>
+  <data name="lblAudioEncoder.Text" xml:space="preserve">
+    <value>Codificador de áudio:</value>
+  </data>
+  <data name="lblAACBitrate.Text" xml:space="preserve">
+    <value>Taxa de bits:</value>
+  </data>
+  <data name="lblOpusBitrate.Text" xml:space="preserve">
+    <value>Taxa de bits:</value>
+  </data>
+  <data name="lblNVENCTune.Text" xml:space="preserve">
+    <value>Ajuste:</value>
+  </data>
+  <data name="lblAMFBitrate.Text" xml:space="preserve">
+    <value>Taxa de bits:</value>
+  </data>
+  <data name="btnResetOptions.Text" xml:space="preserve">
+    <value>Redefinir opções...</value>
+  </data>
 </root>

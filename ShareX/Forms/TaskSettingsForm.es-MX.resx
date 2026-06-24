@@ -643,4 +643,28 @@ en el portapapeles</value>
   <data name="cbOverrideAdvancedSettings.Text" xml:space="preserve">
     <value>Sobreescribir ajustes avanzados</value>
   </data>
+  <data name="cbUseCustomActionCompletedSound.Text" xml:space="preserve">
+    <value>Use personalizado action completed sound:</value>
+  </data>
+  <data name="cbPlaySoundAfterAction.Text" xml:space="preserve">
+    <value>Reproducir sonido después de completar la acción</value>
+  </data>
+  <data name="cbCaptureAutoHideDesktopIcons.Text" xml:space="preserve">
+    <value>Ocultar automáticamente los iconos del escritorio</value>
+  </data>
+  <data name="lblCaptureCustomWindow.Text" xml:space="preserve">
+    <value>Pre configured ventana title:</value>
+  </data>
+  <data name="lblRegionCaptureBackgroundDimStrength.Text" xml:space="preserve">
+    <value>Intensidad de oscurecimiento del fondo:</value>
+  </data>
+  <data name="cbRegionCaptureShowCenterCrosshair.Text" xml:space="preserve">
+    <value>Mostrar mira central</value>
+  </data>
+  <data name="cbCloseWindowAfterOpenServiceLink.Text" xml:space="preserve">
+    <value>Close OCR ventana after opening service link</value>
+  </data>
+  <data name="cbImageEditorUseLegacyImageEditor.Text" xml:space="preserve">
+    <value>Usar editor de imágenes heredado</value>
+  </data>
 </root>
