@@ -116,6 +116,17 @@ namespace ShareX.ImageEditor.Hosting
             });
         }
 
+        public static void ShowBackgroundRemoverWindow()
+        {
+            Initialize();
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                BackgroundRemoverWindow window = new BackgroundRemoverWindow();
+                window.Show();
+            });
+        }
+
         public static SKBitmap? ShowEditorDialog(SKBitmap? imageBitmap, ImageEditorOptions options, EditorEvents? events = null,
             bool taskMode = false, string? imageFilePath = null)
         {

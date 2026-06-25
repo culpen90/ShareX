@@ -264,6 +264,9 @@ namespace ShareX
                         OpenImageViewer();
                     }
                     break;
+                case HotkeyType.BackgroundRemover:
+                    OpenBackgroundRemover();
+                    break;
                 case HotkeyType.ImageComparer:
                     OpenImageComparer();
                     break;
@@ -1011,6 +1014,11 @@ namespace ShareX
         public static void OpenImageComparer()
         {
             AvaloniaIntegration.ShowImageComparerWindow();
+        }
+
+        public static void OpenBackgroundRemover()
+        {
+            AvaloniaIntegration.ShowBackgroundRemoverWindow();
         }
 
         public static void CombineImages(IEnumerable<string> imageFiles, Orientation orientation, TaskSettings taskSettings = null)
@@ -2170,6 +2178,7 @@ namespace ShareX
                     case HotkeyType.ImageBeautifier: return Resources.picture_sunset;
                     case HotkeyType.ImageEffects: return Resources.image_reflection;
                     case HotkeyType.ImageViewer: return Resources.images_flickr;
+                    case HotkeyType.BackgroundRemover: return Resources.image_saturation;
                     case HotkeyType.ImageComparer: return Resources.image_saturation;
                     case HotkeyType.ImageCombiner: return Resources.document_break;
                     case HotkeyType.ImageSplitter: return Resources.image_split;

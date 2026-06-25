@@ -13,6 +13,7 @@
     <AvaloniaResource Include="Assets\Crosshair.cur" />
     <AvaloniaResource Include="Assets\lucide.ttf" />
     <AvaloniaResource Include="Assets\openhand.cur" />
+    <None Include="Assets\u2netp.onnx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +27,7 @@
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="Vortice.Direct2D1" VersionOverride="3.8.3" />
