@@ -1161,7 +1161,7 @@ namespace ShareX
 
         private static void ShowImageEditorSelector(TaskSettings taskSettings)
         {
-            if (taskSettings.ToolsSettings.ShowImageEditorSelector)
+            if (taskSettings.ToolsSettingsReference.ShowImageEditorSelector)
             {
                 using (ImageEditorSelectorForm selectorForm = new ImageEditorSelectorForm())
                 {
