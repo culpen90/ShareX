@@ -62,23 +62,49 @@
                         </Grid>
 
                         <Grid Grid.Row="1"
-                              ColumnDefinitions="Auto,*,Auto,Auto"
+                              ColumnDefinitions="Auto,*,Auto"
                               ColumnSpacing="12">
                             <TextBlock Grid.Column="0"
                                        Text="Models"
                                        VerticalAlignment="Center"/>
+                            <Grid Grid.Column="1"
+                                  ColumnDefinitions="*,Auto,Auto"
+                                  ColumnSpacing="4">
+                                <ComboBox Grid.Column="0"
+                                          ItemsSource="{Binding AvailableModels}"
+                                          SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                                          IsEnabled="{Binding !IsProcessing}"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Center"
+                                          ToolTip.Tip="Background removal model"/>
+                                <Button Grid.Column="1"
+                                        Classes="editor-button"
+                                        MinWidth="0"
+                                        Width="{Binding Bounds.Height, RelativeSource={RelativeSource Self}}"
+                                        Padding="0"
+                                        Command="{Binding RefreshModelsCommand}"
+                                        ToolTip.Tip="Refresh models">
+                                    <TextBlock Text="{x:Static theming:LucideIcons.refresh_cw}"
+                                               FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                               FontWeight="Normal"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Button>
+                                <Button Grid.Column="2"
+                                        Classes="editor-button"
+                                        MinWidth="0"
+                                        Width="{Binding Bounds.Height, RelativeSource={RelativeSource Self}}"
+                                        Padding="0"
+                                        Command="{Binding OpenModelsFolderCommand}"
+                                        ToolTip.Tip="Open models folder">
+                                    <TextBlock Text="{x:Static theming:LucideIcons.folder_open}"
+                                               FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                               FontWeight="Normal"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Button>
+                            </Grid>
                             <Button Grid.Column="2"
-                                    Classes="editor-button"
-                                    Content="Refresh models"
-                                    Command="{Binding RefreshModelsCommand}"/>
-                            <ComboBox Grid.Column="1"
-                                      ItemsSource="{Binding AvailableModels}"
-                                      SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
-                                      IsEnabled="{Binding !IsProcessing}"
-                                      HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Center"
-                                      ToolTip.Tip="Background removal model"/>
-                            <Button Grid.Column="3"
                                     Classes="editor-button"
                                     Content="Remove Background"
                                     Command="{Binding RemoveBackgroundCommand}"/>

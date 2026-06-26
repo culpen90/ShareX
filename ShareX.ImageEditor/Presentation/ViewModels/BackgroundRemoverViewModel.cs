@@ -31,6 +31,7 @@ using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Rendering;
 using SkiaSharp;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels;
 
@@ -68,6 +69,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     [NotifyPropertyChangedFor(nameof(CanRemoveBackground))]
     [NotifyCanExecuteChangedFor(nameof(BrowseImageCommand))]
     [NotifyCanExecuteChangedFor(nameof(RefreshModelsCommand))]
+    [NotifyCanExecuteChangedFor(nameof(OpenModelsFolderCommand))]
     [NotifyCanExecuteChangedFor(nameof(RemoveBackgroundCommand))]
     private bool _isProcessing;
 
@@ -110,6 +112,32 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         catch (Exception ex)
         {
             EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Failed to scan background removal models.", ex);
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenModelsFolder))]
+    private void OpenModelsFolder()
+    {
+        if (string.IsNullOrWhiteSpace(ModelsFolder))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(ModelsFolder);
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = ModelsFolder,
+                UseShellExecute = true
+            });
+
+            RefreshModels();
+        }
+        catch (Exception ex)
+        {
+            EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Failed to open models folder.", ex);
         }
     }
 
@@ -195,6 +223,11 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     private bool CanRefreshModels()
     {
         return !IsProcessing;
+    }
+
+    private bool CanOpenModelsFolder()
+    {
+        return !IsProcessing && !string.IsNullOrWhiteSpace(ModelsFolder);
     }
 
     private void SetSourceImage(SKBitmap bitmap, string? filePath)
