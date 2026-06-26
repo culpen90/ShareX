@@ -116,13 +116,13 @@ namespace ShareX.ImageEditor.Hosting
             });
         }
 
-        public static void ShowBackgroundRemoverWindow()
+        public static void ShowBackgroundRemoverWindow(string? modelsFolder)
         {
             Initialize();
 
             Dispatcher.UIThread.Post(() =>
             {
-                BackgroundRemoverWindow window = new BackgroundRemoverWindow();
+                BackgroundRemoverWindow window = new BackgroundRemoverWindow(modelsFolder);
                 window.Show();
             });
         }

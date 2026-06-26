@@ -29,22 +29,48 @@ using SkiaSharp;
 
 namespace ShareX.ImageEditor.Core.BackgroundRemoval;
 
+public sealed class BackgroundRemovalModel
+{
+    public required string FilePath { get; init; }
+    public required string FileName { get; init; }
+    public required long FileSize { get; init; }
+
+    public string DisplayName => $"{FileName} ({FormatFileSize(FileSize)})";
+
+    public override string ToString() => DisplayName;
+
+    private static string FormatFileSize(long size)
+    {
+        string[] units = ["B", "KB", "MB", "GB"];
+        double value = size;
+        int unitIndex = 0;
+
+        while (value >= 1024 && unitIndex < units.Length - 1)
+        {
+            value /= 1024;
+            unitIndex++;
+        }
+
+        return unitIndex == 0 ? $"{value:0} {units[unitIndex]}" : $"{value:0.#} {units[unitIndex]}";
+    }
+}
+
 public sealed class BackgroundRemovalService
 {
-    private const string ModelRelativePath = "Assets/u2netp.onnx";
     private static readonly float[] Mean = [0.485f, 0.456f, 0.406f];
     private static readonly float[] StandardDeviation = [0.229f, 0.224f, 0.225f];
 
-    public SKBitmap RemoveBackground(SKBitmap source)
+    public SKBitmap RemoveBackground(SKBitmap source, BackgroundRemovalModel model)
     {
         ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(model);
 
         if (source.Width <= 0 || source.Height <= 0)
         {
             throw new InvalidOperationException("Selected image is empty.");
         }
 
-        string modelPath = GetModelPath();
+        string modelPath = model.FilePath;
         if (!File.Exists(modelPath))
         {
             throw new FileNotFoundException("The background removal model file is missing.", modelPath);
@@ -73,11 +99,6 @@ public sealed class BackgroundRemovalService
         using SKBitmap modelMask = CreateMaskBitmap(outputTensor);
         using SKBitmap resizedMask = ResizeBitmap(modelMask, source.Width, source.Height);
         return ApplyAlphaMask(source, resizedMask);
-    }
-
-    private static string GetModelPath()
-    {
-        return Path.Combine(AppContext.BaseDirectory, ModelRelativePath);
     }
 
     private static void ResolveInputShape(IReadOnlyList<int> dimensions, out int width, out int height, out bool channelsLast)
@@ -143,19 +164,7 @@ public sealed class BackgroundRemovalService
 
     private static SKBitmap CreateMaskBitmap(Tensor<float> outputTensor)
     {
-        int height = 1;
-        int width = 1;
-
-        if (outputTensor.Dimensions.Length >= 4)
-        {
-            height = outputTensor.Dimensions[^2];
-            width = outputTensor.Dimensions[^1];
-        }
-        else if (outputTensor.Dimensions.Length >= 2)
-        {
-            height = outputTensor.Dimensions[^2];
-            width = outputTensor.Dimensions[^1];
-        }
+        ResolveOutputShape(outputTensor.Dimensions, out int width, out int height);
 
         if (width <= 0 || height <= 0)
         {
@@ -180,6 +189,20 @@ public sealed class BackgroundRemovalService
             if (value > max) max = value;
         }
 
+        if (min < 0f)
+        {
+            min = float.MaxValue;
+            max = float.MinValue;
+
+            for (int i = 0; i < pixelCount; i++)
+            {
+                float value = 1f / (1f + MathF.Exp(-values[i]));
+                values[i] = value;
+                if (value < min) min = value;
+                if (value > max) max = value;
+            }
+        }
+
         float range = Math.Max(0.000001f, max - min);
         SKBitmap mask = new(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul));
 
@@ -195,6 +218,24 @@ public sealed class BackgroundRemovalService
         }
 
         return mask;
+    }
+
+    private static void ResolveOutputShape(ReadOnlySpan<int> dimensions, out int width, out int height)
+    {
+        width = 1;
+        height = 1;
+
+        if (dimensions.Length >= 4)
+        {
+            bool channelsLast = dimensions[^1] == 1 && dimensions[^3] > 1;
+            height = channelsLast ? dimensions[^3] : dimensions[^2];
+            width = channelsLast ? dimensions[^2] : dimensions[^1];
+        }
+        else if (dimensions.Length >= 2)
+        {
+            height = dimensions[^2];
+            width = dimensions[^1];
+        }
     }
 
     private static SKBitmap ApplyAlphaMask(SKBitmap source, SKBitmap mask)

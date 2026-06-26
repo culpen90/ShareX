@@ -27,8 +27,10 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShareX.ImageEditor.Core.BackgroundRemoval;
+using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Rendering;
 using SkiaSharp;
+using System.Collections.ObjectModel;
 
 namespace ShareX.ImageEditor.Presentation.ViewModels;
 
@@ -36,6 +38,22 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
 {
     private readonly BackgroundRemovalService _backgroundRemovalService = new();
     private SKBitmap? _sourceBitmap;
+
+    public BackgroundRemoverViewModel(string? modelsFolder)
+    {
+        ModelsFolder = modelsFolder;
+        RefreshModels();
+    }
+
+    public ObservableCollection<BackgroundRemovalModel> AvailableModels { get; } = [];
+
+    public string? ModelsFolder { get; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasSelectedModel))]
+    [NotifyPropertyChangedFor(nameof(CanRemoveBackground))]
+    [NotifyCanExecuteChangedFor(nameof(RemoveBackgroundCommand))]
+    private BackgroundRemovalModel? _selectedModel;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasImage))]
@@ -49,24 +67,57 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanRemoveBackground))]
     [NotifyCanExecuteChangedFor(nameof(BrowseImageCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RefreshModelsCommand))]
     [NotifyCanExecuteChangedFor(nameof(RemoveBackgroundCommand))]
     private bool _isProcessing;
-
-    [ObservableProperty]
-    private string _statusText = "Select an image to begin.";
 
     public Func<string, Task<string?>>? SelectImageFileRequested { get; set; }
 
     public bool HasImage => !string.IsNullOrEmpty(ImagePath);
 
-    public bool CanRemoveBackground => HasImage && !IsProcessing;
+    public bool HasSelectedModel => SelectedModel != null;
+
+    public bool CanRemoveBackground => HasImage && HasSelectedModel && !IsProcessing;
+
+    [RelayCommand(CanExecute = nameof(CanRefreshModels))]
+    private void RefreshModels()
+    {
+        AvailableModels.Clear();
+        SelectedModel = null;
+
+        if (string.IsNullOrWhiteSpace(ModelsFolder))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(ModelsFolder);
+
+            foreach (string modelPath in Directory.EnumerateFiles(ModelsFolder, "*.onnx", SearchOption.TopDirectoryOnly).OrderBy(Path.GetFileName))
+            {
+                FileInfo fileInfo = new(modelPath);
+                AvailableModels.Add(new BackgroundRemovalModel
+                {
+                    FilePath = fileInfo.FullName,
+                    FileName = fileInfo.Name,
+                    FileSize = fileInfo.Length
+                });
+            }
+
+            SelectedModel = AvailableModels.FirstOrDefault();
+        }
+        catch (Exception ex)
+        {
+            EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Failed to scan background removal models.", ex);
+        }
+    }
 
     [RelayCommand(CanExecute = nameof(CanBrowseImage))]
     private async Task BrowseImageAsync()
     {
         if (SelectImageFileRequested == null)
         {
-            StatusText = "Image picker is unavailable.";
             return;
         }
 
@@ -81,16 +132,14 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
             SKBitmap? bitmap = SKBitmap.Decode(filePath);
             if (bitmap == null)
             {
-                StatusText = "The selected file could not be loaded as an image.";
                 return;
             }
 
             SetSourceImage(bitmap, filePath);
-            StatusText = "Image loaded. Click Remove Background to process it.";
         }
         catch (Exception ex)
         {
-            StatusText = $"Failed to load image: {ex.Message}";
+            EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), $"Failed to load image '{filePath}'.", ex);
         }
     }
 
@@ -99,34 +148,33 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     {
         if (_sourceBitmap == null)
         {
-            StatusText = "Select an image before removing the background.";
+            return;
+        }
+
+        if (SelectedModel == null)
+        {
             return;
         }
 
         try
         {
             IsProcessing = true;
-            StatusText = "Removing background...";
+            BackgroundRemovalModel selectedModel = SelectedModel!;
 
             SKBitmap sourceCopy = _sourceBitmap.Copy();
             SKBitmap result = await Task.Run(() =>
             {
                 using (sourceCopy)
                 {
-                    return _backgroundRemovalService.RemoveBackground(sourceCopy);
+                    return _backgroundRemovalService.RemoveBackground(sourceCopy, selectedModel);
                 }
             });
 
             SetSourceImage(result, ImagePath);
-            StatusText = "Background removed.";
-        }
-        catch (FileNotFoundException ex)
-        {
-            StatusText = $"Missing ONNX model file: {ex.FileName}";
         }
         catch (Exception ex)
         {
-            StatusText = $"Background removal failed: {ex.Message}";
+            EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Background removal failed.", ex);
         }
         finally
         {
@@ -135,6 +183,11 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     }
 
     private bool CanBrowseImage()
+    {
+        return !IsProcessing;
+    }
+
+    private bool CanRefreshModels()
     {
         return !IsProcessing;
     }

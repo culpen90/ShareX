@@ -38,8 +38,13 @@ public partial class BackgroundRemoverWindow : Window
     private readonly BackgroundRemoverViewModel _viewModel;
 
     public BackgroundRemoverWindow()
+        : this(null)
     {
-        _viewModel = new BackgroundRemoverViewModel();
+    }
+
+    public BackgroundRemoverWindow(string? modelsFolder)
+    {
+        _viewModel = new BackgroundRemoverViewModel(modelsFolder);
         DataContext = _viewModel;
         InitializeComponent();
         RequestedThemeVariant = ThemeManager.GetCurrentTheme();

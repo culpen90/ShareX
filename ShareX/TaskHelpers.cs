@@ -1018,7 +1018,7 @@ namespace ShareX
 
         public static void OpenBackgroundRemover()
         {
-            AvaloniaIntegration.ShowBackgroundRemoverWindow();
+            AvaloniaIntegration.ShowBackgroundRemoverWindow(Program.ModelsFolder);
         }
 
         public static void CombineImages(IEnumerable<string> imageFiles, Orientation orientation, TaskSettings taskSettings = null)

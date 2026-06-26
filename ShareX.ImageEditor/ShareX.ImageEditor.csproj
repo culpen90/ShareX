@@ -13,7 +13,6 @@
     <AvaloniaResource Include="Assets\Crosshair.cur" />
     <AvaloniaResource Include="Assets\lucide.ttf" />
     <AvaloniaResource Include="Assets\openhand.cur" />
-    <None Include="Assets\u2netp.onnx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

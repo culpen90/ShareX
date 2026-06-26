@@ -44,19 +44,42 @@
         <Grid Background="{DynamicResource ShareX.Brush.Background.Main}">
             <Grid RowDefinitions="Auto,*" Margin="16" RowSpacing="12">
                 <Border Grid.Row="0" Classes="remover-panel" Padding="12">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <Button Grid.Column="0"
-                                Classes="editor-button"
-                                Content="Browse..."
-                                Command="{Binding BrowseImageCommand}"/>
-                        <TextBlock Grid.Column="1"
-                                   Classes="path-text"
-                                   Text="{Binding ImagePath, TargetNullValue='No image selected'}"
-                                   VerticalAlignment="Center"/>
-                        <Button Grid.Column="2"
-                                Classes="editor-button"
-                                Content="Remove Background"
-                                Command="{Binding RemoveBackgroundCommand}"/>
+                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                        <Grid Grid.Row="0"
+                              ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="12">
+                            <TextBlock Grid.Column="0"
+                                       Text="Models"
+                                       VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding AvailableModels}"
+                                      SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                                      IsEnabled="{Binding !IsProcessing}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Center"
+                                      ToolTip.Tip="Background removal model"/>
+                            <Button Grid.Column="2"
+                                    Classes="editor-button"
+                                    Content="Refresh"
+                                    Command="{Binding RefreshModelsCommand}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1"
+                              ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="12">
+                            <Button Grid.Column="0"
+                                    Classes="editor-button"
+                                    Content="Browse..."
+                                    Command="{Binding BrowseImageCommand}"/>
+                            <TextBlock Grid.Column="1"
+                                       Classes="path-text"
+                                       Text="{Binding ImagePath, TargetNullValue='No image selected'}"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Column="2"
+                                    Classes="editor-button"
+                                    Content="Remove Background"
+                                    Command="{Binding RemoveBackgroundCommand}"/>
+                        </Grid>
                     </Grid>
                 </Border>
 
