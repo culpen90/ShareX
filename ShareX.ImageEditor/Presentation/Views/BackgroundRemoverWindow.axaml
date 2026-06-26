@@ -49,8 +49,28 @@
                               ColumnDefinitions="Auto,*,Auto"
                               ColumnSpacing="12">
                             <TextBlock Grid.Column="0"
+                                       Text="Image"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1"
+                                       Classes="path-text"
+                                       Text="{Binding ImagePath, TargetNullValue='No image selected'}"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Column="2"
+                                    Classes="editor-button"
+                                    Content="Browse..."
+                                    Command="{Binding BrowseImageCommand}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1"
+                              ColumnDefinitions="Auto,*,Auto,Auto"
+                              ColumnSpacing="12">
+                            <TextBlock Grid.Column="0"
                                        Text="Models"
                                        VerticalAlignment="Center"/>
+                            <Button Grid.Column="2"
+                                    Classes="editor-button"
+                                    Content="Refresh models"
+                                    Command="{Binding RefreshModelsCommand}"/>
                             <ComboBox Grid.Column="1"
                                       ItemsSource="{Binding AvailableModels}"
                                       SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
@@ -58,24 +78,7 @@
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Center"
                                       ToolTip.Tip="Background removal model"/>
-                            <Button Grid.Column="2"
-                                    Classes="editor-button"
-                                    Content="Refresh"
-                                    Command="{Binding RefreshModelsCommand}"/>
-                        </Grid>
-
-                        <Grid Grid.Row="1"
-                              ColumnDefinitions="Auto,*,Auto"
-                              ColumnSpacing="12">
-                            <Button Grid.Column="0"
-                                    Classes="editor-button"
-                                    Content="Browse..."
-                                    Command="{Binding BrowseImageCommand}"/>
-                            <TextBlock Grid.Column="1"
-                                       Classes="path-text"
-                                       Text="{Binding ImagePath, TargetNullValue='No image selected'}"
-                                       VerticalAlignment="Center"/>
-                            <Button Grid.Column="2"
+                            <Button Grid.Column="3"
                                     Classes="editor-button"
                                     Content="Remove Background"
                                     Command="{Binding RemoveBackgroundCommand}"/>
