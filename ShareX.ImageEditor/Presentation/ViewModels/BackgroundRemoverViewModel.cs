@@ -84,6 +84,8 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     [RelayCommand(CanExecute = nameof(CanRefreshModels))]
     private void RefreshModels()
     {
+        string? selectedModelPath = SelectedModel?.FilePath;
+
         AvailableModels.Clear();
         SelectedModel = null;
 
@@ -107,7 +109,9 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
                 });
             }
 
-            SelectedModel = AvailableModels.FirstOrDefault();
+            SelectedModel = AvailableModels.FirstOrDefault(model =>
+                string.Equals(model.FilePath, selectedModelPath, StringComparison.OrdinalIgnoreCase))
+                ?? AvailableModels.FirstOrDefault();
         }
         catch (Exception ex)
         {
