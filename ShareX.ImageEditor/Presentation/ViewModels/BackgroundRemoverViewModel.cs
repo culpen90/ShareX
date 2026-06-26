@@ -146,7 +146,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     [RelayCommand(CanExecute = nameof(CanRemoveBackground))]
     private async Task RemoveBackgroundAsync()
     {
-        if (_sourceBitmap == null)
+        if (string.IsNullOrEmpty(ImagePath))
         {
             return;
         }
@@ -161,12 +161,17 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
             IsProcessing = true;
             BackgroundRemovalModel selectedModel = SelectedModel!;
 
-            SKBitmap sourceCopy = _sourceBitmap.Copy();
+            SKBitmap? sourceBitmap = SKBitmap.Decode(ImagePath);
+            if (sourceBitmap == null)
+            {
+                return;
+            }
+
             SKBitmap result = await Task.Run(() =>
             {
-                using (sourceCopy)
+                using (sourceBitmap)
                 {
-                    return _backgroundRemovalService.RemoveBackground(sourceCopy, selectedModel);
+                    return _backgroundRemovalService.RemoveBackground(sourceBitmap, selectedModel);
                 }
             });
 
