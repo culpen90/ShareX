@@ -121,12 +121,14 @@
                                    FontSize="16"
                                    FontWeight="Normal"/>
 
-                        <Border Background="{DynamicResource ShareX.Brush.Checkered}"
-                                IsVisible="{Binding HasImage}"
-                                Margin="12">
-                            <Image Classes="preview-image"
-                                   Source="{Binding PreviewImage}"/>
-                        </Border>
+                        <Viewbox Stretch="Uniform"
+                                 IsVisible="{Binding HasImage}"
+                                 Margin="12">
+                            <Border Background="{DynamicResource ShareX.Brush.Checkered}">
+                                <Image Stretch="None"
+                                       Source="{Binding PreviewImage}"/>
+                            </Border>
+                        </Viewbox>
                     </Grid>
                 </Border>
             </Grid>
