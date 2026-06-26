@@ -103,8 +103,8 @@ public sealed class BackgroundRemovalService
 
     private static void ResolveInputShape(IReadOnlyList<int> dimensions, out int width, out int height, out bool channelsLast)
     {
-        width = 320;
-        height = 320;
+        width = 1024;
+        height = 1024;
         channelsLast = false;
 
         if (dimensions.Count != 4)
