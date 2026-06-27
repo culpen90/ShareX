@@ -72,14 +72,28 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     private Bitmap? _previewImage;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveAsCommand))]
+    private bool _hasProcessedImage;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveAsCommand))]
+    private bool _isSaving;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanRemoveBackground))]
     [NotifyCanExecuteChangedFor(nameof(BrowseImageCommand))]
     [NotifyCanExecuteChangedFor(nameof(RefreshModelsCommand))]
     [NotifyCanExecuteChangedFor(nameof(OpenModelsFolderCommand))]
     [NotifyCanExecuteChangedFor(nameof(RemoveBackgroundCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveAsCommand))]
     private bool _isProcessing;
 
     public Func<string, Task<string?>>? SelectImageFileRequested { get; set; }
+    public Func<SKBitmap, string?, Task<string?>>? SaveImageRequested { get; set; }
+    public Func<SKBitmap, string?, Task<string?>>? SaveImageAsRequested { get; set; }
 
     public bool HasImage => !string.IsNullOrEmpty(ImagePath);
 
@@ -217,7 +231,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
                 }
             });
 
-            SetSourceImage(result.Image, ImagePath);
+            SetSourceImage(result.Image, ImagePath, true);
             stopwatch.Stop();
             ShowNotification($"Background removed in {stopwatch.ElapsedMilliseconds} ms.", EditorIcons.ToolSmartEraser);
             string cacheStatus = result.IsSessionCached ? "cached" : "not cached";
@@ -237,6 +251,51 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         }
     }
 
+    [RelayCommand(CanExecute = nameof(CanSaveImage))]
+    private async Task SaveAsync()
+    {
+        await SaveImageAsync(SaveImageRequested, EditorIcons.ActionSave);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSaveImage))]
+    private async Task SaveAsAsync()
+    {
+        await SaveImageAsync(SaveImageAsRequested, EditorIcons.ActionSaveAs);
+    }
+
+    private async Task SaveImageAsync(Func<SKBitmap, string?, Task<string?>>? saveRequested, string notificationIcon)
+    {
+        if (saveRequested == null || _sourceBitmap == null || !CanSaveImage())
+        {
+            return;
+        }
+
+        try
+        {
+            IsSaving = true;
+            using SKBitmap image = _sourceBitmap.Copy();
+            string? savedPath = await saveRequested(image, ImagePath);
+
+            if (!string.IsNullOrWhiteSpace(savedPath))
+            {
+                ShowNotification($"Image saved.\nFile path: {savedPath}", notificationIcon);
+            }
+        }
+        catch (Exception ex)
+        {
+            EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Failed to save background removal result.", ex);
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    private bool CanSaveImage()
+    {
+        return HasProcessedImage && !IsProcessing && !IsSaving;
+    }
+
     private bool CanBrowseImage()
     {
         return !IsProcessing;
@@ -252,7 +311,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         return !IsProcessing && !string.IsNullOrWhiteSpace(ModelsFolder);
     }
 
-    private void SetSourceImage(SKBitmap bitmap, string? filePath)
+    private void SetSourceImage(SKBitmap bitmap, string? filePath, bool isProcessedImage = false)
     {
         Bitmap preview = BitmapConversionHelpers.ToAvaloniBitmap(bitmap);
 
@@ -262,6 +321,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         _sourceBitmap = bitmap;
         PreviewImage = preview;
         ImagePath = filePath;
+        HasProcessedImage = isProcessedImage;
     }
 
     public void Dispose()
