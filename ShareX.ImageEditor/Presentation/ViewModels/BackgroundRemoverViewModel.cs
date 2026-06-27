@@ -207,6 +207,8 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
                 return;
             }
 
+            SetSourceImage(sourceBitmap.Copy(), ImagePath);
+
             BackgroundRemovalResult result = await Task.Run(() =>
             {
                 using (sourceBitmap)
