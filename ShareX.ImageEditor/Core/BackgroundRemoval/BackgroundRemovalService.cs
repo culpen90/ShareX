@@ -305,32 +305,40 @@ public sealed class BackgroundRemovalService : IDisposable
         }
     }
 
-    private static DenseTensor<float> CreateInputTensor(SKBitmap bitmap, bool channelsLast)
+    private static unsafe DenseTensor<float> CreateInputTensor(SKBitmap bitmap, bool channelsLast)
     {
         DenseTensor<float> tensor = channelsLast
             ? new DenseTensor<float>([1, bitmap.Height, bitmap.Width, 3])
             : new DenseTensor<float>([1, 3, bitmap.Height, bitmap.Width]);
+        Span<float> tensorValues = tensor.Buffer.Span;
+        int pixelCount = bitmap.Width * bitmap.Height;
+        byte* pixels = (byte*)bitmap.GetPixels();
 
         for (int y = 0; y < bitmap.Height; y++)
         {
+            byte* row = pixels + (y * bitmap.RowBytes);
+
             for (int x = 0; x < bitmap.Width; x++)
             {
-                SKColor color = bitmap.GetPixel(x, y);
-                float r = ((color.Red / 255f) - Mean[0]) / StandardDeviation[0];
-                float g = ((color.Green / 255f) - Mean[1]) / StandardDeviation[1];
-                float b = ((color.Blue / 255f) - Mean[2]) / StandardDeviation[2];
+                byte* pixel = row + (x * 4);
+                float alphaScale = pixel[3] is > 0 and < 255 ? 255f / pixel[3] : 1f;
+                float r = ((Math.Min(255f, pixel[2] * alphaScale) / 255f) - Mean[0]) / StandardDeviation[0];
+                float g = ((Math.Min(255f, pixel[1] * alphaScale) / 255f) - Mean[1]) / StandardDeviation[1];
+                float b = ((Math.Min(255f, pixel[0] * alphaScale) / 255f) - Mean[2]) / StandardDeviation[2];
+                int pixelIndex = (y * bitmap.Width) + x;
 
                 if (channelsLast)
                 {
-                    tensor[0, y, x, 0] = r;
-                    tensor[0, y, x, 1] = g;
-                    tensor[0, y, x, 2] = b;
+                    int tensorIndex = pixelIndex * 3;
+                    tensorValues[tensorIndex] = r;
+                    tensorValues[tensorIndex + 1] = g;
+                    tensorValues[tensorIndex + 2] = b;
                 }
                 else
                 {
-                    tensor[0, 0, y, x] = r;
-                    tensor[0, 1, y, x] = g;
-                    tensor[0, 2, y, x] = b;
+                    tensorValues[pixelIndex] = r;
+                    tensorValues[pixelCount + pixelIndex] = g;
+                    tensorValues[(pixelCount * 2) + pixelIndex] = b;
                 }
             }
         }
@@ -338,7 +346,7 @@ public sealed class BackgroundRemovalService : IDisposable
         return tensor;
     }
 
-    private static SKBitmap CreateMaskBitmap(Tensor<float> outputTensor)
+    private static unsafe SKBitmap CreateMaskBitmap(Tensor<float> outputTensor)
     {
         ResolveOutputShape(outputTensor.Dimensions, out int width, out int height);
 
@@ -381,15 +389,22 @@ public sealed class BackgroundRemovalService : IDisposable
 
         float range = Math.Max(0.000001f, max - min);
         SKBitmap mask = new(new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul));
+        byte* maskPixels = (byte*)mask.GetPixels();
 
         for (int y = 0; y < height; y++)
         {
+            byte* row = maskPixels + (y * mask.RowBytes);
+
             for (int x = 0; x < width; x++)
             {
                 int index = (y * width) + x;
                 float normalized = Math.Clamp((values[index] - min) / range, 0f, 1f);
                 byte alpha = (byte)MathF.Round(normalized * 255f);
-                mask.SetPixel(x, y, new SKColor(alpha, alpha, alpha, alpha));
+                byte* pixel = row + (x * 4);
+                pixel[0] = 0;
+                pixel[1] = 0;
+                pixel[2] = 0;
+                pixel[3] = alpha;
             }
         }
 
@@ -418,24 +433,22 @@ public sealed class BackgroundRemovalService : IDisposable
     {
         SKBitmap output = new(new SKImageInfo(source.Width, source.Height, SKColorType.Bgra8888, SKAlphaType.Premul));
 
-        for (int y = 0; y < source.Height; y++)
-        {
-            for (int x = 0; x < source.Width; x++)
-            {
-                SKColor sourceColor = source.GetPixel(x, y);
-                byte maskAlpha = mask.GetPixel(x, y).Alpha;
-                byte outputAlpha = (byte)Math.Clamp((int)MathF.Round(sourceColor.Alpha * (maskAlpha / 255f)), 0, 255);
-
-                output.SetPixel(x, y, new SKColor(sourceColor.Red, sourceColor.Green, sourceColor.Blue, outputAlpha));
-            }
-        }
+        using SKCanvas canvas = new(output);
+        using SKImage sourceImage = SKImage.FromBitmap(source);
+        using SKImage maskImage = SKImage.FromBitmap(mask);
+        using SKPaint maskPaint = new() { BlendMode = SKBlendMode.DstIn };
+        canvas.Clear(SKColors.Transparent);
+        canvas.DrawImage(sourceImage, 0, 0);
+        canvas.DrawImage(maskImage, 0, 0, maskPaint);
 
         return output;
     }
 
     private static SKBitmap ResizeBitmap(SKBitmap source, int width, int height)
     {
-        if (source.Width == width && source.Height == height)
+        if (source.Width == width && source.Height == height &&
+            source.ColorType == SKColorType.Bgra8888 &&
+            source.AlphaType is SKAlphaType.Premul or SKAlphaType.Opaque)
         {
             return source.Copy();
         }
