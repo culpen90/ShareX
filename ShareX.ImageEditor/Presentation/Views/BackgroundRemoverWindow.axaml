@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ShareX.ImageEditor.Presentation.ViewModels"
+        xmlns:controls="using:ShareX.ImageEditor.Presentation.Controls"
         xmlns:theming="using:ShareX.ImageEditor.Presentation.Theming"
         mc:Ignorable="d" d:DesignWidth="1080" d:DesignHeight="720"
         x:Class="ShareX.ImageEditor.Presentation.Views.BackgroundRemoverWindow"
@@ -26,9 +27,6 @@
             <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text.Secondary}"/>
-        </Style>
-        <Style Selector="Image.preview-image">
-            <Setter Property="Stretch" Value="Uniform"/>
         </Style>
     </Window.Styles>
 
@@ -132,14 +130,10 @@
                                    FontSize="16"
                                    FontWeight="Normal"/>
 
-                        <Viewbox Stretch="Uniform"
-                                 IsVisible="{Binding HasImage}"
-                                 Margin="12">
-                            <Border Background="{DynamicResource ShareX.Brush.Checkered}">
-                                <Image Stretch="None"
-                                       Source="{Binding PreviewImage}"/>
-                            </Border>
-                        </Viewbox>
+                        <controls:ImageComparisonSlider LeftImage="{Binding SourcePreviewImage}"
+                                                        RightImage="{Binding ResultPreviewImage}"
+                                                        IsVisible="{Binding HasImage}"
+                                                        Margin="12"/>
                     </Grid>
                 </Border>
 

@@ -40,6 +40,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
 {
     private readonly BackgroundRemovalService _backgroundRemovalService = new();
     private SKBitmap? _sourceBitmap;
+    private SKBitmap? _resultBitmap;
 
     public BackgroundRemoverViewModel(string? modelsFolder)
     {
@@ -69,7 +70,10 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     private string? _imagePath;
 
     [ObservableProperty]
-    private Bitmap? _previewImage;
+    private Bitmap? _sourcePreviewImage;
+
+    [ObservableProperty]
+    private Bitmap? _resultPreviewImage;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
@@ -231,7 +235,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
                 }
             });
 
-            SetSourceImage(result.Image, ImagePath, true);
+            SetResultImage(result.Image);
             stopwatch.Stop();
             ShowNotification($"Background removed in {stopwatch.ElapsedMilliseconds} ms.", EditorIcons.ToolSmartEraser);
             string cacheStatus = result.IsSessionCached ? "cached" : "not cached";
@@ -265,7 +269,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
 
     private async Task SaveImageAsync(Func<SKBitmap, string?, Task<string?>>? saveRequested, string notificationIcon)
     {
-        if (saveRequested == null || _sourceBitmap == null || !CanSaveImage())
+        if (saveRequested == null || _resultBitmap == null || !CanSaveImage())
         {
             return;
         }
@@ -273,7 +277,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         try
         {
             IsSaving = true;
-            using SKBitmap image = _sourceBitmap.Copy();
+            using SKBitmap image = _resultBitmap.Copy();
             string? savedPath = await saveRequested(image, ImagePath);
 
             if (!string.IsNullOrWhiteSpace(savedPath))
@@ -311,17 +315,33 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         return !IsProcessing && !string.IsNullOrWhiteSpace(ModelsFolder);
     }
 
-    private void SetSourceImage(SKBitmap bitmap, string? filePath, bool isProcessedImage = false)
+    private void SetSourceImage(SKBitmap bitmap, string? filePath)
     {
         Bitmap preview = BitmapConversionHelpers.ToAvaloniBitmap(bitmap);
 
         _sourceBitmap?.Dispose();
-        PreviewImage?.Dispose();
+        _resultBitmap?.Dispose();
+        SourcePreviewImage?.Dispose();
+        ResultPreviewImage?.Dispose();
 
         _sourceBitmap = bitmap;
-        PreviewImage = preview;
+        _resultBitmap = null;
+        SourcePreviewImage = preview;
+        ResultPreviewImage = null;
         ImagePath = filePath;
-        HasProcessedImage = isProcessedImage;
+        HasProcessedImage = false;
+    }
+
+    private void SetResultImage(SKBitmap bitmap)
+    {
+        Bitmap preview = BitmapConversionHelpers.ToAvaloniBitmap(bitmap);
+
+        _resultBitmap?.Dispose();
+        ResultPreviewImage?.Dispose();
+
+        _resultBitmap = bitmap;
+        ResultPreviewImage = preview;
+        HasProcessedImage = true;
     }
 
     public void Dispose()
@@ -329,6 +349,8 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         DismissNotification();
         _backgroundRemovalService.Dispose();
         _sourceBitmap?.Dispose();
-        PreviewImage?.Dispose();
+        _resultBitmap?.Dispose();
+        SourcePreviewImage?.Dispose();
+        ResultPreviewImage?.Dispose();
     }
 }
