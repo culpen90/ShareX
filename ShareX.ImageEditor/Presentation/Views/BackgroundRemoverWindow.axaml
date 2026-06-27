@@ -68,7 +68,7 @@
                                        Text="Models"
                                        VerticalAlignment="Center"/>
                             <Grid Grid.Column="1"
-                                  ColumnDefinitions="*,Auto,Auto"
+                                  ColumnDefinitions="*,Auto,Auto,Auto,Auto"
                                   ColumnSpacing="4">
                                 <ComboBox Grid.Column="0"
                                           ItemsSource="{Binding AvailableModels}"
@@ -103,6 +103,17 @@
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"/>
                                 </Button>
+                                <TextBlock Grid.Column="3"
+                                           Text="Device"
+                                           Margin="8,0,0,0"
+                                           VerticalAlignment="Center"/>
+                                <ComboBox Grid.Column="4"
+                                          ItemsSource="{Binding AvailableDevices}"
+                                          SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                                          IsEnabled="{Binding !IsProcessing}"
+                                          MinWidth="88"
+                                          VerticalAlignment="Center"
+                                          ToolTip.Tip="Processing device"/>
                             </Grid>
                             <Button Grid.Column="2"
                                     Classes="editor-button"
