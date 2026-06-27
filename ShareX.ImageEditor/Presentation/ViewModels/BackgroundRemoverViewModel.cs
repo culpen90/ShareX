@@ -29,6 +29,7 @@ using CommunityToolkit.Mvvm.Input;
 using ShareX.ImageEditor.Core.BackgroundRemoval;
 using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEditor.Presentation.Rendering;
+using ShareX.ImageEditor.Presentation.Theming;
 using SkiaSharp;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -216,6 +217,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
 
             SetSourceImage(result.Image, ImagePath);
             stopwatch.Stop();
+            ShowNotification($"Background removed in {stopwatch.ElapsedMilliseconds} ms.", EditorIcons.ToolSmartEraser);
             string cacheStatus = result.IsSessionCached ? "cached" : "not cached";
             Debug.WriteLine(
                 $"Background removal (device={selectedDevice}, execution={result.ExecutionDevice}, model={selectedModel.FileName}, {cacheStatus}): " +
@@ -262,6 +264,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
 
     public void Dispose()
     {
+        DismissNotification();
         _backgroundRemovalService.Dispose();
         _sourceBitmap?.Dispose();
         PreviewImage?.Dispose();
