@@ -52,6 +52,9 @@ public partial class BackgroundRemoverWindow : Window
         _viewModel.SelectImageFileRequested = SelectImageFileAsync;
         _viewModel.SaveImageRequested = SaveImageAsync;
         _viewModel.SaveImageAsRequested = SaveImageAsAsync;
+        DragDrop.SetAllowDrop(this, true);
+        AddHandler(DragDrop.DragOverEvent, OnDragOver);
+        AddHandler(DragDrop.DropEvent, OnDrop);
         _viewModel.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(BackgroundRemoverViewModel.IsProcessing))
@@ -129,6 +132,41 @@ public partial class BackgroundRemoverWindow : Window
         using SKData data = skImage.Encode(format, 100);
         using FileStream stream = File.Create(filePath);
         data.SaveTo(stream);
+    }
+
+    private void OnDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = !_viewModel.IsProcessing && e.DataTransfer.Formats.Contains(DataFormat.File)
+            ? DragDropEffects.Copy
+            : DragDropEffects.None;
+    }
+
+    private void OnDrop(object? sender, DragEventArgs e)
+    {
+        if (_viewModel.IsProcessing)
+        {
+            return;
+        }
+
+        List<IStorageItem> droppedItems = e.DataTransfer.TryGetFiles()?.ToList() ?? [];
+
+        if (droppedItems.Count == 0)
+        {
+            foreach (IDataTransferItem item in e.DataTransfer.Items)
+            {
+                if (item.TryGetRaw(DataFormat.File) is IStorageItem storageItem)
+                {
+                    droppedItems.Add(storageItem);
+                }
+            }
+        }
+
+        IStorageFile? file = droppedItems.OfType<IStorageFile>().FirstOrDefault();
+        if (file != null)
+        {
+            _viewModel.LoadImage(file.Path.LocalPath);
+            e.Handled = true;
+        }
     }
 
     private void OnNotificationPointerPressed(object? sender, PointerPressedEventArgs e)

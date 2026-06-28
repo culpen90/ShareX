@@ -212,6 +212,16 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
             return;
         }
 
+        LoadImage(filePath);
+    }
+
+    public void LoadImage(string filePath)
+    {
+        if (IsProcessing || string.IsNullOrWhiteSpace(filePath))
+        {
+            return;
+        }
+
         try
         {
             SKBitmap? bitmap = SKBitmap.Decode(filePath);
