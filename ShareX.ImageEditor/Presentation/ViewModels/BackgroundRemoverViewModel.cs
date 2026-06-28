@@ -76,6 +76,9 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     private Bitmap? _resultPreviewImage;
 
     [ObservableProperty]
+    private double _comparisonSliderPosition = 0.5;
+
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     [NotifyCanExecuteChangedFor(nameof(SaveAsCommand))]
     private bool _hasProcessedImage;
@@ -341,6 +344,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
 
         _resultBitmap = bitmap;
         ResultPreviewImage = preview;
+        ComparisonSliderPosition = 0;
         HasProcessedImage = true;
     }
 

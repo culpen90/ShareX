@@ -132,6 +132,7 @@
 
                         <controls:ImageComparisonSlider LeftImage="{Binding SourcePreviewImage}"
                                                         RightImage="{Binding ResultPreviewImage}"
+                                                        SliderPosition="{Binding ComparisonSliderPosition, Mode=TwoWay}"
                                                         IsVisible="{Binding HasImage}"
                                                         Margin="12"/>
                     </Grid>
