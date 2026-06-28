@@ -80,6 +80,9 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
     private double _comparisonSliderPosition = 0.5;
 
     [ObservableProperty]
+    private bool _isGuideHighlighted;
+
+    [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     [NotifyCanExecuteChangedFor(nameof(SaveAsCommand))]
     private bool _hasProcessedImage;
@@ -116,6 +119,7 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
 
         AvailableModels.Clear();
         SelectedModel = null;
+        IsGuideHighlighted = true;
 
         if (string.IsNullOrWhiteSpace(ModelsFolder))
         {
@@ -144,6 +148,10 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         catch (Exception ex)
         {
             EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Failed to scan background removal models.", ex);
+        }
+        finally
+        {
+            IsGuideHighlighted = AvailableModels.Count == 0;
         }
     }
 
