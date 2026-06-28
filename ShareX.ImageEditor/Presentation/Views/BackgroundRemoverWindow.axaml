@@ -66,7 +66,7 @@
                                        Text="Models"
                                        VerticalAlignment="Center"/>
                             <Grid Grid.Column="1"
-                                  ColumnDefinitions="*,Auto,Auto,Auto,Auto"
+                                  ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto"
                                   ColumnSpacing="4">
                                 <ComboBox Grid.Column="0"
                                           ItemsSource="{Binding AvailableModels}"
@@ -101,11 +101,24 @@
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"/>
                                 </Button>
-                                <TextBlock Grid.Column="3"
+                                <Button Grid.Column="3"
+                                        Classes="editor-button"
+                                        MinWidth="0"
+                                        Width="{Binding Bounds.Height, RelativeSource={RelativeSource Self}}"
+                                        Padding="0"
+                                        Command="{Binding OpenBackgroundRemoverGuideCommand}"
+                                        ToolTip.Tip="Open background remover guide">
+                                    <TextBlock Text="{x:Static theming:LucideIcons.book_open}"
+                                               FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                               FontWeight="Normal"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Button>
+                                <TextBlock Grid.Column="4"
                                            Text="Device"
                                            Margin="8,0,8,0"
                                            VerticalAlignment="Center"/>
-                                <ComboBox Grid.Column="4"
+                                <ComboBox Grid.Column="5"
                                           ItemsSource="{Binding AvailableDevices}"
                                           SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
                                           IsEnabled="{Binding !IsProcessing}"

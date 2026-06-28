@@ -38,6 +38,7 @@ namespace ShareX.ImageEditor.Presentation.ViewModels;
 
 public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposable
 {
+    private const string BackgroundRemoverGuideUrl = "https://getsharex.com/docs/background-remover";
     private readonly BackgroundRemovalService _backgroundRemovalService = new();
     private SKBitmap? _sourceBitmap;
     private SKBitmap? _resultBitmap;
@@ -169,6 +170,23 @@ public sealed partial class BackgroundRemoverViewModel : ViewModelBase, IDisposa
         catch (Exception ex)
         {
             EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Failed to open models folder.", ex);
+        }
+    }
+
+    [RelayCommand]
+    private void OpenBackgroundRemoverGuide()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = BackgroundRemoverGuideUrl,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            EditorServices.ReportWarning(nameof(BackgroundRemoverViewModel), "Failed to open the background remover guide.", ex);
         }
     }
 
