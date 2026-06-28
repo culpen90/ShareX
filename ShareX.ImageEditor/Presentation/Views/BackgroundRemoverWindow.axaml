@@ -28,6 +28,9 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text.Secondary}"/>
         </Style>
+        <Style Selector="TextBlock.model-action-icon">
+            <Setter Property="FontSize" Value="17"/>
+        </Style>
         <Style Selector="Button.guide-highlight">
             <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Accent.Foreground}"/>
             <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
@@ -106,7 +109,8 @@
                                         Padding="0"
                                         Command="{Binding RefreshModelsCommand}"
                                         ToolTip.Tip="Refresh models">
-                                    <TextBlock Text="{x:Static theming:LucideIcons.refresh_cw}"
+                                    <TextBlock Classes="model-action-icon"
+                                               Text="{x:Static theming:LucideIcons.refresh_cw}"
                                                FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
                                                FontWeight="Normal"
                                                HorizontalAlignment="Center"
@@ -119,7 +123,8 @@
                                         Padding="0"
                                         Command="{Binding OpenModelsFolderCommand}"
                                         ToolTip.Tip="Open models folder">
-                                    <TextBlock Text="{x:Static theming:LucideIcons.folder_open}"
+                                    <TextBlock Classes="model-action-icon"
+                                               Text="{x:Static theming:LucideIcons.folder_open}"
                                                FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
                                                FontWeight="Normal"
                                                HorizontalAlignment="Center"
@@ -133,7 +138,8 @@
                                         Padding="0"
                                         Command="{Binding OpenBackgroundRemoverGuideCommand}"
                                         ToolTip.Tip="Open guide page...">
-                                    <TextBlock Text="{x:Static theming:LucideIcons.circle_help}"
+                                    <TextBlock Classes="model-action-icon"
+                                               Text="{x:Static theming:LucideIcons.circle_help}"
                                                FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
                                                FontWeight="Normal"
                                                HorizontalAlignment="Center"
