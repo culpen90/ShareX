@@ -94,8 +94,8 @@ public partial class BackgroundRemoverWindow : Window
     private async Task<string?> SaveImageAsAsync(SKBitmap image, string? sourcePath)
     {
         string suggestedFileName = string.IsNullOrWhiteSpace(sourcePath)
-            ? "image-no-background.png"
-            : $"{Path.GetFileNameWithoutExtension(sourcePath)}-no-background.png";
+            ? "image-output.png"
+            : $"{Path.GetFileNameWithoutExtension(sourcePath)}-output.png";
 
         IStorageFile? file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
