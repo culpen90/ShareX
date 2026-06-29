@@ -103,25 +103,36 @@ namespace ShareX.ScreenCaptureLib
 
         private bool CheckHandle(IntPtr handle, Rectangle? clipRect)
         {
-            bool isWindow = clipRect == null;
-
             if (cts != null && cts.IsCancellationRequested)
             {
                 return false;
             }
 
-            if (IgnoreHandleList.Contains(handle) || !NativeMethods.IsWindowVisible(handle))
+            if (IgnoreHandleList.Contains(handle))
             {
                 return true;
             }
 
+            WindowInfo windowInfo = new WindowInfo(handle);
+
+            if (!windowInfo.IsVisible)
+            {
+                return true;
+            }
+
+            bool isWindow = clipRect == null;
+
             if (isWindow)
             {
-                WindowInfo windowInfo = new WindowInfo(handle);
+                if (windowInfo.IsCloaked)
+                {
+                    return true;
+                }
+
                 string className = windowInfo.ClassName;
 
-                if (IgnoreClassNameList.Any(ignore => className.Equals(ignore, StringComparison.OrdinalIgnoreCase)) ||
-                    NativeMethods.IsWindowCloaked(handle))
+                if (!string.IsNullOrEmpty(className) &&
+                    IgnoreClassNameList.Any(ignore => className.Equals(ignore, StringComparison.OrdinalIgnoreCase)))
                 {
                     return true;
                 }
