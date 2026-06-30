@@ -28,6 +28,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using ShareX.ImageEditor.Presentation.Rendering;
 using ShareX.ImageEditor.Presentation.Theming;
 using System.Runtime.InteropServices;
 
@@ -178,6 +179,7 @@ namespace ShareX.ImageEditor.Presentation.Views
             Position = topLeft;
             Width = (right - left) / scaling;
             Height = (bottom - top) / scaling;
+            Cursor = CursorAssetLoader.GetCrosshairCursor(scaling);
         }
 
         private void UpdatePicker(PixelPoint screenPoint, Point clientPoint)

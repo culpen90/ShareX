@@ -8,8 +8,7 @@
         TransparencyLevelHint="Transparent"
         Background="Transparent"
         FontFamily="{DynamicResource ShareX.FontFamily.Default}"
-        Foreground="{DynamicResource ShareX.Brush.Text}"
-        Cursor="Cross">
+        Foreground="{DynamicResource ShareX.Brush.Text}">
     <Window.Styles>
         <StyleInclude Source="avares://ShareX.ImageEditor/Presentation/Theming/ImageEditorStyles.axaml"/>
     </Window.Styles>
