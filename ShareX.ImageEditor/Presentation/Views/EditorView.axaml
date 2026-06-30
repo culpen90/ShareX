@@ -6,7 +6,6 @@
              xmlns:views="using:ShareX.ImageEditor.Presentation.Views"
              xmlns:models="using:ShareX.ImageEditor.Core.Annotations"
              xmlns:converters="using:ShareX.ImageEditor.Presentation.Converters"
-             xmlns:cp="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.ColorPicker"
              xmlns:theming="using:ShareX.ImageEditor.Presentation.Theming"
              xmlns:helpers="using:ShareX.ImageEditor.Presentation.Rendering"
              xmlns:controls="using:ShareX.ImageEditor.Presentation.Controls"
@@ -369,15 +368,13 @@
                                            VerticalOffset="4">
                                         <Border Classes="popup-border popup-surface"
                                                 Classes.open="{Binding #BackgroundGradientColor1Popup.IsOpen}"
-                                                Background="{DynamicResource ShareX.Brush.Background.Popup}"
+                                                Background="{DynamicResource ShareX.Brush.Background.Panel}"
                                                 CornerRadius="8"
                                                 Padding="4"
                                                 BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                                 BorderThickness="1">
-                                            <cp:ColorView Color="{Binding BackgroundGradientColor1Value, Mode=TwoWay}"
-                                                          IsAlphaVisible="True"
-                                                          IsColorPreviewVisible="True"
-                                                          SelectedIndex="1"/>
+                                            <controls:ColorPickerPanel SelectedColorValue="{Binding BackgroundGradientColor1Value, Mode=TwoWay}"
+                                                                       HostPopup="{Binding #BackgroundGradientColor1Popup}"/>
                                         </Border>
                                     </Popup>
 
@@ -388,15 +385,13 @@
                                            VerticalOffset="4">
                                         <Border Classes="popup-border popup-surface"
                                                 Classes.open="{Binding #BackgroundGradientColor2Popup.IsOpen}"
-                                                Background="{DynamicResource ShareX.Brush.Background.Popup}"
+                                                Background="{DynamicResource ShareX.Brush.Background.Panel}"
                                                 CornerRadius="8"
                                                 Padding="4"
                                                 BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                                 BorderThickness="1">
-                                            <cp:ColorView Color="{Binding BackgroundGradientColor2Value, Mode=TwoWay}"
-                                                          IsAlphaVisible="True"
-                                                          IsColorPreviewVisible="True"
-                                                          SelectedIndex="1"/>
+                                            <controls:ColorPickerPanel SelectedColorValue="{Binding BackgroundGradientColor2Value, Mode=TwoWay}"
+                                                                       HostPopup="{Binding #BackgroundGradientColor2Popup}"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
@@ -455,15 +450,13 @@
                                            VerticalOffset="4">
                                         <Border Classes="popup-border popup-surface"
                                                 Classes.open="{Binding #BackgroundColorPopup.IsOpen}"
-                                                Background="{DynamicResource ShareX.Brush.Background.Popup}"
+                                                Background="{DynamicResource ShareX.Brush.Background.Panel}"
                                                 CornerRadius="8"
                                                 Padding="4"
                                                 BorderBrush="{DynamicResource ShareX.Brush.Border}"
                                                 BorderThickness="1">
-                                            <cp:ColorView Color="{Binding BackgroundColorValue, Mode=TwoWay}"
-                                                          IsAlphaVisible="True"
-                                                          IsColorPreviewVisible="True"
-                                                          SelectedIndex="1"/>
+                                            <controls:ColorPickerPanel SelectedColorValue="{Binding BackgroundColorValue, Mode=TwoWay}"
+                                                                       HostPopup="{Binding #BackgroundColorPopup}"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
