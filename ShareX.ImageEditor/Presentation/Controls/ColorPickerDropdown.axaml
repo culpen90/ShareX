@@ -85,12 +85,33 @@
                     Padding="4"
                     BorderBrush="{DynamicResource ShareX.Brush.Border}"
                     BorderThickness="1">
-                <cp:ColorView x:Name="ColorViewControl"
-                              Color="{Binding SelectedColorValue, ElementName=ColorPickerDropdownRoot, Mode=TwoWay}"
-                              IsAlphaVisible="True"
-                              IsColorPreviewVisible="True"
-                              SelectedIndex="1"
-                              HsvColor="{Binding SelectedHsvColor, ElementName=ColorPickerDropdownRoot, Mode=TwoWay}"/>
+                <StackPanel>
+                    <cp:ColorView x:Name="ColorViewControl"
+                                  Color="{Binding SelectedColorValue, ElementName=ColorPickerDropdownRoot, Mode=TwoWay}"
+                                  IsAlphaVisible="True"
+                                  IsColorPreviewVisible="True"
+                                  SelectedIndex="1"
+                                  HsvColor="{Binding SelectedHsvColor, ElementName=ColorPickerDropdownRoot, Mode=TwoWay}"/>
+
+                    <Border Height="1"
+                            Margin="8,4"
+                            Background="{DynamicResource ShareX.Brush.Border}"/>
+
+                    <Button Classes="editor-button"
+                            Margin="4"
+                            Height="36"
+                            HorizontalContentAlignment="Left"
+                            Click="OnScreenColorPickerClick">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{x:Static theming:EditorIcons.ScreenColorPicker}"
+                                       FontFamily="{DynamicResource ShareX.FontFamily.Icon}"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Pick color from screen"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </Border>
         </Popup>
     </Grid>
