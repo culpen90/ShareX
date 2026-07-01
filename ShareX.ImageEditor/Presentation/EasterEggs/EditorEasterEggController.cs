@@ -33,14 +33,17 @@ internal sealed class EditorEasterEggController : IDisposable
     private readonly KonamiCodeDetector _detector = new();
     private readonly Func<SKBitmap?> _snapshotProvider;
     private readonly ShaderEasterEggPlayer _player;
+    private readonly Action? _activated;
 
     public EditorEasterEggController(
         ShaderEasterEggOverlay overlay,
         Func<SKBitmap?> snapshotProvider,
-        IShaderEasterEggEffect effect)
+        IShaderEasterEggEffect effect,
+        Action? activated = null)
     {
         _snapshotProvider = snapshotProvider;
         _player = new ShaderEasterEggPlayer(overlay, effect);
+        _activated = activated;
     }
 
     /// <summary>
@@ -71,7 +74,13 @@ internal sealed class EditorEasterEggController : IDisposable
         }
 
         SKBitmap? snapshot = _snapshotProvider();
-        return snapshot != null && _player.Play(snapshot);
+        if (snapshot == null || !_player.Play(snapshot))
+        {
+            return false;
+        }
+
+        _activated?.Invoke();
+        return true;
     }
 
     public void Stop()

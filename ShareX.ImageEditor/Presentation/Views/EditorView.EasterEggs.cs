@@ -26,6 +26,8 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using ShareX.ImageEditor.Presentation.EasterEggs;
+using ShareX.ImageEditor.Presentation.Theming;
+using ShareX.ImageEditor.Presentation.ViewModels;
 
 namespace ShareX.ImageEditor.Presentation.Views;
 
@@ -42,7 +44,16 @@ public partial class EditorView
             _easterEggController = new EditorEasterEggController(
                 overlay,
                 GetSnapshot,
-                new InfiniteFoldEffect());
+                new InfiniteFoldEffect(),
+                ShowEasterEggNotification);
+        }
+    }
+
+    private void ShowEasterEggNotification()
+    {
+        if (DataContext is MainViewModel vm)
+        {
+            vm.ShowNotification("Achievement unlocked!", EditorIcons.Achievement);
         }
     }
 
