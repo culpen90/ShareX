@@ -54,7 +54,6 @@ internal sealed class ShaderEasterEggOverlay : Control, IDisposable
         string? ShaderSource = null,
         byte[]? EncodedSource = null,
         TimeSpan Duration = default,
-        int FramesPerSecond = 60,
         Size Bounds = default);
 
     private CompositionCustomVisual? _customVisual;
@@ -80,7 +79,6 @@ internal sealed class ShaderEasterEggOverlay : Control, IDisposable
                 effect.ShaderSource,
                 encoded.ToArray(),
                 effect.Duration,
-                effect.FramesPerSecond,
                 Bounds.Size);
 
             _pendingStart = payload;
@@ -186,8 +184,6 @@ internal sealed class ShaderEasterEggOverlay : Control, IDisposable
         private Size _bounds;
         private TimeSpan _duration;
         private TimeSpan _startedAt;
-        private TimeSpan _lastFrameAt;
-        private TimeSpan _frameInterval;
         private bool _running;
 
         public override void OnMessage(object message)
@@ -226,17 +222,7 @@ internal sealed class ShaderEasterEggOverlay : Control, IDisposable
                 return;
             }
 
-            TimeSpan now = CompositionNow;
-            TimeSpan elapsedSinceFrame = now - _lastFrameAt;
-            if (elapsedSinceFrame >= _frameInterval)
-            {
-                long elapsedIntervals = Math.Max(
-                    1,
-                    elapsedSinceFrame.Ticks / _frameInterval.Ticks);
-                _lastFrameAt += TimeSpan.FromTicks(elapsedIntervals * _frameInterval.Ticks);
-                Invalidate();
-            }
-
+            Invalidate();
             RegisterForNextAnimationFrameUpdate();
         }
 
@@ -306,10 +292,7 @@ internal sealed class ShaderEasterEggOverlay : Control, IDisposable
             _children["source"] = _sourceShader;
             _bounds = payload.Bounds;
             _duration = payload.Duration;
-            _frameInterval = TimeSpan.FromSeconds(
-                1.0 / Math.Clamp(payload.FramesPerSecond, 1, 240));
             _startedAt = CompositionNow;
-            _lastFrameAt = _startedAt - _frameInterval;
             _running = true;
             RegisterForNextAnimationFrameUpdate();
         }

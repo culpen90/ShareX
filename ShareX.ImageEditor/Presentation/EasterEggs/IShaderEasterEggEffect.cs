@@ -34,6 +34,4 @@ internal interface IShaderEasterEggEffect
     string ShaderSource { get; }
 
     TimeSpan Duration { get; }
-
-    int FramesPerSecond { get; }
 }

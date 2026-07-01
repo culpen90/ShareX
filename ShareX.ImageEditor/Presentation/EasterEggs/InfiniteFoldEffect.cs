@@ -62,6 +62,7 @@ internal sealed class InfiniteFoldEffect : IShaderEasterEggEffect
 
         half4 main(float2 position)
         {
+            float2 sourcePosition = position;
             position.y = resolution.y - position.y;
             float4 outputColor = float4(0.0);
             float2 size = resolution;
@@ -103,18 +104,36 @@ internal sealed class InfiniteFoldEffect : IShaderEasterEggEffect
                     exp(cos(seed * travel * 0.1 + iterationVariant) + 3.0 + 10000.0 * stepDistance);
             }
 
-            half4 background = source.eval(float2(position.x, resolution.y - position.y));
             float fade = smoothstep(0.0, 0.06, progress) *
                 (1.0 - smoothstep(0.90, 1.0, progress));
-            half3 glow = half3(clamp(outputColor.rgb * 1.3, float3(0.0), float3(1.0))) * half(fade);
+            half4 background = source.eval(sourcePosition);
+            float energy = clamp(
+                max(max(outputColor.r, outputColor.g), outputColor.b) * 1.3,
+                0.0,
+                1.0);
 
-            // Screen blend preserves the flattened editor snapshot as the background.
-            half3 composited = background.rgb + glow * (half3(background.a) - background.rgb);
+            // Feed the flattened image into the fold. The final iterative state controls a
+            // localized rotation and refraction, exposing animated fragments of the source.
+            float textureAngle = sin(point.y + time * 0.7) * energy * fade * 0.18;
+            float2 centeredPosition = sourcePosition - resolution * 0.5;
+            float2 textureDirection = float2(
+                sin(point.x + travel * 8.0 + time * 0.7),
+                cos(point.z - travel * 6.0 - time * 0.5));
+            float2 texturePosition = resolution * 0.5 +
+                centeredPosition * rotate2D(textureAngle) +
+                textureDirection * resolution.y * (0.012 + energy * 0.032) * fade;
+            half4 foldedSource = source.eval(texturePosition);
+
+            half textureAmount = half(energy * fade * 0.72);
+            half3 texturedBase = mix(background.rgb, foldedSource.rgb, textureAmount);
+            half3 glow = half3(clamp(outputColor.rgb * 1.3, float3(0.0), float3(1.0))) * half(fade);
+            glow *= half3(0.35) + foldedSource.rgb * half(0.9);
+
+            // Screen blend keeps the source legible while the same texture moves through the glow.
+            half3 composited = texturedBase + glow * (half3(background.a) - texturedBase);
             return half4(min(composited, half3(background.a)), background.a);
         }
         """;
 
     public TimeSpan Duration => TimeSpan.FromSeconds(12);
-
-    public int FramesPerSecond => 60;
 }
