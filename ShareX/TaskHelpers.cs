@@ -42,6 +42,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -262,6 +263,12 @@ namespace ShareX
                     {
                         OpenImageViewer();
                     }
+                    break;
+                case HotkeyType.BackgroundRemover:
+                    OpenBackgroundRemover(safeTaskSettings);
+                    break;
+                case HotkeyType.ImageComparer:
+                    OpenImageComparer();
                     break;
                 case HotkeyType.ImageCombiner:
                     OpenImageCombiner(null, safeTaskSettings);
@@ -1004,6 +1011,18 @@ namespace ShareX
             imageCombinerForm.Show();
         }
 
+        public static void OpenImageComparer()
+        {
+            AvaloniaIntegration.ShowImageComparerWindow();
+        }
+
+        public static void OpenBackgroundRemover(TaskSettings taskSettings = null)
+        {
+            if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
+
+            AvaloniaIntegration.ShowBackgroundRemoverWindow(Program.ModelsFolder, taskSettings.ToolsSettingsReference.BackgroundRemoverOptions);
+        }
+
         public static void CombineImages(IEnumerable<string> imageFiles, Orientation orientation, TaskSettings taskSettings = null)
         {
             if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
@@ -1152,7 +1171,7 @@ namespace ShareX
 
         private static void ShowImageEditorSelector(TaskSettings taskSettings)
         {
-            if (taskSettings.ToolsSettings.ShowImageEditorSelector)
+            if (taskSettings.ToolsSettingsReference.ShowImageEditorSelector)
             {
                 using (ImageEditorSelectorForm selectorForm = new ImageEditorSelectorForm())
                 {
@@ -1316,84 +1335,158 @@ namespace ShareX
         {
             Bitmap bmpResult = null;
 
-            Program.MainForm.InvokeSafe(() =>
+            EditorEvents events = new EditorEvents
             {
-                EditorEvents events = new EditorEvents
+                CopyImageRequested = (skBitmap) =>
                 {
-                    CopyImageRequested = (skBitmap) =>
-                    {
-                        using Bitmap img = skBitmap.ToBitmap();
-                        MainFormCopyImage(img);
-                    },
-                    SaveImageRequested = (skBitmap, newFilePath) =>
-                    {
-                        using Bitmap img = skBitmap.ToBitmap();
+                    using Bitmap img = skBitmap.ToBitmap();
+                    MainFormCopyImage(img);
+                },
+                SaveImageRequested = (skBitmap, newFilePath) =>
+                {
+                    using Bitmap img = skBitmap.ToBitmap();
 
-                        if (string.IsNullOrEmpty(newFilePath))
-                        {
-                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                            newFilePath = Path.Combine(screenshotsFolder, fileName);
-                        }
-
-                        ImageHelpers.SaveImage(img, newFilePath);
-                        return newFilePath;
-                    },
-                    SaveImageAsRequested = (skBitmap, newFilePath) =>
+                    if (string.IsNullOrEmpty(newFilePath))
                     {
-                        using Bitmap img = skBitmap.ToBitmap();
-
-                        if (string.IsNullOrEmpty(newFilePath))
-                        {
-                            string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                            string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                            newFilePath = Path.Combine(screenshotsFolder, fileName);
-                        }
-
-                        newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
-                        return newFilePath;
-                    },
-                    PrintImageRequested = (skBitmap) =>
-                    {
-                        Bitmap bmp = skBitmap.ToBitmap();
-                        MainFormPrintImage(bmp);
-                    },
-                    PinImageRequested = (skBitmap) =>
-                    {
-                        Bitmap bmp = skBitmap.ToBitmap();
-                        PinToScreen(bmp, taskSettings);
-                    },
-                    UploadImageRequested = (skBitmap) =>
-                    {
-                        Bitmap bmp = skBitmap.ToBitmap();
-                        MainFormUploadImage(bmp, taskSettings);
+                        string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                        string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                        newFilePath = Path.Combine(screenshotsFolder, fileName);
                     }
-                };
 
-                SKBitmap skBitmapResult = null;
-
-                if (bmp != null)
+                    ImageHelpers.SaveImage(img, newFilePath);
+                    return newFilePath;
+                },
+                SaveImageAsRequested = (skBitmap, newFilePath) =>
                 {
-                    using SKBitmap skBitmap = bmp.ToSKBitmap();
-                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                        events, taskMode, filePath);
+                    using Bitmap img = skBitmap.ToBitmap();
+
+                    if (string.IsNullOrEmpty(newFilePath))
+                    {
+                        string screenshotsFolder = GetScreenshotsFolder(taskSettings);
+                        string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
+                        newFilePath = Path.Combine(screenshotsFolder, fileName);
+                    }
+
+                    newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
+                    return newFilePath;
+                },
+                PrintImageRequested = (skBitmap) =>
+                {
+                    Bitmap bmp = skBitmap.ToBitmap();
+                    MainFormPrintImage(bmp);
+                },
+                PinImageRequested = (skBitmap) =>
+                {
+                    Bitmap bmp = skBitmap.ToBitmap();
+                    PinToScreen(bmp, taskSettings);
+                },
+                UploadImageRequested = (skBitmap) =>
+                {
+                    Bitmap bmp = skBitmap.ToBitmap();
+                    MainFormUploadImage(bmp, taskSettings);
+                }
+            };
+
+            SKBitmap skBitmapResult = null;
+
+            if (bmp != null)
+            {
+                using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
+                skBitmapResult = AvaloniaIntegration.ShowEditorDialog(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                    events, taskMode, filePath);
+            }
+            else
+            {
+                skBitmapResult = AvaloniaIntegration.ShowEditorDialog(taskSettings.ToolsSettingsReference.ImageEditorOptions,
+                    events, taskMode, filePath);
+            }
+
+            if (skBitmapResult != null)
+            {
+                using (skBitmapResult)
+                {
+                    bmpResult = skBitmapResult.ToBitmap();
+                }
+            }
+
+            return bmpResult;
+        }
+
+        // Avoid the slow PNG re-encode path for large captures while still bypassing
+        // the WindowsForms Bitmap->SKBitmap conversion that regressed post-effects opens.
+        private static SKBitmap GdiBitmapToSkBitmap(Bitmap bitmap)
+        {
+            Bitmap sourceBitmap = bitmap;
+            bool disposeSourceBitmap = false;
+            PixelFormat pixelFormat = bitmap.PixelFormat;
+
+            if (pixelFormat != PixelFormat.Format32bppArgb && pixelFormat != PixelFormat.Format32bppPArgb)
+            {
+                sourceBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppPArgb);
+                sourceBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
+
+                using (Graphics graphics = Graphics.FromImage(sourceBitmap))
+                {
+                    graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    graphics.DrawImage(bitmap, 0, 0, bitmap.Width, bitmap.Height);
+                }
+
+                disposeSourceBitmap = true;
+                pixelFormat = sourceBitmap.PixelFormat;
+            }
+
+            Rectangle rect = new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height);
+            BitmapData bmpData = sourceBitmap.LockBits(rect, ImageLockMode.ReadOnly, pixelFormat);
+
+            try
+            {
+                SKAlphaType alphaType = pixelFormat == PixelFormat.Format32bppPArgb ? SKAlphaType.Premul : SKAlphaType.Unpremul;
+                SKBitmap skBitmap = new SKBitmap(new SKImageInfo(sourceBitmap.Width, sourceBitmap.Height, SKColorType.Bgra8888, alphaType));
+
+                IntPtr dstPtr = skBitmap.GetPixels();
+                int dstStride = skBitmap.RowBytes;
+                int srcStride = bmpData.Stride;
+                int srcStrideAbs = Math.Abs(srcStride);
+                int height = sourceBitmap.Height;
+                int rowBytes = sourceBitmap.Width * 4;
+                IntPtr srcStart = bmpData.Scan0;
+
+                if (srcStride < 0)
+                {
+                    srcStart = IntPtr.Add(srcStart, srcStride * (height - 1));
+                }
+
+                if (srcStrideAbs == dstStride)
+                {
+                    int copyLength = dstStride * height;
+                    byte[] pixels = new byte[copyLength];
+                    Marshal.Copy(srcStart, pixels, 0, copyLength);
+                    Marshal.Copy(pixels, 0, dstPtr, copyLength);
                 }
                 else
                 {
-                    skBitmapResult = AvaloniaIntegration.ShowEditorDialogBitmap(taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                        events, taskMode, filePath);
-                }
+                    byte[] row = new byte[rowBytes];
 
-                if (skBitmapResult != null)
-                {
-                    using (skBitmapResult)
+                    for (int y = 0; y < height; y++)
                     {
-                        bmpResult = skBitmapResult.ToBitmap();
+                        IntPtr srcRow = IntPtr.Add(srcStart, y * srcStrideAbs);
+                        IntPtr dstRow = IntPtr.Add(dstPtr, y * dstStride);
+                        Marshal.Copy(srcRow, row, 0, rowBytes);
+                        Marshal.Copy(row, 0, dstRow, rowBytes);
                     }
                 }
-            });
 
-            return bmpResult;
+                return skBitmap;
+            }
+            finally
+            {
+                sourceBitmap.UnlockBits(bmpData);
+
+                if (disposeSourceBitmap)
+                {
+                    sourceBitmap.Dispose();
+                }
+            }
         }
 
         public static void MainFormCopyImage(Bitmap bmp)
@@ -2085,8 +2178,10 @@ namespace ShareX
                     case HotkeyType.PinToScreenCloseAll: return Resources.pin__minus;
                     case HotkeyType.ImageEditor: return Resources.image_pencil;
                     case HotkeyType.ImageBeautifier: return Resources.picture_sunset;
-                    case HotkeyType.ImageEffects: return Resources.image_saturation;
+                    case HotkeyType.ImageEffects: return Resources.image_reflection;
                     case HotkeyType.ImageViewer: return Resources.images_flickr;
+                    case HotkeyType.BackgroundRemover: return Resources.wand_magic;
+                    case HotkeyType.ImageComparer: return Resources.image_saturation;
                     case HotkeyType.ImageCombiner: return Resources.document_break;
                     case HotkeyType.ImageSplitter: return Resources.image_split;
                     case HotkeyType.ImageThumbnailer: return Resources.image_resize_actual;

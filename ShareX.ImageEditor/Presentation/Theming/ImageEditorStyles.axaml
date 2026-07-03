@@ -202,6 +202,19 @@
         <Setter Property="RenderTransform" Value="translateY(8px) scale(0.98)"/>
     </Style>
 
+    <Style Selector="Border.editor-toast">
+        <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Background.Popup}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="BoxShadow" Value="0 14 28 -16 #70000000"/>
+
+        <Style Selector="^ TextBlock:first-child">
+            <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Accent}"/>
+        </Style>
+    </Style>
+
     <Style Selector="Border.floating-panel">
         <Setter Property="RenderTransformOrigin" Value="50%,0%"/>
         <Setter Property="RenderTransform" Value="translateY(-24px) scale(0.98)"/>
@@ -318,6 +331,35 @@
 
         <Style Selector="^.right.open">
             <Setter Property="BorderThickness" Value="1,0,0,0"/>
+        </Style>
+    </Style>
+
+    <Style Selector="Border.editor-toolbar-host">
+        <Setter Property="Opacity" Value="1"/>
+        <Setter Property="RenderTransform" Value="translateY(0px)"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+
+        <Style Selector="^.top">
+            <Setter Property="RenderTransformOrigin" Value="50%,0%"/>
+        </Style>
+
+        <Style Selector="^.bottom">
+            <Setter Property="RenderTransformOrigin" Value="50%,100%"/>
+        </Style>
+
+        <Style Selector="^.top.hidden">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="RenderTransform" Value="translateY(-28px)"/>
+        </Style>
+
+        <Style Selector="^.bottom.hidden">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="RenderTransform" Value="translateY(28px)"/>
         </Style>
     </Style>
 

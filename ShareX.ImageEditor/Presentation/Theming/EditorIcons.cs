@@ -39,6 +39,7 @@ namespace ShareX.ImageEditor.Presentation.Theming
         public const string ToolText = LucideIcons.type;
         public const string ToolSpeechBalloon = LucideIcons.message_square;
         public const string ToolStep = LucideIcons.hash;
+        public const string ToolCursor = LucideIcons.mouse_pointer;
         public const string ToolBlur = LucideIcons.droplet;
         public const string ToolPixelate = LucideIcons.grid_2x2;
         public const string ToolMagnify = LucideIcons.search;
@@ -71,16 +72,20 @@ namespace ShareX.ImageEditor.Presentation.Theming
         public const string ActionReset = LucideIcons.refresh_cw;
         public const string ActionRotateLeft = LucideIcons.rotate_ccw_square;
         public const string ActionRotateRight = LucideIcons.rotate_cw_square;
+        public const string ActionToggleToolbars = LucideIcons.chevrons_up_down;
+        public const string Achievement = LucideIcons.trophy;
 
         public const string FormatBold = LucideIcons.bold;
         public const string FormatItalic = LucideIcons.italic;
-        public const string FormatUnderline = LucideIcons.underline;
         public const string MenuTheme = LucideIcons.moon_star;
+        public const string ToggleSpeechBalloonTail = LucideIcons.message_square_check;
+        public const string ToggleEllipseShape = ToolEllipse;
         public const string PanelBackground = LucideIcons.wallpaper;
         public const string PanelEffects = LucideIcons.sparkles;
         public const string LayerFlatten = LucideIcons.layers_2;
         public const string ChevronDown = LucideIcons.chevron_down;
         public const string Zoom = LucideIcons.zoom_in;
+        public const string ScreenColorPicker = LucideIcons.pipette;
 
         public const string FileMenu = LucideIcons.file;
         public const string FileNew = LucideIcons.file_plus;
@@ -100,6 +105,7 @@ namespace ShareX.ImageEditor.Presentation.Theming
             EditorTool.Text => ToolText,
             EditorTool.SpeechBalloon => ToolSpeechBalloon,
             EditorTool.Step => ToolStep,
+            EditorTool.Cursor => ToolCursor,
             EditorTool.Blur => ToolBlur,
             EditorTool.Pixelate => ToolPixelate,
             EditorTool.Magnify => ToolMagnify,

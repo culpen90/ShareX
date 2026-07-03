@@ -41,6 +41,7 @@ public enum EditorTool
     Step,
     Image,
     Emoji,
+    Cursor,
     Highlight,
     SmartEraser,
     Blur,
