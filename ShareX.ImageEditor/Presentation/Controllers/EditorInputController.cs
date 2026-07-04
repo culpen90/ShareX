@@ -1249,7 +1249,7 @@ public class EditorInputController
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center
         };
-        button.Classes.Add("editor-button");
+        button.Classes.Add("app-button");
         button.SetValue(Panel.ZIndexProperty, CropConfirmButtonZIndex);
         button.Click += OnCropConfirmButtonClick;
 

@@ -28,7 +28,7 @@
                                Foreground="{DynamicResource ShareX.Brush.Text}"/>
 
                     <Button Grid.Column="1"
-                            Classes="editor-button toolbar-button"
+                            Classes="app-button toolbar-button"
                             Command="{Binding CancelCommand}"
                             Width="32"
                             MinWidth="32"
@@ -45,7 +45,7 @@
 
             <StackPanel Grid.Row="1" Margin="20" Spacing="12">
                 <Button x:Name="CenterButton"
-                        Classes="editor-button"
+                        Classes="app-button"
                         Command="{Binding InsertCenterCommand}"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Left"
@@ -67,7 +67,7 @@
                     </StackPanel>
                 </Button>
 
-                <Button Classes="editor-button"
+                <Button Classes="app-button"
                         Command="{Binding InsertBelowCommand}"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Left"
@@ -89,7 +89,7 @@
                     </StackPanel>
                 </Button>
 
-                <Button Classes="editor-button"
+                <Button Classes="app-button"
                         Command="{Binding InsertRightCommand}"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Left"

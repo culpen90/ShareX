@@ -1,7 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--
-        Project-wide style entry point.
+        Application-wide style entry point.
         Keep reusable selectors and style classes here so views stay focused on layout and behavior.
     -->
 
@@ -21,7 +21,7 @@
     </Style>
 
     <!-- Shared buttons -->
-    <Style Selector="Button.editor-button">
+    <Style Selector="Button.app-button">
         <Setter Property="Height" Value="40"/>
         <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Control.Background}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Border}"/>
@@ -107,7 +107,7 @@
         </Style>
     </Style>
 
-    <Style Selector="Button.editor-button.toolbar-button">
+    <Style Selector="Button.app-button.toolbar-button">
         <Setter Property="Width" Value="40"/>
         <Setter Property="MinWidth" Value="40"/>
         <Setter Property="FontFamily" Value="{DynamicResource ShareX.FontFamily.Icon}"/>
@@ -202,7 +202,7 @@
         <Setter Property="RenderTransform" Value="translateY(8px) scale(0.98)"/>
     </Style>
 
-    <Style Selector="Border.editor-toast">
+    <Style Selector="Border.app-toast">
         <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Background.Popup}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Border}"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -302,9 +302,7 @@
         <Style Selector="^.left > ScrollViewer > StackPanel > StackPanel:nth-child(1) > TextBlock">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="Foreground">
-                <SolidColorBrush Color="{DynamicResource ShareX.Color.Accent.Start}"/>
-            </Setter>
+            <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Accent.Start}"/>
             <Setter Property="Padding" Value="0,0,0,16"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>
@@ -312,9 +310,7 @@
         <Style Selector="^.right ContentControl > :is(UserControl) > StackPanel > StackPanel:nth-child(1) > TextBlock">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="Foreground">
-                <SolidColorBrush Color="{DynamicResource ShareX.Color.Accent.Start}"/>
-            </Setter>
+            <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Accent.Start}"/>
             <Setter Property="Padding" Value="0,0,0,16"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>

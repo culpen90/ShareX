@@ -27,7 +27,7 @@
                            VerticalAlignment="Center"/>
             </StackPanel>
                 <Button Grid.Column="1"
-                    Classes="editor-button"
+                    Classes="app-button"
                     Command="{Binding CloseEffectsPanelCommand}"
                     Width="32"
                     Height="32"
@@ -100,7 +100,7 @@
                                       IsChecked="{Binding EditorShowNotifications, Mode=TwoWay}"
                                       Margin="0,0,0,8"/>
 
-        <Button Classes="editor-button"
+        <Button Classes="app-button"
                 Command="{Binding OpenToolbarCustomizationDialogCommand}"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Left"
