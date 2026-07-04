@@ -47,7 +47,7 @@
                                        Classes="path-text"
                                        VerticalAlignment="Center"
                                        Text="{Binding Image1Path, TargetNullValue='No image selected'}"/>
-                            <Button Grid.Column="2" Classes="app-button" Content="Choose..." Command="{Binding SelectImage1Command}"/>
+                            <Button Grid.Column="2" Content="Choose..." Command="{Binding SelectImage1Command}"/>
                         </Grid>
                     </Border>
 
@@ -62,7 +62,7 @@
                                        Classes="path-text"
                                        VerticalAlignment="Center"
                                        Text="{Binding Image2Path, TargetNullValue='No image selected'}"/>
-                            <Button Grid.Column="2" Classes="app-button" Content="Choose..." Command="{Binding SelectImage2Command}"/>
+                            <Button Grid.Column="2" Content="Choose..." Command="{Binding SelectImage2Command}"/>
                         </Grid>
                     </Border>
                 </Grid>

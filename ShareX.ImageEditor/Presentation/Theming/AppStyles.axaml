@@ -20,8 +20,8 @@
         <Setter Property="Foreground" Value="{DynamicResource ShareX.Brush.Text.Secondary}"/>
     </Style>
 
-    <!-- Shared buttons -->
-    <Style Selector="Button.app-button">
+    <!-- Standard buttons. Specialized visual variants opt out through their own classes. -->
+    <Style Selector="Button:not(.picker-button):not(.effect-item):not(.task-mode-button):not(.transparent-button):not(.side-panel-toggle-row)">
         <Setter Property="Height" Value="40"/>
         <Setter Property="Background" Value="{DynamicResource ShareX.Brush.Control.Background}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ShareX.Brush.Border}"/>
@@ -107,7 +107,7 @@
         </Style>
     </Style>
 
-    <Style Selector="Button.app-button.toolbar-button">
+    <Style Selector="Button.toolbar-button">
         <Setter Property="Width" Value="40"/>
         <Setter Property="MinWidth" Value="40"/>
         <Setter Property="FontFamily" Value="{DynamicResource ShareX.FontFamily.Icon}"/>
@@ -119,6 +119,11 @@
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Width" Value="NaN"/>
         <Setter Property="Height" Value="32"/>
+    </Style>
+
+    <Style Selector="Button.transparent-button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
     <Style Selector="Button.task-mode-button">
