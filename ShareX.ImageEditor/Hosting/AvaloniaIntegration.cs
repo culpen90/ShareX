@@ -116,6 +116,17 @@ namespace ShareX.ImageEditor.Hosting
             });
         }
 
+        public static void ShowIconConverterWindow()
+        {
+            Initialize();
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                IconConverterWindow window = new IconConverterWindow();
+                window.Show();
+            });
+        }
+
         public static void ShowBackgroundRemoverWindow(string? modelsFolder)
         {
             ShowBackgroundRemoverWindow(modelsFolder, new BackgroundRemoverOptions());
