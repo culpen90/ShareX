@@ -38,7 +38,11 @@
             <Grid RowDefinitions="Auto,*,Auto" Margin="16" RowSpacing="12">
                 <Border Grid.Row="0" Classes="converter-panel" Padding="12">
                     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <TextBlock Grid.Column="0" Text="Image" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0"
+                                   Classes="section-heading"
+                                   Text="Image"
+                                   Margin="0"
+                                   VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="1"
                                    Classes="path-text"
                                    Text="{Binding ImagePath, TargetNullValue='No image selected'}"
@@ -55,24 +59,38 @@
                             <StackPanel>
                                 <TextBlock Classes="section-heading" Text="Sizes"/>
                                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10" ColumnSpacing="12">
-                                    <CheckBox Grid.Row="0" Grid.Column="0" Content="16 pixels" IsChecked="{Binding Is16Selected}"/>
-                                    <CheckBox Grid.Row="0" Grid.Column="1" Content="32 pixels" IsChecked="{Binding Is32Selected}"/>
-                                    <CheckBox Grid.Row="1" Grid.Column="0" Content="48 pixels" IsChecked="{Binding Is48Selected}"/>
-                                    <CheckBox Grid.Row="1" Grid.Column="1" Content="64 pixels" IsChecked="{Binding Is64Selected}"/>
-                                    <CheckBox Grid.Row="2" Grid.Column="0" Content="128 pixels" IsChecked="{Binding Is128Selected}"/>
-                                    <CheckBox Grid.Row="2" Grid.Column="1" Content="256 pixels" IsChecked="{Binding Is256Selected}"/>
+                                    <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding Is16Selected}">
+                                        <TextBlock Text="16 pixels" FontWeight="Normal"/>
+                                    </CheckBox>
+                                    <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding Is32Selected}">
+                                        <TextBlock Text="32 pixels" FontWeight="Normal"/>
+                                    </CheckBox>
+                                    <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding Is48Selected}">
+                                        <TextBlock Text="48 pixels" FontWeight="Normal"/>
+                                    </CheckBox>
+                                    <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding Is64Selected}">
+                                        <TextBlock Text="64 pixels" FontWeight="Normal"/>
+                                    </CheckBox>
+                                    <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding Is128Selected}">
+                                        <TextBlock Text="128 pixels" FontWeight="Normal"/>
+                                    </CheckBox>
+                                    <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding Is256Selected}">
+                                        <TextBlock Text="256 pixels" FontWeight="Normal"/>
+                                    </CheckBox>
                                 </Grid>
                             </StackPanel>
 
                             <StackPanel>
                                 <TextBlock Classes="section-heading" Text="Bit depth"/>
                                 <StackPanel Spacing="8">
-                                    <RadioButton Content="8 bits (256 colors)"
-                                                 GroupName="BitDepth"
-                                                 IsChecked="{Binding IsPalette8}"/>
-                                    <RadioButton Content="32 bits (16.7M colors)"
-                                                 GroupName="BitDepth"
-                                                 IsChecked="{Binding IsTrueColor32}"/>
+                                    <RadioButton GroupName="BitDepth"
+                                                 IsChecked="{Binding IsPalette8}">
+                                        <TextBlock Text="8 bits (256 colors)" FontWeight="Normal"/>
+                                    </RadioButton>
+                                    <RadioButton GroupName="BitDepth"
+                                                 IsChecked="{Binding IsTrueColor32}">
+                                        <TextBlock Text="32 bits (16.7M colors)" FontWeight="Normal"/>
+                                    </RadioButton>
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>
