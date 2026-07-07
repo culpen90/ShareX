@@ -11,6 +11,7 @@ on:
       - "Package.swift"
       - "README.md"
       - "release-please-config.json"
+      - "ShareX/Package.swift"
       - "ShareX/Platforms/macOS/**"
       - "ShareX/Scripts/package-macos-app.sh"
 

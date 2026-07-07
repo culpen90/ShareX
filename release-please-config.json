@@ -8,9 +8,9 @@
   "prerelease": true,
   "force-tag-creation": true,
   "packages": {
-    "ShareX/Platforms/macOS": {
+    ".": {
       "component": "sharex",
-      "version-file": "version.txt"
+      "version-file": "ShareX/Platforms/macOS/version.txt"
     }
   }
 }
