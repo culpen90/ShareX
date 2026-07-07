@@ -8,7 +8,7 @@ APP_VERSION="${APP_VERSION:-$(tr -d '[:space:]' < "$VERSION_FILE")}"
 
 cd "$ROOT_DIR"
 
-swift build -c "$CONFIGURATION"
+swift build -c "$CONFIGURATION" >&2
 BIN_DIR="$(swift build -c "$CONFIGURATION" --show-bin-path)"
 
 APP_DIR="$ROOT_DIR/.build/app/ShareX.app"
