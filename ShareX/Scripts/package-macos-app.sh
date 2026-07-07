@@ -17,8 +17,8 @@ RESOURCES_DIR="$CONTENTS_DIR/Resources"
 rm -rf "$APP_DIR"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
 
-cp "$BIN_DIR/ShareXMac" "$MACOS_DIR/ShareXMac"
-chmod +x "$MACOS_DIR/ShareXMac"
+cp "$BIN_DIR/ShareX" "$MACOS_DIR/ShareX"
+chmod +x "$MACOS_DIR/ShareX"
 
 cat > "$CONTENTS_DIR/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -28,9 +28,9 @@ cat > "$CONTENTS_DIR/Info.plist" <<'PLIST'
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleExecutable</key>
-    <string>ShareXMac</string>
+    <string>ShareX</string>
     <key>CFBundleIdentifier</key>
-    <string>com.sharex.native-mac</string>
+    <string>com.getsharex.ShareX</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
