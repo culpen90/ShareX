@@ -17,16 +17,46 @@ struct ShareXApp: App {
                     store.capture(.fullScreen)
                 }
                 .keyboardShortcut("1", modifiers: [.command, .shift])
+                .disabled(store.isCapturing)
 
                 Button("Selection") {
                     store.capture(.selection)
                 }
                 .keyboardShortcut("2", modifiers: [.command, .shift])
+                .disabled(store.isCapturing)
 
                 Button("Window") {
                     store.capture(.window)
                 }
                 .keyboardShortcut("3", modifiers: [.command, .shift])
+                .disabled(store.isCapturing)
+
+                Button("Active Window") {
+                    store.capture(.activeWindow)
+                }
+                .keyboardShortcut("4", modifiers: [.command, .shift])
+                .disabled(store.isCapturing)
+
+                Button("Active Monitor") {
+                    store.capture(.activeMonitor)
+                }
+                .keyboardShortcut("5", modifiers: [.command, .shift])
+                .disabled(store.isCapturing)
+
+                Menu("Choose Monitor") {
+                    ForEach(store.availableDisplays) { display in
+                        Button(display.title) {
+                            store.capture(.monitor, display: display)
+                        }
+                    }
+                }
+                .disabled(store.isCapturing)
+
+                Button("Last Region") {
+                    store.capture(.lastRegion)
+                }
+                .keyboardShortcut("6", modifiers: [.command, .shift])
+                .disabled(store.isCapturing || !store.hasLastRegion)
             }
         }
 
@@ -34,14 +64,41 @@ struct ShareXApp: App {
             Button("Full Screen") {
                 store.capture(.fullScreen)
             }
+            .disabled(store.isCapturing)
 
             Button("Selection") {
                 store.capture(.selection)
             }
+            .disabled(store.isCapturing)
 
             Button("Window") {
                 store.capture(.window)
             }
+            .disabled(store.isCapturing)
+
+            Button("Active Window") {
+                store.capture(.activeWindow)
+            }
+            .disabled(store.isCapturing)
+
+            Button("Active Monitor") {
+                store.capture(.activeMonitor)
+            }
+            .disabled(store.isCapturing)
+
+            Menu("Choose Monitor") {
+                ForEach(store.availableDisplays) { display in
+                    Button(display.title) {
+                        store.capture(.monitor, display: display)
+                    }
+                }
+            }
+            .disabled(store.isCapturing)
+
+            Button("Last Region") {
+                store.capture(.lastRegion)
+            }
+            .disabled(store.isCapturing || !store.hasLastRegion)
 
             Divider()
 
@@ -72,6 +129,14 @@ struct ContentView: View {
 
 struct CaptureSidebar: View {
     @EnvironmentObject private var store: CaptureStore
+    private let primaryModes: [CaptureMode] = [
+        .fullScreen,
+        .selection,
+        .window,
+        .activeWindow,
+        .activeMonitor,
+        .lastRegion
+    ]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
@@ -95,7 +160,7 @@ struct CaptureSidebar: View {
             }
 
             VStack(spacing: 10) {
-                ForEach(CaptureMode.allCases) { mode in
+                ForEach(primaryModes) { mode in
                     Button {
                         store.capture(mode)
                     } label: {
@@ -104,8 +169,23 @@ struct CaptureSidebar: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
-                    .disabled(store.isCapturing)
+                    .disabled(store.isModeDisabled(mode))
+                    .help(store.helpText(for: mode))
                 }
+
+                Menu {
+                    ForEach(store.availableDisplays) { display in
+                        Button(display.title) {
+                            store.capture(.monitor, display: display)
+                        }
+                    }
+                } label: {
+                    Label("Choose Monitor", systemImage: CaptureMode.monitor.symbolName)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(store.isCapturing)
             }
 
             Divider()
@@ -113,7 +193,11 @@ struct CaptureSidebar: View {
             VStack(alignment: .leading, spacing: 12) {
                 Toggle("Copy after capture", isOn: $store.copyAfterCapture)
                 Toggle("Hide ShareX first", isOn: $store.hideBeforeCapture)
-                Toggle("Include cursor", isOn: $store.includeCursorInFullScreen)
+                Toggle("Include cursor", isOn: $store.includeCursor)
+
+                Stepper(value: $store.screenshotDelaySeconds, in: 0...60) {
+                    Text("Screenshot delay: \(store.screenshotDelayLabel)")
+                }
             }
 
             Divider()
@@ -296,6 +380,10 @@ enum CaptureMode: String, Codable, CaseIterable, Identifiable, Sendable {
     case fullScreen
     case selection
     case window
+    case activeWindow
+    case activeMonitor
+    case monitor
+    case lastRegion
 
     var id: String { rawValue }
 
@@ -304,9 +392,17 @@ enum CaptureMode: String, Codable, CaseIterable, Identifiable, Sendable {
         case .fullScreen:
             "Full Screen"
         case .selection:
-            "Selection"
+            "Selection / Region"
         case .window:
             "Window"
+        case .activeWindow:
+            "Active Window"
+        case .activeMonitor:
+            "Active Monitor"
+        case .monitor:
+            "Monitor"
+        case .lastRegion:
+            "Last Region"
         }
     }
 
@@ -318,6 +414,14 @@ enum CaptureMode: String, Codable, CaseIterable, Identifiable, Sendable {
             "crop"
         case .window:
             "macwindow"
+        case .activeWindow:
+            "rectangle.on.rectangle"
+        case .activeMonitor:
+            "cursorarrow.motionlines"
+        case .monitor:
+            "rectangle.connected.to.line.below"
+        case .lastRegion:
+            "selection.pin.in.out"
         }
     }
 
@@ -329,7 +433,65 @@ enum CaptureMode: String, Codable, CaseIterable, Identifiable, Sendable {
             "Selection"
         case .window:
             "Window"
+        case .activeWindow:
+            "Active Window"
+        case .activeMonitor:
+            "Active Monitor"
+        case .monitor:
+            "Monitor"
+        case .lastRegion:
+            "Last Region"
         }
+    }
+}
+
+struct DisplayTarget: Hashable, Identifiable, Sendable {
+    var displayID: CGDirectDisplayID
+    var captureNumber: Int
+    var title: String
+
+    var id: CGDirectDisplayID { displayID }
+}
+
+struct CaptureRectangle: Codable, Hashable, Sendable {
+    var x: Int
+    var y: Int
+    var width: Int
+    var height: Int
+
+    var argument: String {
+        "\(x),\(y),\(width),\(height)"
+    }
+
+    @MainActor
+    static func from(appKitRect rect: CGRect) -> CaptureRectangle? {
+        let normalized = rect.standardized
+        guard normalized.width >= 2, normalized.height >= 2 else {
+            return nil
+        }
+
+        let midpoint = CGPoint(x: normalized.midX, y: normalized.midY)
+        guard let screen = NSScreen.screens.first(where: { $0.frame.contains(midpoint) })
+            ?? NSScreen.screens.first(where: { $0.frame.intersects(normalized) }),
+              let displayID = screen.displayID else {
+            return nil
+        }
+
+        let clipped = normalized.intersection(screen.frame)
+        guard clipped.width >= 2, clipped.height >= 2 else {
+            return nil
+        }
+
+        let displayBounds = CGDisplayBounds(displayID)
+        let x = displayBounds.minX + (clipped.minX - screen.frame.minX)
+        let y = displayBounds.minY + (screen.frame.maxY - clipped.maxY)
+
+        return CaptureRectangle(
+            x: Int(x.rounded(.down)),
+            y: Int(y.rounded(.down)),
+            width: max(1, Int(clipped.width.rounded(.toNearestOrAwayFromZero))),
+            height: max(1, Int(clipped.height.rounded(.toNearestOrAwayFromZero)))
+        )
     }
 }
 
@@ -354,6 +516,7 @@ final class CaptureStore: ObservableObject {
     @Published private(set) var items: [CaptureItem] = []
     @Published private(set) var isCapturing = false
     @Published var statusMessage: String?
+    @Published private(set) var lastRegion: CaptureRectangle?
 
     @Published var copyAfterCapture: Bool {
         didSet { defaults.set(copyAfterCapture, forKey: Defaults.copyAfterCapture) }
@@ -363,8 +526,12 @@ final class CaptureStore: ObservableObject {
         didSet { defaults.set(hideBeforeCapture, forKey: Defaults.hideBeforeCapture) }
     }
 
-    @Published var includeCursorInFullScreen: Bool {
-        didSet { defaults.set(includeCursorInFullScreen, forKey: Defaults.includeCursor) }
+    @Published var includeCursor: Bool {
+        didSet { defaults.set(includeCursor, forKey: Defaults.includeCursor) }
+    }
+
+    @Published var screenshotDelaySeconds: Int {
+        didSet { defaults.set(screenshotDelaySeconds, forKey: Defaults.screenshotDelaySeconds) }
     }
 
     @Published var saveFolder: URL {
@@ -377,7 +544,10 @@ final class CaptureStore: ObservableObject {
         self.defaults = defaults
         self.copyAfterCapture = defaults.object(forKey: Defaults.copyAfterCapture) as? Bool ?? true
         self.hideBeforeCapture = defaults.object(forKey: Defaults.hideBeforeCapture) as? Bool ?? true
-        self.includeCursorInFullScreen = defaults.object(forKey: Defaults.includeCursor) as? Bool ?? false
+        self.includeCursor = defaults.object(forKey: Defaults.includeCursor) as? Bool
+            ?? defaults.object(forKey: Defaults.legacyIncludeCursor) as? Bool
+            ?? false
+        self.screenshotDelaySeconds = defaults.object(forKey: Defaults.screenshotDelaySeconds) as? Int ?? 0
 
         if let path = defaults.string(forKey: Defaults.saveFolder), !path.isEmpty {
             self.saveFolder = URL(fileURLWithPath: path, isDirectory: true)
@@ -385,11 +555,41 @@ final class CaptureStore: ObservableObject {
             self.saveFolder = Self.defaultSaveFolder
         }
 
+        self.lastRegion = Self.loadLastRegion(defaults: defaults)
         loadHistory()
     }
 
-    func capture(_ mode: CaptureMode) {
+    var availableDisplays: [DisplayTarget] {
+        DisplayCatalog.displays()
+    }
+
+    var hasLastRegion: Bool {
+        lastRegion != nil
+    }
+
+    var screenshotDelayLabel: String {
+        screenshotDelaySeconds == 1 ? "1 second" : "\(screenshotDelaySeconds) seconds"
+    }
+
+    func isModeDisabled(_ mode: CaptureMode) -> Bool {
+        isCapturing || (mode == .lastRegion && !hasLastRegion)
+    }
+
+    func helpText(for mode: CaptureMode) -> String {
+        if mode == .lastRegion && !hasLastRegion {
+            return "Capture a selection first to reuse it."
+        }
+
+        return mode.title
+    }
+
+    func capture(_ mode: CaptureMode, display: DisplayTarget? = nil) {
         guard !isCapturing else {
+            return
+        }
+
+        if mode == .lastRegion, lastRegion == nil {
+            statusMessage = "Capture a selection first"
             return
         }
 
@@ -397,28 +597,32 @@ final class CaptureStore: ObservableObject {
         statusMessage = "Capturing \(mode.title)"
 
         let destination = nextDestinationURL(for: mode)
-        let includeCursor = mode == .fullScreen && includeCursorInFullScreen
+        let includeCursor = includeCursor
         let shouldHide = hideBeforeCapture
+        let delay = screenshotDelaySeconds
+        let hiddenWindows = shouldHide ? hideVisibleShareXWindows() : []
 
-        if shouldHide {
-            NSApp.hide(nil)
-        }
-
-        Task {
+        Task { @MainActor in
             if shouldHide {
                 try? await Task.sleep(nanoseconds: 250_000_000)
             }
 
             do {
+                if delay > 0 {
+                    await waitForDelay(seconds: delay, mode: mode)
+                }
+
+                let request = try await makeCaptureRequest(mode: mode, display: display, includeCursor: includeCursor)
+
                 let capturedURL = try await Task.detached(priority: .userInitiated) {
-                    try CaptureRunner.capture(mode: mode, destination: destination, includeCursor: includeCursor)
+                    try CaptureRunner.capture(request: request, destination: destination)
                 }.value
 
-                finishCapture(mode: mode, url: capturedURL, shouldUnhide: shouldHide)
+                finishCapture(mode: mode, url: capturedURL, hiddenWindows: hiddenWindows)
             } catch CaptureError.cancelled {
-                finishCancelledCapture(shouldUnhide: shouldHide)
+                finishCancelledCapture(hiddenWindows: hiddenWindows)
             } catch {
-                finishFailedCapture(error, shouldUnhide: shouldHide)
+                finishFailedCapture(error, hiddenWindows: hiddenWindows)
             }
         }
     }
@@ -475,11 +679,53 @@ final class CaptureStore: ObservableObject {
         statusMessage = removedCount == 1 ? "Removed 1 missing capture" : "Removed \(removedCount) missing captures"
     }
 
-    private func finishCapture(mode: CaptureMode, url: URL, shouldUnhide: Bool) {
-        if shouldUnhide {
-            NSApp.unhide(nil)
-            NSApp.activate(ignoringOtherApps: true)
+    private func makeCaptureRequest(mode: CaptureMode, display: DisplayTarget?, includeCursor: Bool) async throws -> CaptureRequest {
+        switch mode {
+        case .fullScreen:
+            return CaptureRequest(target: .fullScreen, includeCursor: includeCursor)
+        case .selection:
+            statusMessage = "Select a region"
+            guard let rect = await RegionSelectionController.shared.selectRegion() else {
+                throw CaptureError.cancelled
+            }
+
+            lastRegion = rect
+            saveLastRegion(rect)
+            return CaptureRequest(target: .region(rect), includeCursor: includeCursor)
+        case .window:
+            return CaptureRequest(target: .interactiveWindow, includeCursor: false)
+        case .activeWindow:
+            return CaptureRequest(target: .activeWindow, includeCursor: includeCursor)
+        case .activeMonitor:
+            guard let activeDisplay = DisplayCatalog.activeDisplay() else {
+                throw CaptureError.noDisplayAvailable
+            }
+
+            return CaptureRequest(target: .display(activeDisplay.captureNumber), includeCursor: includeCursor)
+        case .monitor:
+            guard let display else {
+                throw CaptureError.noDisplayAvailable
+            }
+
+            return CaptureRequest(target: .display(display.captureNumber), includeCursor: includeCursor)
+        case .lastRegion:
+            guard let lastRegion else {
+                throw CaptureError.noLastRegion
+            }
+
+            return CaptureRequest(target: .region(lastRegion), includeCursor: includeCursor)
         }
+    }
+
+    private func waitForDelay(seconds: Int, mode: CaptureMode) async {
+        for remaining in stride(from: seconds, through: 1, by: -1) {
+            statusMessage = "\(mode.title) in \(remaining)s"
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+        }
+    }
+
+    private func finishCapture(mode: CaptureMode, url: URL, hiddenWindows: [NSWindow]) {
+        restoreHiddenWindows(hiddenWindows)
 
         do {
             if copyAfterCapture {
@@ -506,24 +752,34 @@ final class CaptureStore: ObservableObject {
         isCapturing = false
     }
 
-    private func finishCancelledCapture(shouldUnhide: Bool) {
-        if shouldUnhide {
-            NSApp.unhide(nil)
-            NSApp.activate(ignoringOtherApps: true)
-        }
-
+    private func finishCancelledCapture(hiddenWindows: [NSWindow]) {
+        restoreHiddenWindows(hiddenWindows)
         statusMessage = "Capture canceled"
         isCapturing = false
     }
 
-    private func finishFailedCapture(_ error: Error, shouldUnhide: Bool) {
-        if shouldUnhide {
-            NSApp.unhide(nil)
-            NSApp.activate(ignoringOtherApps: true)
-        }
-
+    private func finishFailedCapture(_ error: Error, hiddenWindows: [NSWindow]) {
+        restoreHiddenWindows(hiddenWindows)
         statusMessage = error.localizedDescription
         isCapturing = false
+    }
+
+    private func hideVisibleShareXWindows() -> [NSWindow] {
+        let windows = NSApp.windows.filter { window in
+            window.isVisible && window.level.rawValue < NSWindow.Level.screenSaver.rawValue
+        }
+
+        windows.forEach { $0.orderOut(nil) }
+        return windows
+    }
+
+    private func restoreHiddenWindows(_ windows: [NSWindow]) {
+        guard !windows.isEmpty else {
+            return
+        }
+
+        windows.forEach { $0.makeKeyAndOrderFront(nil) }
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     private func nextDestinationURL(for mode: CaptureMode) -> URL {
@@ -585,6 +841,14 @@ final class CaptureStore: ObservableObject {
         }
     }
 
+    private func saveLastRegion(_ rect: CaptureRectangle) {
+        guard let data = try? JSONEncoder.shareXEncoder.encode(rect) else {
+            return
+        }
+
+        defaults.set(data, forKey: Defaults.lastRegion)
+    }
+
     private func ensureDirectoryExists(_ url: URL) {
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
     }
@@ -616,27 +880,67 @@ final class CaptureStore: ObservableObject {
         return formatter
     }()
 
+    private static func loadLastRegion(defaults: UserDefaults) -> CaptureRectangle? {
+        guard let data = defaults.data(forKey: Defaults.lastRegion) else {
+            return nil
+        }
+
+        return try? JSONDecoder().decode(CaptureRectangle.self, from: data)
+    }
+
     private enum Defaults {
         static let copyAfterCapture = "copyAfterCapture"
         static let hideBeforeCapture = "hideBeforeCapture"
-        static let includeCursor = "includeCursorInFullScreen"
+        static let includeCursor = "includeCursor"
+        static let legacyIncludeCursor = "includeCursorInFullScreen"
+        static let screenshotDelaySeconds = "screenshotDelaySeconds"
+        static let lastRegion = "lastRegion"
         static let saveFolder = "saveFolder"
     }
 }
 
+struct CaptureRequest: Sendable {
+    var target: CaptureTarget
+    var includeCursor: Bool
+}
+
+enum CaptureTarget: Sendable {
+    case fullScreen
+    case region(CaptureRectangle)
+    case interactiveWindow
+    case activeWindow
+    case display(Int)
+}
+
 enum CaptureRunner {
-    static func capture(mode: CaptureMode, destination: URL, includeCursor: Bool) throws -> URL {
+    static func capture(request: CaptureRequest, destination: URL) throws -> URL {
         var arguments = ["-x", "-t", "png"]
 
-        switch mode {
+        switch request.target {
         case .fullScreen:
-            if includeCursor {
+            if request.includeCursor {
                 arguments.append("-C")
             }
-        case .selection:
-            arguments.append(contentsOf: ["-i", "-s"])
-        case .window:
+        case .region(let rect):
+            if request.includeCursor {
+                arguments.append("-C")
+            }
+
+            arguments.append(contentsOf: ["-R", rect.argument])
+        case .interactiveWindow:
             arguments.append(contentsOf: ["-i", "-w"])
+        case .activeWindow:
+            if request.includeCursor {
+                arguments.append("-C")
+            }
+
+            arguments.append(contentsOf: ["-l", "\(try activeWindowID())"])
+        case .display(let displayNumber):
+            if request.includeCursor {
+                arguments.append("-C")
+            }
+
+            arguments.append(contentsOf: ["-D", "\(displayNumber)"])
         }
 
         arguments.append(destination.path)
@@ -677,12 +981,100 @@ enum CaptureRunner {
 
         return destination
     }
+
+    private static func activeWindowID() throws -> CGWindowID {
+        let options: CGWindowListOption = [.optionOnScreenOnly, .excludeDesktopElements]
+        guard let windows = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
+            throw CaptureError.noActiveWindow
+        }
+
+        let ownPID = ProcessInfo.processInfo.processIdentifier
+        for window in windows {
+            let ownerPID = Self.pidValue(window[kCGWindowOwnerPID as String])
+            guard ownerPID != ownPID else {
+                continue
+            }
+
+            let layer = Self.intValue(window[kCGWindowLayer as String]) ?? 0
+            guard layer == 0 else {
+                continue
+            }
+
+            let alpha = Self.doubleValue(window[kCGWindowAlpha as String]) ?? 1
+            guard alpha > 0.05 else {
+                continue
+            }
+
+            if let boundsDictionary = window[kCGWindowBounds as String] as? NSDictionary,
+               let bounds = CGRect(dictionaryRepresentation: boundsDictionary),
+               (bounds.width < 40 || bounds.height < 40) {
+                continue
+            }
+
+            if let windowNumber = Self.uint32Value(window[kCGWindowNumber as String]) {
+                return CGWindowID(windowNumber.uint32Value)
+            }
+        }
+
+        throw CaptureError.noActiveWindow
+    }
+
+    private static func pidValue(_ value: Any?) -> pid_t? {
+        if let pid = value as? pid_t {
+            return pid
+        }
+
+        if let number = value as? NSNumber {
+            return number.int32Value
+        }
+
+        return nil
+    }
+
+    private static func intValue(_ value: Any?) -> Int? {
+        if let int = value as? Int {
+            return int
+        }
+
+        if let number = value as? NSNumber {
+            return number.intValue
+        }
+
+        return nil
+    }
+
+    private static func doubleValue(_ value: Any?) -> Double? {
+        if let double = value as? Double {
+            return double
+        }
+
+        if let number = value as? NSNumber {
+            return number.doubleValue
+        }
+
+        return nil
+    }
+
+    private static func uint32Value(_ value: Any?) -> NSNumber? {
+        if let number = value as? NSNumber {
+            return number
+        }
+
+        if let value = value as? UInt32 {
+            return NSNumber(value: value)
+        }
+
+        return nil
+    }
 }
 
 enum CaptureError: LocalizedError {
     case cancelled
     case clipboardWriteFailed
     case commandFailed(String)
+    case noActiveWindow
+    case noDisplayAvailable
+    case noLastRegion
     case unreadableImage(String)
 
     var errorDescription: String? {
@@ -693,9 +1085,246 @@ enum CaptureError: LocalizedError {
             "Could not write image to the clipboard"
         case .commandFailed(let message):
             message
+        case .noActiveWindow:
+            "Could not find an active window to capture"
+        case .noDisplayAvailable:
+            "Could not find a display to capture"
+        case .noLastRegion:
+            "Capture a selection first"
         case .unreadableImage(let path):
             "Could not read image at \(path)"
         }
+    }
+}
+
+@MainActor
+enum DisplayCatalog {
+    static func displays() -> [DisplayTarget] {
+        var count: UInt32 = 0
+        CGGetActiveDisplayList(0, nil, &count)
+
+        var displayIDs = [CGDirectDisplayID](repeating: 0, count: Int(count))
+        CGGetActiveDisplayList(count, &displayIDs, &count)
+        displayIDs = Array(displayIDs.prefix(Int(count)))
+
+        let mainDisplayID = CGMainDisplayID()
+        if let mainIndex = displayIDs.firstIndex(of: mainDisplayID), mainIndex != 0 {
+            displayIDs.remove(at: mainIndex)
+            displayIDs.insert(mainDisplayID, at: 0)
+        }
+
+        return displayIDs.enumerated().map { index, displayID in
+            let screen = NSScreen.screens.first { $0.displayID == displayID }
+            let fallbackName = index == 0 ? "Main Monitor" : "Monitor \(index + 1)"
+            let name = screen?.localizedName ?? fallbackName
+            let frame = screen?.frame ?? CGDisplayBounds(displayID)
+            let size = "\(Int(frame.width)) x \(Int(frame.height))"
+
+            return DisplayTarget(
+                displayID: displayID,
+                captureNumber: index + 1,
+                title: "\(name) (\(size))"
+            )
+        }
+    }
+
+    static func activeDisplay() -> DisplayTarget? {
+        let mouseLocation = NSEvent.mouseLocation
+        guard let activeScreen = NSScreen.screens.first(where: { $0.frame.contains(mouseLocation) }),
+              let displayID = activeScreen.displayID else {
+            return displays().first
+        }
+
+        return displays().first { $0.displayID == displayID } ?? displays().first
+    }
+}
+
+extension NSScreen {
+    var displayID: CGDirectDisplayID? {
+        let key = NSDeviceDescriptionKey("NSScreenNumber")
+
+        if let id = deviceDescription[key] as? CGDirectDisplayID {
+            return id
+        }
+
+        if let number = deviceDescription[key] as? NSNumber {
+            return CGDirectDisplayID(number.uint32Value)
+        }
+
+        return nil
+    }
+}
+
+@MainActor
+final class RegionSelectionController {
+    static let shared = RegionSelectionController()
+    private var activeSession: RegionSelectionSession?
+
+    private init() {}
+
+    func selectRegion() async -> CaptureRectangle? {
+        await withCheckedContinuation { continuation in
+            let session = RegionSelectionSession { [weak self] rect in
+                self?.activeSession = nil
+                continuation.resume(returning: rect)
+            }
+
+            activeSession = session
+            session.begin()
+        }
+    }
+}
+
+@MainActor
+final class RegionSelectionSession {
+    private let completion: (CaptureRectangle?) -> Void
+    private var window: RegionSelectionWindow?
+
+    init(completion: @escaping (CaptureRectangle?) -> Void) {
+        self.completion = completion
+    }
+
+    func begin() {
+        let frame = NSScreen.screens.reduce(CGRect.null) { partialResult, screen in
+            partialResult.union(screen.frame)
+        }
+
+        let overlayFrame = frame.isNull ? NSScreen.main?.frame ?? .zero : frame
+        let window = RegionSelectionWindow(
+            contentRect: overlayFrame,
+            styleMask: .borderless,
+            backing: .buffered,
+            defer: false
+        )
+        let view = RegionSelectionView(frame: CGRect(origin: .zero, size: overlayFrame.size)) { [weak self] rect in
+            self?.finish(with: rect)
+        }
+
+        window.contentView = view
+        window.backgroundColor = .clear
+        window.isOpaque = false
+        window.hasShadow = false
+        window.level = .screenSaver
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        window.ignoresMouseEvents = false
+        window.makeKeyAndOrderFront(nil)
+        window.orderFrontRegardless()
+
+        self.window = window
+    }
+
+    private func finish(with rect: CGRect?) {
+        window?.orderOut(nil)
+        window = nil
+
+        guard let rect, let captureRect = CaptureRectangle.from(appKitRect: rect) else {
+            completion(nil)
+            return
+        }
+
+        completion(captureRect)
+    }
+}
+
+final class RegionSelectionWindow: NSWindow {
+    override var canBecomeKey: Bool { true }
+}
+
+final class RegionSelectionView: NSView {
+    private let completion: (CGRect?) -> Void
+    private var startPoint: CGPoint?
+    private var currentPoint: CGPoint?
+
+    init(frame frameRect: NSRect, completion: @escaping (CGRect?) -> Void) {
+        self.completion = completion
+        super.init(frame: frameRect)
+        wantsLayer = true
+        layer?.backgroundColor = NSColor.clear.cgColor
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+
+    override var acceptsFirstResponder: Bool { true }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        window?.makeFirstResponder(self)
+        NSCursor.crosshair.set()
+    }
+
+    override func resetCursorRects() {
+        addCursorRect(bounds, cursor: .crosshair)
+    }
+
+    override func mouseDown(with event: NSEvent) {
+        startPoint = event.locationInWindow
+        currentPoint = startPoint
+        needsDisplay = true
+    }
+
+    override func mouseDragged(with event: NSEvent) {
+        currentPoint = event.locationInWindow
+        needsDisplay = true
+    }
+
+    override func mouseUp(with event: NSEvent) {
+        currentPoint = event.locationInWindow
+
+        guard let selectedRect = selectedRect, selectedRect.width >= 2, selectedRect.height >= 2 else {
+            completion(nil)
+            return
+        }
+
+        let windowOrigin = window?.frame.origin ?? .zero
+        let globalRect = selectedRect.offsetBy(dx: windowOrigin.x, dy: windowOrigin.y)
+        completion(globalRect)
+    }
+
+    override func keyDown(with event: NSEvent) {
+        if event.keyCode == 53 {
+            completion(nil)
+        } else {
+            super.keyDown(with: event)
+        }
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+        guard let selectedRect else {
+            NSColor.black.withAlphaComponent(0.28).setFill()
+            bounds.fill()
+            return
+        }
+
+        let overlayPath = NSBezierPath(rect: bounds)
+        overlayPath.append(NSBezierPath(rect: selectedRect))
+        overlayPath.windingRule = .evenOdd
+
+        NSColor.black.withAlphaComponent(0.28).setFill()
+        overlayPath.fill()
+
+        NSColor.systemBlue.setStroke()
+        let border = NSBezierPath(rect: selectedRect)
+        border.lineWidth = 2
+        border.stroke()
+
+        NSColor.systemBlue.withAlphaComponent(0.14).setFill()
+        selectedRect.fill()
+    }
+
+    private var selectedRect: CGRect? {
+        guard let startPoint, let currentPoint else {
+            return nil
+        }
+
+        return CGRect(
+            x: min(startPoint.x, currentPoint.x),
+            y: min(startPoint.y, currentPoint.y),
+            width: abs(currentPoint.x - startPoint.x),
+            height: abs(currentPoint.y - startPoint.y)
+        )
     }
 }
 
