@@ -6,9 +6,10 @@ CI have been removed from this repository.
 
 The native macOS app supports:
 
-- full-screen, selection, and window capture
+- full-screen, selection/region, window, active-window, monitor, and last-region capture
 - PNG output to `~/Pictures/ShareX`
 - optional clipboard copy after capture
+- optional screenshot delay and cursor capture
 - recent capture history
 - reveal, open, copy, and delete actions
 - menu-bar capture commands

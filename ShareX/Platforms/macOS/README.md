@@ -7,6 +7,10 @@ The root package manifest builds the same target for direct `swift run ShareX`
 use, and `ShareX/Scripts/package-macos-app.sh` creates a local `ShareX.app`
 bundle.
 
+Core capture modes include full screen, selection/region, window, active window,
+active monitor, choose monitor, and last region. Capture settings include a
+screenshot delay and cursor include/exclude control.
+
 ## Build
 
 ```sh
