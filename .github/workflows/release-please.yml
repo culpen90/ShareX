@@ -5,8 +5,11 @@ on:
     branches:
       - develop
     paths:
+      - ".github/workflows/build.yml"
       - ".github/workflows/release-please.yml"
       - ".release-please-manifest.json"
+      - "Package.swift"
+      - "README.md"
       - "release-please-config.json"
       - "ShareX/Platforms/macOS/**"
       - "ShareX/Scripts/package-macos-app.sh"
