@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/culpen90/ShareX/compare/v1.0.0...v1.1.0) (2026-07-07)
+
+
+### Features
+
+* **macOS:** add core capture modes ([eb60ac5](https://github.com/culpen90/ShareX/commit/eb60ac514bed81ba6247e840b2c46b1377cb8020))
+* **macOS:** add core capture modes ([1ced02c](https://github.com/culpen90/ShareX/commit/1ced02c8961eb984097fb1ef0fa72cf061f75317))
+
 ## [1.0.0](https://github.com/culpen90/ShareX/compare/v0.1.0...v1.0.0) (2026-07-07)
 
 
