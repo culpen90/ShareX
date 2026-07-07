@@ -1,8 +1,10 @@
-# ShareX macOS Platform
+# ShareX for macOS
 
-This repository contains the native macOS platform implementation for the ShareX app, built with SwiftUI and AppKit. The repository root exposes a Swift package manifest for direct `swift run ShareX` use, while the app project also keeps its own manifest and packaging script.
+ShareX is now a macOS-exclusive screenshot utility built with SwiftUI and AppKit.
+The Windows/.NET desktop application, installer projects, and Windows-specific
+CI have been removed from this repository.
 
-The existing Windows desktop target uses `net9.0-windows10.0.22621.0` and WinForms. The macOS platform target lives under the existing `ShareX` app tree and builds a native `ShareX.app` around the core ShareX workflow:
+The native macOS app supports:
 
 - full-screen, selection, and window capture
 - PNG output to `~/Pictures/ShareX`
@@ -10,6 +12,11 @@ The existing Windows desktop target uses `net9.0-windows10.0.22621.0` and WinFor
 - recent capture history
 - reveal, open, copy, and delete actions
 - menu-bar capture commands
+
+## Requirements
+
+- macOS 13 or newer
+- Xcode command line tools with Swift 5.9 or newer
 
 ## Build
 
@@ -23,7 +30,7 @@ swift build
 swift run ShareX
 ```
 
-## Create ShareX.app
+## Package
 
 ```sh
 cd ShareX
