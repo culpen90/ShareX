@@ -1,6 +1,6 @@
 # ShareX macOS Platform
 
-This directory contains the native macOS platform implementation for the ShareX app, built with SwiftUI and AppKit. The Swift package manifest and packaging script live at the `ShareX` app root so `ShareX.app` is built from the app project itself.
+This directory contains the native macOS platform implementation for the ShareX app, built with SwiftUI and AppKit. The repository root exposes a Swift package manifest for direct `swift run ShareX` use, while the app project also keeps its own manifest and packaging script.
 
 The existing Windows desktop target uses `net9.0-windows10.0.22621.0` and WinForms. The macOS platform target lives under the existing `ShareX` app tree and builds a native `ShareX.app` around the core ShareX workflow:
 
@@ -14,14 +14,12 @@ The existing Windows desktop target uses `net9.0-windows10.0.22621.0` and WinFor
 ## Build
 
 ```sh
-cd ShareX
 swift build
 ```
 
 ## Run
 
 ```sh
-cd ShareX
 swift run ShareX
 ```
 
