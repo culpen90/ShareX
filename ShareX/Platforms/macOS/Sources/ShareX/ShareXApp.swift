@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 @main
-struct ShareXMacApp: App {
+struct ShareXApp: App {
     @StateObject private var store = CaptureStore()
 
     var body: some Scene {
@@ -607,7 +607,7 @@ final class CaptureStore: ObservableObject {
     private static var applicationSupportFolder: URL {
         let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
         return (support ?? URL(fileURLWithPath: NSHomeDirectory()))
-            .appendingPathComponent("ShareXMac", isDirectory: true)
+            .appendingPathComponent("ShareX", isDirectory: true)
     }
 
     private static let fileDateFormatter: DateFormatter = {
