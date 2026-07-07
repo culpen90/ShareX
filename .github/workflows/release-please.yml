@@ -1,0 +1,32 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - ".github/workflows/release-please.yml"
+      - ".release-please-manifest.json"
+      - "release-please-config.json"
+      - "ShareX/Platforms/macOS/**"
+      - "ShareX/Scripts/package-macos-app.sh"
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Release Please
+        uses: googleapis/release-please-action@v4
+        with:
+          # Prefer the existing PAT so release tags can trigger the artifact workflow.
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          target-branch: develop
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
